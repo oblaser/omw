@@ -1,0 +1,51 @@
+/*
+author         Oliver Blaser
+date           09.06.2021
+copyright      MIT - Copyright (c) 2021 Oliver Blaser
+*/
+
+/*! \file omw.h */
+/*! \file defs.h */
+
+/*!
+\namespace omw
+\brief Main namespace
+*/
+
+/*!
+\namespace omw::info
+\brief Some information about the library
+*/
+
+/*!
+\namespace omw::windows
+\brief Contains wraping and helper functions for the Windows API
+
+This namespace is only present on Windows platforms.
+
+Also read the \ref mainpage_conventions_strings section on the <i>Main Page</i>.
+
+
+
+\section omw_windows_strConv_infoText String Conversion Functions
+
+The functions `utf8_to_wstr()` and `wstr_to_utf8()` are used to convert between UTF-8 `char` strings used by this library
+and `WCHAR` strings used in the Windows API. Both do have several overloads.
+
+The overloads with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.code() == EC_OK`.
+Possible code values:
+ - `omw::windows::EC_OK`
+ - `omw::windows::EC_INV_ARG`
+ - `omw::windows::EC_INV_UNICODE`
+ - `omw::windows::EC_INTERNAL`
+ - `omw::windows::EC_UNKNOWN_WIN`
+ - `omw::windows::EC_STRCONV_SRC_STR_SIZE` (can only occure when `OMW_CFG_WINDOWS_TYPESIZECHECK` is true)
+ - `omw::windows::EC_STRCONV_DEST_BUFFER_SIZE`
+
+The other overloads can throw
+ - <tt>omw::range_error</tt> if `src` string is too big or `dest` buffer is too small
+ - <tt>omw::invalid_argument</tt> when invalid arguments are passed to the function (such as null pointers)
+ - <tt>omw::windows::invalid_unicode</tt> when src contains invalid unicode codepoints
+ - <tt>omw::runtime_error</tt> on unexpected behaviour of underlaying function
+
+*/

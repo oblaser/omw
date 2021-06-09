@@ -1,0 +1,26 @@
+
+h1 {
+    border-bottom: 1px solid #879ECB;
+    color: #354C7B;
+    font-size: 120%;
+    font-size: 140%;
+    font-weight: normal;
+    margin-top: 1.75em;
+    padding-top: 8px;
+    padding-bottom: 4px;
+    width: 100%;
+}
+
+h2 {
+    font-size: 115%;
+    margin-bottom: -0.75em;
+}
+
+h3 {
+    font-size: 100%;
+    margin-bottom: -0.8em;
+}
+
+h2.groupheader {
+    margin-bottom: initial;
+}

@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           08.06.2021
+date           09.06.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -10,15 +10,19 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 // platform
 #ifdef _WIN32
+//! Defined as 1 if `_WIN32` is defined. Otherwise, undefined.
 #define OMW_PLAT_WIN32 (1)
 #endif
 #ifdef _WIN64
+//! Defined as 1 if `_WIN64` is defined. Otherwise, undefined.
 #define OMW_PLAT_WIN64 (1)
 #endif
 #ifdef __unix__
+//! Defined as 1 if `__unix__` is defined. Otherwise, undefined.
 #define OMW_PLAT_UNIX (1)
 #endif
-#if (OMW_PLAT_WIN32 || OMW_PLAT_WIN64)
+#if (defined(OMW_PLAT_WIN32) || defined(OMW_PLAT_WIN64))
+//! Defined as 1 if `OMW_PLAT_WIN32` or `OMW_PLAT_WIN64` is defined. Otherwise, undefined.
 #define OMW_PLAT_WIN (1)
 #endif
 
@@ -28,12 +32,13 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #endif
 
 
+
 constexpr const char* OMWi_file_to_filename(const char* p)
 {
     const char* fn = p;
     while (*p)
     {
-#if OMW_PLAT_WIN
+#if defined(OMW_PLAT_WIN)
         if (*p++ == '\\') fn = p;
 #else
         if (*p++ == '/') fn = p;
@@ -58,13 +63,11 @@ constexpr const char* OMWi_file_to_filename(const char* p)
 #define OMWi_DISPSTR(x) (x)
 
 // check for invalid combinations
-#if ((OMW_PLAT_WIN32 || OMW_PLAT_WIN64 || OMW_PLAT_WIN) && OMW_PLAT_UNIX)
+#if ((defined(OMW_PLAT_WIN32) || defined(OMW_PLAT_WIN64) || defined(OMW_PLAT_WIN)) && defined(OMW_PLAT_UNIX))
 #error invalid platform
 #endif
-#ifndef _DEBUG
-#if OMW_DEBUG
+#if (!defined(_DEBUG) && OMW_DEBUG)
 #error invalid debug configuration
-#endif
 #endif
 
 #endif // OMW_DEFS_H
