@@ -35,7 +35,7 @@ According to <a href="http://utf8everywhere.org/" target="_blank">UTF-8 Everywhe
 (or `std::string` respectively) and formatted as UTF-8.
 
 If you call functions in the Windows API you should use the <tt>foobar<b>W</b>()</tt> functions and Microsofts `WCHAR` types to call the API and
-use the \ref omw_windows_strConv_infoText (<i>omw/windows/strConv.hpp</i>) to convert between the two string types. An example can be seen in
+use the \ref omw_windows_strConv_infoText (<i>omw/windows/strConv.h</i>) to convert between the two string types. An example can be seen in
 the sourcecode of the `omw::windows::getEnvironmentVariable()` function.
 
 

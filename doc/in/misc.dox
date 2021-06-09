@@ -39,13 +39,12 @@ Possible code values:
  - `omw::windows::EC_INV_UNICODE`
  - `omw::windows::EC_INTERNAL`
  - `omw::windows::EC_UNKNOWN_WIN`
- - `omw::windows::EC_STRCONV_SRC_STR_SIZE` (can only occure when `OMW_CFG_WINDOWS_TYPESIZECHECK` is true)
  - `omw::windows::EC_STRCONV_DEST_BUFFER_SIZE`
 
 The other overloads can throw
- - <tt>omw::range_error</tt> if `src` string is too big or `dest` buffer is too small
- - <tt>omw::invalid_argument</tt> when invalid arguments are passed to the function (such as null pointers)
- - <tt>omw::windows::invalid_unicode</tt> when src contains invalid unicode codepoints
- - <tt>omw::runtime_error</tt> on unexpected behaviour of underlaying function
+ - `omw::range_error` if `dest` buffer is too small
+ - `omw::invalid_argument` when invalid arguments are passed to the function (such as null pointers)
+ - `omw::windows::invalid_unicode` when src contains invalid unicode codepoints
+ - `omw::runtime_error` on unexpected behaviour of underlaying function
 
 */

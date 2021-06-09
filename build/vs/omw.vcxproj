@@ -123,12 +123,16 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\omw.cpp" />
     <ClCompile Include="..\..\src\version.cpp" />
+    <ClCompile Include="..\..\src\windows\error.cpp" />
+    <ClCompile Include="..\..\src\windows\exception.cpp" />
     <ClCompile Include="..\..\src\windows\string.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\omw\defs.h" />
     <ClInclude Include="..\..\include\omw\omw.h" />
     <ClInclude Include="..\..\include\omw\version.h" />
+    <ClInclude Include="..\..\include\omw\windows\error.h" />
+    <ClInclude Include="..\..\include\omw\windows\exception.h" />
     <ClInclude Include="..\..\include\omw\windows\string.h" />
     <ClInclude Include="..\..\src\config.h" />
   </ItemGroup>
