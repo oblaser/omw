@@ -7,13 +7,13 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #ifndef OMW_WINDOWS_ENVVAR_H
 #define OMW_WINDOWS_ENVVAR_H
 
-#include "../defs.h"
+#include "../../omw/defs.h"
 #ifdef OMW_PLAT_WIN
 
 #include <cstddef>
 #include <string>
 
-#include "omw/windows/error.h"
+#include "../../omw/windows/error.h"
 
 #include <Windows.h>
 

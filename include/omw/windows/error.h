@@ -7,7 +7,7 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #ifndef OMW_WINDOWS_ERROR_H
 #define OMW_WINDOWS_ERROR_H
 
-#include "../defs.h"
+#include "../../omw/defs.h"
 #ifdef OMW_PLAT_WIN
 
 #include <iostream>

@@ -7,7 +7,7 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #ifndef OMW_WINDOWS_EXCEPTION_H
 #define OMW_WINDOWS_EXCEPTION_H
 
-#include "../defs.h"
+#include "../../omw/defs.h"
 #if OMW_PLAT_WIN
 
 #include <stdexcept>
