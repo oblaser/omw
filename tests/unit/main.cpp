@@ -25,3 +25,12 @@ TEST_CASE("omw lib")
 #include "version.hpp"
 #include "windows_string.hpp"
 #include "windows_envVar.hpp"
+
+#include <omw/string.h>
+
+TEST_CASE("omw/string.h")
+{
+    std::string str = omw::testFunc(123);
+    CHECK(str == "123");
+    CHECK(str.length() == 3);
+}

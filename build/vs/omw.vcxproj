@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\omw.cpp" />
+    <ClCompile Include="..\..\src\string.cpp" />
     <ClCompile Include="..\..\src\version.cpp" />
     <ClCompile Include="..\..\src\windows\envVar.cpp" />
     <ClCompile Include="..\..\src\windows\error.cpp" />
@@ -135,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\omw\defs.h" />
     <ClInclude Include="..\..\include\omw\omw.h" />
+    <ClInclude Include="..\..\include\omw\string.h" />
     <ClInclude Include="..\..\include\omw\version.h" />
     <ClInclude Include="..\..\include\omw\windows\envVar.h" />
     <ClInclude Include="..\..\include\omw\windows\error.h" />
