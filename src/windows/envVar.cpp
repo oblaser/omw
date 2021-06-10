@@ -4,7 +4,7 @@ date        10.06.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#include "windows/envVar.h"
+#include "omw/windows/envVar.h"
 
 #if OMW_PLAT_WIN
 
@@ -12,9 +12,9 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
-#include "windows/error.h"
-#include "windows/exception.h"
-#include "windows/string.h"
+#include "omw/windows/error.h"
+#include "omw/windows/exception.h"
+#include "omw/windows/string.h"
 
 #include <Windows.h>
 

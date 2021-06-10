@@ -7,7 +7,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
-#include "version.h"
+#include "omw/version.h"
 
 
 

@@ -84,7 +84,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../../src;../../include/omw</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;../../include</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)a/b/%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
@@ -99,7 +99,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../src;../../include/omw</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;../../include</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)a/b/%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\omw.cpp" />
+    <ClCompile Include="..\..\src\string.cpp" />
     <ClCompile Include="..\..\src\version.cpp" />
     <ClCompile Include="..\..\src\windows\envVar.cpp" />
     <ClCompile Include="..\..\src\windows\error.cpp" />
@@ -135,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\omw\defs.h" />
     <ClInclude Include="..\..\include\omw\omw.h" />
+    <ClInclude Include="..\..\include\omw\string.h" />
     <ClInclude Include="..\..\include\omw\version.h" />
     <ClInclude Include="..\..\include\omw\windows\envVar.h" />
     <ClInclude Include="..\..\include\omw\windows\error.h" />

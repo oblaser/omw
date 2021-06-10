@@ -7,8 +7,8 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include <sstream>
 #include <string>
 
-#include "defs.h"
-#include "omw.h"
+#include "omw/defs.h"
+#include "omw/omw.h"
 
 
 
