@@ -24,3 +24,4 @@ TEST_CASE("omw lib")
 
 #include "version.hpp"
 #include "windows_string.hpp"
+#include "windows_envVar.hpp"

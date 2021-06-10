@@ -12,7 +12,6 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
-#include "../config.h"
 #include "defs.h"
 #include "windows/error.h"
 #include "windows/exception.h"

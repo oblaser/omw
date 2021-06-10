@@ -32,7 +32,7 @@ Also read the \ref mainpage_conventions_strings section on the <i>Main Page</i>.
 The functions `utf8_to_wstr()` and `wstr_to_utf8()` are used to convert between UTF-8 `char` strings used by this library
 and `WCHAR` strings used in the Windows API. Both do have several overloads.
 
-The overloads with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.code() == EC_OK`.
+The overloads with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.code() == omw::windows::EC_OK`.
 Possible code values:
  - `omw::windows::EC_OK`
  - `omw::windows::EC_INV_ARG`
@@ -42,9 +42,9 @@ Possible code values:
  - `omw::windows::EC_STRCONV_DEST_BUFFER_SIZE`
 
 The other overloads can throw
- - `omw::range_error` if `dest` buffer is too small
- - `omw::invalid_argument` when invalid arguments are passed to the function (such as null pointers)
+ - `std::range_error` if `dest` buffer is too small
+ - `std::invalid_argument` when invalid arguments are passed to the function (such as null pointers)
  - `omw::windows::invalid_unicode` when src contains invalid unicode codepoints
- - `omw::runtime_error` on unexpected behaviour of underlaying function
+ - `std::runtime_error` on unexpected behaviour of underlaying function
 
 */
