@@ -12,9 +12,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace omw
 {
-    std::string testFunc(int a);
-
-    /*class string : public std::string
+    class string : public std::string
     {
     public:
         string();
@@ -31,7 +29,7 @@ namespace omw
         virtual omw::string& replaceAll(const omw::string* search, const char* replace, size_t count, size_t startPos = 0, size_t* occ = nullptr);
 
         virtual omw::string getUrlEncoded() const;
-    };*/
+    };
 }
 
 #endif // OMW_STRING_H

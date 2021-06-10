@@ -26,11 +26,23 @@ TEST_CASE("omw lib")
 #include "windows_string.hpp"
 #include "windows_envVar.hpp"
 
+
+
 #include <omw/string.h>
 
 TEST_CASE("omw/string.h")
 {
-    std::string str = omw::testFunc(123);
-    CHECK(str == "123");
-    CHECK(str.length() == 3);
+    CHECK(omw::string("+\"*%&/()=asdf(fdsf)").getUrlEncoded() == "%2B%22%2A%25%26%2F%28%29%3Dasdf%28fdsf%29");
+
+    const char str[] = "a boy with a hat";
+    omw::string replFirst(str);
+    omw::string replAll(str);
+
+    replFirst.replaceFirst("a", "#", 5);
+    replAll.replaceAll("a", "#");
+    CHECK(replFirst == "a boy with # hat");
+    CHECK(replAll == "# boy with # h#t");
+
+    replAll.replaceAll(" ", "_", 6);
+    CHECK(replAll == "# boy with_#_h#t");
 }
