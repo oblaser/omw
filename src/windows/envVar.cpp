@@ -61,6 +61,9 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName)
 //! 
 std::string omw::windows::getEnvironmentVariable(const std::string& varName, ErrorCode& ec) noexcept
 {
+    const size_t bufferSizeInitial = 300;
+    const size_t bufferSizeGrow = 100;
+
     std::string value;
     std::vector<WCHAR> wVarName(300, 0);
 
@@ -68,42 +71,61 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName, Err
 
     if (ec.code() == omw::windows::EC_OK)
     {
-        std::vector<WCHAR> wVal(omw::windows::envVarValueMaxSize, 0);
+        bool proc;
+        std::vector<WCHAR> wVal(bufferSizeInitial, 0);
 
-        DWORD r = GetEnvironmentVariableW(wVarName.data(), wVal.data(), wVal.size());
-
-        if (r == 0)
+        proc = true;
+        while (proc)
         {
-            DWORD err = GetLastError();
+            DWORD r = GetEnvironmentVariableW(wVarName.data(), wVal.data(), wVal.size());
 
-            if (err == ERROR_ENVVAR_NOT_FOUND)
+            if (r == 0)
             {
-                ec = ErrorCode(omw::windows::EC_ENVVAR_NOT_FOUND, OMWi_DISPSTR("environment variable not found"));
-                value.clear();
+                DWORD err = GetLastError();
+
+                if (err == ERROR_ENVVAR_NOT_FOUND)
+                {
+                    ec = ErrorCode(omw::windows::EC_ENVVAR_NOT_FOUND, OMWi_DISPSTR("environment variable not found"));
+                    value.clear();
+                }
+                else
+                {
+                    ec = ErrorCode(omw::windows::EC_UNKNOWN_WIN, OMWi_DISPSTR("Windows API error, GetEnvironmentVariableW() caused GetLastError() to return ") + std::to_string(err));
+                    value.clear();
+                }
+
+                proc = false;
+            }
+            else if (r > wVal.size())
+            {
+                const size_t currentSize = wVal.size();
+
+                if (currentSize < (omw::windows::envVarValueMaxSize - bufferSizeGrow))
+                {
+                    wVal.assign((currentSize + bufferSizeGrow), 0);
+                }
+                else
+                {
+                    ec = ErrorCode(omw::windows::EC_INTERNAL, OMWi_DISPSTR("value buffer too small"));
+                    value.clear();
+                    proc = false;
+                }
             }
             else
             {
-                ec = ErrorCode(omw::windows::EC_UNKNOWN_WIN, OMWi_DISPSTR("Windows API error, GetEnvironmentVariableW() caused GetLastError() to return ") + std::to_string(err));
-                value.clear();
-            }
-        }
-        else if (r > wVal.size())
-        {
-            ec = ErrorCode(omw::windows::EC_INTERNAL, OMWi_DISPSTR("value buffer too small"));
-            value.clear();
-        }
-        else
-        {
-            omw::windows::wstr_to_utf8(wVal.data(), value, ec);
+                omw::windows::wstr_to_utf8(wVal.data(), value, ec);
 
-            if (ec.code() == omw::windows::EC_OK)
-            {
-                ec = ErrorCode(omw::windows::EC_OK, OMWi_DISPSTR("OK"));
-            }
-            else
-            {
-                ec = ErrorCode(omw::windows::EC_INTERNAL, OMWi_DISPSTR("unable to convert back to UTF-8 string (" + ec.msg() + ")"));
-                value.clear();
+                if (ec.code() == omw::windows::EC_OK)
+                {
+                    ec = ErrorCode(omw::windows::EC_OK, OMWi_DISPSTR("OK"));
+                }
+                else
+                {
+                    ec = ErrorCode(omw::windows::EC_INTERNAL, OMWi_DISPSTR("unable to convert back to UTF-8 string (" + ec.msg() + ")"));
+                    value.clear();
+                }
+
+                proc = false;
             }
         }
     }
