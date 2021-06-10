@@ -4,7 +4,7 @@ date        09.06.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#include "windows/string.h"
+#include "omw/windows/string.h"
 
 #ifdef OMW_PLAT_WIN
 
@@ -12,9 +12,9 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
-#include "defs.h"
-#include "windows/error.h"
-#include "windows/exception.h"
+#include "omw/defs.h"
+#include "omw/windows/error.h"
+#include "omw/windows/exception.h"
 
 //! @brief Converts an UTF-8 string to a Windows API compatible wide string.
 //! @param src The input string

@@ -4,7 +4,7 @@ date        09.06.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#include "windows/exception.h"
+#include "omw/windows/exception.h"
 
 #if OMW_PLAT_WIN
 

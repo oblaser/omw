@@ -9,8 +9,8 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <string>
 
-#include "defs.h"
-#include "version.h"
+#include "omw/defs.h"
+#include "omw/version.h"
 
 namespace omw
 {

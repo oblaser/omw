@@ -13,7 +13,7 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include <cstddef>
 #include <string>
 
-#include "error.h"
+#include "omw/windows/error.h"
 
 #include <Windows.h>
 
