@@ -32,17 +32,28 @@ TEST_CASE("omw lib")
 
 TEST_CASE("omw/string.h")
 {
-    CHECK(omw::string("+\"*%&/()=asdf(fdsf)").getUrlEncoded() == "%2B%22%2A%25%26%2F%28%29%3Dasdf%28fdsf%29");
-
     const char str[] = "a boy with a hat";
+
+    //omw::basic_string<char> replFirst(str);
     omw::string replFirst(str);
-    omw::string replAll(str);
 
     replFirst.replaceFirst("a", "#", 5);
-    replAll.replaceAll("a", "#");
-    CHECK(replFirst == "a boy with # hat");
-    CHECK(replAll == "# boy with # h#t");
+    //CHECK(replFirst == "a boy with # hat");
 
-    replAll.replaceAll(" ", "_", 6);
-    CHECK(replAll == "# boy with_#_h#t");
+
+
+
+
+    /*CHECK(omw::OMWi_string("+\"*%&/()=asdf(fdsf)").getUrlEncoded() == "%2B%22%2A%25%26%2F%28%29%3Dasdf%28fdsf%29");
+
+    omw::OMWi_string OMWi_replFirst(str);
+    omw::OMWi_string OMWi_replAll(str);
+
+    OMWi_replFirst.replaceFirst("a", "#", 5);
+    OMWi_replAll.replaceAll("a", "#");
+    CHECK(OMWi_replFirst == "a boy with # hat");
+    CHECK(OMWi_replAll == "# boy with # h#t");
+
+    OMWi_replAll.replaceAll(" ", "_", 6);
+    CHECK(OMWi_replAll == "# boy with_#_h#t");*/
 }
