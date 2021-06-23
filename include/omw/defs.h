@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           09.06.2021
+date           21.06.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -9,12 +9,12 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 
 // platform
-#ifdef _WIN32
-//! Defined as 1 if `_WIN32` is defined. Otherwise, undefined.
+#if (defined(_WIN32) && !defined(_WIN64))
+//! Defined as 1 if target is x86 Windows. Otherwise, undefined.
 #define OMW_PLAT_WIN32 (1)
 #endif
 #ifdef _WIN64
-//! Defined as 1 if `_WIN64` is defined. Otherwise, undefined.
+//! Defined as 1 if target is x64 Windows. Otherwise, undefined.
 #define OMW_PLAT_WIN64 (1)
 #endif
 #ifdef __unix__

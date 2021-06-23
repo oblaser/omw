@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           10.06.2021
+date           11.06.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -62,6 +62,13 @@ omw::string& omw::string::replaceAll(const omw::string& search, char replace, si
 {
     const char repl[2] = { replace, 0 };
     return replaceAll(search, repl, startPos, occ);
+}
+
+omw::string& omw::string::replaceAll(char search, char replace, omw::string::size_type startPos, size_t* occ)
+{
+    const char src[2] = { search, 0 };
+    const char repl[2] = { replace, 0 };
+    return replaceAll(src, repl, startPos, occ);
 }
 
 omw::string& omw::string::replaceAll(const omw::string* search, const omw::string* replace, size_t count, size_t startPos, size_t* occ)

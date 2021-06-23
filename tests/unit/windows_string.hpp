@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           09.06.2021
+date           11.06.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -12,6 +12,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include <catch2/catch.hpp>
 #include <omw/windows/string.h>
@@ -66,17 +67,15 @@ TEST_CASE("omw::windows::wstr_to_utf8(LPCWCH, std::string&, ErrorCode&) stress b
     {
 
         const size_t wStringSize = wss[iTest];
-        WCHAR* wString = new WCHAR[wStringSize];
+        std::vector<WCHAR> wString(wStringSize, 0);
 
-        for (size_t i = 0; i < wStringSize; ++i) wString[i] = (L'a' + (i % 26));
-        wString[wStringSize - 1] = 0;
+        for (size_t i = 0; i < wString.size(); ++i) wString[i] = (L'a' + (i % 26));
+        wString[wString.size() - 1] = 0;
 
         omw::windows::ErrorCode ec;
         std::string string;
 
-        omw::windows::wstr_to_utf8(wString, string, ec);
-
-        delete[] wString;
+        omw::windows::wstr_to_utf8(wString.data(), string, ec);
 
         CHECK(ec.code() == omw::windows::EC_OK);
         CHECK(string.length() == (wStringSize - 1));
