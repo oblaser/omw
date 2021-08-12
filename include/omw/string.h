@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           11.06.2021
+date           12.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -14,6 +14,9 @@ namespace omw
 {
     class string : public std::string
     {
+    public:
+        static bool isValidUTF8(const omw::string& str);
+
     public:
         string();
         string(const char* str);
@@ -33,6 +36,8 @@ namespace omw
         //virtual omw::string& replaceAll(const char* search, const char* replace, omw::string::size_type count, omw::string::size_type startPos = 0, size_t* occ = nullptr);
 
         virtual omw::string getUrlEncoded() const;
+
+        bool isValidUTF8() const;
     };
 }
 

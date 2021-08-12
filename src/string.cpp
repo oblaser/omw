@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           11.06.2021
+date           12.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -10,6 +10,11 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include "omw/string.h"
 
 
+
+bool omw::string::isValidUTF8(const omw::string& str)
+{
+    return str.isValidUTF8();
+}
 
 omw::string::string()
     : std::string()
