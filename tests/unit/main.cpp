@@ -17,7 +17,7 @@ TEST_CASE("omw lib")
     CHECK(omw::info::version() == omw::Version(0, 0, 0));
 
     std::cout << std::endl << "Testing OMW ..." << std::endl;
-    
+
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 }
 
@@ -35,7 +35,7 @@ TEST_CASE("omw/string.h")
     const char str[] = "a boy with a hat";
 
     //omw::basic_string<char> replFirst(str);
-    omw::string replFirst(str);
+    omw::string replFirst = str;
 
     replFirst.replaceFirst("a", "#", 5);
     //CHECK(replFirst == "a boy with # hat");

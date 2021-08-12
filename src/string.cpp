@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           10.06.2021
+date           12.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -11,8 +11,46 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 
 
+/*!
+* \class omw::Basic_StringReplacePair
+* \brief
+*/
+
 template<class CharT, class Traits, class Allocator>
-inline omw::basic_string<CharT, Traits, Allocator>::basic_string()
+omw::Basic_StringReplacePair<CharT, Traits, Allocator>::Basic_StringReplacePair()
+    : searchString(), replaceString()
+{
+}
+
+template<class CharT, class Traits, class Allocator>
+omw::Basic_StringReplacePair<CharT, Traits, Allocator>::Basic_StringReplacePair(const std::basic_string<CharT, Traits, Allocator>& search, const std::basic_string<CharT, Traits, Allocator>& replace)
+    : searchString(search), replaceString(replace)
+{
+}
+
+template<class CharT, class Traits, class Allocator>
+const std::basic_string<CharT, Traits, Allocator>& omw::Basic_StringReplacePair<CharT, Traits, Allocator>::searchStr() const
+{
+    return searchString;
+}
+
+template<class CharT, class Traits, class Allocator>
+const std::basic_string<CharT, Traits, Allocator>& omw::Basic_StringReplacePair<CharT, Traits, Allocator>::replaceStr() const
+{
+    return replaceString;
+}
+
+
+
+/*!
+* \class omw::basic_string
+* \brief A with `std::basic_string` interchangeable class to add more functionalities.
+*
+* This class does not override/implement any virtual methods of the base class. So it's a `std::basic_string` with some more methods.
+*/
+
+template<class CharT, class Traits, class Allocator>
+omw::basic_string<CharT, Traits, Allocator>::basic_string()
     : std::basic_string()
 {
 }
@@ -24,19 +62,58 @@ omw::basic_string<CharT, Traits, Allocator>::basic_string(const CharT* str)
 }
 
 template<class CharT, class Traits, class Allocator>
-omw::basic_string<CharT, Traits, Allocator>& omw::basic_string<CharT, Traits, Allocator>::replaceFirst(const omw::basic_string<CharT, Traits, Allocator>& search, const omw::basic_string<CharT, Traits, Allocator>& replace, omw::basic_string<CharT, Traits, Allocator>::size_type startPos)
+omw::basic_string<CharT, Traits, Allocator>& omw::basic_string<CharT, Traits, Allocator>::replaceFirst(const omw::basic_string<CharT, Traits, Allocator>& search, const omw::basic_string<CharT, Traits, Allocator>& replace, size_type startPos)
 {
     size_type pos = find(search, startPos);
     if ((pos < length()) && (pos != npos)) this->replace(pos, search.length(), replace);
     return *this;
 }
 
+template<class CharT, class Traits, class Allocator>
+inline omw::basic_string<CharT, Traits, Allocator>& omw::basic_string<CharT, Traits, Allocator>::replaceFirst(const StringReplacePair_type& pair, size_type startPos)
+{
+    return replaceFirst(pair.searchStr(), pair.replaceStr(), startPos);
+}
+
+template<class CharT, class Traits, class Allocator>
+omw::basic_string<CharT, Traits, Allocator>& omw::basic_string<CharT, Traits, Allocator>::replaceAll(const omw::basic_string<CharT, Traits, Allocator>& search, const omw::basic_string<CharT, Traits, Allocator>& replace, size_type startPos, size_type* cntReplacements)
+{
+    size_type cnt = 0;
+
+    if ((search.length() > 0) || (replace.length() > 0))
+    {
+        size_type pos = find(search, startPos);
+        while ((pos < length()) && (pos != npos))
+        {
+            this->replace(pos, search.length(), replace);
+            ++cnt;
+            pos = find(search, pos + replace.length());
+        }
+    }
+
+    if (cntReplacements) *cntReplacements = cnt;
+
+    return *this;
+}
+
+
+
+/*!
+* \class omw::string
+* \brief An implementation of `omw::basic_string`.
+*/
+
+
+
+
+
+
 
 
 /*!
 * \class omw::OMWi_string
 * \brief A with `std::string` interchangeable class to add more functionalities.
-* 
+*
 * This class does not override/implement any virtual methods of the base class. So it's a `std::string` with some more methods.
 */
 
