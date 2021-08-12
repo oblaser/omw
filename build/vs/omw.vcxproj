@@ -133,6 +133,7 @@
     <ClCompile Include="..\..\src\windows\envVar.cpp" />
     <ClCompile Include="..\..\src\windows\error.cpp" />
     <ClCompile Include="..\..\src\windows\exception.cpp" />
+    <ClCompile Include="..\..\src\windows\resources.cpp" />
     <ClCompile Include="..\..\src\windows\string.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +144,8 @@
     <ClInclude Include="..\..\include\omw\windows\envVar.h" />
     <ClInclude Include="..\..\include\omw\windows\error.h" />
     <ClInclude Include="..\..\include\omw\windows\exception.h" />
+    <ClInclude Include="..\..\include\omw\windows\resources.h" />
+    <ClInclude Include="..\..\include\omw\windows\resources_rc.h" />
     <ClInclude Include="..\..\include\omw\windows\string.h" />
     <ClInclude Include="..\..\src\config.h" />
   </ItemGroup>
