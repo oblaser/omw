@@ -79,11 +79,18 @@ omw::string& omw::string::replaceFirst(const omw::string& search, const omw::str
     if ((pos < length()) && (pos != std::string::npos)) this->replace(pos, search.length(), replace);
     return *this;
 }
+
 inline omw::string& omw::string::replaceFirst(const omw::StringReplacePair& pair, size_type startPos)
 {
     return replaceFirst(pair.search(), pair.replace(), startPos);
 }
 
+//! @brief 
+//! @param search 
+//! @param replace 
+//! @param startPos 
+//! @param [out] nReplacements 
+//! @return 
 omw::string& omw::string::replaceAll(const omw::string& search, const omw::string& replace, size_type startPos, size_type* nReplacements)
 {
     size_type cnt = 0;
@@ -104,10 +111,23 @@ omw::string& omw::string::replaceAll(const omw::string& search, const omw::strin
 
     return *this;
 }
+
+//! @brief 
+//! @param pair 
+//! @param startPos 
+//! @param [out] nReplacements 
+//! @return 
 inline omw::string& omw::string::replaceAll(const omw::StringReplacePair& pair, size_type startPos, size_type* nReplacements)
 {
     return replaceAll(pair.search(), pair.replace(), startPos, nReplacements);
 }
+
+//! @brief 
+//! @param pairs 
+//! @param startPos 
+//! @param [out] nReplacementsTotal 
+//! @param [out] nReplacements 
+//! @return 
 inline omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
 {
     bool allInvalid = true;
@@ -134,6 +154,13 @@ inline omw::string& omw::string::replaceAll(const std::vector<omw::StringReplace
     return *this;
 }
 
+//! @brief 
+//! @param pairsBegin 
+//! @param pairsEnd 
+//! @param startPos 
+//! @param [out] nReplacementsTotal 
+//! @param [out] nReplacements 
+//! @return 
 inline omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairsBegin, const omw::StringReplacePair* pairsEnd, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
 {
     return replaceAll(std::vector<omw::StringReplacePair>(pairsBegin, pairsEnd), startPos, nReplacementsTotal, nReplacements);

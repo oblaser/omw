@@ -71,7 +71,7 @@
     <ClInclude Include="..\..\include\omw\windows\resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\omw\windows\resources_rc.h">
+    <ClInclude Include="..\..\include\omw\windows\resourceTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

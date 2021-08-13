@@ -30,7 +30,7 @@ omw::windows::ErrorCode::~ErrorCode()
 }
 
 //! @brief Getter for the error code.
-//! @return The actual error code
+//! @return The error code
 int omw::windows::ErrorCode::code() const
 {
     return errorCode;
@@ -44,18 +44,21 @@ const std::string& omw::windows::ErrorCode::msg() const
 }
 
 //! @brief 
-//! @return 
-//! 
-//! Returns `true` if `omw::windows::ErrorCode::code() == omw::windows::EC_OK`.
+//! @return  `true` if `code() == omw::windows::EC_OK`
 //! 
 bool omw::windows::ErrorCode::good() const
 {
     return (code() == omw::windows::EC_OK);
 }
 
+std::string omw::windows::ErrorCode::toString() const
+{
+    return std::to_string(code()) + OMWi_DISPSTR(" - ") + msg();
+}
+
 std::ostream& omw::windows::operator<<(std::ostream& os, const ErrorCode& ec)
 {
-    os << ec.code() << OMWi_DISPSTR(" - ") << ec.msg();
+    os << ec.toString();
     return os;
 }
 

@@ -40,11 +40,20 @@ int omw::Version::rev() const
     return version[2];
 }
 
+//! @brief 
+//! @return Pointer to the underlaying `int` array.
+//! 
+//! \[0]: major<br/>
+//! \[1]: minor<br/>
+//! \[2]: revision<br/>
+//! 
 const int* omw::Version::data() const
 {
     return version;
 }
 
+//! @brief 
+//! @return Size of the underlaying `int` array (allways 3).
 size_t omw::Version::size() const
 {
     return dataSize;
@@ -57,8 +66,8 @@ std::vector<int> omw::Version::toVector() const
     return v;
 }
 
-//! @brief Returns a `major.minor.revision` formatted string.
-//! @return 
+//! @brief 
+//! @return A `major.minor.revision` formatted string.
 std::string omw::Version::toString() const
 {
     return std::to_string(version[0]) + '.' + std::to_string(version[1]) + '.' + std::to_string(version[2]);

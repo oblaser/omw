@@ -46,6 +46,8 @@ namespace omw
 
             virtual bool good() const;
 
+            std::string toString() const;
+
             friend std::ostream& operator<<(std::ostream& os, const ErrorCode& ec);
 
         private:

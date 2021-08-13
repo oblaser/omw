@@ -14,38 +14,19 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include <vector>
 
 #include "omw/windows/exception.h"
-#include "omw/windows/resources_rc.h"
 
 #include <Windows.h>
 
 
 
-std::vector<uint8_t> omw::windows::getBinaryResource(int idr)
-{
-    return getResource(idr, OMW_RCT_BINFILE);
-}
-
-std::vector<uint8_t> omw::windows::getBinaryResource(int idr, omw::windows::ErrorCode& ec) noexcept
-{
-    return getResource(idr, OMW_RCT_BINFILE, ec);
-}
-
-std::string omw::windows::getTextResource(int idr)
-{
-    size_t size;
-    const char* data = (const char*)getResource(idr, OMW_RCT_TEXTFILE, &size);
-
-    return std::string(data, data + size);
-}
-
-std::string omw::windows::getTextResource(int idr, omw::windows::ErrorCode& ec) noexcept
-{
-    size_t size;
-    const char* data = (const char*)getResource(idr, OMW_RCT_TEXTFILE, &size, ec);
-
-    return std::string(data, data + size);
-}
-
+//! @brief 
+//! @param idr 
+//! @param type 
+//! @param [out] size Number of bytes
+//! @return Pointer to the byte array
+//! 
+//! Throwing function, see \ref omw_windows_getResrc_infoText.
+//! 
 const uint8_t* omw::windows::getResource(int idr, int type, size_t* size)
 {
     ErrorCode ec;
@@ -58,6 +39,12 @@ const uint8_t* omw::windows::getResource(int idr, int type, size_t* size)
     throw std::runtime_error(ec.msg());
 }
 
+//! @brief 
+//! @param idr 
+//! @param type 
+//! @param [out] size Number of bytes
+//! @param [out] ec 
+//! @return Pointer to the byte array
 const uint8_t* omw::windows::getResource(int idr, int type, size_t* size, omw::windows::ErrorCode& ec) noexcept
 {
     const uint8_t* data = nullptr;
@@ -82,6 +69,13 @@ const uint8_t* omw::windows::getResource(int idr, int type, size_t* size, omw::w
     return data;
 }
 
+//! @brief 
+//! @param idr 
+//! @param type 
+//! @return 
+//! 
+//! Throwing function, see \ref omw_windows_getResrc_infoText.
+//! 
 std::vector<uint8_t> omw::windows::getResource(int idr, int type)
 {
     size_t size;
@@ -90,6 +84,11 @@ std::vector<uint8_t> omw::windows::getResource(int idr, int type)
     return std::vector<uint8_t>(data, data + size);
 }
 
+//! @brief 
+//! @param idr 
+//! @param type 
+//! @param [out] ec 
+//! @return 
 std::vector<uint8_t> omw::windows::getResource(int idr, int type, omw::windows::ErrorCode& ec) noexcept
 {
     std::vector<uint8_t> r;
@@ -101,15 +100,54 @@ std::vector<uint8_t> omw::windows::getResource(int idr, int type, omw::windows::
     return r;
 }
 
-int omw::windows::getResourceTypeBin()
+
+
+//! @brief 
+//! @param idr 
+//! @return 
+//! 
+//! Throwing function, see \ref omw_windows_getResrc_infoText.
+//! 
+std::vector<uint8_t> omw::windows::getBinaryResource(int idr)
 {
-    return OMW_RCT_BINFILE;
+    return getResource(idr, OMW_RCT_BINFILE);
 }
 
-int omw::windows::getResourceTypeText()
+//! @brief 
+//! @param idr 
+//! @param [out] ec 
+//! @return 
+std::vector<uint8_t> omw::windows::getBinaryResource(int idr, omw::windows::ErrorCode& ec) noexcept
 {
-    return OMW_RCT_TEXTFILE;
+    return getResource(idr, OMW_RCT_BINFILE, ec);
 }
+
+//! @brief 
+//! @param idr 
+//! @return 
+//! 
+//! Throwing function, see \ref omw_windows_getResrc_infoText.
+//! 
+std::string omw::windows::getTextResource(int idr)
+{
+    size_t size;
+    const char* data = (const char*)getResource(idr, OMW_RCT_TEXTFILE, &size);
+
+    return std::string(data, data + size);
+}
+
+//! @brief 
+//! @param idr 
+//! @param [out] ec 
+//! @return 
+std::string omw::windows::getTextResource(int idr, omw::windows::ErrorCode& ec) noexcept
+{
+    size_t size;
+    const char* data = (const char*)getResource(idr, OMW_RCT_TEXTFILE, &size, ec);
+
+    return std::string(data, data + size);
+}
+
 
 
 #endif // OMW_PLAT_WIN

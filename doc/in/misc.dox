@@ -27,12 +27,27 @@ Also read the \ref mainpage_conventions_strings section on the <i>Main Page</i>.
 
 
 
+\section omw_windows_getResrc_infoText Get Resources
+
+The overloads of `getResource()` with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
+Possible code values:
+ - `omw::windows::EC_OK`
+ - `omw::windows::EC_RESOURCE_NOT_FOUND`
+ - `omw::windows::EC_RESOURCE_NOT_LOADED`
+
+The other overloads can throw
+ - `omw::windows::resource_not_found` if the resource could not be found
+ - `std::runtime_error` if the resource could not be loaded or on C++ standard runtime errors
+
+
+
+
 \section omw_windows_strConv_infoText String Conversion Functions
 
 The functions `utf8_to_wstr()` and `wstr_to_utf8()` are used to convert between UTF-8 `char` strings used by this library
 and `WCHAR` strings used in the Windows API. Both do have several overloads.
 
-The overloads with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.code() == omw::windows::EC_OK`.
+The overloads with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
 Possible code values:
  - `omw::windows::EC_OK`
  - `omw::windows::EC_INV_ARG`
