@@ -4,17 +4,54 @@ date           12.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#include <cstddef>
 #include <string>
+#include <vector>
 
 #include "omw/string.h"
 
 
 
-bool omw::string::isValidUTF8(const omw::string& str)
+omw::StringReplacePair::StringReplacePair()
+    : searchElem(), replaceElem()
 {
-    return str.isValidUTF8();
 }
+
+omw::StringReplacePair::StringReplacePair(const std::string& searchElement, const std::string& replaceElement)
+    : searchElem(searchElement), replaceElem(replaceElement)
+{
+}
+
+omw::StringReplacePair::StringReplacePair(const char searchElement, const std::string& replaceElement)
+    : searchElem(1, searchElement), replaceElem(replaceElement)
+{
+}
+
+omw::StringReplacePair::StringReplacePair(const std::string& searchElement, const char replaceElement)
+    : searchElem(searchElement), replaceElem(1, replaceElement)
+{
+}
+
+omw::StringReplacePair::StringReplacePair(const char searchElement, const char replaceElement)
+    : searchElem(1, searchElement), replaceElem(1, replaceElement)
+{
+}
+
+const std::string& omw::StringReplacePair::search() const
+{
+    return searchElem;
+}
+
+const std::string& omw::StringReplacePair::replace() const
+{
+    return replaceElem;
+}
+
+
+
+//bool omw::string::isValidUTF8(const omw::string& str)
+//{
+//    return str.isValidUTF8();
+//}
 
 omw::string::string()
     : std::string()
@@ -31,20 +68,29 @@ omw::string::string(const std::string& str)
 {
 }
 
-omw::string& omw::string::replaceFirst(const omw::string& search, const omw::string& replace, size_t startPos)
+omw::string::string(const char* first, const char* last)
+    : std::string(first, last)
 {
-    size_t pos = find(search, startPos);
+}
+
+omw::string& omw::string::replaceFirst(const omw::string& search, const omw::string& replace, size_type startPos)
+{
+    size_type pos = find(search, startPos);
     if ((pos < length()) && (pos != std::string::npos)) this->replace(pos, search.length(), replace);
     return *this;
 }
-
-omw::string& omw::string::replaceAll(const omw::string& search, const omw::string& replace, size_t startPos, size_t* occ)
+inline omw::string& omw::string::replaceFirst(const omw::StringReplacePair& pair, size_type startPos)
 {
-    size_t cnt = 0;
+    return replaceFirst(pair.search(), pair.replace(), startPos);
+}
+
+omw::string& omw::string::replaceAll(const omw::string& search, const omw::string& replace, size_type startPos, size_type* nReplacements)
+{
+    size_type cnt = 0;
 
     if (search.length() > 0)
     {
-        size_t pos = find(search, startPos);
+        size_type pos = find(search, startPos);
         while ((pos < length()) && (pos != std::string::npos))
         {
             this->replace(pos, search.length(), replace);
@@ -52,83 +98,62 @@ omw::string& omw::string::replaceAll(const omw::string& search, const omw::strin
             pos = find(search, pos + replace.length());
         }
     }
+    else cnt = npos;
 
-    if (occ) *occ = cnt;
+    if (nReplacements) *nReplacements = cnt;
+
     return *this;
 }
-
-omw::string& omw::string::replaceAll(char search, const omw::string& replace, size_t startPos, size_t* occ)
+inline omw::string& omw::string::replaceAll(const omw::StringReplacePair& pair, size_type startPos, size_type* nReplacements)
 {
-    const char srch[2] = { search, 0 };
-    return replaceAll(srch, replace, startPos, occ);
+    return replaceAll(pair.search(), pair.replace(), startPos, nReplacements);
 }
-
-omw::string& omw::string::replaceAll(const omw::string& search, char replace, size_t startPos, size_t* occ)
+inline omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
 {
-    const char repl[2] = { replace, 0 };
-    return replaceAll(search, repl, startPos, occ);
-}
+    bool allInvalid = true;
+    size_type cnt = 0;
+    size_type tmpCnt;
 
-omw::string& omw::string::replaceAll(char search, char replace, omw::string::size_type startPos, size_t* occ)
-{
-    const char src[2] = { search, 0 };
-    const char repl[2] = { replace, 0 };
-    return replaceAll(src, repl, startPos, occ);
-}
+    if (nReplacements) *nReplacements = std::vector<size_type>(pairs.size(), npos);
 
-omw::string& omw::string::replaceAll(const omw::string* search, const omw::string* replace, size_t count, size_t startPos, size_t* occ)
-{
-    size_t cnt = 0;
-
-    for (size_t i = 0; i < count; ++i)
+    for (size_t i = 0; i < pairs.size(); ++i)
     {
-        size_t tmpCnt;
-        replaceAll(search[i], replace[i], startPos, &tmpCnt);
-        cnt += tmpCnt;
+        replaceAll(pairs[i], startPos, &tmpCnt);
+        if (nReplacements) nReplacements->at(i) = tmpCnt;
+        if (tmpCnt != npos)
+        {
+            cnt += tmpCnt;
+            allInvalid = false;
+        }
     }
 
-    if (occ) *occ = cnt;
+    if (allInvalid) cnt = npos;
+
+    if (nReplacementsTotal) *nReplacementsTotal = cnt;
+
     return *this;
 }
 
-omw::string& omw::string::replaceAll(const char* search, const omw::string* replace, size_t count, size_t startPos, size_t* occ)
+inline omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairsBegin, const omw::StringReplacePair* pairsEnd, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
 {
-    size_t cnt = 0;
-
-    for (size_t i = 0; i < count; ++i)
-    {
-        size_t tmpCnt;
-        replaceAll(search[i], replace[i], startPos, &tmpCnt);
-        cnt += tmpCnt;
-    }
-
-    if (occ) *occ = cnt;
-    return *this;
+    return replaceAll(std::vector<omw::StringReplacePair>(pairsBegin, pairsEnd), startPos, nReplacementsTotal, nReplacements);
 }
 
-omw::string& omw::string::replaceAll(const omw::string* search, const char* replace, size_t count, size_t startPos, size_t* occ)
-{
-    size_t cnt = 0;
-
-    for (size_t i = 0; i < count; ++i)
-    {
-        size_t tmpCnt;
-        replaceAll(search[i], replace[i], startPos, &tmpCnt);
-        cnt += tmpCnt;
-    }
-
-    if (occ) *occ = cnt;
-    return *this;
-}
-
-omw::string omw::string::getUrlEncoded() const
+omw::string& omw::string::makeUrlEncoded()
 {
     const size_t count = 61;
     const char search[count] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 47, 58, 59, 60, 61, 62, 63, 64, 91, 92, 93, 94, 96, 123, 124, 125, 127 };
     const omw::string replace[count] = { "%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07", "%08", "%09", "%0A", "%0B", "%0C", "%0D", "%0E", "%0F", "%10", "%11", "%12", "%13", "%14", "%15", "%16", "%17", "%18", "%19", "%1A", "%1B", "%1C", "%1D", "%1E", "%1F", "%20", "%21", "%22", "%23", "%24", "%26", "%27", "%28", "%29", "%2A", "%2B", "%2C", "%2F", "%3A", "%3B", "%3C", "%3D", "%3E", "%3F", "%40", "%5B", "%5C", "%5D", "%5E", "%60", "%7B", "%7C", "%7D", "%7F" };
+    
+    replaceAll("%", "%25", 0, nullptr);
+    for (size_t i = 0; i < count; ++i) replaceAll(omw::StringReplacePair(search[i], replace[i]), 0, nullptr);
 
-    omw::string r(*this);
-    r.replaceAll('%', "%25", 0, nullptr);
-    r.replaceAll(search, replace, count, 0, nullptr);
-    return r;
+    return *this;
+}
+
+inline omw::string omw::string::getUrlEncoded() const
+{
+    omw::string s(this->c_str());
+    s.makeUrlEncoded();
+    return s;
 }

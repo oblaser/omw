@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           10.06.2021
+date           13.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -10,7 +10,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include <omw/defs.h>
 #ifdef OMW_PLAT_WIN
 
-#include <cstdint>
+#include <cctype>
 #include <string>
 
 #include <catch2/catch.hpp>
@@ -18,7 +18,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 
 
-TEST_CASE("omw::windows::getEnvironmentVariable() ")
+TEST_CASE("omw::windows::getEnvironmentVariable()")
 {
     omw::windows::ErrorCode ec;
     std::string value;
@@ -30,6 +30,15 @@ TEST_CASE("omw::windows::getEnvironmentVariable() ")
     value = omw::windows::getEnvironmentVariable("windir", ec);
     CHECK(ec.code() == omw::windows::EC_OK);
     CHECK(value.length() == 10);
+
+    for (size_t i = 0; i < value.length(); ++i)
+    {
+        unsigned char c = value[i];
+        c = std::tolower(c);
+        value[i] = c;
+    }
+
+    CHECK(std::string(":\\windows") == std::string(value, 1));
 }
 
 

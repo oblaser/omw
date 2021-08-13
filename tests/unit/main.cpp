@@ -14,11 +14,17 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 TEST_CASE("omw lib")
 {
-    CHECK(omw::info::version() == omw::Version(0, 0, 0));
-
     std::cout << std::endl << "Testing OMW ..." << std::endl;
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
+
+    int revision = 0;
+
+#ifdef _DEBUG
+    revision += 1000;
+#endif
+
+    CHECK(omw::info::version() == omw::Version(0, 1, revision));
 }
 
 
