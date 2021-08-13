@@ -1,6 +1,6 @@
 /*
 author      Oliver Blaser
-date        09.06.2021
+date        13.08.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -33,6 +33,15 @@ namespace omw
             explicit invalid_unicode(const std::string& message) : std::runtime_error(message) {}
             explicit invalid_unicode(const char* message) : std::runtime_error(message) {}
             virtual ~invalid_unicode() {}
+        };
+
+        class resource_not_found : public std::runtime_error
+        {
+        public:
+            resource_not_found() = delete;
+            explicit resource_not_found(const std::string& message) : std::runtime_error(message) {}
+            explicit resource_not_found(const char* message) : std::runtime_error(message) {}
+            virtual ~resource_not_found() {}
         };
     }
 }

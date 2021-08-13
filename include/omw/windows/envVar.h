@@ -24,7 +24,7 @@ namespace omw
         constexpr size_t envVarValueMaxSize = 32767;
 
         std::string getEnvironmentVariable(const std::string& varName);
-        std::string getEnvironmentVariable(const std::string& varName, ErrorCode& ec) noexcept;
+        std::string getEnvironmentVariable(const std::string& varName, omw::windows::ErrorCode& ec) noexcept;
     }
 }
 

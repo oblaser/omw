@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           09.06.2021
+date           13.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -37,6 +37,13 @@ According to <a href="http://utf8everywhere.org/" target="_blank">UTF-8 Everywhe
 If you call functions in the Windows API you should use the <tt>foobar<b>W</b>()</tt> functions and Microsofts `WCHAR` types to call the API and
 use the \ref omw_windows_strConv_infoText (<i>omw/windows/string.h</i>) to convert between the two string types. An example can be seen in
 the sourcecode of the `omw::windows::getEnvironmentVariable()` function.
+
+
+
+\section mainpage_links Links
+- <a href="https://github.com/oblaser/omw" target="_blank">GitHub</a>
+- <a href="https://static.oblaser.ch/omw/doc/" target="_blank">Docs</a>
+- <a href="https://static.oblaser.ch/omw/download/" target="_blank">Downloads</a>
 
 
 

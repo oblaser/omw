@@ -1,0 +1,14 @@
+//
+// author         Oliver Blaser
+// date           13.08.2021
+// copyright      MIT - Copyright (c) 2021 Oliver Blaser
+//
+
+#include "resources.h"
+#include <omw/windows/resources_rc.h>
+
+// the alphabetical first ICON is used by Windows as app icon
+AAAAA_MainIcon ICON "icon.ico"
+
+IDR_MYTEXTFILE OMW_RCT_TEXTFILE "..\\myTextFile.txt"
+IDR_MYBINARYFILE OMW_RCT_BINFILE "myBinFile.hxd"
