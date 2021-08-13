@@ -1,0 +1,3 @@
+﻿Some text in the myTextFile resource.
+The file is saved as UTF-8 with BOM.
+Some non-ASCII letters: ä ö ü ¨ °

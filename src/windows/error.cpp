@@ -1,6 +1,6 @@
 /*
 author      Oliver Blaser
-date        09.06.2021
+date        13.08.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -41,6 +41,16 @@ int omw::windows::ErrorCode::code() const
 const std::string& omw::windows::ErrorCode::msg() const
 {
     return errorMsg;
+}
+
+//! @brief 
+//! @return 
+//! 
+//! Returns `true` if `omw::windows::ErrorCode::code() == omw::windows::EC_OK`.
+//! 
+bool omw::windows::ErrorCode::good() const
+{
+    return (code() == omw::windows::EC_OK);
 }
 
 std::ostream& omw::windows::operator<<(std::ostream& os, const ErrorCode& ec)

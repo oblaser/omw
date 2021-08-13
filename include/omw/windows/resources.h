@@ -1,6 +1,6 @@
 /*
 author      Oliver Blaser
-date        28.06.2021
+date        13.08.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -10,46 +10,28 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include "../../omw/defs.h"
 #ifdef OMW_PLAT_WIN
 
-#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <vector>
+
+#include "../../omw/windows/error.h"
+
+
 
 namespace omw
 {
     namespace windows
     {
-        template <typename DataType, typename SizeType = size_t>
-        class Basic_Resource
-        {
-        public:
-            using size_type = SizeType;
+        std::vector<uint8_t> getBinaryResource(int idr);
+        std::vector<uint8_t> getBinaryResource(int idr, omw::windows::ErrorCode& ec) noexcept;
+        std::string getTextResource(int idr);
+        std::string getTextResource(int idr, omw::windows::ErrorCode& ec) noexcept;
 
-        public:
-            Basic_Resource();
-            Basic_Resource(int idr, int type);
-            virtual ~Basic_Resource() {}
-            
-            const DataType* begin() const;
-            const DataType* data() const;
-            const DataType* end() const;
-            size_type size() const;
+        const uint8_t* getResource(int idr, int type, size_t* size);
+        const uint8_t* getResource(int idr, int type, size_t* size, omw::windows::ErrorCode& ec) noexcept;
+        std::vector<uint8_t> getResource(int idr, int type);
+        std::vector<uint8_t> getResource(int idr, int type, omw::windows::ErrorCode& ec) noexcept;
 
-        protected:
-            virtual void load(int idr, int type);
-
-        protected:
-            const void* resData;
-            size_type resSize;
-        };
-
-        using BinaryResource = omw::windows::Basic_Resource<uint8_t>;
-        using StringResource = omw::windows::Basic_Resource<char>;
-
-        omw::windows::BinaryResource getBinaryResource(int idr);
-        omw::windows::StringResource getStringResource(int idr);
-
-        std::vector<char> getResource(int idr, int type);
         int getResourceTypeBin();
         int getResourceTypeText();
     }

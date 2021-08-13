@@ -1,6 +1,6 @@
 /*
 author      Oliver Blaser
-date        28.06.2021
+date        13.08.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -13,88 +13,92 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "omw/windows/exception.h"
 #include "omw/windows/resources_rc.h"
 
 #include <Windows.h>
 
 
 
-template<typename DataType, typename SizeType>
-inline omw::windows::Basic_Resource<DataType, SizeType>::Basic_Resource()
-    : resData(nullptr), resSize(0)
+std::vector<uint8_t> omw::windows::getBinaryResource(int idr)
 {
+    return getResource(idr, OMW_RCT_BINFILE);
 }
 
-template<typename DataType, typename SizeType>
-omw::windows::Basic_Resource<DataType, SizeType>::Basic_Resource(int idr, int type)
-    : resData(nullptr), resSize(0)
+std::vector<uint8_t> omw::windows::getBinaryResource(int idr, omw::windows::ErrorCode& ec) noexcept
 {
-    load(idr, type);
+    return getResource(idr, OMW_RCT_BINFILE, ec);
 }
 
-template<typename DataType, typename SizeType>
-const DataType* omw::windows::Basic_Resource<DataType, SizeType>::begin() const
+std::string omw::windows::getTextResource(int idr)
 {
-    return resData;
+    size_t size;
+    const char* data = (const char*)getResource(idr, OMW_RCT_TEXTFILE, &size);
+
+    return std::string(data, data + size);
 }
 
-template<typename DataType, typename SizeType>
-const DataType* omw::windows::Basic_Resource<DataType, SizeType>::data() const
+std::string omw::windows::getTextResource(int idr, omw::windows::ErrorCode& ec) noexcept
 {
-    return resData;
+    size_t size;
+    const char* data = (const char*)getResource(idr, OMW_RCT_TEXTFILE, &size, ec);
+
+    return std::string(data, data + size);
 }
 
-template<typename DataType, typename SizeType>
-const DataType* omw::windows::Basic_Resource<DataType, SizeType>::end() const
+const uint8_t* omw::windows::getResource(int idr, int type, size_t* size)
 {
-    return resData + resSize;
+    ErrorCode ec;
+    const uint8_t* data = getResource(idr, type, size, ec);
+
+    if (ec.good()) return data;
+    else if (ec.code() == omw::windows::EC_RESOURCE_NOT_FOUND) throw omw::windows::resource_not_found(ec.msg());
+    // else nop (EC_RESOURCE_NOT_LOADED throws std::runtime_error)
+
+    throw std::runtime_error(ec.msg());
 }
 
-template<typename DataType, typename SizeType>
-SizeType omw::windows::Basic_Resource<DataType, SizeType>::size() const
+const uint8_t* omw::windows::getResource(int idr, int type, size_t* size, omw::windows::ErrorCode& ec) noexcept
 {
-    return resSize;
+    const uint8_t* data = nullptr;
+
+    HMODULE handle = GetModuleHandleW(NULL);
+    HRSRC rc = FindResourceW(handle, MAKEINTRESOURCEW(idr), MAKEINTRESOURCEW(type));
+
+    if (rc)
+    {
+        HGLOBAL rcData = LoadResource(handle, rc);
+
+        const size_t tmpSize = SizeofResource(handle, rc);
+        data = (uint8_t*)LockResource(rcData);
+
+        if (size) *size = tmpSize;
+
+        if (rcData && tmpSize && data) ec = ErrorCode(omw::windows::EC_OK, OMWi_DISPSTR("OK"));
+        else ec = ErrorCode(omw::windows::EC_RESOURCE_NOT_LOADED, OMWi_DISPSTR("could not load resource"));
+    }
+    else ec = ErrorCode(omw::windows::EC_RESOURCE_NOT_FOUND, OMWi_DISPSTR("resource not found"));
+
+    return data;
 }
 
-template<typename DataType, typename SizeType>
-void omw::windows::Basic_Resource<DataType, SizeType>::load(int idr, int type)
+std::vector<uint8_t> omw::windows::getResource(int idr, int type)
 {
+    size_t size;
+    const uint8_t* data = getResource(idr, type, &size);
 
-    // TODO: error handling
-
-    HMODULE handle = GetModuleHandle(NULL);
-    HRSRC rc = FindResource(handle, MAKEINTRESOURCE(idr), MAKEINTRESOURCE(type));
-    HGLOBAL rcData = LoadResource(handle, rc);
-
-    resSize = SizeofResource(handle, rc);
-    resData = LockResource(rcData);
+    return std::vector<uint8_t>(data, data + size);
 }
 
-
-
-omw::windows::BinaryResource omw::windows::getBinaryResource(int idr)
+std::vector<uint8_t> omw::windows::getResource(int idr, int type, omw::windows::ErrorCode& ec) noexcept
 {
-    return omw::windows::BinaryResource(idr, OMW_RCT_BINFILE);
-}
+    std::vector<uint8_t> r;
+    size_t size;
+    const uint8_t* data = getResource(idr, type, &size, ec);
 
-omw::windows::StringResource omw::windows::getStringResource(int idr)
-{
-    return omw::windows::StringResource(idr, OMW_RCT_TEXTFILE);
-}
+    if (ec.good()) r = std::vector<uint8_t>(data, data + size);
 
-std::vector<char> omw::windows::getResource(int idr, int type)
-{
-    // TODO: error handling
-
-    HMODULE handle = GetModuleHandle(NULL);
-    HRSRC rc = FindResource(handle, MAKEINTRESOURCE(idr), MAKEINTRESOURCE(type));
-    HGLOBAL rcData = LoadResource(handle, rc);
-
-    DWORD size = SizeofResource(handle, rc);
-    void* data = LockResource(rcData);
-
-
-    return std::vector<char>((const char*)data, (const char*)data + size);
+    return r;
 }
 
 int omw::windows::getResourceTypeBin()

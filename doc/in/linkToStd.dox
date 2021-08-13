@@ -1,11 +1,25 @@
 /*
 author         Oliver Blaser
-date           31.03.2021
+date           13.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 namespace std
 {
+    //######################################
+    // string
+    //######################################
+
+    //! \brief C++ standard string.
+    //! See <a href="https://en.cppreference.com/w/cpp/string/basic_string" target="_blank">std::basic_string</a> for further detail.
+    class string {};
+
+
+
+    //######################################
+    // exception
+    //######################################
+
     //! \brief An exception of the C++ std.
     //! See <a href="https://en.cppreference.com/w/cpp/error/exception" target="_blank">std::exception</a> for further detail.
     //!
