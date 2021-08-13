@@ -15,6 +15,7 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include "omw/defs.h"
 #include "omw/windows/error.h"
 #include "omw/windows/exception.h"
+#include "..\..\include\omw\string.h"
 
 //! @brief Converts an UTF-8 string to a Windows API compatible wide string.
 //! @param src The input string

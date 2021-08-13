@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           12.08.2021
+date           13.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -10,6 +10,13 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include "omw/string.h"
 
 
+
+/*!
+* \class omw::StringReplacePair
+* \brief Container class.
+*
+* Used by `omw::string::replaceFirst()` and `omw::string::replaceAll()`.
+*/
 
 omw::StringReplacePair::StringReplacePair()
     : searchElem(), replaceElem()
@@ -48,6 +55,13 @@ const std::string& omw::StringReplacePair::replace() const
 
 
 
+/*!
+* \class omw::string
+* \brief A with `std::string` interchangeable class to add more functionalities.
+*
+* This class does not override/implement any virtual methods of the base class and has no attributes. It's basically a `std::string` with some more methods.
+*/
+
 //bool omw::string::isValidUTF8(const omw::string& str)
 //{
 //    return str.isValidUTF8();
@@ -80,7 +94,7 @@ omw::string& omw::string::replaceFirst(const omw::string& search, const omw::str
     return *this;
 }
 
-inline omw::string& omw::string::replaceFirst(const omw::StringReplacePair& pair, size_type startPos)
+omw::string& omw::string::replaceFirst(const omw::StringReplacePair& pair, size_type startPos)
 {
     return replaceFirst(pair.search(), pair.replace(), startPos);
 }
@@ -117,7 +131,7 @@ omw::string& omw::string::replaceAll(const omw::string& search, const omw::strin
 //! @param startPos 
 //! @param [out] nReplacements 
 //! @return 
-inline omw::string& omw::string::replaceAll(const omw::StringReplacePair& pair, size_type startPos, size_type* nReplacements)
+omw::string& omw::string::replaceAll(const omw::StringReplacePair& pair, size_type startPos, size_type* nReplacements)
 {
     return replaceAll(pair.search(), pair.replace(), startPos, nReplacements);
 }
@@ -128,7 +142,7 @@ inline omw::string& omw::string::replaceAll(const omw::StringReplacePair& pair, 
 //! @param [out] nReplacementsTotal 
 //! @param [out] nReplacements 
 //! @return 
-inline omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
+omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
 {
     bool allInvalid = true;
     size_type cnt = 0;
@@ -161,9 +175,83 @@ inline omw::string& omw::string::replaceAll(const std::vector<omw::StringReplace
 //! @param [out] nReplacementsTotal 
 //! @param [out] nReplacements 
 //! @return 
-inline omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairsBegin, const omw::StringReplacePair* pairsEnd, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
+omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairsBegin, const omw::StringReplacePair* pairsEnd, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
 {
     return replaceAll(std::vector<omw::StringReplacePair>(pairsBegin, pairsEnd), startPos, nReplacementsTotal, nReplacements);
+}
+
+omw::string& omw::string::makeLower_ascii()
+{
+    for (size_type i = 0; i < length(); ++i)
+    {
+        value_type& c = this->at(i);
+        if ((c >= 'A') && (c <= 'Z')) c += 32;
+    }
+
+    return *this;
+}
+
+omw::string& omw::string::makeLower_asciiExt()
+{
+    makeLower_ascii();
+
+    const omw::StringReplacePair rp[] =
+    {
+        omw::StringReplacePair(omw::UTF8CP_Auml, omw::UTF8CP_auml),
+        omw::StringReplacePair(omw::UTF8CP_Ouml, omw::UTF8CP_ouml),
+        omw::StringReplacePair(omw::UTF8CP_Uuml, omw::UTF8CP_uuml)
+    };
+
+    return replaceAll(rp, rp + (sizeof(rp) / sizeof(rp[0])));
+}
+
+omw::string& omw::string::makeUpper_ascii()
+{
+    for (size_type i = 0; i < length(); ++i)
+    {
+        value_type& c = this->at(i);
+        if ((c >= 'a') && (c <= 'z')) c -= 32;
+    }
+
+    return *this;
+}
+
+omw::string& omw::string::makeUpper_asciiExt()
+{
+    makeUpper_ascii();
+
+    const omw::StringReplacePair rp[] =
+    {
+        omw::StringReplacePair(omw::UTF8CP_auml, omw::UTF8CP_Auml),
+        omw::StringReplacePair(omw::UTF8CP_ouml, omw::UTF8CP_Ouml),
+        omw::StringReplacePair(omw::UTF8CP_uuml, omw::UTF8CP_Uuml)
+    };
+
+    return replaceAll(rp, rp + (sizeof(rp) / sizeof(rp[0])));
+}
+
+omw::string omw::string::toLower_ascii() const
+{
+    omw::string s(this->c_str());
+    return s.makeLower_ascii();
+}
+
+omw::string omw::string::toLower_asciiExt() const
+{
+    omw::string s(this->c_str());
+    return s.makeLower_asciiExt();
+}
+
+omw::string omw::string::toUpper_ascii() const
+{
+    omw::string s(this->c_str());
+    return s.makeUpper_ascii();
+}
+
+omw::string omw::string::toUpper_asciiExt() const
+{
+    omw::string s(this->c_str());
+    return s.makeUpper_asciiExt();
 }
 
 omw::string& omw::string::makeUrlEncoded()
@@ -171,16 +259,88 @@ omw::string& omw::string::makeUrlEncoded()
     const size_t count = 61;
     const char search[count] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 47, 58, 59, 60, 61, 62, 63, 64, 91, 92, 93, 94, 96, 123, 124, 125, 127 };
     const omw::string replace[count] = { "%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07", "%08", "%09", "%0A", "%0B", "%0C", "%0D", "%0E", "%0F", "%10", "%11", "%12", "%13", "%14", "%15", "%16", "%17", "%18", "%19", "%1A", "%1B", "%1C", "%1D", "%1E", "%1F", "%20", "%21", "%22", "%23", "%24", "%26", "%27", "%28", "%29", "%2A", "%2B", "%2C", "%2F", "%3A", "%3B", "%3C", "%3D", "%3E", "%3F", "%40", "%5B", "%5C", "%5D", "%5E", "%60", "%7B", "%7C", "%7D", "%7F" };
-    
+
     replaceAll("%", "%25", 0, nullptr);
     for (size_t i = 0; i < count; ++i) replaceAll(omw::StringReplacePair(search[i], replace[i]), 0, nullptr);
 
     return *this;
 }
 
-inline omw::string omw::string::getUrlEncoded() const
+omw::string omw::string::toUrlEncoded() const
 {
     omw::string s(this->c_str());
-    s.makeUrlEncoded();
-    return s;
+    return s.makeUrlEncoded();
+}
+
+
+
+omw::string omw::toHexStr(int8_t value)
+{
+    return omw::toHexStr((uint8_t)value);
+}
+
+omw::string omw::toHexStr(uint8_t value)
+{
+    const char r[] = { omw::hexStrDigits[(value >> 4) & 0x0F], omw::hexStrDigits[value & 0x0F], 0 };
+    return r;
+}
+
+omw::string omw::toHexStr(int16_t value)
+{
+    return toHexStr((uint16_t)value);
+}
+
+omw::string omw::toHexStr(uint16_t value)
+{
+    return toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value);
+}
+
+omw::string omw::toHexStr(int32_t value)
+{
+    return toHexStr((uint32_t)value);
+}
+
+omw::string omw::toHexStr(uint32_t value)
+{
+    return toHexStr((uint8_t)(value >> 24)) + toHexStr((uint8_t)(value >> 16)) + toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value);
+}
+
+omw::string omw::toHexStr(int64_t value)
+{
+    return toHexStr((uint64_t)value);
+}
+
+omw::string omw::toHexStr(uint64_t value)
+{
+    return toHexStr((uint8_t)(value >> 56)) + toHexStr((uint8_t)(value >> 48)) + toHexStr((uint8_t)(value >> 40)) + toHexStr((uint8_t)(value >> 32)) +
+        toHexStr((uint8_t)(value >> 24)) + toHexStr((uint8_t)(value >> 16)) + toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value);
+}
+
+omw::string omw::toHexStr(const std::vector<char>& data, char joinChar)
+{
+    return toHexStr(data.data(), data.size(), joinChar);
+}
+
+omw::string omw::toHexStr(const std::vector<uint8_t>& data, char joinChar)
+{
+    return toHexStr(data.data(), data.size(), joinChar);
+}
+
+omw::string omw::toHexStr(const char* data, size_t count, char joinChar)
+{
+    return toHexStr((const uint8_t*)data, count, joinChar);
+}
+
+omw::string omw::toHexStr(const uint8_t* data, size_t count, char joinChar)
+{
+    omw::string str;
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        if ((i > 0) && (joinChar != 0)) str += joinChar;
+
+        str += toHexStr(data[i]);
+    }
+
+    return str;
 }

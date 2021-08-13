@@ -221,6 +221,20 @@ TEST_CASE("string.h omw::string::replaceAll()")
     CHECK(nrv == std::vector<size_t>({ omw::string::npos, omw::string::npos, omw::string::npos }));
 }
 
+TEST_CASE("string.h omw::string case conversion")
+{
+    const omw::string mixed = "0123 ThE QuIcK BrOwN FoX JuMpS OvEr tHe lAzY DoG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
+    const omw::string lower = "0123 the quick brown fox jumps over the lazy dog. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
+    const omw::string lowerExt = "0123 the quick brown fox jumps over the lazy dog. 456 =\xC3\xA4-\xC3\xB6 * \xC3\xBC 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
+    const omw::string upper = "0123 THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
+    const omw::string upperExt = "0123 THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\x84\xC3\x96\xC3\x9C#";
+
+    CHECK(mixed.toLower_ascii() == lower);
+    CHECK(mixed.toLower_asciiExt() == lowerExt);
+    CHECK(mixed.toUpper_ascii() == upper);
+    CHECK(mixed.toUpper_asciiExt() == upperExt);
+}
+
 TEST_CASE("string.h omw::string URL encoded")
 {
     const std::string str = "+\"*%&/()=asdf(fdsf)";
@@ -232,8 +246,32 @@ TEST_CASE("string.h omw::string URL encoded")
     const omw::string s2(str);
 
     CHECK(s1 == enc);
-    CHECK(s2.getUrlEncoded() == enc);
-    CHECK(s1.getUrlEncoded() == "%252B%2522%252A%2525%2526%252F%2528%2529%253Dasdf%2528fdsf%2529");
+    CHECK(s2.toUrlEncoded() == enc);
+    CHECK(s1.toUrlEncoded() == "%252B%2522%252A%2525%2526%252F%2528%2529%253Dasdf%2528fdsf%2529");
+}
+
+TEST_CASE("string.h toHexStr()")
+{
+    CHECK(omw::toHexStr((int8_t)0xBC) == "BC");
+    CHECK(omw::toHexStr((uint8_t)0xBC) == "BC");
+    CHECK(omw::toHexStr((int16_t)0x5678) == "5678");
+    CHECK(omw::toHexStr((uint16_t)0x5678) == "5678");
+    CHECK(omw::toHexStr((int32_t)0x89ABCDEF) == "89ABCDEF");
+    CHECK(omw::toHexStr((uint32_t)0x89ABCDEF) == "89ABCDEF");
+    CHECK(omw::toHexStr((int64_t)0x0123456789ABCDEF) == "0123456789ABCDEF");
+    CHECK(omw::toHexStr((uint64_t)0x0123456789ABCDEF) == "0123456789ABCDEF");
+
+    std::vector<char> vecC = { 0x30, 0x35, 'A', 'b' };
+    CHECK(omw::toHexStr(vecC) == "30 35 41 62");
+    CHECK(omw::toHexStr(vecC, '-') == "30-35-41-62");
+    CHECK(omw::toHexStr(vecC.data(), vecC.size()) == "30 35 41 62");
+    CHECK(omw::toHexStr(vecC.data(), vecC.size(), '-') == "30-35-41-62");
+
+    std::vector<uint8_t> vecUC = { 0x30, 0x35, 'A', 'b' };
+    CHECK(omw::toHexStr(vecUC) == "30 35 41 62");
+    CHECK(omw::toHexStr(vecUC, '-') == "30-35-41-62");
+    CHECK(omw::toHexStr(vecUC.data(), vecUC.size()) == "30 35 41 62");
+    CHECK(omw::toHexStr(vecUC.data(), vecUC.size(), '-') == "30-35-41-62");
 }
 
 
