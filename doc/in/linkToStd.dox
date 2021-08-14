@@ -23,7 +23,7 @@ namespace std
     //! \brief An exception of the C++ std.
     //! See <a href="https://en.cppreference.com/w/cpp/error/exception" target="_blank">std::exception</a> for further detail.
     //!
-    //! There are more inherited members from the base classes in `std`, only the most commons are listed here.
+    //! There are more inherited members from the base classes in `std`.
     class exception
     {
     public:
@@ -33,29 +33,33 @@ namespace std
         virtual const char* what() const noexcept;
     };
 
-
     //! \brief An exception of the C++ std.
     //! See <a href="https://en.cppreference.com/w/cpp/error/runtime_error" target="_blank">std::runtime_error</a> for further detail.
     //!
-    //! There are more inherited members from the base classes in `std`, only the most commons are listed here.
+    //! There are more inherited members from the base classes in `std`.
     class runtime_error : public exception {};
 
     //! \brief An exception of the C++ std.
     //! See <a href="https://en.cppreference.com/w/cpp/error/range_error" target="_blank">std::range_error</a> for further detail.
     //!
-    //! There are more inherited members from the base classes in `std`, only the most commons are listed here.
+    //! There are more inherited members from the base classes in `std`.
     class range_error : public runtime_error {};
-
 
     //! \brief An exception of the C++ std.
     //! See <a href="https://en.cppreference.com/w/cpp/error/logic_error" target="_blank">std::logic_error</a> for further detail.
     //!
-    //! There are more inherited members from the base classes in `std`, only the most commons are listed here.
+    //! There are more inherited members from the base classes in `std`.
     class logic_error : public exception {};
 
     //! \brief An exception of the C++ std.
     //! See <a href="https://en.cppreference.com/w/cpp/error/invalid_argument" target="_blank">std::invalid_argument</a> for further detail.
     //!
-    //! There are more inherited members from the base classes in `std`, only the most commons are listed here.
+    //! There are more inherited members from the base classes in `std`.
     class invalid_argument : public logic_error {};
+
+    //! \brief An exception of the C++ std.
+    //! See <a href="https://en.cppreference.com/w/cpp/error/out_of_range" target="_blank">std::out_of_range</a> for further detail.
+    //!
+    //! There are more inherited members from the base classes in `std`.
+    class out_of_range : public logic_error {};
 }

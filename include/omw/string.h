@@ -10,20 +10,34 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
-
 namespace omw
 {
-    constexpr char UTF8CP_Auml[] = "\xC3\x84";          /*!< UTF-8 code point U+00C4 */
-    constexpr char UTF8CP_Ouml[] = "\xC3\x96";          /*!< UTF-8 code point U+00D6 */
-    constexpr char UTF8CP_Uuml[] = "\xC3\x9C";          /*!< UTF-8 code point U+00DC */
-    constexpr char UTF8CP_auml[] = "\xC3\xA4";          /*!< UTF-8 code point U+00E4 */
-    constexpr char UTF8CP_ouml[] = "\xC3\xB6";          /*!< UTF-8 code point U+00F6 */
-    constexpr char UTF8CP_uuml[] = "\xC3\xBC";          /*!< UTF-8 code point U+00FC */
+    /*! \addtogroup grp_stringsLib
+    * @{
+    */
+
+    //! \name UTF-8 Code Points
+    /// @{
+    constexpr char UTF8CP_00C4[] = "\xC3\x84";
+    constexpr char UTF8CP_00D6[] = "\xC3\x96";
+    constexpr char UTF8CP_00DC[] = "\xC3\x9C";
+    constexpr char UTF8CP_00E4[] = "\xC3\xA4";
+    constexpr char UTF8CP_00F6[] = "\xC3\xB6";
+    constexpr char UTF8CP_00FC[] = "\xC3\xBC";
+    /// @}
+
+    //! \name UFT-8 Code Point Aliases
+    /// @{
+    const char* const UTF8CP_Auml = omw::UTF8CP_00C4;
+    const char* const UTF8CP_Ouml = omw::UTF8CP_00D6;
+    const char* const UTF8CP_Uuml = omw::UTF8CP_00DC;
+    const char* const UTF8CP_auml = omw::UTF8CP_00E4;
+    const char* const UTF8CP_ouml = omw::UTF8CP_00F6;
+    const char* const UTF8CP_uuml = omw::UTF8CP_00FC;
+    /// @}
 
     constexpr char hexStrDigits[] = "0123456789ABCDEF";
-
-    //! @brief Default character between 8bit hex strings of multibyte hex strings.
-    constexpr char toHexStr_defaultJoinChar = 0x20;
+    constexpr char toHexStr_defaultSepChar = 0x20; /*!< Default character between 8bit hex strings of multibyte hex strings. */
 
     class StringReplacePair
     {
@@ -63,6 +77,9 @@ namespace omw
         omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_type* nReplacementsTotal = nullptr, std::vector<size_type>* nReplacements = nullptr);
         omw::string& replaceAll(const omw::StringReplacePair* pairsBegin, const omw::StringReplacePair* pairsEnd, size_type startPos = 0, size_type* nReplacementsTotal = nullptr, std::vector<size_type>* nReplacements = nullptr);
 
+        //! \name Case Conversion
+        //! Methods named `.._ascii` convert only A-Z and a-z. Those named `.._asciiExt` additionally convert some UTF-8 code points too.
+        /// @{
         omw::string& makeLower_ascii();
         omw::string& makeLower_asciiExt();
         omw::string& makeUpper_ascii();
@@ -71,12 +88,17 @@ namespace omw
         omw::string toLower_asciiExt() const;
         omw::string toUpper_ascii() const;
         omw::string toUpper_asciiExt() const;
+        /// @}
 
         omw::string& makeUrlEncoded();
         omw::string toUrlEncoded() const;
 
         //bool isValidUTF8() const;
     };
+
+    omw::string to_string(bool value, bool textual = false);
+
+    bool stob(const omw::string& boolStr);
 
     omw::string toHexStr(int8_t value);
     omw::string toHexStr(uint8_t value);
@@ -86,11 +108,12 @@ namespace omw
     omw::string toHexStr(uint32_t value);
     omw::string toHexStr(int64_t value);
     omw::string toHexStr(uint64_t value);
-    omw::string toHexStr(const std::vector<char>& data, char joinChar = toHexStr_defaultJoinChar);
-    omw::string toHexStr(const std::vector<uint8_t>& data, char joinChar = toHexStr_defaultJoinChar);
-    omw::string toHexStr(const char* data, size_t count, char joinChar = toHexStr_defaultJoinChar);
-    omw::string toHexStr(const uint8_t* data, size_t count, char joinChar = toHexStr_defaultJoinChar);
+    omw::string toHexStr(const std::vector<char>& data, char sepChar = toHexStr_defaultSepChar);
+    omw::string toHexStr(const std::vector<uint8_t>& data, char sepChar = toHexStr_defaultSepChar);
+    omw::string toHexStr(const char* data, size_t count, char sepChar = toHexStr_defaultSepChar);
+    omw::string toHexStr(const uint8_t* data, size_t count, char sepChar = toHexStr_defaultSepChar);
+    
+    /*! @} */
 }
-
 
 #endif // OMW_STRING_H

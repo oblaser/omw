@@ -12,11 +12,16 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 
 
+//! @brief Returns the version of the this library.
 omw::Version omw::info::version()
 {
     return omw::Version(0, 1, 1000);
 }
 
+//! @brief Returns an info text.
+//! 
+//! The info text contains version, copyright and a link to the project webpage.
+//! 
 std::string omw::info::infoTxt()
 {
     std::stringstream s;

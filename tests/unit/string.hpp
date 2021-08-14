@@ -233,6 +233,19 @@ TEST_CASE("string.h omw::string case conversion")
     CHECK(mixed.toLower_asciiExt() == lowerExt);
     CHECK(mixed.toUpper_ascii() == upper);
     CHECK(mixed.toUpper_asciiExt() == upperExt);
+
+    omw::string s = mixed;
+    s.makeLower_ascii();
+    CHECK(s == lower);
+    s = mixed;
+    s.makeLower_asciiExt();
+    CHECK(s == lowerExt);
+    s = mixed;
+    s.makeUpper_ascii();
+    CHECK(s == upper);
+    s = mixed;
+    s.makeUpper_asciiExt();
+    CHECK(s == upperExt);
 }
 
 TEST_CASE("string.h omw::string URL encoded")
@@ -248,6 +261,34 @@ TEST_CASE("string.h omw::string URL encoded")
     CHECK(s1 == enc);
     CHECK(s2.toUrlEncoded() == enc);
     CHECK(s1.toUrlEncoded() == "%252B%2522%252A%2525%2526%252F%2528%2529%253Dasdf%2528fdsf%2529");
+}
+
+TEST_CASE("string.h to_string()")
+{
+    CHECK(omw::to_string(false, false) == "0");
+    CHECK(omw::to_string(false, true) == "false");
+    CHECK(omw::to_string(true, false) == "1");
+    CHECK(omw::to_string(true, true) == "true");
+}
+
+TEST_CASE("string.h sto..()")
+{
+    CHECK(omw::stob("0") == false);
+    CHECK(omw::stob("false") == false);
+    CHECK(omw::stob("fAlsE") == false);
+    CHECK(omw::stob("FALSE") == false);
+
+    CHECK(omw::stob("1") == true);
+    CHECK(omw::stob("true") == true);
+    CHECK(omw::stob("TrUe") == true);
+    CHECK(omw::stob("TRUE") == true);
+
+    try
+    {
+        auto value = omw::stob("fsef");
+        CHECK(false);
+    }
+    catch (...) { CHECK(true); }
 }
 
 TEST_CASE("string.h toHexStr()")

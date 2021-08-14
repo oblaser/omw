@@ -1,0 +1,10 @@
+/*
+author         Oliver Blaser
+date           14.08.2021
+copyright      MIT - Copyright (c) 2021 Oliver Blaser
+*/
+
+/*!
+\defgroup grp_stringsLib Strings Library
+\brief `#include <omw/string.h>`
+*/

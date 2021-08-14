@@ -4,6 +4,7 @@ date           13.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -13,8 +14,9 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 /*!
 * \class omw::StringReplacePair
-* \brief Container class.
 *
+* Container that holds information for search and replace methods.
+* 
 * Used by `omw::string::replaceFirst()` and `omw::string::replaceAll()`.
 */
 
@@ -57,8 +59,8 @@ const std::string& omw::StringReplacePair::replace() const
 
 /*!
 * \class omw::string
-* \brief A with `std::string` interchangeable class to add more functionalities.
-*
+* 
+* A with `std::string` interchangeable class to add more functionalities.
 * This class does not override/implement any virtual methods of the base class and has no attributes. It's basically a `std::string` with some more methods.
 */
 
@@ -87,6 +89,10 @@ omw::string::string(const char* first, const char* last)
 {
 }
 
+//! @param search Substring to be replaced
+//! @param replace String for replacement
+//! @param startPos From where to start searching
+//! @return `*this`
 omw::string& omw::string::replaceFirst(const omw::string& search, const omw::string& replace, size_type startPos)
 {
     size_type pos = find(search, startPos);
@@ -94,17 +100,19 @@ omw::string& omw::string::replaceFirst(const omw::string& search, const omw::str
     return *this;
 }
 
+//! @param pair Search and replace string pair
+//! @param startPos From where to start searching
+//! @return `*this`
 omw::string& omw::string::replaceFirst(const omw::StringReplacePair& pair, size_type startPos)
 {
     return replaceFirst(pair.search(), pair.replace(), startPos);
 }
 
-//! @brief 
-//! @param search 
-//! @param replace 
-//! @param startPos 
-//! @param [out] nReplacements 
-//! @return 
+//! @param search Substring to be replaced
+//! @param replace String for replacement
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return `*this`
 omw::string& omw::string::replaceAll(const omw::string& search, const omw::string& replace, size_type startPos, size_type* nReplacements)
 {
     size_type cnt = 0;
@@ -126,22 +134,20 @@ omw::string& omw::string::replaceAll(const omw::string& search, const omw::strin
     return *this;
 }
 
-//! @brief 
-//! @param pair 
-//! @param startPos 
-//! @param [out] nReplacements 
-//! @return 
+//! @param pair Search and replace string pair
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return `*this`
 omw::string& omw::string::replaceAll(const omw::StringReplacePair& pair, size_type startPos, size_type* nReplacements)
 {
     return replaceAll(pair.search(), pair.replace(), startPos, nReplacements);
 }
 
-//! @brief 
-//! @param pairs 
-//! @param startPos 
-//! @param [out] nReplacementsTotal 
-//! @param [out] nReplacements 
-//! @return 
+//! @param pairs Search and replace string pair vector
+//! @param startPos From where to start searching
+//! @param [out] nReplacementsTotal Total number of occurrences
+//! @param [out] nReplacements Number of occurrences of specific replace pair
+//! @return `*this`
 omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
 {
     bool allInvalid = true;
@@ -168,13 +174,15 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
     return *this;
 }
 
-//! @brief 
-//! @param pairsBegin 
-//! @param pairsEnd 
-//! @param startPos 
-//! @param [out] nReplacementsTotal 
-//! @param [out] nReplacements 
-//! @return 
+//! @param pairsBegin Pointer to first replace pair in array
+//! @param pairsEnd Pointer to first replace pair behind the array
+//! @param startPos From where to start searching
+//! @param [out] nReplacementsTotal Total number of occurrences
+//! @param [out] nReplacements Number of occurrences of specific replace pair
+//! @return `*this`
+//! 
+//! Processes all replace pairs in range [`pairsBegin`, `pairsEnd`).
+//! 
 omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairsBegin, const omw::StringReplacePair* pairsEnd, size_type startPos, size_type* nReplacementsTotal, std::vector<size_type>* nReplacements)
 {
     return replaceAll(std::vector<omw::StringReplacePair>(pairsBegin, pairsEnd), startPos, nReplacementsTotal, nReplacements);
@@ -274,6 +282,38 @@ omw::string omw::string::toUrlEncoded() const
 
 
 
+omw::string omw::to_string(bool value, bool textual)
+{
+    if (textual) return (value ? "true" : "false");
+    return (value ? "1" : "0");
+}
+
+
+
+//! @param boolStr Boolean string representation
+//! @return Bool value of the string
+//! 
+//! \b true and \b 1 converts to `true`, \b false and \b 0 to `false`. The input is not case sensitive.
+//! 
+//! \b Exceptions
+//! - `std::out_of_range` if the int value isn't element of [0, 1]
+//! - <tt><a href="https://en.cppreference.com/w/cpp/string/basic_string/stol" target="_blank">std::stoi()</a></tt> is called and may throw `std::out_of_range` or `std::invalid_argument`
+//! 
+bool omw::stob(const omw::string& boolStr)
+{
+    if (boolStr.toLower_ascii() == "true") return true;
+    if (boolStr.toLower_ascii() == "false") return false;
+
+    int boolInt = std::stoi(boolStr);
+
+    if (boolInt == 1) return true;
+    if (boolInt == 0) return false;
+
+    throw std::out_of_range("stob");
+}
+
+
+
 omw::string omw::toHexStr(int8_t value)
 {
     return omw::toHexStr((uint8_t)value);
@@ -316,28 +356,28 @@ omw::string omw::toHexStr(uint64_t value)
         toHexStr((uint8_t)(value >> 24)) + toHexStr((uint8_t)(value >> 16)) + toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value);
 }
 
-omw::string omw::toHexStr(const std::vector<char>& data, char joinChar)
+omw::string omw::toHexStr(const std::vector<char>& data, char sepChar)
 {
-    return toHexStr(data.data(), data.size(), joinChar);
+    return toHexStr(data.data(), data.size(), sepChar);
 }
 
-omw::string omw::toHexStr(const std::vector<uint8_t>& data, char joinChar)
+omw::string omw::toHexStr(const std::vector<uint8_t>& data, char sepChar)
 {
-    return toHexStr(data.data(), data.size(), joinChar);
+    return toHexStr(data.data(), data.size(), sepChar);
 }
 
-omw::string omw::toHexStr(const char* data, size_t count, char joinChar)
+omw::string omw::toHexStr(const char* data, size_t count, char sepChar)
 {
-    return toHexStr((const uint8_t*)data, count, joinChar);
+    return toHexStr((const uint8_t*)data, count, sepChar);
 }
 
-omw::string omw::toHexStr(const uint8_t* data, size_t count, char joinChar)
+omw::string omw::toHexStr(const uint8_t* data, size_t count, char sepChar)
 {
     omw::string str;
 
     for (size_t i = 0; i < count; ++i)
     {
-        if ((i > 0) && (joinChar != 0)) str += joinChar;
+        if ((i > 0) && (sepChar != 0)) str += sepChar;
 
         str += toHexStr(data[i]);
     }
