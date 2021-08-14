@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           13.08.2021
+date           14.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -69,6 +69,9 @@ namespace omw
         string(const char* first, const char* last);
         virtual ~string() {}
 
+        bool isInteger() const;
+        bool isUInteger() const;
+
         omw::string& replaceFirst(const omw::string& search, const omw::string& replace, size_type startPos = 0);
         omw::string& replaceFirst(const omw::StringReplacePair& pair, size_type startPos = 0);
 
@@ -96,9 +99,16 @@ namespace omw
         //bool isValidUTF8() const;
     };
 
+
     omw::string to_string(bool value, bool textual = false);
 
+
     bool stob(const omw::string& boolStr);
+
+
+    bool isInteger(const std::string& str);
+    bool isUInteger(const std::string& str);
+
 
     omw::string toHexStr(int8_t value);
     omw::string toHexStr(uint8_t value);

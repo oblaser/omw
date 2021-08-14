@@ -1,28 +1,48 @@
 /*
 author         Oliver Blaser
-date           09.06.2021
+date           14.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include <string>
 #include <vector>
 
+#include "omw/defs.h"
+#include "omw/string.h"
 #include "omw/version.h"
 
 
 
 omw::Version::Version()
+    : version{ 0, 0, 0 }
 {
-    version[0] = 0;
-    version[1] = 0;
-    version[2] = 0;
 }
 
 omw::Version::Version(int major, int minor, int revision)
+    : version{ major, minor, revision }
 {
-    version[0] = major;
-    version[1] = minor;
-    version[2] = revision;
+}
+
+//! @param versionStr A `major.minor.revision` formatted string
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` on format
+//! 
+omw::Version::Version(const char* versionStr)
+    : version{ 0, 0, 0 }
+{
+    setData(std::string(versionStr));
+}
+
+//! @param versionStr A `major.minor.revision` formatted string
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` on format
+//! 
+omw::Version::Version(const std::string& versionStr)
+    : version{ 0, 0, 0 }
+{
+    setData(versionStr);
 }
 
 int omw::Version::maj() const
@@ -71,6 +91,43 @@ std::vector<int> omw::Version::toVector() const
 std::string omw::Version::toString() const
 {
     return std::to_string(version[0]) + '.' + std::to_string(version[1]) + '.' + std::to_string(version[2]);
+}
+
+void omw::Version::setData(const std::string& versionStr)
+{
+    try
+    {
+        const size_t sp1 = versionStr.find('.');
+        const size_t sp2 = versionStr.find('.', sp1 + 1);
+
+        if ((sp1 == 0) || ((sp2 - sp1) == 1) || (sp1 >= (versionStr.length() - 1)) ||
+            (sp1 == std::string::npos) || (sp2 == std::string::npos))
+        {
+            throw - 1;
+        }
+
+        const std::string majStr = versionStr.substr(0, sp1);
+        const std::string minStr = versionStr.substr(sp1 + 1, sp2 - sp1 - 1);
+        const std::string revStr = versionStr.substr(sp2 + 1);
+
+        if (!omw::isInteger(majStr) || !omw::isInteger(minStr) || !omw::isInteger(revStr))
+        {
+            throw - 1;
+        }
+
+        // perform all conversions before assigning the member array
+        const int maj = std::stoi(majStr);
+        const int min = std::stoi(minStr);
+        const int rev = std::stoi(revStr);
+
+        version[0] = maj;
+        version[1] = min;
+        version[2] = rev;
+    }
+    catch (...)
+    {
+        throw std::invalid_argument(OMWi_DISPSTR("invalid format"));
+    }
 }
 
 bool omw::operator<(const omw::Version& left, const omw::Version& right)

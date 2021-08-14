@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           13.08.2021
+date           14.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -16,7 +16,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 * \class omw::StringReplacePair
 *
 * Container that holds information for search and replace methods.
-* 
+*
 * Used by `omw::string::replaceFirst()` and `omw::string::replaceAll()`.
 */
 
@@ -59,7 +59,7 @@ const std::string& omw::StringReplacePair::replace() const
 
 /*!
 * \class omw::string
-* 
+*
 * A with `std::string` interchangeable class to add more functionalities.
 * This class does not override/implement any virtual methods of the base class and has no attributes. It's basically a `std::string` with some more methods.
 */
@@ -87,6 +87,16 @@ omw::string::string(const std::string& str)
 omw::string::string(const char* first, const char* last)
     : std::string(first, last)
 {
+}
+
+bool omw::string::isInteger() const
+{
+    return omw::isInteger(*this);
+}
+
+bool omw::string::isUInteger() const
+{
+    return omw::isUInteger(*this);
 }
 
 //! @param search Substring to be replaced
@@ -296,7 +306,7 @@ omw::string omw::to_string(bool value, bool textual)
 //! \b true and \b 1 converts to `true`, \b false and \b 0 to `false`. The input is not case sensitive.
 //! 
 //! \b Exceptions
-//! - `std::out_of_range` if the int value isn't element of [0, 1]
+//! - `std::out_of_range` if the value isn't element of `{ "0", "1", "true", "false" }`
 //! - <tt><a href="https://en.cppreference.com/w/cpp/string/basic_string/stol" target="_blank">std::stoi()</a></tt> is called and may throw `std::out_of_range` or `std::invalid_argument`
 //! 
 bool omw::stob(const omw::string& boolStr)
@@ -310,6 +320,41 @@ bool omw::stob(const omw::string& boolStr)
     if (boolInt == 0) return false;
 
     throw std::out_of_range("stob");
+}
+
+
+
+bool omw::isInteger(const std::string& str)
+{
+    size_t startPos = 0;
+
+    if (str.length() > 1)
+    {
+        if (str[0] == '-') startPos = 1;
+    }
+
+    return omw::isUInteger(std::string(str, startPos));
+}
+
+bool omw::isUInteger(const std::string& str)
+{
+    bool r;
+
+    if (str.length() > 0)
+    {
+        r = true;
+        for (size_t i = 0; i < str.length(); ++i)
+        {
+            if ((str[i] < '0') || (str[i] > '9'))
+            {
+                r = false;
+                break;
+            }
+        }
+    }
+    else r = false;
+
+    return r;
 }
 
 

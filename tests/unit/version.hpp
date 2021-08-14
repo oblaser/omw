@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           09.06.2021
+date           14.06.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -9,11 +9,61 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include <catch2/catch.hpp>
 #include <omw/omw.h>
 
 
+
+TEST_CASE("omw::Version ctor")
+{
+    omw::Version v;
+    std::vector<int> version;
+    std::vector<int> vec;
+
+    v = omw::Version("1.2.3");
+    version = std::vector<int>(v.data(), v.data() + v.size());
+    vec = std::vector<int>({ 1, 2, 3 });
+    CHECK(version == vec);
+
+    v = omw::Version("1.-2.-3");
+    version = std::vector<int>(v.data(), v.data() + v.size());
+    vec = std::vector<int>({ 1, -2, -3 });
+    CHECK(version == vec);
+
+    try {
+        v = omw::Version("1.2-.3");
+        CHECK(false);
+    }
+    catch (...) {
+        CHECK(true);
+    }
+
+    try {
+        v = omw::Version("d1.2.3");
+        CHECK(false);
+    }
+    catch (...) {
+        CHECK(true);
+    }
+
+    try {
+        v = omw::Version("1.2.p3");
+        CHECK(false);
+    }
+    catch (...) {
+        CHECK(true);
+    }
+
+    try {
+        v = omw::Version("1.23");
+        CHECK(false);
+    }
+    catch (...) {
+        CHECK(true);
+    }
+}
 
 TEST_CASE("omw::Version coversion functions")
 {

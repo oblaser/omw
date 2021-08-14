@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           09.06.2021
+date           14.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -18,6 +18,8 @@ namespace omw
     public:
         Version();
         Version(int major, int minor, int revision);
+        explicit Version(const char* versionStr);
+        explicit Version(const std::string& versionStr);
 
         int maj() const;
         int min() const;
@@ -38,8 +40,10 @@ namespace omw
         friend std::ostream& operator<<(std::ostream& os, const omw::Version& v);
 
     private:
-        static const size_t dataSize = 3;
+        static constexpr size_t dataSize = 3;
         int version[dataSize];
+
+        void setData(const std::string& versionStr);
     };
 }
 

@@ -71,6 +71,37 @@ TEST_CASE("string.h omw::string ctor")
     CHECK(std::strcmp(stdfromomw.c_str(), "aaa") == 0);
 }
 
+TEST_CASE("string.h omw::string::isInteger()")
+{
+    CHECK(omw::string("a123").isInteger() == false);
+    CHECK(omw::string("a").isInteger() == false);
+    CHECK(omw::string("abc").isInteger() == false);
+    CHECK(omw::string("-").isInteger() == false);
+    CHECK(omw::string("-abc").isInteger() == false);
+    CHECK(omw::string("123abc").isInteger() == false);
+    CHECK(omw::string("-123abc").isInteger() == false);
+    CHECK(omw::string("0").isInteger() == true);
+    CHECK(omw::string("-0").isInteger() == true);
+    CHECK(omw::string("-1").isInteger() == true);
+    CHECK(omw::string("-123").isInteger() == true);
+    CHECK(omw::string("1").isInteger() == true);
+    CHECK(omw::string("123").isInteger() == true);
+
+    CHECK(omw::string("a123").isUInteger() == false);
+    CHECK(omw::string("a").isUInteger() == false);
+    CHECK(omw::string("abc").isUInteger() == false);
+    CHECK(omw::string("-").isUInteger() == false);
+    CHECK(omw::string("-abc").isUInteger() == false);
+    CHECK(omw::string("123abc").isUInteger() == false);
+    CHECK(omw::string("-123abc").isUInteger() == false);
+    CHECK(omw::string("0").isUInteger() == true);
+    CHECK(omw::string("-0").isUInteger() == false);
+    CHECK(omw::string("-1").isUInteger() == false);
+    CHECK(omw::string("-123").isUInteger() == false);
+    CHECK(omw::string("1").isUInteger() == true);
+    CHECK(omw::string("123").isUInteger() == true);
+}
+
 TEST_CASE("string.h omw::string::replaceFirst()")
 {
     const char str[] = "a boy with a hat";
