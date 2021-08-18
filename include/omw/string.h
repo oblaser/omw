@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           14.08.2021
+date           18.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -8,6 +8,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #define OMW_STRING_H
 
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace omw
@@ -36,8 +37,11 @@ namespace omw
     const char* const UTF8CP_uuml = omw::UTF8CP_00FC;
     /// @}
 
+    constexpr char pairtos_defaultSepChar = ';';
     constexpr char hexStrDigits[] = "0123456789ABCDEF";
-    constexpr char toHexStr_defaultSepChar = 0x20; /*!< Default character between 8bit hex strings of multibyte hex strings. */
+    constexpr char toHexStr_defaultSepChar = 0x20;
+
+
 
     class StringReplacePair
     {
@@ -100,14 +104,40 @@ namespace omw
     };
 
 
+
     omw::string to_string(bool value, bool textual = false);
+
+    template<typename T1, typename T2>
+    std::string to_string(const std::pair<T1, T2>& value, char sepChar = pairtos_defaultSepChar);
+
+    template std::string to_string(const std::pair<int, int>&, char);
+    template std::string to_string(const std::pair<long, long>&, char);
+    template std::string to_string(const std::pair<long long, long long>&, char);
+    template std::string to_string(const std::pair<unsigned, unsigned>&, char);
+    template std::string to_string(const std::pair<unsigned long, unsigned long>&, char);
+    template std::string to_string(const std::pair<unsigned long long, unsigned long long>&, char);
+    template std::string to_string(const std::pair<float, float>&, char);
+    template std::string to_string(const std::pair<double, double>&, char);
+    template std::string to_string(const std::pair<long double, long double>&, char);
+
 
 
     bool stob(const omw::string& boolStr);
+    std::pair<int, int> stoipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<long, long> stolpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<long long, long long> stollpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<unsigned long, unsigned long> stoulpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<unsigned long long, unsigned long long> stoullpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<float, float> stofpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<double, double> stodpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<long double, long double> stoldpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+
+
 
 
     bool isInteger(const std::string& str);
     bool isUInteger(const std::string& str);
+
 
 
     omw::string toHexStr(int8_t value);

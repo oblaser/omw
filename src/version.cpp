@@ -26,7 +26,7 @@ omw::Version::Version(int major, int minor, int revision)
 //! @param versionStr A `major.minor.revision` formatted string
 //! 
 //! \b Exceptions
-//! - `std::invalid_argument` on format
+//! - `std::invalid_argument` on format violations
 //! 
 omw::Version::Version(const char* versionStr)
     : version{ 0, 0, 0 }
@@ -37,7 +37,7 @@ omw::Version::Version(const char* versionStr)
 //! @param versionStr A `major.minor.revision` formatted string
 //! 
 //! \b Exceptions
-//! - `std::invalid_argument` on format
+//! - `std::invalid_argument` on format violations
 //! 
 omw::Version::Version(const std::string& versionStr)
     : version{ 0, 0, 0 }
@@ -93,6 +93,11 @@ std::string omw::Version::toString() const
     return std::to_string(version[0]) + '.' + std::to_string(version[1]) + '.' + std::to_string(version[2]);
 }
 
+//! @param versionStr A `major.minor.revision` formatted string
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` on format violations
+//! 
 void omw::Version::setData(const std::string& versionStr)
 {
     try

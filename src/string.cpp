@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           14.08.2021
+date           18.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -298,6 +298,12 @@ omw::string omw::to_string(bool value, bool textual)
     return (value ? "1" : "0");
 }
 
+template<typename T1, typename T2>
+std::string omw::to_string(const std::pair<T1, T2>& value, char sepChar)
+{
+    return (std::to_string(value.first) + sepChar + std::to_string(value.second));
+}
+
 
 
 //! @param boolStr Boolean string representation
@@ -322,6 +328,33 @@ bool omw::stob(const omw::string& boolStr)
     throw std::out_of_range("stob");
 }
 
+//! @param str Pair string representation
+//! @param sepChar Character between the two values
+//! @return <tt><a href="https://en.cppreference.com/w/cpp/utility/pair" target="_blank">std::pair</a></tt> with the two values
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the separator character was not found, is at the first or at the last position in the string
+//! - <tt><a href="https://en.cppreference.com/w/cpp/string/basic_string/stol" target="_blank">std::stoi()</a></tt> is called and may throw `std::out_of_range` or `std::invalid_argument`
+//! 
+std::pair<int, int> omw::stoipair(const std::string& str, char sepChar)
+{
+    const std::string fnName = "stoipair";
+
+    size_t sp = str.find(sepChar);
+
+    if ((sp == 0) || (sp >= (str.length() - 1)) || (sp == std::string::npos)) throw std::invalid_argument(fnName + ": invalid separator char pos");
+
+    const std::string first = str.substr(0, sp);
+    const std::string second = str.substr(sp + 1);
+
+    if (!isInteger(first)) throw std::invalid_argument(fnName + ": first is not an integer");
+    if (!isInteger(second)) throw std::invalid_argument(fnName + ": second is not an integer");
+
+    return std::pair<int, int>(std::stoi(first), std::stoi(second));
+}
+
+// https://en.cppreference.com/w/cpp/string/basic_string/stoul
+// https://en.cppreference.com/w/cpp/string/basic_string/stof
 
 
 bool omw::isInteger(const std::string& str)

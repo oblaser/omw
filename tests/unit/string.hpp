@@ -300,9 +300,15 @@ TEST_CASE("string.h to_string()")
     CHECK(omw::to_string(false, true) == "false");
     CHECK(omw::to_string(true, false) == "1");
     CHECK(omw::to_string(true, true) == "true");
+
+    std::pair<int, int> pair1(-1, 123);
+    CHECK(omw::to_string(pair1) == "-1;123");
+
+    std::pair<double, double> pair2(3.14159265, 123);
+    CHECK(omw::to_string(pair2, '/') == "3.141593/123.000000");
 }
 
-TEST_CASE("string.h sto..()")
+TEST_CASE("string.h stob()")
 {
     CHECK(omw::stob("0") == false);
     CHECK(omw::stob("false") == false);
@@ -314,12 +320,46 @@ TEST_CASE("string.h sto..()")
     CHECK(omw::stob("TrUe") == true);
     CHECK(omw::stob("TRUE") == true);
 
+    bool catched;
+
     try
     {
         auto value = omw::stob("fsef");
-        CHECK(false);
+        catched = false;
     }
-    catch (...) { CHECK(true); }
+    catch (...) { catched = true; }
+    CHECK(catched == true);
+}
+
+TEST_CASE("string.h stoipair()")
+{
+    CHECK(std::pair<int, int>(-1, 123) == omw::stoipair("-1#123", '#'));
+
+    bool catched;
+
+    try
+    {
+        omw::stoipair("-1 123");
+        catched = false;
+    }
+    catch (...) { catched = true; }
+    CHECK(catched == true);
+
+    try
+    {
+        omw::stoipair(";123");
+        catched = false;
+    }
+    catch (...) { catched = true; }
+    CHECK(catched == true);
+
+    try
+    {
+        omw::stoipair("123;");
+        catched = false;
+    }
+    catch (...) { catched = true; }
+    CHECK(catched == true);
 }
 
 TEST_CASE("string.h toHexStr()")
