@@ -24,14 +24,14 @@ namespace omw
     namespace windows
     {
         const uint8_t* getResource(int idr, int type, size_t* size);
-        const uint8_t* getResource(int idr, int type, size_t* size, omw::windows::ErrorCode& ec) noexcept;
+        const uint8_t* getResource(int idr, int type, size_t* size, omw::windows::ErrorCode& ec);
         std::vector<uint8_t> getResource(int idr, int type);
-        std::vector<uint8_t> getResource(int idr, int type, omw::windows::ErrorCode& ec) noexcept;
+        std::vector<uint8_t> getResource(int idr, int type, omw::windows::ErrorCode& ec);
     
         std::vector<uint8_t> getBinaryResource(int idr);
-        std::vector<uint8_t> getBinaryResource(int idr, omw::windows::ErrorCode& ec) noexcept;
+        std::vector<uint8_t> getBinaryResource(int idr, omw::windows::ErrorCode& ec);
         std::string getTextResource(int idr);
-        std::string getTextResource(int idr, omw::windows::ErrorCode& ec) noexcept;
+        std::string getTextResource(int idr, omw::windows::ErrorCode& ec);
 }
 }
 

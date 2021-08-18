@@ -59,7 +59,7 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName)
 //! - `omw::windows::EC_INTERNAL`
 //! - `omw::windows::EC_UNKNOWN_WIN`
 //! 
-std::string omw::windows::getEnvironmentVariable(const std::string& varName, ErrorCode& ec) noexcept
+std::string omw::windows::getEnvironmentVariable(const std::string& varName, ErrorCode& ec)
 {
     const size_t bufferSizeInitial = 300;
     const size_t bufferSizeGrow = 100;

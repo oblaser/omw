@@ -52,7 +52,7 @@ size_t omw::windows::utf8_to_wstr(const std::string& src, LPWSTR dest, size_t de
 //! 
 //! The \b src argument can also be of type <tt>const char*</tt> (implicit <tt>std::string()</tt> constructor).
 //! 
-size_t omw::windows::utf8_to_wstr(const std::string& src, LPWSTR dest, size_t destSize, ErrorCode& ec) noexcept
+size_t omw::windows::utf8_to_wstr(const std::string& src, LPWSTR dest, size_t destSize, ErrorCode& ec)
 {
     int r;
 
@@ -128,7 +128,7 @@ size_t omw::windows::wstr_to_utf8(LPCWCH src, char* dest, size_t destSize)
 //! @param destSize Size of the destination buffer
 //! @param [out] ec See \ref omw_windows_strConv_infoText
 //! @return Number of bytes written to dest (not including the terminating null character)
-size_t omw::windows::wstr_to_utf8(LPCWCH src, char* dest, size_t destSize, ErrorCode& ec) noexcept
+size_t omw::windows::wstr_to_utf8(LPCWCH src, char* dest, size_t destSize, ErrorCode& ec)
 {
     int r;
 
@@ -199,7 +199,7 @@ void omw::windows::wstr_to_utf8(LPCWCH src, std::string& dest)
 //! @param src The input string
 //! @param [out] dest Reference to the output string
 //! @param [out] ec See \ref omw_windows_strConv_infoText
-void omw::windows::wstr_to_utf8(LPCWCH src, std::string& dest, ErrorCode& ec) noexcept
+void omw::windows::wstr_to_utf8(LPCWCH src, std::string& dest, ErrorCode& ec)
 {
     const size_t bufferSizeInitial = 300;   // adapt unit test "windows_string.hpp" if
     const size_t bufferSizeGrow = 100;      // one of these values change
