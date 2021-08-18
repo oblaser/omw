@@ -15,7 +15,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 //! @brief Returns the version of the this library.
 omw::Version omw::info::version()
 {
-    return omw::Version(0, 1, 0);
+    return omw::Version(0, 1, 1001);
 }
 
 //! @brief Returns an info text.

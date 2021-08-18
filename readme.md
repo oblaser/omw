@@ -2,8 +2,6 @@
 
 A C++ middleware library with my often used units.
 
-> Currently at some unreleased state. Have an eye on it before using it ;-)
-
 [doc](https://static.oblaser.ch/omw/doc/)
 
 
