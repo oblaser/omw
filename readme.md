@@ -2,7 +2,8 @@
 
 A C++ middleware library with my often used units.
 
-[doc](https://static.oblaser.ch/omw/doc/)
+ - [doc](https://static.oblaser.ch/omw/doc/)
+ - [download](https://static.oblaser.ch/omw/download/)
 
 
 

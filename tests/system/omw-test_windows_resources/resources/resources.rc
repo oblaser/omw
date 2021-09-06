@@ -6,7 +6,7 @@
 
 #include "resources.h"
 
-// add '$(sdk)/omw/include' (or similar) to Configuration Properties > Resources > Additional Include Directories
+// add '$(sdk)/omw/include' (or similar, depends on your setup) to Configuration Properties > Resources > General > Additional Include Directories
 #include <omw/windows/resourceTypes.h>
 
 // the alphabetical first ICON is used by Windows as app icon
