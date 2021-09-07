@@ -113,20 +113,19 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;../../include</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)a/b/%(RelativeDir)</ObjectFileName>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src;../../include</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)a/b/%(RelativeDir)</ObjectFileName>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\color.cpp" />
     <ClCompile Include="..\..\src\omw.cpp" />
     <ClCompile Include="..\..\src\string.cpp" />
     <ClCompile Include="..\..\src\version.cpp" />
@@ -135,8 +134,10 @@
     <ClCompile Include="..\..\src\windows\exception.cpp" />
     <ClCompile Include="..\..\src\windows\resources.cpp" />
     <ClCompile Include="..\..\src\windows\string.cpp" />
+    <ClCompile Include="..\..\src\windows\windows.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\omw\color.h" />
     <ClInclude Include="..\..\include\omw\defs.h" />
     <ClInclude Include="..\..\include\omw\omw.h" />
     <ClInclude Include="..\..\include\omw\string.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="..\..\include\omw\windows\resources.h" />
     <ClInclude Include="..\..\include\omw\windows\resourceTypes.h" />
     <ClInclude Include="..\..\include\omw\windows\string.h" />
+    <ClInclude Include="..\..\include\omw\windows\windows.h" />
     <ClInclude Include="..\..\src\config.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

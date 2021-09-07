@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           18.08.2021
+date           07.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -8,6 +8,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "omw/defs.h"
 #include "omw/string.h"
 
 
@@ -97,6 +98,11 @@ bool omw::string::isInteger() const
 bool omw::string::isUInteger() const
 {
     return omw::isUInteger(*this);
+}
+
+bool omw::string::isHex() const
+{
+    return omw::isHex(*this);
 }
 
 //! @param search Substring to be replaced
@@ -342,13 +348,13 @@ std::pair<int, int> omw::stoipair(const std::string& str, char sepChar)
 
     size_t sp = str.find(sepChar);
 
-    if ((sp == 0) || (sp >= (str.length() - 1)) || (sp == std::string::npos)) throw std::invalid_argument(fnName + ": invalid separator char pos");
+    if ((sp == 0) || (sp >= (str.length() - 1)) || (sp == std::string::npos)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": invalid separator char pos"));
 
     const std::string first = str.substr(0, sp);
     const std::string second = str.substr(sp + 1);
 
-    if (!isInteger(first)) throw std::invalid_argument(fnName + ": first is not an integer");
-    if (!isInteger(second)) throw std::invalid_argument(fnName + ": second is not an integer");
+    if (!isInteger(first)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": first is not an integer"));
+    if (!isInteger(second)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": second is not an integer"));
 
     return std::pair<int, int>(std::stoi(first), std::stoi(second));
 }
@@ -383,6 +389,23 @@ bool omw::isUInteger(const std::string& str)
                 r = false;
                 break;
             }
+        }
+    }
+    else r = false;
+
+    return r;
+}
+
+bool omw::isHex(const std::string& str)
+{
+    bool r;
+
+    if (str.length() > 0)
+    {
+        r = true;
+        for (size_t i = 0; i < str.length(); ++i)
+        {
+            asdf;
         }
     }
     else r = false;
@@ -461,4 +484,30 @@ omw::string omw::toHexStr(const uint8_t* data, size_t count, char sepChar)
     }
 
     return str;
+}
+
+
+
+int32_t omw::hexstoi(const std::string& str)
+{
+    const std::string fnName = "hexstoi";
+    std::string hexstr(str, 0, 8);
+    if (!omw::isHex(hexstr)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": not a hex string"));
+    int32_t r = 0;
+
+    asdf;
+
+    return r;
+}
+
+int64_t omw::hexstoi64(const std::string& str)
+{
+    const std::string fnName = "hexstoi64";
+    std::string hexstr(str, 0, 16);
+    if (!omw::isHex(hexstr)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": not a hex string"));
+    int32_t r = 0;
+
+    asdf;
+
+    return r;
 }

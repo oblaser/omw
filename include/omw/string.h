@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           18.08.2021
+date           07.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -38,7 +38,9 @@ namespace omw
     /// @}
 
     constexpr char pairtos_defaultSepChar = ';';
-    constexpr char hexStrDigits[] = "0123456789ABCDEF";
+    constexpr char hexStrDigitsUpper[] = "0123456789ABCDEF";
+    constexpr char hexStrDigitsLower[] = "0123456789abcdef";
+    const char* const hexStrDigits = hexStrDigitsUpper;
     constexpr char toHexStr_defaultSepChar = 0x20;
 
 
@@ -75,6 +77,7 @@ namespace omw
 
         bool isInteger() const;
         bool isUInteger() const;
+        bool isHex() const;
 
         omw::string& replaceFirst(const omw::string& search, const omw::string& replace, size_type startPos = 0);
         omw::string& replaceFirst(const omw::StringReplacePair& pair, size_type startPos = 0);
@@ -137,6 +140,7 @@ namespace omw
 
     bool isInteger(const std::string& str);
     bool isUInteger(const std::string& str);
+    bool isHex(const std::string& str);
 
 
 
@@ -152,6 +156,9 @@ namespace omw
     omw::string toHexStr(const std::vector<uint8_t>& data, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const char* data, size_t count, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const uint8_t* data, size_t count, char sepChar = toHexStr_defaultSepChar);
+
+    int32_t hexstoi(const std::string& str);
+    int64_t hexstoi64(const std::string& str);
     
     /*! @} */
 }
