@@ -1,12 +1,13 @@
 /*
 author         Oliver Blaser
-date           07.09.2021
+date           14.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef OMW_STRING_H
 #define OMW_STRING_H
 
+#include <cstdint>
 #include <string>
 #include <utility>
 #include <vector>
@@ -19,12 +20,12 @@ namespace omw
 
     //! \name UTF-8 Code Points
     /// @{
-    constexpr char UTF8CP_00C4[] = "\xC3\x84";
-    constexpr char UTF8CP_00D6[] = "\xC3\x96";
-    constexpr char UTF8CP_00DC[] = "\xC3\x9C";
-    constexpr char UTF8CP_00E4[] = "\xC3\xA4";
-    constexpr char UTF8CP_00F6[] = "\xC3\xB6";
-    constexpr char UTF8CP_00FC[] = "\xC3\xBC";
+    const char* const UTF8CP_00C4 = "\xC3\x84";
+    const char* const UTF8CP_00D6 = "\xC3\x96";
+    const char* const UTF8CP_00DC = "\xC3\x9C";
+    const char* const UTF8CP_00E4 = "\xC3\xA4";
+    const char* const UTF8CP_00F6 = "\xC3\xB6";
+    const char* const UTF8CP_00FC = "\xC3\xBC";
     /// @}
 
     //! \name UFT-8 Code Point Aliases
@@ -38,8 +39,8 @@ namespace omw
     /// @}
 
     constexpr char pairtos_defaultSepChar = ';';
-    constexpr char hexStrDigitsUpper[] = "0123456789ABCDEF";
-    constexpr char hexStrDigitsLower[] = "0123456789abcdef";
+    const char* const hexStrDigitsUpper = "0123456789ABCDEF";
+    const char* const hexStrDigitsLower = "0123456789abcdef";
     const char* const hexStrDigits = hexStrDigitsUpper;
     constexpr char toHexStr_defaultSepChar = 0x20;
 
@@ -66,18 +67,12 @@ namespace omw
     class string : public std::string
     {
     public:
-        //static bool isValidUTF8(const omw::string& str);
-
-    public:
         string();
         string(const char* str);
-        string(const std::string& str);
+        string(const char* str, size_type count);
+        string(const std::string& other, size_type pos = 0, size_type count = npos);
         string(const char* first, const char* last);
         virtual ~string() {}
-
-        bool isInteger() const;
-        bool isUInteger() const;
-        bool isHex() const;
 
         omw::string& replaceFirst(const omw::string& search, const omw::string& replace, size_type startPos = 0);
         omw::string& replaceFirst(const omw::StringReplacePair& pair, size_type startPos = 0);
@@ -90,57 +85,45 @@ namespace omw
         //! \name Case Conversion
         //! Methods named `.._ascii` convert only A-Z and a-z. Those named `.._asciiExt` additionally convert some UTF-8 code points too.
         /// @{
-        omw::string& makeLower_ascii();
-        omw::string& makeLower_asciiExt();
-        omw::string& makeUpper_ascii();
-        omw::string& makeUpper_asciiExt();
+        omw::string& lower_ascii();
+        omw::string& lower_asciiExt();
+        omw::string& upper_ascii();
+        omw::string& upper_asciiExt();
         omw::string toLower_ascii() const;
         omw::string toLower_asciiExt() const;
         omw::string toUpper_ascii() const;
         omw::string toUpper_asciiExt() const;
         /// @}
 
-        omw::string& makeUrlEncoded();
+        omw::string& encodeUrl();
         omw::string toUrlEncoded() const;
-
-        //bool isValidUTF8() const;
     };
 
 
 
-    omw::string to_string(bool value, bool textual = false);
+    omw::string to_string(bool value, bool textual = true);
 
     template<typename T1, typename T2>
-    std::string to_string(const std::pair<T1, T2>& value, char sepChar = pairtos_defaultSepChar);
+    omw::string to_string(const std::pair<T1, T2>& value, char sepChar = pairtos_defaultSepChar);
 
-    template std::string to_string(const std::pair<int, int>&, char);
-    template std::string to_string(const std::pair<long, long>&, char);
-    template std::string to_string(const std::pair<long long, long long>&, char);
-    template std::string to_string(const std::pair<unsigned, unsigned>&, char);
-    template std::string to_string(const std::pair<unsigned long, unsigned long>&, char);
-    template std::string to_string(const std::pair<unsigned long long, unsigned long long>&, char);
-    template std::string to_string(const std::pair<float, float>&, char);
-    template std::string to_string(const std::pair<double, double>&, char);
-    template std::string to_string(const std::pair<long double, long double>&, char);
+    template omw::string to_string(const std::pair<int32_t, int32_t>&, char);
+    template omw::string to_string(const std::pair<int64_t, int64_t>&, char);
+    template omw::string to_string(const std::pair<uint32_t, uint32_t>&, char);
+    template omw::string to_string(const std::pair<uint64_t, uint64_t>&, char);
+    template omw::string to_string(const std::pair<float, float>&, char);
+    template omw::string to_string(const std::pair<double, double>&, char);
+    template omw::string to_string(const std::pair<long double, long double>&, char);
 
 
 
     bool stob(const omw::string& boolStr);
-    std::pair<int, int> stoipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<long, long> stolpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<long long, long long> stollpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<unsigned long, unsigned long> stoulpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<unsigned long long, unsigned long long> stoullpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<float, float> stofpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<double, double> stodpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<long double, long double> stoldpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-
-
-
-
-    bool isInteger(const std::string& str);
-    bool isUInteger(const std::string& str);
-    bool isHex(const std::string& str);
+    std::pair<int32_t, int32_t> stoipair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<int64_t, int64_t> stoi64pair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<uint32_t, uint32_t> stouipair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<uint64_t, uint64_t> stoui64pair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<float, float> stofpair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<double, double> stodpair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<long double, long double> stoldpair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
 
 
 
@@ -154,12 +137,22 @@ namespace omw
     omw::string toHexStr(uint64_t value);
     omw::string toHexStr(const std::vector<char>& data, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const std::vector<uint8_t>& data, char sepChar = toHexStr_defaultSepChar);
-    omw::string toHexStr(const char* data, size_t count, char sepChar = toHexStr_defaultSepChar);
-    omw::string toHexStr(const uint8_t* data, size_t count, char sepChar = toHexStr_defaultSepChar);
+    omw::string toHexStr(const char* data, omw::string::size_type count, char sepChar = toHexStr_defaultSepChar);
+    omw::string toHexStr(const uint8_t* data, omw::string::size_type count, char sepChar = toHexStr_defaultSepChar);
 
-    int32_t hexstoi(const std::string& str);
-    int64_t hexstoi64(const std::string& str);
-    
+    int32_t hexstoi(const omw::string& str);
+    int64_t hexstoi64(const omw::string& str);
+    uint32_t hexstoui(const omw::string& str);
+    uint64_t hexstoui64(const omw::string& str);
+    std::vector<uint8_t> hexstovector(const omw::string& str, char sepChar = toHexStr_defaultSepChar);
+
+
+
+    //bool isValidUTF8(const omw::string& str);
+    bool isInteger(const omw::string& str);
+    bool isUInteger(const omw::string& str);
+    bool isHex(const omw::string& str);
+
     /*! @} */
 }
 

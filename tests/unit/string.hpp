@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           13.08.2021
+date           14.07.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -8,8 +8,11 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #define TEST_OMW_STRING_H
 
 #include <cstring>
+#include <stdexcept>
 #include <string>
 #include <vector>
+
+#include "testUtil.h"
 
 #include <catch2/catch.hpp>
 #include <omw/string.h>
@@ -69,37 +72,6 @@ TEST_CASE("string.h omw::string ctor")
     CHECK(std::strcmp(omw::string(str, str + std::strlen(str)).c_str(), str) == 0);
     CHECK(std::strcmp(omwstr.c_str(), "aaa") == 0);
     CHECK(std::strcmp(stdfromomw.c_str(), "aaa") == 0);
-}
-
-TEST_CASE("string.h omw::string::isInteger()")
-{
-    CHECK(omw::string("a123").isInteger() == false);
-    CHECK(omw::string("a").isInteger() == false);
-    CHECK(omw::string("abc").isInteger() == false);
-    CHECK(omw::string("-").isInteger() == false);
-    CHECK(omw::string("-abc").isInteger() == false);
-    CHECK(omw::string("123abc").isInteger() == false);
-    CHECK(omw::string("-123abc").isInteger() == false);
-    CHECK(omw::string("0").isInteger() == true);
-    CHECK(omw::string("-0").isInteger() == true);
-    CHECK(omw::string("-1").isInteger() == true);
-    CHECK(omw::string("-123").isInteger() == true);
-    CHECK(omw::string("1").isInteger() == true);
-    CHECK(omw::string("123").isInteger() == true);
-
-    CHECK(omw::string("a123").isUInteger() == false);
-    CHECK(omw::string("a").isUInteger() == false);
-    CHECK(omw::string("abc").isUInteger() == false);
-    CHECK(omw::string("-").isUInteger() == false);
-    CHECK(omw::string("-abc").isUInteger() == false);
-    CHECK(omw::string("123abc").isUInteger() == false);
-    CHECK(omw::string("-123abc").isUInteger() == false);
-    CHECK(omw::string("0").isUInteger() == true);
-    CHECK(omw::string("-0").isUInteger() == false);
-    CHECK(omw::string("-1").isUInteger() == false);
-    CHECK(omw::string("-123").isUInteger() == false);
-    CHECK(omw::string("1").isUInteger() == true);
-    CHECK(omw::string("123").isUInteger() == true);
 }
 
 TEST_CASE("string.h omw::string::replaceFirst()")
@@ -266,16 +238,16 @@ TEST_CASE("string.h omw::string case conversion")
     CHECK(mixed.toUpper_asciiExt() == upperExt);
 
     omw::string s = mixed;
-    s.makeLower_ascii();
+    s.lower_ascii();
     CHECK(s == lower);
     s = mixed;
-    s.makeLower_asciiExt();
+    s.lower_asciiExt();
     CHECK(s == lowerExt);
     s = mixed;
-    s.makeUpper_ascii();
+    s.upper_ascii();
     CHECK(s == upper);
     s = mixed;
-    s.makeUpper_asciiExt();
+    s.upper_asciiExt();
     CHECK(s == upperExt);
 }
 
@@ -285,7 +257,7 @@ TEST_CASE("string.h omw::string URL encoded")
     const std::string enc = "%2B%22%2A%25%26%2F%28%29%3Dasdf%28fdsf%29";
 
     omw::string s1(str);
-    s1.makeUrlEncoded();
+    s1.encodeUrl();
 
     const omw::string s2(str);
 
@@ -320,46 +292,23 @@ TEST_CASE("string.h stob()")
     CHECK(omw::stob("TrUe") == true);
     CHECK(omw::stob("TRUE") == true);
 
-    bool catched;
 
-    try
-    {
-        auto value = omw::stob("fsef");
-        catched = false;
-    }
-    catch (...) { catched = true; }
-    CHECK(catched == true);
+    TESTUTIL_TRYCATCH_DECLARE_VAL(bool, true);
+    TESTUTIL_TRYCATCH_CHECK(omw::stob("fsef"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stob("2"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::stob("-1"), std::out_of_range);
 }
 
 TEST_CASE("string.h stoipair()")
 {
     CHECK(std::pair<int, int>(-1, 123) == omw::stoipair("-1#123", '#'));
 
-    bool catched;
-
-    try
-    {
-        omw::stoipair("-1 123");
-        catched = false;
-    }
-    catch (...) { catched = true; }
-    CHECK(catched == true);
-
-    try
-    {
-        omw::stoipair(";123");
-        catched = false;
-    }
-    catch (...) { catched = true; }
-    CHECK(catched == true);
-
-    try
-    {
-        omw::stoipair("123;");
-        catched = false;
-    }
-    catch (...) { catched = true; }
-    CHECK(catched == true);
+    typedef std::pair<int32_t, int32_t> ipair;
+    TESTUTIL_TRYCATCH_DECLARE_VAL(ipair, ipair(0x11112, -1234));
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("-1 123"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair(";123"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("123;"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair(";"), std::invalid_argument);
 }
 
 TEST_CASE("string.h toHexStr()")
@@ -384,6 +333,147 @@ TEST_CASE("string.h toHexStr()")
     CHECK(omw::toHexStr(vecUC, '-') == "30-35-41-62");
     CHECK(omw::toHexStr(vecUC.data(), vecUC.size()) == "30 35 41 62");
     CHECK(omw::toHexStr(vecUC.data(), vecUC.size(), '-') == "30-35-41-62");
+}
+
+TEST_CASE("string.h hexstoi()")
+{
+    CHECK(omw::hexstoi("0") == 0);
+    CHECK(omw::hexstoi("000") == 0);
+    CHECK(omw::hexstoi("ff") == 255);
+    CHECK(omw::hexstoi("FFffFFff") == -1);
+    CHECK(omw::hexstoi("FFffFFfe") == -2);
+    CHECK(omw::hexstoi("0FFffFFff") == -1);
+
+    TESTUTIL_TRYCATCH_DECLARE_VAL(int32_t, 0x11112);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi(""), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi("0xF0"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi("100000000"), std::out_of_range);
+}
+
+TEST_CASE("string.h hexstoui()")
+{
+    CHECK(omw::hexstoui("0") == 0);
+    CHECK(omw::hexstoui("000") == 0);
+    CHECK(omw::hexstoui("ff") == 255);
+    CHECK(omw::hexstoui("FFffFFff") == 4294967295);
+    CHECK(omw::hexstoui("FFffFFfe") == 4294967294);
+    CHECK(omw::hexstoui("0FFffFFff") == 4294967295);
+
+    TESTUTIL_TRYCATCH_DECLARE_VAL(uint32_t, 0x11112);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui(""), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui("0xF0"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui("100000000"), std::out_of_range);
+}
+
+TEST_CASE("string.h hexstoi64()")
+{
+    CHECK(omw::hexstoi64("0") == 0);
+    CHECK(omw::hexstoi64("000") == 0);
+    CHECK(omw::hexstoi64("ff") == 255);
+    CHECK(omw::hexstoi64("FFffFFff") == 4294967295);
+    CHECK(omw::hexstoi64("FFffFFfe") == 4294967294);
+    CHECK(omw::hexstoi64("ffffFFFFffffFFFF") == -1);
+    CHECK(omw::hexstoi64("ffffFFFFffffFFFe") == -2);
+    CHECK(omw::hexstoi64("0ffffFFFFffffFFFF") == -1);
+
+    TESTUTIL_TRYCATCH_DECLARE_VAL(int64_t, 0x11112);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64(""), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64("0xF0"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64("10000000000000000"), std::out_of_range);
+}
+
+TEST_CASE("string.h hexstoui64()")
+{
+    CHECK(omw::hexstoui64("0") == 0);
+    CHECK(omw::hexstoui64("000") == 0);
+    CHECK(omw::hexstoui64("ff") == 255);
+    CHECK(omw::hexstoui64("FFffFFff") == 4294967295);
+    CHECK(omw::hexstoui64("FFffFFfe") == 4294967294);
+    CHECK(omw::hexstoui64("ffffFFFFffffFFFF") == 18446744073709551615);
+    CHECK(omw::hexstoui64("ffffFFFFffffFFFe") == 18446744073709551614);
+    CHECK(omw::hexstoui64("0ffffFFFFffffFFFF") == 18446744073709551615);
+
+    TESTUTIL_TRYCATCH_DECLARE_VAL(uint64_t, 0x11112);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64(""), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64("0xF0"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64("10000000000000000"), std::out_of_range);
+}
+
+TEST_CASE("string.h hexstovector()")
+{
+    const std::vector<uint8_t> vector = { 0x00, 0x05, 0xA5, 'c', 'B' };
+    CHECK(omw::hexstovector("00 05 a5 63 42") == vector);
+    CHECK(omw::hexstovector("00-05-a5-63-42", '-') == vector);
+    CHECK(omw::hexstovector("0 5 a5 63 042") == vector);
+
+    const std::vector<uint8_t> initialVector = { 0 };
+    TESTUTIL_TRYCATCH_DECLARE_VAL(std::vector<uint8_t>, initialVector);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00 05 a5 63-42"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00 05 a5 100 42"), std::out_of_range);
+}
+
+TEST_CASE("string.h isInteger()")
+{
+    CHECK(omw::isInteger("a123") == false);
+    CHECK(omw::isInteger("a") == false);
+    CHECK(omw::isInteger("abc") == false);
+    CHECK(omw::isInteger("-") == false);
+    CHECK(omw::isInteger("-abc") == false);
+    CHECK(omw::isInteger("123abc") == false);
+    CHECK(omw::isInteger("-123abc") == false);
+    CHECK(omw::isInteger("0") == true);
+    CHECK(omw::isInteger("-0") == true);
+    CHECK(omw::isInteger("-1") == true);
+    CHECK(omw::isInteger("-123") == true);
+    CHECK(omw::isInteger("1") == true);
+    CHECK(omw::isInteger("123") == true);
+
+    CHECK(omw::isUInteger("a123") == false);
+    CHECK(omw::isUInteger("a") == false);
+    CHECK(omw::isUInteger("abc") == false);
+    CHECK(omw::isUInteger("-") == false);
+    CHECK(omw::isUInteger("-abc") == false);
+    CHECK(omw::isUInteger("123abc") == false);
+    CHECK(omw::isUInteger("-123abc") == false);
+    CHECK(omw::isUInteger("0") == true);
+    CHECK(omw::isUInteger("-0") == false);
+    CHECK(omw::isUInteger("-1") == false);
+    CHECK(omw::isUInteger("-123") == false);
+    CHECK(omw::isUInteger("1") == true);
+    CHECK(omw::isUInteger("123") == true);
+}
+
+TEST_CASE("string.h isHex()")
+{
+    CHECK(omw::isHex("3F") == true);
+    CHECK(omw::isHex("3F5") == true);
+    CHECK(omw::isHex("0123456789ABCDEF") == true);
+    CHECK(omw::isHex("0123456789abcdef") == true);
+    CHECK(omw::isHex("0123456789ABCDEF0123") == true);
+
+    CHECK(omw::isHex("") == false);
+    CHECK(omw::isHex("0x3F") == false);
+
+    for (int c = 0; c <= 0xFF; ++c)
+    {
+        const char hexStr[] = { '5', 'a', (char)c, 0 };
+        bool expectedResult;
+
+        if (((c >= '0') && (c <= '9')) ||
+            ((c >= 'A') && (c <= 'F')) ||
+            ((c >= 'a') && (c <= 'f')) ||
+            (c == 0))
+        {
+            expectedResult = true;
+        }
+        else expectedResult = false;
+
+        CHECK(omw::isHex(hexStr) == expectedResult);
+    }
 }
 
 

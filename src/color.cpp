@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           07.09.2021
+date           14.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -51,7 +51,9 @@ void omw::Color::set(const omw::string& css)
 
     if (colStr.length() == 3)
     {
-        asdf;
+        const char tmpColStr[] = { colStr[0], colStr[0], colStr[1], colStr[1], colStr[2], colStr[2], 0 };
+        int col = omw::hexstoi(tmpColStr);
+        set(col);
     }
     else if (colStr.length() == colStrLen)
     {

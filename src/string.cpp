@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           07.09.2021
+date           14.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -10,6 +10,48 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 #include "omw/defs.h"
 #include "omw/string.h"
+
+
+
+namespace
+{
+    template <typename T>
+    T hexstointeger(const omw::string& str, const std::string& fnName)
+    {
+        const std::string exMsg_notHex(OMWi_DISPSTR(fnName + ": not a hex string"));
+        const std::string hexDigits(omw::hexStrDigitsLower);
+
+        omw::string::size_type pos = 0;
+        while ((str[pos] == '0') && (pos < (str.length() - 1))) ++pos;
+
+        const omw::string hexStr((omw::string(str, pos)).toLower_ascii());
+        const omw::string::size_type hexStrLen = hexStr.length();
+        const omw::string::size_type maxLen = 2 * sizeof(T);
+
+        T r = 0;
+
+        if ((hexStrLen <= maxLen) && (hexStrLen > 0))
+        {
+            for (omw::string::size_type i = 0; i < hexStrLen; ++i)
+            {
+                const omw::string::size_type digitIdx = hexDigits.find(hexStr[hexStrLen - i - 1]);
+
+                if (digitIdx == omw::string::npos) throw std::invalid_argument(exMsg_notHex);
+
+                T digitValue = (T)digitIdx;
+                digitValue <<= (4 * (T)i);
+                r |= digitValue;
+            }
+        }
+        else
+        {
+            if (!omw::isHex(hexStr)) throw std::invalid_argument(exMsg_notHex);
+            throw std::out_of_range(fnName);
+        }
+
+        return r;
+    }
+}
 
 
 
@@ -72,38 +114,23 @@ const std::string& omw::StringReplacePair::replace() const
 
 omw::string::string()
     : std::string()
-{
-}
+{}
 
 omw::string::string(const char* str)
     : std::string(str)
-{
-}
+{}
 
-omw::string::string(const std::string& str)
-    : std::string(str)
-{
-}
+omw::string::string(const char* str, size_type count)
+    : std::string(str, count)
+{}
+
+omw::string::string(const std::string& other, size_type pos, size_type count)
+    : std::string(other, pos, count)
+{}
 
 omw::string::string(const char* first, const char* last)
     : std::string(first, last)
-{
-}
-
-bool omw::string::isInteger() const
-{
-    return omw::isInteger(*this);
-}
-
-bool omw::string::isUInteger() const
-{
-    return omw::isUInteger(*this);
-}
-
-bool omw::string::isHex() const
-{
-    return omw::isHex(*this);
-}
+{}
 
 //! @param search Substring to be replaced
 //! @param replace String for replacement
@@ -204,7 +231,7 @@ omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairsBegin, c
     return replaceAll(std::vector<omw::StringReplacePair>(pairsBegin, pairsEnd), startPos, nReplacementsTotal, nReplacements);
 }
 
-omw::string& omw::string::makeLower_ascii()
+omw::string& omw::string::lower_ascii()
 {
     for (size_type i = 0; i < length(); ++i)
     {
@@ -215,9 +242,9 @@ omw::string& omw::string::makeLower_ascii()
     return *this;
 }
 
-omw::string& omw::string::makeLower_asciiExt()
+omw::string& omw::string::lower_asciiExt()
 {
-    makeLower_ascii();
+    lower_ascii();
 
     const omw::StringReplacePair rp[] =
     {
@@ -229,7 +256,7 @@ omw::string& omw::string::makeLower_asciiExt()
     return replaceAll(rp, rp + (sizeof(rp) / sizeof(rp[0])));
 }
 
-omw::string& omw::string::makeUpper_ascii()
+omw::string& omw::string::upper_ascii()
 {
     for (size_type i = 0; i < length(); ++i)
     {
@@ -240,9 +267,9 @@ omw::string& omw::string::makeUpper_ascii()
     return *this;
 }
 
-omw::string& omw::string::makeUpper_asciiExt()
+omw::string& omw::string::upper_asciiExt()
 {
-    makeUpper_ascii();
+    upper_ascii();
 
     const omw::StringReplacePair rp[] =
     {
@@ -257,28 +284,28 @@ omw::string& omw::string::makeUpper_asciiExt()
 omw::string omw::string::toLower_ascii() const
 {
     omw::string s(this->c_str());
-    return s.makeLower_ascii();
+    return s.lower_ascii();
 }
 
 omw::string omw::string::toLower_asciiExt() const
 {
     omw::string s(this->c_str());
-    return s.makeLower_asciiExt();
+    return s.lower_asciiExt();
 }
 
 omw::string omw::string::toUpper_ascii() const
 {
     omw::string s(this->c_str());
-    return s.makeUpper_ascii();
+    return s.upper_ascii();
 }
 
 omw::string omw::string::toUpper_asciiExt() const
 {
     omw::string s(this->c_str());
-    return s.makeUpper_asciiExt();
+    return s.upper_asciiExt();
 }
 
-omw::string& omw::string::makeUrlEncoded()
+omw::string& omw::string::encodeUrl()
 {
     const size_t count = 61;
     const char search[count] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 47, 58, 59, 60, 61, 62, 63, 64, 91, 92, 93, 94, 96, 123, 124, 125, 127 };
@@ -293,7 +320,7 @@ omw::string& omw::string::makeUrlEncoded()
 omw::string omw::string::toUrlEncoded() const
 {
     omw::string s(this->c_str());
-    return s.makeUrlEncoded();
+    return s.encodeUrl();
 }
 
 
@@ -305,7 +332,7 @@ omw::string omw::to_string(bool value, bool textual)
 }
 
 template<typename T1, typename T2>
-std::string omw::to_string(const std::pair<T1, T2>& value, char sepChar)
+omw::string omw::to_string(const std::pair<T1, T2>& value, char sepChar)
 {
     return (std::to_string(value.first) + sepChar + std::to_string(value.second));
 }
@@ -339,14 +366,14 @@ bool omw::stob(const omw::string& boolStr)
 //! @return <tt><a href="https://en.cppreference.com/w/cpp/utility/pair" target="_blank">std::pair</a></tt> with the two values
 //! 
 //! \b Exceptions
-//! - `std::invalid_argument` if the separator character was not found, is at the first or at the last position in the string
+//! - `std::invalid_argument` if the separator character was not found or it is at the first or at the last position in the string
 //! - <tt><a href="https://en.cppreference.com/w/cpp/string/basic_string/stol" target="_blank">std::stoi()</a></tt> is called and may throw `std::out_of_range` or `std::invalid_argument`
 //! 
-std::pair<int, int> omw::stoipair(const std::string& str, char sepChar)
+std::pair<int32_t, int32_t> omw::stoipair(const omw::string& str, char sepChar)
 {
     const std::string fnName = "stoipair";
 
-    size_t sp = str.find(sepChar);
+    omw::string::size_type sp = str.find(sepChar);
 
     if ((sp == 0) || (sp >= (str.length() - 1)) || (sp == std::string::npos)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": invalid separator char pos"));
 
@@ -356,62 +383,11 @@ std::pair<int, int> omw::stoipair(const std::string& str, char sepChar)
     if (!isInteger(first)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": first is not an integer"));
     if (!isInteger(second)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": second is not an integer"));
 
-    return std::pair<int, int>(std::stoi(first), std::stoi(second));
+    return std::pair<int32_t, int32_t>(std::stoi(first), std::stoi(second));
 }
 
 // https://en.cppreference.com/w/cpp/string/basic_string/stoul
 // https://en.cppreference.com/w/cpp/string/basic_string/stof
-
-
-bool omw::isInteger(const std::string& str)
-{
-    size_t startPos = 0;
-
-    if (str.length() > 1)
-    {
-        if (str[0] == '-') startPos = 1;
-    }
-
-    return omw::isUInteger(std::string(str, startPos));
-}
-
-bool omw::isUInteger(const std::string& str)
-{
-    bool r;
-
-    if (str.length() > 0)
-    {
-        r = true;
-        for (size_t i = 0; i < str.length(); ++i)
-        {
-            if ((str[i] < '0') || (str[i] > '9'))
-            {
-                r = false;
-                break;
-            }
-        }
-    }
-    else r = false;
-
-    return r;
-}
-
-bool omw::isHex(const std::string& str)
-{
-    bool r;
-
-    if (str.length() > 0)
-    {
-        r = true;
-        for (size_t i = 0; i < str.length(); ++i)
-        {
-            asdf;
-        }
-    }
-    else r = false;
-
-    return r;
-}
 
 
 
@@ -467,16 +443,16 @@ omw::string omw::toHexStr(const std::vector<uint8_t>& data, char sepChar)
     return toHexStr(data.data(), data.size(), sepChar);
 }
 
-omw::string omw::toHexStr(const char* data, size_t count, char sepChar)
+omw::string omw::toHexStr(const char* data, omw::string::size_type count, char sepChar)
 {
     return toHexStr((const uint8_t*)data, count, sepChar);
 }
 
-omw::string omw::toHexStr(const uint8_t* data, size_t count, char sepChar)
+omw::string omw::toHexStr(const uint8_t* data, omw::string::size_type count, char sepChar)
 {
     omw::string str;
 
-    for (size_t i = 0; i < count; ++i)
+    for (omw::string::size_type i = 0; i < count; ++i)
     {
         if ((i > 0) && (sepChar != 0)) str += sepChar;
 
@@ -486,28 +462,111 @@ omw::string omw::toHexStr(const uint8_t* data, size_t count, char sepChar)
     return str;
 }
 
-
-
-int32_t omw::hexstoi(const std::string& str)
+int32_t omw::hexstoi(const omw::string& str)
 {
-    const std::string fnName = "hexstoi";
-    std::string hexstr(str, 0, 8);
-    if (!omw::isHex(hexstr)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": not a hex string"));
-    int32_t r = 0;
+    return hexstointeger<int32_t>(str, "hexstoi");
+}
 
-    asdf;
+int64_t omw::hexstoi64(const omw::string& str)
+{
+    return hexstointeger<int64_t>(str, "hexstoi64");
+}
+
+uint32_t omw::hexstoui(const omw::string& str)
+{
+    return hexstointeger<uint32_t>(str, "hexstoui");
+}
+
+uint64_t omw::hexstoui64(const omw::string& str)
+{
+    return hexstointeger<uint64_t>(str, "hexstoui64");
+}
+
+std::vector<uint8_t> omw::hexstovector(const omw::string& str, char sepChar)
+{
+    const std::string fnName = "hexstovector";
+
+    std::vector<omw::string> hexStrings;
+    for (omw::string::size_type pos = 0; pos != omw::string::npos;)
+    {
+        const omw::string::size_type sepCharPos = str.find(sepChar, pos);
+        omw::string::size_type count;
+
+        if (sepCharPos != omw::string::npos) count = sepCharPos - pos;
+        else count = omw::string::npos;
+
+        hexStrings.push_back(omw::string(str, pos, count));
+
+        if (sepCharPos != omw::string::npos) pos = sepCharPos + 1;
+        else pos = omw::string::npos;
+    }
+
+    std::vector<uint8_t> values;
+    for (size_t i = 0; i < hexStrings.size(); ++i)
+    {
+        uint32_t value = omw::hexstoui(hexStrings[i]);
+        if (value > 0xFF) throw std::out_of_range(fnName);
+        values.push_back(value);
+    }
+
+    return values;
+}
+
+
+
+bool omw::isInteger(const omw::string& str)
+{
+    omw::string::size_type startPos = 0;
+
+    if (str.length() > 1)
+    {
+        if (str[0] == '-') startPos = 1;
+    }
+
+    return omw::isUInteger(omw::string(str, startPos));
+}
+
+bool omw::isUInteger(const omw::string& str)
+{
+    bool r;
+
+    if (str.length() > 0)
+    {
+        r = true;
+        for (omw::string::size_type i = 0; i < str.length(); ++i)
+        {
+            if ((str[i] < '0') || (str[i] > '9'))
+            {
+                r = false;
+                break;
+            }
+        }
+    }
+    else r = false;
 
     return r;
 }
 
-int64_t omw::hexstoi64(const std::string& str)
+bool omw::isHex(const omw::string& str)
 {
-    const std::string fnName = "hexstoi64";
-    std::string hexstr(str, 0, 16);
-    if (!omw::isHex(hexstr)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": not a hex string"));
-    int32_t r = 0;
+    bool r;
 
-    asdf;
+    if (str.length() > 0)
+    {
+        const std::string hexDigits(omw::hexStrDigitsLower);
+        omw::string tmpStr(str);
+        tmpStr.lower_ascii();
+
+        r = true;
+        for (omw::string::size_type i = 0; (i < tmpStr.length()) && r; ++i)
+        {
+            if (hexDigits.find(tmpStr[i]) == std::string::npos)
+            {
+                r = false;
+            }
+        }
+    }
+    else r = false;
 
     return r;
 }
