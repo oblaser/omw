@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           09.06.2021
+date           15.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -10,6 +10,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 
 #include "../omw/defs.h"
+#include "../omw/string.h"
 #include "../omw/version.h"
 
 namespace omw
@@ -17,7 +18,7 @@ namespace omw
     namespace info
     {
         omw::Version version();
-        std::string infoTxt();
+        omw::string infoTxt();
     }
 }
 

@@ -1,6 +1,6 @@
 /*
 author      Oliver Blaser
-date        07.09.2021
+date        15.09.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -18,7 +18,6 @@ namespace omw
 {
     namespace windows
     {
-        omw::Color getSysColor(int colorId);
     }
 }
 

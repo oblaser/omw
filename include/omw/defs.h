@@ -29,6 +29,8 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 // debugging
 #ifdef _DEBUG
 #define OMW_DEBUG (1)
+#else
+#undef OMW_DEBUG
 #endif
 
 
