@@ -301,7 +301,7 @@ TEST_CASE("string.h stob()")
 
 TEST_CASE("string.h stoipair()")
 {
-    CHECK(std::pair<int, int>(-1, 123) == omw::stoipair("-1#123", '#'));
+    CHECK(std::pair<int32_t, int32_t>(-1, 123) == omw::stoipair("-1#123", '#'));
 
     typedef std::pair<int32_t, int32_t> ipair;
     TESTUTIL_TRYCATCH_DECLARE_VAL(ipair, ipair(0x11112, -1234));
@@ -309,6 +309,8 @@ TEST_CASE("string.h stoipair()")
     TESTUTIL_TRYCATCH_CHECK(omw::stoipair(";123"), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::stoipair("123;"), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::stoipair(";"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("0;2200000000"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("2200000000;123"), std::out_of_range);
 }
 
 TEST_CASE("string.h toHexStr()")

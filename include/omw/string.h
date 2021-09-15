@@ -69,18 +69,18 @@ namespace omw
     public:
         string();
         string(const char* str);
-        string(const char* str, size_type count);
-        string(const std::string& other, size_type pos = 0, size_type count = npos);
+        string(const char* str, std::string::size_type count);
+        string(const std::string& other, std::string::size_type pos = 0, std::string::size_type count = std::string::npos);
         string(const char* first, const char* last);
         virtual ~string() {}
 
-        omw::string& replaceFirst(const omw::string& search, const omw::string& replace, size_type startPos = 0);
+        omw::string& replaceFirst(const std::string& search, const std::string& replace, size_type startPos = 0);
         omw::string& replaceFirst(const omw::StringReplacePair& pair, size_type startPos = 0);
 
-        omw::string& replaceAll(const omw::string& search, const omw::string& replace, size_type startPos = 0, size_type* nReplacements = nullptr);
-        omw::string& replaceAll(const omw::StringReplacePair& pair, size_type startPos = 0, size_type* nReplacements = nullptr);
-        omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_type* nReplacementsTotal = nullptr, std::vector<size_type>* nReplacements = nullptr);
-        omw::string& replaceAll(const omw::StringReplacePair* pairsBegin, const omw::StringReplacePair* pairsEnd, size_type startPos = 0, size_type* nReplacementsTotal = nullptr, std::vector<size_type>* nReplacements = nullptr);
+        omw::string& replaceAll(const std::string& search, const std::string& replace, size_type startPos = 0, size_t* nReplacements = nullptr);
+        omw::string& replaceAll(const omw::StringReplacePair& pair, size_type startPos = 0, size_t* nReplacements = nullptr);
+        omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
+        omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
 
         //! \name Case Conversion
         //! Methods named `.._ascii` convert only A-Z and a-z. Those named `.._asciiExt` additionally convert some UTF-8 code points too.
@@ -116,14 +116,14 @@ namespace omw
 
 
 
-    bool stob(const omw::string& boolStr);
-    std::pair<int32_t, int32_t> stoipair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<int64_t, int64_t> stoi64pair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<uint32_t, uint32_t> stouipair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<uint64_t, uint64_t> stoui64pair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<float, float> stofpair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<double, double> stodpair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<long double, long double> stoldpair(const omw::string& str, char sepChar = pairtos_defaultSepChar);
+    bool stob(const std::string& boolStr);
+    std::pair<int32_t, int32_t> stoipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<int64_t, int64_t> stoi64pair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<uint64_t, uint64_t> stoui64pair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<float, float> stofpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<double, double> stodpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<long double, long double> stoldpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
 
 
 
@@ -137,21 +137,21 @@ namespace omw
     omw::string toHexStr(uint64_t value);
     omw::string toHexStr(const std::vector<char>& data, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const std::vector<uint8_t>& data, char sepChar = toHexStr_defaultSepChar);
-    omw::string toHexStr(const char* data, omw::string::size_type count, char sepChar = toHexStr_defaultSepChar);
-    omw::string toHexStr(const uint8_t* data, omw::string::size_type count, char sepChar = toHexStr_defaultSepChar);
+    omw::string toHexStr(const char* data, size_t count, char sepChar = toHexStr_defaultSepChar);
+    omw::string toHexStr(const uint8_t* data, size_t count, char sepChar = toHexStr_defaultSepChar);
 
-    int32_t hexstoi(const omw::string& str);
-    int64_t hexstoi64(const omw::string& str);
-    uint32_t hexstoui(const omw::string& str);
-    uint64_t hexstoui64(const omw::string& str);
-    std::vector<uint8_t> hexstovector(const omw::string& str, char sepChar = toHexStr_defaultSepChar);
+    int32_t hexstoi(const std::string& str);
+    int64_t hexstoi64(const std::string& str);
+    uint32_t hexstoui(const std::string& str);
+    uint64_t hexstoui64(const std::string& str);
+    std::vector<uint8_t> hexstovector(const std::string& str, char sepChar = toHexStr_defaultSepChar);
 
 
 
-    //bool isValidUTF8(const omw::string& str);
-    bool isInteger(const omw::string& str);
-    bool isUInteger(const omw::string& str);
-    bool isHex(const omw::string& str);
+    //bool isValidUTF8(const std::string& str);
+    bool isInteger(const std::string& str);
+    bool isUInteger(const std::string& str);
+    bool isHex(const std::string& str);
 
     /*! @} */
 }

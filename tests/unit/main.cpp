@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           18.08.2021
+date           15.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -18,10 +18,11 @@ TEST_CASE("omw lib")
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 
-    CHECK(omw::info::version() == omw::Version(0, 1, 1001));
+    REQUIRE(omw::info::version() == omw::Version(0, 1, 1001));
 }
 
 
+#include "color.hpp"
 #include "string.hpp"
 #include "version.hpp"
 #include "windows_envVar.hpp"

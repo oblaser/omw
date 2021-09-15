@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           07.07.2021
+date           15.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -55,13 +55,6 @@ constexpr const char* OMWi_file_to_filename(const char* p)
 
 
 
-#if (defined(OMW_DEFINE_SIZE_MAX) && !defined(SIZE_MAX))
-#define SIZE_MAX ((size_t)-1)
-#endif
-
-#if (defined(OMW_DEFINE_SIZE_T_MAX) && !defined(SIZE_T_MAX))
-#define SIZE_T_MAX ((size_t)-1)
-#endif
 
 #define OMW_SIZE_MAX ((size_t)-1)
 
