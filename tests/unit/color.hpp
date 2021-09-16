@@ -283,6 +283,12 @@ TEST_CASE("color.h omw::Color operators")
 {
     omw::Color col;
 
+    CHECK(col != omw::Color(0));
+    col = omw::Color(0);
+    CHECK(col == omw::Color(0));
+    col.invalidate();
+    CHECK_FALSE(col == omw::Color(0));
+
     col.set(4, 5, 6);
     CHECK(col == 0x040506);
     CHECK(col == "#040506");
@@ -387,6 +393,23 @@ TEST_CASE("color.h omw::Color wxWidgets support")
 
     col.from_wxW_RGBA(0x10ABCDEF);
     CHECK(col == omw::Color(0xEF, 0xCD, 0xAB, 16));
+}
+
+TEST_CASE("color.h color namespace")
+{
+    omw::Color col;
+
+    col.set(0xFF, 0xFF, 0xFF, 0);
+    CHECK(omw::colors::transparent == col);
+
+    CHECK(0xFF0000 == omw::colors::red);
+    CHECK(0xFF00FF == omw::colors::magenta);
+    CHECK(0xFFFF00 == omw::colors::yellow);
+    CHECK(0x00FF00 == omw::colors::lime);
+    CHECK(0xFFD700 == omw::colors::gold);
+    CHECK(0xFF4500 == omw::colors::orangeRed);
+    CHECK(0x000080 == omw::colors::navy);
+    CHECK(0xDA70D6 == omw::colors::orchid);
 }
 
 
