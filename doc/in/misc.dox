@@ -19,7 +19,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 /*!
 \namespace omw::windows
-\brief Contains wraping and helper functions for the Windows API
+\brief Wraping and helper functions for the Windows API
 
 This namespace is only present on Windows platforms.
 

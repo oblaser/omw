@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           15.09.2021
+date           17.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -74,7 +74,9 @@ TEST_CASE("color.h omw::Color implicit ctor")
     omw::Color other(0x12ab34);
     omw::Color col;
 
+    other.invalidate();
     col = other;
+    CHECK_FALSE(col.isValid());
     CHECK(col.r() == 0x12);
     CHECK(col.g() == 0xAB);
     CHECK(col.b() == 0x34);
@@ -279,7 +281,7 @@ TEST_CASE("color.h omw::Color to string")
     CHECK(col.toCssStr() == "#ABCDEF");
 }
 
-TEST_CASE("color.h omw::Color operators")
+TEST_CASE("color.h omw::Color compare operators")
 {
     omw::Color col;
 
@@ -304,70 +306,92 @@ TEST_CASE("color.h omw::Color operators")
     CHECK_FALSE("#040506" == col);
     CHECK(0x040506 != col);
     CHECK("#040506" != col);
+}
 
+TEST_CASE("color.h omw::Color A over B operator")
+{
+    // tools/colorAdd_AoverB/unit_test_values.m
 
-    col.set(4, 5, 6, 200);
+    omw::Color col;
+
+    col.set(0xf0f0f0);
     omw::Color result;
 
-    result = col + 0x101010;
-    CHECK(result.r() == 20);
-    CHECK(result.g() == 21);
-    CHECK(result.b() == 22);
-    CHECK(result.a() == 200);
-
-    result = 0x101010 + omw::Color(100, 80, 10, 60);
-    CHECK(result.r() == 40);
-    CHECK(result.g() == 35);
-    CHECK(result.b() == 18);
+    result = col + 0xf03f0f;
+    CHECK(result.r() == 0xf0);
+    CHECK(result.g() == 0x3f);
+    CHECK(result.b() == 0x0f);
     CHECK(result.a() == 255);
+    CHECK(result.isValid());
 
-    result = "101010" + omw::Color(100, 80, 10);
-    CHECK(result.r() == 116);
-    CHECK(result.g() == 96);
-    CHECK(result.b() == 26);
+    result = col + omw::Color(200, 100, 50, 0);
+    CHECK(result == col);
+    CHECK(result.isValid());
+
+    result.set(0xFF, 0, 0);
+    result += omw::Color(0, 0, 0xFF, 0x7F);
+    CHECK(result.r() == 128); //  }
+    CHECK(result.g() == 0);   //   } rounding error because neither 127 nor 128 is the perfect half of 255 (0.498 -> 127, 0.502 -> 128).
+    CHECK(result.b() == 127); //  }
     CHECK(result.a() == 255);
+    CHECK(result.isValid());
 
-    result = "F0FEF5" + omw::Color(16, 5, 47);
-    CHECK(result.r() == 0);
-    CHECK(result.g() == 3);
-    CHECK(result.b() == 36);
-    CHECK(result.a() == 255);
+    result.set(0xFF, 0, 0, 0x7F);
+    result += omw::Color(0, 0, 0xFF, 0x7F);
+    CHECK(result.r() == 85);
+    CHECK(result.g() == 0);
+    CHECK(result.b() == 170);
+    CHECK(result.a() == 191);
+    CHECK(result.isValid());
+
+    col = 0x00FF00;
+    result = col + omw::Color(255, 0, 255, 0x3F);
+    CHECK(result == omw::Color(63, 192, 63, 255));
+    CHECK(result.isValid());
+    result = col + omw::Color(255, 0, 255, 0x7F);
+    CHECK(result == omw::Color(127, 128, 127, 255));
+    CHECK(result.isValid());
+    result = col + omw::Color(255, 0, 255, 0xBE);
+    CHECK(result == omw::Color(190, 65, 190, 255));
+    CHECK(result.isValid());
 
 
-    col.set(100, 80, 20, 200);
+    omw::Color addend;
 
-    result = col - 0x101010;
-    CHECK(result.r() == 84);
-    CHECK(result.g() == 64);
-    CHECK(result.b() == 4);
-    CHECK(result.a() == 200);
+    col.setARGB(0x1000FF7F);
+    addend = omw::Color(255, 0, 255, 0x3F);
+    col.invalidate();
+    result = col + addend;
+    CHECK_FALSE(col.isValid());
+    CHECK(addend.isValid());
+    CHECK(result.r() == 214);
+    CHECK(result.g() == 41);
+    CHECK(result.b() == 234);
+    CHECK(result.a() == 75);
+    CHECK_FALSE(result.isValid());
 
-    result = 0x101010 - omw::Color(100, 80, 10, 25);
-    CHECK(result.r() == 6);
-    CHECK(result.g() == 8);
-    CHECK(result.b() == 15);
-    CHECK(result.a() == 255);
-
-    result = "#101010" - omw::Color(1, 2, 3);
-    CHECK(result.r() == 15);
-    CHECK(result.g() == 14);
-    CHECK(result.b() == 13);
-    CHECK(result.a() == 255);
-
-    result = "#101010" - omw::Color(17, 59, 214);
-    CHECK(result.r() == 255);
-    CHECK(result.g() == 213);
-    CHECK(result.b() == 58);
-    CHECK(result.a() == 255);
+    col.setARGB(0x1000FF7F);
+    addend = omw::Color(255, 0, 255, 0x3F);
+    addend.invalidate();
+    result = col + addend;
+    CHECK(col.isValid());
+    CHECK_FALSE(addend.isValid());
+    CHECK(result.r() == 214);
+    CHECK(result.g() == 41);
+    CHECK(result.b() == 234);
+    CHECK(result.a() == 75);
+    CHECK_FALSE(result.isValid());
 }
 
 TEST_CASE("color.h omw::Color win32 support")
 {
     omw::Color col(1, 2, 3, 4);
-    CHECK(col.to_win32() == 0x00030201);
+    CHECK(col.to_win() == 0x00030201);
 
-    col.from_win32(0xABCDEF);
+    col.from_win(0xABCDEF);
     CHECK(col == omw::Color(0xEF, 0xCD, 0xAB, 255));
+
+    CHECK(omw::fromWinColor(0x123456) == omw::Color(0x56, 0x34, 0x12, 255));
 }
 
 TEST_CASE("color.h omw::Color wxWidgets support")
@@ -393,6 +417,8 @@ TEST_CASE("color.h omw::Color wxWidgets support")
 
     col.from_wxW_RGBA(0x10ABCDEF);
     CHECK(col == omw::Color(0xEF, 0xCD, 0xAB, 16));
+
+    CHECK(omw::fromWxColor(0xA0B0F0E0) == omw::Color(0xE0, 0xF0, 0xB0, 0xA0));
 }
 
 TEST_CASE("color.h color namespace")

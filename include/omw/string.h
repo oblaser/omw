@@ -14,7 +14,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace omw
 {
-    /*! \addtogroup grp_stringsLib
+    /*! \addtogroup grp_stringLib
     * @{
     */
 
@@ -83,7 +83,7 @@ namespace omw
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
 
         //! \name Case Conversion
-        //! Methods named `.._ascii` convert only A-Z and a-z. Those named `.._asciiExt` additionally convert some UTF-8 code points too.
+        //! Methods named `.._ascii` convert only A-Z and a-z. Those named `.._asciiExt` additionally convert some UTF-8 code points.
         /// @{
         omw::string& lower_ascii();
         omw::string& lower_asciiExt();

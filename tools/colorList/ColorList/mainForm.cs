@@ -40,11 +40,15 @@ namespace ColorList
             return r;
         }
 
+        public static string omwColorValueVarName(string valVarName)
+        {
+            return valVarName + "_argb";
+        }
         public static string omwColorCtorArg(ColCont cc)
         {
             string str;
 
-            if (cc.color.A == 0xFF) str = "argb_" + cc.name_c;
+            if (cc.color.A == 0xFF) str = omwColorValueVarName(cc.name_c);
             else if (cc.name == "Transparent") str = "255, 255, 255, 0";
             else str = "TODO";
 
@@ -80,8 +84,10 @@ namespace ColorList
 
     public partial class mainForm : Form
     {
+        private static readonly string frameTitle = "Color List";
         private ColCont[] webColors;
         private ColCont[] sysColors;
+        private Color defaultBackColor;
 
         public mainForm()
         {
@@ -89,9 +95,11 @@ namespace ColorList
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Size = new Size(600, 700);
             this.MinimumSize = new Size(600, 700);
-            this.Text = "Color List";
+            this.Text = frameTitle;
             this.FormClosing += new FormClosingEventHandler(this.mainForm_closing);
 
+
+            defaultBackColor = this.BackColor;
 
 
             KnownColor[] kc_colors = Enum.GetValues(typeof(KnownColor)).Cast<KnownColor>().ToArray();
@@ -149,25 +157,8 @@ namespace ColorList
             }
 
 
-
-            int posX = 3;
-            int posY = 3;
-            createColorListControls(new Point(posX, posY), "Web Colors", webColors);
-            posX = 300;
-            posY = createColorListControls(new Point(posX, posY), "System Colors", sysColors);
-
-            posX += 20;
-            posY += 50;
-
-            Button btn_info = new Button();
-            btn_info.Text = "info";
-            btn_info.Size = new Size(75, 35);
-            btn_info.Location = new Point(posX, posY);
-            btn_info.Click += new EventHandler(this.btn_info_click);
-            this.Controls.Add(btn_info);
-            posY += btn_info.Size.Height;
-
-            this.Invalidate();
+            config = loadConfig();
+            createControls();
         }
 
         private int createColorListControls(Point position, string title, ColCont[] colors)
@@ -192,7 +183,8 @@ namespace ColorList
             {
                 PictureBox pbx = new PictureBox();
                 pbx.BackColor = colors[i].color;
-                pbx.BorderStyle = BorderStyle.FixedSingle;
+                pbx.Click += new EventHandler(this.pbx_click);
+                if (config.drawBorder) pbx.BorderStyle = BorderStyle.FixedSingle;
                 pbx.Size = new Size(50, 23);
                 pbx.Location = new Point(posX, posY);
                 this.Controls.Add(pbx);
@@ -228,21 +220,60 @@ namespace ColorList
             return posY;
         }
 
+        private void createControls()
+        {
+            this.Controls.Clear();
+
+            int posX = 3;
+            int posY = 3;
+            createColorListControls(new Point(posX, posY), "Web Colors", webColors);
+            posX = 300;
+            posY = createColorListControls(new Point(posX, posY), "System Colors", sysColors);
+
+            posY += 50;
+
+            CheckBox ckb = new CheckBox();
+            ckb.Text = "draw borders";
+            ckb.Location = new Point(posX + 10, posY);
+            ckb.Checked = config.drawBorder;
+            ckb.CheckedChanged += new EventHandler((object sender, EventArgs e) => { config.drawBorder = ((CheckBox)sender).Checked; createControls(); });
+            this.Controls.Add(ckb);
+            posY += ckb.Size.Height;
+
+            posY += 20;
+
+            Button btn_info = new Button();
+            btn_info.Text = "info";
+            btn_info.BackColor = Color.FromKnownColor(KnownColor.ControlLight);
+            btn_info.Size = new Size(75, 35);
+            btn_info.Location = new Point(posX + 20, posY);
+            btn_info.Click += new EventHandler(this.btn_info_click);
+            this.Controls.Add(btn_info);
+            posY += btn_info.Size.Height;
+
+            this.Invalidate();
+        }
+
+        private void updateFrameTitle()
+        {
+            Color col = this.BackColor;
+            this.Text = frameTitle + " - " + col.ToString() + " - " + Util.colorToCssStr(col) + " - rgb(" + col.R + ", " + col.G + ", " + col.B + ")";
+        }
+
         private void mainForm_Load(object sender, EventArgs e)
         {
-            config = loadConfig();
             this.Location = config.winPos;
             this.Size = config.winSize;
 
             if (config.createOutputFiles)
             {
                 string cppStr = "namespace colors\n{\n";
-                for (int i = 0; i < webColors.Length; ++i) cppStr += "constexpr int32_t argb_" + webColors[i].name_c + " = " + webColors[i].value_c + ";\n";
+                for (int i = 0; i < webColors.Length; ++i) cppStr += "constexpr int32_t " + Util.omwColorValueVarName(webColors[i].name_c) + " = " + webColors[i].value_c + ";\n";
                 cppStr += "\n";
                 for (int i = 0; i < webColors.Length; ++i) cppStr += "const omw::Color " + webColors[i].name_c + " = omw::Color(" + Util.omwColorCtorArg(webColors[i]) + ");\n";
                 cppStr += "\n";
                 cppStr += "namespace windows\n{\n";
-                for (int i = 0; i < sysColors.Length; ++i) cppStr += "    constexpr int32_t argb_" + sysColors[i].name_c + " = " + sysColors[i].value_c + ";\n";
+                for (int i = 0; i < sysColors.Length; ++i) cppStr += "    constexpr int32_t " + Util.omwColorValueVarName(sysColors[i].name_c) + " = " + sysColors[i].value_c + ";\n";
                 cppStr += "    \n";
                 for (int i = 0; i < sysColors.Length; ++i) cppStr += "    const omw::Color " + sysColors[i].name_c + " = omw::Color(" + Util.omwColorCtorArg(sysColors[i]) + ");\n";
                 cppStr += "}\n";
@@ -254,6 +285,8 @@ namespace ColorList
                 for (int i = 0; i < sysColors.Length; ++i) csvStr += sysColors[i].value_css + "," + sysColors[i].name + "\n";
                 System.IO.File.WriteAllBytes("windowsSystemColors.csv", Encoding.UTF8.GetBytes(csvStr));
             }
+
+            updateFrameTitle();
         }
         private void mainForm_closing(object sender, FormClosingEventArgs e)
         {
@@ -265,11 +298,19 @@ namespace ColorList
 
         private void btn_info_click(object sender, EventArgs e)
         {
-            const string url = "https://github.com/oblaser/omw/tree/master/tools/colorList/ColorList";
+            const string url = "https://github.com/oblaser/omw/tree/master/tools/colorList";
 
             System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("cmd", "/c start " + url);
             psi.CreateNoWindow = true;
             System.Diagnostics.Process.Start(psi);
+        }
+
+        private void pbx_click(object sender, EventArgs e)
+        {
+            if (((PictureBox)sender).BackColor == Color.Transparent) this.BackColor = defaultBackColor;
+            else this.BackColor = ((PictureBox)sender).BackColor;
+
+            updateFrameTitle();
         }
 
 
@@ -279,6 +320,7 @@ namespace ColorList
             public bool createOutputFiles;
             public Point winPos;
             public Size winSize;
+            public bool drawBorder;
         }
 
         private Config config;
@@ -298,15 +340,18 @@ namespace ColorList
                 int y = Convert.ToInt32(lines[2].Split(' ')[0]);
                 int w = Convert.ToInt32(lines[3].Split(' ')[0]);
                 int h = Convert.ToInt32(lines[4].Split(' ')[0]);
-
                 cfg.winPos = new Point(x, y);
                 cfg.winSize = new Size(w, h);
+
+                cfg.drawBorder = (Convert.ToInt32(lines[5].Split(' ')[0]) != 0);
             }
             catch
             {
+                // default values
                 cfg.createOutputFiles = true;
                 cfg.winPos = this.Location;
                 cfg.winSize = this.Size;
+                cfg.drawBorder = true;
             }
 
             return cfg;
@@ -322,7 +367,14 @@ namespace ColorList
             line += "# createOutputFiles";
             str += line + "\n";
 
-            if (this.WindowState != FormWindowState.Normal) cfg = loadConfig();
+
+
+            if (this.WindowState != FormWindowState.Normal)
+            {
+                var tmpCfg = loadConfig();
+                cfg.winPos = tmpCfg.winPos;
+                cfg.winSize = tmpCfg.winSize;
+            }
 
             line = cfg.winPos.X.ToString();
             while (line.Length < tab) line += " ";
@@ -343,6 +395,15 @@ namespace ColorList
             while (line.Length < tab) line += " ";
             line += "# winSize.Height";
             str += line + "\n";
+
+
+
+            line = (cfg.drawBorder ? "1" : "0");
+            while (line.Length < tab) line += " ";
+            line += "# drawBorder";
+            str += line + "\n";
+
+
 
             try
             {

@@ -461,21 +461,49 @@ omw::string omw::toHexStr(const uint8_t* data, size_t count, char sepChar)
     return str;
 }
 
+//! @param str Hexadecimal string representation
+//! @return The corresponding value
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the string contains invalid characters
+//! - `std::out_of_range` if the value would fall out of range
+//! 
 int32_t omw::hexstoi(const std::string& str)
 {
     return hexstointeger<int32_t>(str, "hexstoi");
 }
 
+//! @param str Hexadecimal string representation
+//! @return The corresponding value
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the string contains invalid characters
+//! - `std::out_of_range` if the value would fall out of range
+//! 
 int64_t omw::hexstoi64(const std::string& str)
 {
     return hexstointeger<int64_t>(str, "hexstoi64");
 }
 
+//! @param str Hexadecimal string representation
+//! @return The corresponding value
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the string contains invalid characters
+//! - `std::out_of_range` if the value would fall out of range
+//! 
 uint32_t omw::hexstoui(const std::string& str)
 {
     return hexstointeger<uint32_t>(str, "hexstoui");
 }
 
+//! @param str Hexadecimal string representation
+//! @return The corresponding value
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the string contains invalid characters
+//! - `std::out_of_range` if the value would fall out of range
+//! 
 uint64_t omw::hexstoui64(const std::string& str)
 {
     return hexstointeger<uint64_t>(str, "hexstoui64");

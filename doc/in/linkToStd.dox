@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           13.08.2021
+date           17.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -11,7 +11,7 @@ namespace std
     //######################################
 
     //! \brief C++ standard string.
-    //! See <a href="https://en.cppreference.com/w/cpp/string/basic_string" target="_blank">std::basic_string</a> for further detail.
+    //! See <a href="https://en.cppreference.com/w/cpp/string/basic_string" target="_blank">std::basic_string</a> for detailed information.
     class string {};
 
 
@@ -21,7 +21,7 @@ namespace std
     //######################################
 
     //! \brief An exception of the C++ std.
-    //! See <a href="https://en.cppreference.com/w/cpp/error/exception" target="_blank">std::exception</a> for further detail.
+    //! See <a href="https://en.cppreference.com/w/cpp/error/exception" target="_blank">std::exception</a> for detailed information.
     //!
     //! There are more inherited members from the base classes in `std`.
     class exception
@@ -29,36 +29,36 @@ namespace std
     public:
         //! \brief Returns the explanatory string.
         //! 
-        //! See <a href="https://en.cppreference.com/w/cpp/error/exception/what" target="_blank">std::exception::what</a> for further detail.
+        //! See <a href="https://en.cppreference.com/w/cpp/error/exception/what" target="_blank">std::exception::what</a> for detailed information.
         virtual const char* what() const noexcept;
     };
 
     //! \brief An exception of the C++ std.
-    //! See <a href="https://en.cppreference.com/w/cpp/error/runtime_error" target="_blank">std::runtime_error</a> for further detail.
+    //! See <a href="https://en.cppreference.com/w/cpp/error/runtime_error" target="_blank">std::runtime_error</a> for detailed information.
     //!
     //! There are more inherited members from the base classes in `std`.
     class runtime_error : public exception {};
 
     //! \brief An exception of the C++ std.
-    //! See <a href="https://en.cppreference.com/w/cpp/error/range_error" target="_blank">std::range_error</a> for further detail.
+    //! See <a href="https://en.cppreference.com/w/cpp/error/range_error" target="_blank">std::range_error</a> for detailed information.
     //!
     //! There are more inherited members from the base classes in `std`.
     class range_error : public runtime_error {};
 
     //! \brief An exception of the C++ std.
-    //! See <a href="https://en.cppreference.com/w/cpp/error/logic_error" target="_blank">std::logic_error</a> for further detail.
+    //! See <a href="https://en.cppreference.com/w/cpp/error/logic_error" target="_blank">std::logic_error</a> for detailed information.
     //!
     //! There are more inherited members from the base classes in `std`.
     class logic_error : public exception {};
 
     //! \brief An exception of the C++ std.
-    //! See <a href="https://en.cppreference.com/w/cpp/error/invalid_argument" target="_blank">std::invalid_argument</a> for further detail.
+    //! See <a href="https://en.cppreference.com/w/cpp/error/invalid_argument" target="_blank">std::invalid_argument</a> for detailed information.
     //!
     //! There are more inherited members from the base classes in `std`.
     class invalid_argument : public logic_error {};
 
     //! \brief An exception of the C++ std.
-    //! See <a href="https://en.cppreference.com/w/cpp/error/out_of_range" target="_blank">std::out_of_range</a> for further detail.
+    //! See <a href="https://en.cppreference.com/w/cpp/error/out_of_range" target="_blank">std::out_of_range</a> for detailed information.
     //!
     //! There are more inherited members from the base classes in `std`.
     class out_of_range : public logic_error {};
