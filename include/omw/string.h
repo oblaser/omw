@@ -4,8 +4,8 @@ date           14.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#ifndef OMW_STRING_H
-#define OMW_STRING_H
+#ifndef IG_OMW_STRING_H
+#define IG_OMW_STRING_H
 
 #include <cstdint>
 #include <string>
@@ -156,4 +156,4 @@ namespace omw
     /*! @} */
 }
 
-#endif // OMW_STRING_H
+#endif // IG_OMW_STRING_H

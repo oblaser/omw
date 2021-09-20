@@ -4,8 +4,8 @@ date           14.08.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#ifndef OMW_VERSION_H
-#define OMW_VERSION_H
+#ifndef IG_OMW_VERSION_H
+#define IG_OMW_VERSION_H
 
 #include <iostream>
 #include <string>
@@ -47,4 +47,4 @@ namespace omw
     };
 }
 
-#endif // OMW_VERSION_H
+#endif // IG_OMW_VERSION_H

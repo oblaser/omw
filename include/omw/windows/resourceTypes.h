@@ -12,8 +12,8 @@ This file has to be included by the resource file(s).
 
 */
 
-#ifndef OMW_WINDOWS_RESOURCETYPES_H
-#define OMW_WINDOWS_RESOURCETYPES_H
+#ifndef IG_OMW_WINDOWS_RESOURCETYPES_H
+#define IG_OMW_WINDOWS_RESOURCETYPES_H
 
 
 
@@ -24,4 +24,4 @@ This file has to be included by the resource file(s).
 
 
 
-#endif // OMW_WINDOWS_RESOURCETYPES_H
+#endif // IG_OMW_WINDOWS_RESOURCETYPES_H

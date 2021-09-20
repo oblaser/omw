@@ -4,8 +4,8 @@ date           17.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#ifndef OMW_COLOR_H
-#define OMW_COLOR_H
+#ifndef IG_OMW_COLOR_H
+#define IG_OMW_COLOR_H
 
 #include <cstdint>
 
@@ -463,4 +463,4 @@ namespace omw
     /*! @} */
 }
 
-#endif // OMW_COLOR_H
+#endif // IG_OMW_COLOR_H
