@@ -20,4 +20,3 @@ Periodically sends a counter value and handles get and set LED commands.
 
 ### Messages
  - `10 XX XX XX XX` Counter value
- - `E1 00` From error handler

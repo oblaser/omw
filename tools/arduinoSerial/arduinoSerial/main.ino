@@ -40,90 +40,84 @@ void setup()
 
 void loop()
 {
-    while(1)
+    ++cnt;
+
+    // handle command
+    if(nBytesReceived > 0)
     {
-        ++cnt;
-
-        // handle command
-        if(nBytesReceived > 0)
+        switch (rxBuffer[0])
         {
-            switch (rxBuffer[0])
+        case 0x01:
+            if(nBytesReceived == 2)
             {
-            case 0x01:
-                if(nBytesReceived == 2)
-                {
-                    txBuffer[0] = 0x01;
-                    txBuffer[1] = 0x00;
-                    if(rxBuffer[1] == 0) setLed(0);
-                    else if(rxBuffer[1] == 1) setLed(1);
-                    else txBuffer[1] = 0x01;
-                    Serial.write(txBuffer, 2);
-                }
-                else ansGeneralError();
-                break;
-            
-            case 0x02:
-                if(nBytesReceived == 1)
-                {
-                    txBuffer[0] = 0x02;
-                    txBuffer[1] = (getLed() > 0 ? 1 : 0);
-                    Serial.write(txBuffer, 2);
-                }
-                else ansGeneralError();
-                break;
-            
-            case 0x03:
-                if(nBytesReceived == 1)
-                {
-                    ansCntVal(0x03);
-                }
-                else ansGeneralError();
-                break;
-            
-            case 0x04:
-                if(nBytesReceived == 2)
-                {
-                    sendCounterInterval = rxBuffer[1];
-                    sendCounterInterval *= 1000;
-                    tmr_sendCounter = sendCounterInterval;
-
-                    txBuffer[0] = 0x04;
-                    txBuffer[1] = 0x00;
-                    Serial.write(txBuffer, 2);
-                }
-                else ansGeneralError();
-                break;
-            
-            default:
-                ansGeneralError();
-                break;
+                txBuffer[0] = 0x01;
+                txBuffer[1] = 0x00;
+                if(rxBuffer[1] == 0) setLed(0);
+                else if(rxBuffer[1] == 1) setLed(1);
+                else txBuffer[1] = 0x01;
+                Serial.write(txBuffer, 2);
             }
-            
-            nBytesReceived = 0;
+            else ansGeneralError();
+            break;
+        
+        case 0x02:
+            if(nBytesReceived == 1)
+            {
+                txBuffer[0] = 0x02;
+                txBuffer[1] = (getLed() > 0 ? 1 : 0);
+                Serial.write(txBuffer, 2);
+            }
+            else ansGeneralError();
+            break;
+        
+        case 0x03:
+            if(nBytesReceived == 1)
+            {
+                ansCntVal(0x03);
+            }
+            else ansGeneralError();
+            break;
+        
+        case 0x04:
+            if(nBytesReceived == 2)
+            {
+                sendCounterInterval = rxBuffer[1];
+                sendCounterInterval *= 1000;
+                tmr_sendCounter = sendCounterInterval;
+
+                txBuffer[0] = 0x04;
+                txBuffer[1] = 0x00;
+                Serial.write(txBuffer, 2);
+            }
+            else ansGeneralError();
+            break;
+        
+        default:
+            ansGeneralError();
+            break;
         }
-
-        // send counter value
-        if((tmr_sendCounter == 0) && (sendCounterInterval > 0))
-        {
-            tmr_sendCounter = sendCounterInterval;
-            ansCntVal(0x10);
-        }
-
-        // read serial
-        if(Serial.available() > 0) nBytesReceived = Serial.readBytes(rxBuffer, trxBufferSize);
-
-        // time handler
-        unsigned long millis_now = millis();
-        if(millis_now != millis_old) // Caution! millis()'s return value overflows after 50 days!
-        {
-            millis_old = millis_now;
-
-            if(tmr_sendCounter > 0) --tmr_sendCounter;
-        }
+        
+        nBytesReceived = 0;
     }
 
-    // error handling
-    errorHandler();
+    // send counter value
+    if((tmr_sendCounter == 0) && (sendCounterInterval > 0))
+    {
+        tmr_sendCounter = sendCounterInterval;
+        ansCntVal(0x10);
+    }
+
+    // read serial
+    if(Serial.available() > 0) nBytesReceived = Serial.readBytes(rxBuffer, trxBufferSize);
+
+    // time handler
+    const unsigned long millis_now = millis();
+    if(millis_now != millis_old) // Caution! millis()'s return value overflows after 50 days!
+    {
+        millis_old = millis_now;
+
+        if(tmr_sendCounter > 0) --tmr_sendCounter;
+    }
 }
 
 
@@ -152,24 +146,4 @@ int getLed()
 void setLed(int state)
 {
     digitalWrite(LED, state);
-}
-
-void errorHandler()
-{
-    txBuffer[0] = 0xE1;
-    txBuffer[1] = 0x00;
-    Serial.write(txBuffer, 2);
-
-    for(size_t i = 0; i < 3; ++i)
-    {
-        for(size_t j = 0; j < 5; ++j)
-        {
-            delay(100);
-            setLed(0);
-            delay(100);
-            setLed(1);
-        }
-
-        delay(400);
-    }
 }

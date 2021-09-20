@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\color.cpp" />
+    <ClCompile Include="..\..\src\io\serialPort.cpp" />
     <ClCompile Include="..\..\src\omw.cpp" />
     <ClCompile Include="..\..\src\string.cpp" />
     <ClCompile Include="..\..\src\version.cpp" />
@@ -139,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\omw\color.h" />
     <ClInclude Include="..\..\include\omw\defs.h" />
+    <ClInclude Include="..\..\include\omw\io\serialPort.h" />
     <ClInclude Include="..\..\include\omw\omw.h" />
     <ClInclude Include="..\..\include\omw\string.h" />
     <ClInclude Include="..\..\include\omw\version.h" />
