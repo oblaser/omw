@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           20.09.2021
+date           24.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -9,6 +9,9 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <cstdint>
 #include <string>
+#include <vector>
+
+#include "../../omw/string.h"
 
 namespace omw
 {
@@ -69,6 +72,8 @@ namespace omw
             std::string port;
             int32_t stopBits;
         };
+
+        std::vector<omw::string> getSerialPortList(bool onlyCOMx = true);
     }
 }
 

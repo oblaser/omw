@@ -1,6 +1,6 @@
 /*
 author      Oliver Blaser
-date        15.09.2021
+date        24.09.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -10,7 +10,7 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include "../../omw/defs.h"
 #ifdef OMW_PLAT_WIN
 
-#include "../../omw/color.h"
+#include "../../omw/string.h"
 
 #include <Windows.h>
 
@@ -18,6 +18,8 @@ namespace omw
 {
     namespace windows
     {
+        std::vector<omw::string> getAllDosDevices();
+        std::vector<omw::string> queryDosDevice(const std::string& device);
     }
 }
 
