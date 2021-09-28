@@ -23,16 +23,19 @@ namespace omw
 {
     namespace windows
     {
+        //! \name Resources
+        /// @{
         const uint8_t* getResource(int idr, int type, size_t* size);
         const uint8_t* getResource(int idr, int type, size_t* size, omw::windows::ErrorCode& ec);
         std::vector<uint8_t> getResource(int idr, int type);
         std::vector<uint8_t> getResource(int idr, int type, omw::windows::ErrorCode& ec);
-    
+
         std::vector<uint8_t> getBinaryResource(int idr);
         std::vector<uint8_t> getBinaryResource(int idr, omw::windows::ErrorCode& ec);
         std::string getTextResource(int idr);
         std::string getTextResource(int idr, omw::windows::ErrorCode& ec);
-}
+        /// @}
+    }
 }
 
 #endif // OMW_PLAT_WIN

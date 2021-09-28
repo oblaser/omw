@@ -27,7 +27,7 @@ Also read the \ref mainpage_conventions_strings section on the <i>Main Page</i>.
 
 
 
-\section omw_windows_getResrc_infoText Get Resources
+\section omw_windows_getResrc_infoText Getting Resources
 
 The overloads of `getResource()` with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
 Possible code values:

@@ -21,12 +21,15 @@ namespace omw
 {
     namespace windows
     {
+        //! \name String Conversion
+        /// @{
         size_t utf8_to_wstr(const std::string& src, LPWSTR dest, size_t destSize);
         size_t utf8_to_wstr(const std::string& src, LPWSTR dest, size_t destSize, omw::windows::ErrorCode& ec);
         size_t wstr_to_utf8(LPCWCH src, char* dest, size_t destSize);
         size_t wstr_to_utf8(LPCWCH src, char* dest, size_t destSize, omw::windows::ErrorCode& ec);
         void wstr_to_utf8(LPCWCH src, std::string& dest);
         void wstr_to_utf8(LPCWCH src, std::string& dest, omw::windows::ErrorCode& ec);
+        /// @}
     }
 }
 

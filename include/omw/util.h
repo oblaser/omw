@@ -9,10 +9,6 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace omw
 {
-    //! @param value The value to toggle
-    //! 
-    //! Toggles a boolean value.
-    //! 
     inline void toggle(bool& value) { value = !value; }
 }
 
