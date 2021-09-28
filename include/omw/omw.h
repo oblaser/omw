@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           15.09.2021
+date           28.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -12,6 +12,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include "../omw/defs.h"
 #include "../omw/string.h"
 #include "../omw/version.h"
+#include "../omw/util.h"
 
 namespace omw
 {
