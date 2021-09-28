@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           14.09.2021
+date           28.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -135,6 +135,12 @@ namespace omw
     omw::string toHexStr(uint32_t value);
     omw::string toHexStr(int64_t value);
     omw::string toHexStr(uint64_t value);
+    omw::string toHexStr(int16_t value, char sepChar);
+    omw::string toHexStr(uint16_t value, char sepChar);
+    omw::string toHexStr(int32_t value, char sepChar);
+    omw::string toHexStr(uint32_t value, char sepChar);
+    omw::string toHexStr(int64_t value, char sepChar);
+    omw::string toHexStr(uint64_t value, char sepChar);
     omw::string toHexStr(const std::vector<char>& data, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const std::vector<uint8_t>& data, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const char* data, size_t count, char sepChar = toHexStr_defaultSepChar);

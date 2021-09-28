@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           14.09.2021
+date           28.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -430,6 +430,37 @@ omw::string omw::toHexStr(uint64_t value)
 {
     return toHexStr((uint8_t)(value >> 56)) + toHexStr((uint8_t)(value >> 48)) + toHexStr((uint8_t)(value >> 40)) + toHexStr((uint8_t)(value >> 32)) +
         toHexStr((uint8_t)(value >> 24)) + toHexStr((uint8_t)(value >> 16)) + toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value);
+}
+
+omw::string omw::toHexStr(int16_t value, char sepChar)
+{
+    return toHexStr((uint16_t)value, sepChar);
+}
+
+omw::string omw::toHexStr(uint16_t value, char sepChar)
+{
+    return toHexStr((uint8_t)(value >> 8)) + sepChar + toHexStr((uint8_t)value);
+}
+
+omw::string omw::toHexStr(int32_t value, char sepChar)
+{
+    return toHexStr((uint32_t)value, sepChar);
+}
+
+omw::string omw::toHexStr(uint32_t value, char sepChar)
+{
+    return toHexStr((uint8_t)(value >> 24)) + sepChar + toHexStr((uint8_t)(value >> 16)) + sepChar + toHexStr((uint8_t)(value >> 8)) + sepChar + toHexStr((uint8_t)value);
+}
+
+omw::string omw::toHexStr(int64_t value, char sepChar)
+{
+    return toHexStr((uint64_t)value, sepChar);
+}
+
+omw::string omw::toHexStr(uint64_t value, char sepChar)
+{
+    return toHexStr((uint8_t)(value >> 56)) + sepChar + toHexStr((uint8_t)(value >> 48)) + sepChar + toHexStr((uint8_t)(value >> 40)) + sepChar + toHexStr((uint8_t)(value >> 32)) + sepChar +
+        toHexStr((uint8_t)(value >> 24)) + sepChar + toHexStr((uint8_t)(value >> 16)) + sepChar + toHexStr((uint8_t)(value >> 8)) + sepChar + toHexStr((uint8_t)value);
 }
 
 omw::string omw::toHexStr(const std::vector<char>& data, char sepChar)

@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           14.07.2021
+date           28.07.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -323,6 +323,13 @@ TEST_CASE("string.h toHexStr()")
     CHECK(omw::toHexStr((uint32_t)0x89ABCDEF) == "89ABCDEF");
     CHECK(omw::toHexStr((int64_t)0x0123456789ABCDEF) == "0123456789ABCDEF");
     CHECK(omw::toHexStr((uint64_t)0x0123456789ABCDEF) == "0123456789ABCDEF");
+
+    CHECK(omw::toHexStr((int16_t)0x5678, '-') == "56-78");
+    CHECK(omw::toHexStr((uint16_t)0x5678, ' ') == "56 78");
+    CHECK(omw::toHexStr((int32_t)0x89ABCDEF, ' ') == "89 AB CD EF");
+    CHECK(omw::toHexStr((uint32_t)0x89ABCDEF, '+') == "89+AB+CD+EF");
+    CHECK(omw::toHexStr((int64_t)0x0123456789ABCDEF, 't') == "01t23t45t67t89tABtCDtEF");
+    CHECK(omw::toHexStr((uint64_t)0x0123456789ABCDEF, '-') == "01-23-45-67-89-AB-CD-EF");
 
     std::vector<char> vecC = { 0x30, 0x35, 'A', 'b' };
     CHECK(omw::toHexStr(vecC) == "30 35 41 62");
