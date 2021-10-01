@@ -74,6 +74,36 @@ TEST_CASE("string.h omw::string ctor")
     CHECK(std::strcmp(stdfromomw.c_str(), "aaa") == 0);
 }
 
+TEST_CASE("string.h omw::string::contains()")
+{
+    char chr;
+    const char* ptr;
+    std::string str;
+
+    const omw::string s("The quick brown fox jumps over the lazy dog");
+
+    chr = 'q';
+    ptr = "ox j";
+    str = "The q";
+    CHECK(s.contains(chr));
+    CHECK(s.contains(ptr));
+    CHECK(s.contains(str));
+
+    chr = 'x';
+    ptr = "jump";
+    str = "az";
+    CHECK(s.contains(chr));
+    CHECK(s.contains(ptr));
+    CHECK(s.contains(str));
+
+    chr = '-';
+    ptr = "mobile";
+    str = "cellphone";
+    CHECK_FALSE(s.contains(chr));
+    CHECK_FALSE(s.contains(ptr));
+    CHECK_FALSE(s.contains(str));
+}
+
 TEST_CASE("string.h omw::string::replaceFirst()")
 {
     const char str[] = "a boy with a hat";
@@ -222,6 +252,53 @@ TEST_CASE("string.h omw::string::replaceAll()")
     CHECK(s == str);
     CHECK(nReplacements == omw::string::npos);
     CHECK(nrv == std::vector<size_t>({ omw::string::npos, omw::string::npos, omw::string::npos }));
+}
+
+TEST_CASE("string.h omw::string::split(n)")
+{
+    const omw::string s("The quick brown fox jumps over the lazy dog");
+    std::vector<omw::string> t;
+    size_t n;
+
+    n = 43;
+    t = s.split(1);
+    REQUIRE(t.size() == n);
+    for (size_t i = 0; i < n; ++i)
+    {
+        REQUIRE(t[i].length() == 1);
+        CHECK(t[i][0] == s[i]);
+    }
+
+    n = 43;
+    t = s.split(1, n);
+    REQUIRE(t.size() == n);
+    for (size_t i = 0; i < (n - 1); ++i)
+    {
+        REQUIRE(t[i].length() == 1);
+        CHECK(t[i][0] == s[i]);
+    }
+    CHECK(t[(n - 1)] == "g");
+
+    n = 38;
+    t = s.split(1, n);
+    REQUIRE(t.size() == n);
+    for (size_t i = 0; i < (n - 1); ++i)
+    {
+        REQUIRE(t[i].length() == 1);
+        CHECK(t[i][0] == s[i]);
+    }
+    CHECK(t[(n - 1)] == "zy dog");
+
+    n = 5;
+    t = s.split(2, n);
+    REQUIRE(t.size() == n);
+    for (size_t i = 0; i < (n - 1); ++i)
+    {
+        REQUIRE(t[i].length() == 2);
+        CHECK(t[i][0] == s[i * 2 + 0]);
+        CHECK(t[i][1] == s[i * 2 + 1]);
+    }
+    CHECK(t[(n - 1)] == "k brown fox jumps over the lazy dog");
 }
 
 TEST_CASE("string.h omw::string case conversion")
@@ -425,6 +502,90 @@ TEST_CASE("string.h hexstovector()")
     TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00 05 a5 100 42"), std::out_of_range);
 }
 
+TEST_CASE("string.h sepHexStr()")
+{
+    std::string hexsp;
+
+    hexsp = "0123ab45cd67ef89";
+    CHECK(omw::sepHexStr(hexsp) == "01 23 ab 45 cd 67 ef 89");
+    CHECK(omw::sepHexStr(hexsp, '-') == "01-23-ab-45-cd-67-ef-89");
+
+    // TODO
+}
+
+TEST_CASE("string.h rmNonHex()")
+{
+    const std::string result = "adfe";
+
+    {
+        const char cbuffer[] = "asdf&qwertz-";
+        const char* cp = cbuffer;
+        const std::string cs = cp;
+        CHECK(omw::rmNonHex(cp) == result);
+        CHECK(omw::rmNonHex(cs) == result);
+
+        char buffer[] = "asdf&qwertz-";
+        char* p = buffer;
+        std::string s = p;
+        omw::rmNonHex(p);
+        omw::rmNonHex(s);
+        CHECK(result == buffer);
+        CHECK(s == result);
+    }
+
+    {
+        const char cbuffer[] = "adfe";
+        const char* cp = cbuffer;
+        const std::string cs = cp;
+        CHECK(omw::rmNonHex(cp) == result);
+        CHECK(omw::rmNonHex(cs) == result);
+
+        char buffer[] = "adfe";
+        char* p = buffer;
+        std::string s = p;
+        omw::rmNonHex(p);
+        omw::rmNonHex(s);
+        CHECK(result == buffer);
+        CHECK(s == result);
+    }
+}
+
+TEST_CASE("string.h join()")
+{
+    constexpr size_t count = 3;
+    const omw::string tokens[count] =
+    {
+        "asdf",
+        "456",
+        "%&/"
+    };
+
+    std::vector<omw::string> t(tokens, tokens + count);
+    CHECK(omw::join(t) == "asdf456%&/");
+    CHECK(omw::join(t, '-') == "asdf-456-%&/");
+}
+
+TEST_CASE("string.h String Vectors")
+{
+    constexpr size_t count = 3;
+    const char* t_p[count] = { "asdf", "456", "%&/" };
+    const std::string t_std[count] = { t_p[0], t_p[1], t_p[2] };
+    const omw::string t_omw[count] = { t_p[0], t_p[1], t_p[2] };
+
+    const std::vector<std::string> v_std = { t_p[0], t_p[1], t_p[2] };
+    const std::vector<omw::string> v_omw = { t_p[0], t_p[1], t_p[2] };
+
+    CHECK(omw::stringVector(t_p, count) == v_omw);
+    CHECK(omw::stringVector(t_std, count) == v_omw);
+    CHECK(omw::stringVector(t_omw, count) == v_omw);
+    CHECK(omw::stringVector(v_std) == v_omw);
+
+    CHECK(omw::stdStringVector(t_p, count) == v_std);
+    CHECK(omw::stdStringVector(t_std, count) == v_std);
+    CHECK(omw::stdStringVector(t_omw, count) == v_std);
+    CHECK(omw::stdStringVector(v_omw) == v_std);
+}
+
 TEST_CASE("string.h isInteger()")
 {
     CHECK(omw::isInteger("a123") == false);
@@ -458,8 +619,11 @@ TEST_CASE("string.h isInteger()")
 
 TEST_CASE("string.h isHex()")
 {
-    CHECK(omw::isHex("3F") == true);
-    CHECK(omw::isHex("3F5") == true);
+    const std::string s1 = "3F";
+    const char* p1 = "3F5";
+
+    CHECK(omw::isHex(s1) == true);
+    CHECK(omw::isHex(p1) == true);
     CHECK(omw::isHex("0123456789ABCDEF") == true);
     CHECK(omw::isHex("0123456789abcdef") == true);
     CHECK(omw::isHex("0123456789ABCDEF0123") == true);
@@ -469,18 +633,21 @@ TEST_CASE("string.h isHex()")
 
     for (int c = 0; c <= 0xFF; ++c)
     {
-        const char hexStr[] = { '5', 'a', (char)c, 0 };
+        const char chr = (char)c;
+        const char hexStr[] = { '5', 'a', chr, 0 };
         bool expectedResult;
 
-        if (((c >= '0') && (c <= '9')) ||
-            ((c >= 'A') && (c <= 'F')) ||
-            ((c >= 'a') && (c <= 'f')) ||
-            (c == 0))
+        if (((chr >= '0') && (chr <= '9')) ||
+            ((chr >= 'A') && (chr <= 'F')) ||
+            ((chr >= 'a') && (chr <= 'f')))
         {
             expectedResult = true;
         }
         else expectedResult = false;
 
+        CHECK(omw::isHex(chr) == expectedResult);
+
+        if (chr == 0) expectedResult = true;
         CHECK(omw::isHex(hexStr) == expectedResult);
     }
 }

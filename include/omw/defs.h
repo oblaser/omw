@@ -1,11 +1,15 @@
 /*
 author         Oliver Blaser
-date           15.09.2021
+date           30.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_DEFS_H
 #define IG_OMW_DEFS_H
+
+
+#include <cstddef>
+#include <cstdint>
 
 
 // platform

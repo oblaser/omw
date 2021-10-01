@@ -1,10 +1,9 @@
 /*
 author         Oliver Blaser
-date           28.09.2021
+date           01.10.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#include <cstdint>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -16,6 +15,7 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace
 {
+    // T has to be an integer type
     template <typename T>
     T hexstointeger(const omw::string& str, const std::string& fnName)
     {
@@ -48,6 +48,41 @@ namespace
         {
             if (!omw::isHex(hexStr)) throw std::invalid_argument(exMsg_notHex);
             throw std::out_of_range(fnName);
+        }
+
+        return r;
+    }
+
+    omw::string separateHexStr(const omw::string& hexstr, char sepChar)
+    {
+        return omw::join(hexstr.split(2), sepChar);
+    }
+
+    // out_t and in_t have to be std::vector<omw::string> and std::vector<std::string> or vice versa.
+    template <class out_t, class in_t>
+    out_t convertStringVector(const in_t& stringVector)
+    {
+        out_t r;
+        r.reserve((out_t::size_type)stringVector.size());
+
+        for (in_t::size_type i = 0; i < stringVector.size(); ++i)
+        {
+            r.push_back(out_t::value_type(stringVector[i].c_str()));
+        }
+
+        return r;
+    }
+
+    // out_t has to be std::vector<omw::string> or std::vector<std::string>
+    template <class out_t>
+    out_t stringVector(const char* const* strings, size_t count)
+    {
+        out_t r;
+        r.reserve(count);
+
+        for (size_t i = 0; i < count; ++i)
+        {
+            r.push_back(out_t::value_type(strings[i]));
         }
 
         return r;
@@ -105,7 +140,8 @@ const std::string& omw::StringReplacePair::replace() const
 * \class omw::string
 *
 * A with `std::string` interchangeable class to add more functionalities.
-* This class does not override/implement any virtual methods of the base class and has no attributes. It's basically a `std::string` with some more methods.
+* This class does not override/implement any (virtual) methods of the base class and has no attributes. It's basically a `std::string` with some more methods.
+* However the two constructors which take the other string as a `char` pointer behave defined if a NULL pointer is passed.
 */
 
 //bool omw::string::isValidUTF8(const omw::string& str)
@@ -118,11 +154,11 @@ omw::string::string()
 {}
 
 omw::string::string(const char* str)
-    : std::string(str)
+    : std::string(str ? str : "")
 {}
 
 omw::string::string(const char* str, std::string::size_type count)
-    : std::string(str, count)
+    : std::string(str ? str : "", str ? count : 0)
 {}
 
 omw::string::string(const std::string& other, std::string::size_type pos, std::string::size_type count)
@@ -132,6 +168,21 @@ omw::string::string(const std::string& other, std::string::size_type pos, std::s
 omw::string::string(const char* first, const char* last)
     : std::string(first, last)
 {}
+
+#ifdef OMWi_STRING_IMPLEMENT_CONTAINS
+bool omw::string::contains(char ch) const
+{
+    return (this->find(ch) != omw::string::npos);
+}
+bool omw::string::contains(const char* str) const
+{
+    return (this->find(str) != omw::string::npos);
+}
+#endif
+bool omw::string::contains(const std::string& str) const
+{
+    return (this->find(str) != omw::string::npos);;
+}
 
 //! @param search Substring to be replaced
 //! @param replace String for replacement
@@ -227,6 +278,27 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
 omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos, size_t* nReplacementsTotal, std::vector<size_t>* nReplacements)
 {
     return replaceAll(std::vector<omw::StringReplacePair>(pairs, pairs + count), startPos, nReplacementsTotal, nReplacements);
+}
+
+omw::stringVector_t omw::string::split(omw::string::size_type tokenLength, omw::stringVector_size_type maxTokenCount) const
+{
+    omw::stringVector_t r;
+
+    const omw::string::size_type len = this->length();
+    omw::string::size_type pos = 0;
+
+    for (omw::stringVector_size_type iToken = 0; (iToken < maxTokenCount) && (pos < len); ++iToken)
+    {
+        r.push_back(this->substr(pos, tokenLength));
+        pos += tokenLength;
+    }
+
+    if (pos < len)
+    {
+        r[r.size() - 1] += this->substr(pos);
+    }
+
+    return r;
 }
 
 omw::string& omw::string::lower_ascii()
@@ -572,6 +644,184 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char sepChar)
 
 
 
+omw::string omw::sepHexStr(const std::string& str)
+{
+    return omw::sepHexStr(str, toHexStr_defaultSepChar);
+}
+
+omw::string omw::sepHexStr(const std::string& str, char sepChar)
+{
+    return ::separateHexStr(omw::string(str), sepChar);
+}
+
+omw::string omw::sepHexStr(const std::string& str, char rmChar, char sepChar)
+{
+    omw::string hexstr = str;
+    hexstr.replaceAll(omw::StringReplacePair(rmChar, ""));
+
+    return ::separateHexStr(hexstr, sepChar);
+}
+
+omw::string omw::sepHexStr(const std::string& str, const char* rmChars, size_t count, char sepChar)
+{
+    std::vector<omw::StringReplacePair> replPairs;
+    replPairs.reserve(count);
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        replPairs.push_back(omw::StringReplacePair(rmChars[i], ""));
+    }
+
+    omw::string hexstr = str;
+    hexstr.replaceAll(replPairs);
+
+    return ::separateHexStr(hexstr, sepChar);
+}
+
+// ready, but not tested:
+// 
+//omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmChars, char sepChar)
+//{
+//    return omw::sepHexStr(str, rmChars.data(), rmChars.size(), sepChar);
+//}
+//
+//omw::string omw::sepHexStr(const std::string& str, const char* rmString, char sepChar)
+//{
+//    omw::string hexstr = str;
+//    hexstr.replaceAll(rmString, "");
+//
+//    return ::separateHexStr(hexstr, sepChar);
+//}
+//
+//omw::string omw::sepHexStr(const std::string& str, const std::string& rmString, char sepChar)
+//{
+//    return omw::sepHexStr(str, rmString.c_str(), sepChar);
+//}
+//
+//omw::string omw::sepHexStr(const std::string& str, const std::string* rmStrings, size_t count, char sepChar)
+//{
+//    std::vector<omw::StringReplacePair> replPairs;
+//    replPairs.reserve(count);
+//
+//    for (size_t i = 0; i < count; ++i)
+//    {
+//        replPairs.push_back(omw::StringReplacePair(rmStrings[i], ""));
+//    }
+//
+//    omw::string hexstr = str;
+//    hexstr.replaceAll(replPairs);
+//
+//    return ::separateHexStr(hexstr, sepChar);
+//}
+//
+//omw::string omw::sepHexStr(const std::string& str, const omw::stringVector_t& rmStrings, char sepChar)
+//{
+//    return omw::sepHexStr(str, rmStrings.data(), rmStrings.size(), sepChar);
+//}
+
+
+
+omw::string omw::rmNonHex(const std::string& str)
+{
+    omw::string r = str;
+    omw::rmNonHex(r);
+    return r;
+}
+
+void omw::rmNonHex(char* str)
+{
+    if (str)
+    {
+        std::string tmpStr = str;
+        omw::rmNonHex(tmpStr);
+        std::copy_n(tmpStr.c_str(), tmpStr.size() + 1, str);
+    }
+}
+
+void omw::rmNonHex(std::string& str)
+{
+    for (std::string::size_type i = 0; i < str.length(); )
+    {
+        if (omw::isHex(str[i])) ++i;
+        else str.erase(i, 1);
+    }
+}
+
+
+
+omw::string omw::join(const omw::stringVector_t& strings, char sepChar)
+{
+    omw::string r = "";
+
+    for (omw::stringVector_size_type i = 0; i < strings.size(); ++i)
+    {
+        if ((i > 0) && (sepChar != 0)) r += sepChar;
+        r += strings[i];
+    }
+
+    return r;
+}
+
+
+
+omw::stringVector_t omw::stringVector(const char* const* strings, size_t count)
+{
+    return ::stringVector<omw::stringVector_t>(strings, count);
+}
+
+omw::stringVector_t omw::stringVector(const std::string* strings, size_t count)
+{
+    std::vector<const char*> v;
+    v.reserve(count);
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        v.push_back((strings + i)->c_str());
+    }
+
+    return ::stringVector<omw::stringVector_t>(v.data(), count);
+}
+
+omw::stringVector_t omw::stringVector(const omw::string* strings, size_t count)
+{
+    return omw::stringVector_t(strings, strings + count);
+}
+
+omw::stringVector_t omw::stringVector(const omw::stdStringVector_t& strvec)
+{
+    return convertStringVector<omw::stringVector_t, omw::stdStringVector_t>(strvec);
+}
+
+omw::stdStringVector_t omw::stdStringVector(const char* const* strings, size_t count)
+{
+    return ::stringVector<omw::stdStringVector_t>(strings, count);
+}
+
+omw::stdStringVector_t omw::stdStringVector(const std::string* strings, size_t count)
+{
+    return omw::stdStringVector_t(strings, strings + count);
+}
+
+omw::stdStringVector_t omw::stdStringVector(const omw::string* strings, size_t count)
+{
+    std::vector<const char*> v;
+    v.reserve(count);
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        v.push_back((strings + i)->c_str());
+    }
+
+    return ::stringVector<omw::stdStringVector_t>(v.data(), count);
+}
+
+omw::stdStringVector_t omw::stdStringVector(const omw::stringVector_t& strvec)
+{
+    return convertStringVector<omw::stdStringVector_t, omw::stringVector_t>(strvec);
+}
+
+
+
 bool omw::isInteger(const std::string& str)
 {
     std::string::size_type startPos = 0;
@@ -605,6 +855,20 @@ bool omw::isUInteger(const std::string& str)
     return r;
 }
 
+bool omw::isHex(char ch)
+{
+    omw::string digits = omw::hexStrDigitsUpper;
+    bool r = digits.contains(ch);
+
+    if (!r)
+    {
+        digits = omw::hexStrDigitsLower;
+        r = digits.contains(ch);
+    }
+
+    return r;
+}
+
 bool omw::isHex(const std::string& str)
 {
     bool r;
@@ -618,10 +882,7 @@ bool omw::isHex(const std::string& str)
         r = true;
         for (omw::string::size_type i = 0; (i < tmpStr.length()) && r; ++i)
         {
-            if (hexDigits.find(tmpStr[i]) == omw::string::npos)
-            {
-                r = false;
-            }
+            r = hexDigits.contains(tmpStr[i]);
         }
     }
     else r = false;
