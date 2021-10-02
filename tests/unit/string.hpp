@@ -504,13 +504,54 @@ TEST_CASE("string.h hexstovector()")
 
 TEST_CASE("string.h sepHexStr()")
 {
-    std::string hexsp;
+    const char* const r_sp = "01 23 ab 45 cd 67 ef 89";
+    const char* const r_hy = "01-23-ab-45-cd-67-ef-89";
 
-    hexsp = "0123ab45cd67ef89";
-    CHECK(omw::sepHexStr(hexsp) == "01 23 ab 45 cd 67 ef 89");
-    CHECK(omw::sepHexStr(hexsp, '-') == "01-23-ab-45-cd-67-ef-89");
+    const char* h_p;
+    std::string h_std;
+    omw::string h_omw;
 
-    // TODO
+    h_p = "0123ab45cd67ef89";
+    h_std = h_p;
+    h_omw = h_p;
+    CHECK(omw::sepHexStr(h_p) == r_sp);
+    CHECK(omw::sepHexStr(h_std) == r_sp);
+    CHECK(omw::sepHexStr(h_omw) == r_sp);
+    CHECK(omw::sepHexStr(h_p, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_std, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_omw, '-') == r_hy);
+
+    h_p = "012*3ab45cd67ef*8*9";
+    h_std = h_p;
+    h_omw = h_p;
+    CHECK(omw::sepHexStr(h_p, '*', omw::toHexStr_defaultSepChar) == r_sp);
+    CHECK(omw::sepHexStr(h_std, '*', omw::toHexStr_defaultSepChar) == r_sp);
+    CHECK(omw::sepHexStr(h_omw, '*', omw::toHexStr_defaultSepChar) == r_sp);
+    CHECK(omw::sepHexStr(h_p, '*', '-') == r_hy);
+    CHECK(omw::sepHexStr(h_std, '*', '-') == r_hy);
+    CHECK(omw::sepHexStr(h_omw, '*', '-') == r_hy);
+
+    const char* const rmChars = "*-o";
+    h_p = "0-12*3ab45-cdo67ef*8*9";
+    h_std = h_p;
+    h_omw = h_p;
+    CHECK(omw::sepHexStr(h_p, rmChars, 3) == r_sp);
+    CHECK(omw::sepHexStr(h_std, rmChars, 3) == r_sp);
+    CHECK(omw::sepHexStr(h_omw, rmChars, 3) == r_sp);
+    CHECK(omw::sepHexStr(h_p, rmChars, 3, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_std, rmChars, 3, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_omw, rmChars, 3, '-') == r_hy);
+
+    const std::vector<char> rmChrV(rmChars, rmChars + 3);
+    CHECK(omw::sepHexStr(h_p, rmChrV) == r_sp);
+    CHECK(omw::sepHexStr(h_std, rmChrV) == r_sp);
+    CHECK(omw::sepHexStr(h_omw, rmChrV) == r_sp);
+    CHECK(omw::sepHexStr(h_p, rmChrV, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_std, rmChrV, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_omw, rmChrV, '-') == r_hy);
+
+    CHECK(omw::sepHexStr(h_p, "*-o/&%", 6) == r_sp);
+    CHECK_FALSE(omw::sepHexStr(h_p, "*-oa", 4) == r_sp);
 }
 
 TEST_CASE("string.h rmNonHex()")

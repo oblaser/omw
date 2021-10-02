@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           01.10.2021
+date           02.10.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -676,6 +676,11 @@ omw::string omw::sepHexStr(const std::string& str, const char* rmChars, size_t c
     hexstr.replaceAll(replPairs);
 
     return ::separateHexStr(hexstr, sepChar);
+}
+
+omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmChars, char sepChar)
+{
+    return omw::sepHexStr(str, rmChars.data(), rmChars.size(), sepChar);
 }
 
 // ready, but not tested:

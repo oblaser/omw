@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           01.10.2021
+date           02.10.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -114,9 +114,9 @@ namespace omw
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
 
         omw::stringVector_t split(omw::string::size_type tokenLength, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
-        //omw::string::vector split(char sepChar, omw::string::vector_size_type maxTokens = omw::string::vector_npos) const;
-        //omw::string::vector split(const char* sepChars, size_t count, omw::string::vector_size_type maxTokens = omw::string::vector_npos) const;
-        //omw::string::vector split(const char* sepString) const;
+        //omw::stringVector_t split(char sepChar, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
+        //omw::stringVector_t split(const char* sepString, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
+        //omw::stringVector_t split(const std::string& sepString, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
 
         //! \name Case Conversion
         //! Methods named `.._ascii` convert only A-Z and a-z. Those named `.._asciiExt` additionally convert some UTF-8 code points.
@@ -194,23 +194,18 @@ namespace omw
     uint64_t hexstoui64(const std::string& str);
     std::vector<uint8_t> hexstovector(const std::string& str, char sepChar = toHexStr_defaultSepChar);
 
-    //omw::string sepHexStr(const char* str); // { return omw::sepHexStr(str, omw::toHexStr_defaultSepChar); }
-    //omw::string sepHexStr(const char* str, char sepChar);
-    //omw::string sepHexStr(const char* str, char rmChar, char sepChar);
-    //omw::string sepHexStr(const char* str, const char* rmChars, size_t count, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const char* str, const std::vector<char>& rmChars, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const char* str, const char* rmString, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const char* str, const std::string& rmString, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const char* str, const std::string* rmStrings, size_t count, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const char* str, const omw::stringVector_t& rmStrings, char sepChar = toHexStr_defaultSepChar);
+
+
     omw::string sepHexStr(const std::string& str);
     omw::string sepHexStr(const std::string& str, char sepChar);
     omw::string sepHexStr(const std::string& str, char rmChar, char sepChar);
     omw::string sepHexStr(const std::string& str, const char* rmChars, size_t count, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const std::string& str, const std::vector<char>& rmChars, char sepChar = toHexStr_defaultSepChar);
+    omw::string sepHexStr(const std::string& str, const std::vector<char>& rmChars, char sepChar = toHexStr_defaultSepChar);
     //omw::string sepHexStr(const std::string& str, const char* rmString, char sepChar = toHexStr_defaultSepChar);
     //omw::string sepHexStr(const std::string& str, const std::string& rmString, char sepChar = toHexStr_defaultSepChar);
     //omw::string sepHexStr(const std::string& str, const std::string* rmStrings, size_t count, char sepChar = toHexStr_defaultSepChar);
+    //omw::string sepHexStr(const std::string& str, const omw::string* rmStrings, size_t count, char sepChar = toHexStr_defaultSepChar);
+    //omw::string sepHexStr(const std::string& str, const omw::stdStringVector_t& rmStrings, char sepChar = toHexStr_defaultSepChar);
     //omw::string sepHexStr(const std::string& str, const omw::stringVector_t& rmStrings, char sepChar = toHexStr_defaultSepChar);
 
     omw::string rmNonHex(const std::string& str);
@@ -220,6 +215,7 @@ namespace omw
 
 
 
+    // TODO check overloads
     //omw::string join(const std::string* strings, size_t count, char sepChar = '\0');
     //omw::string join(const std::string* strings, size_t count, const char* sepString);
     //omw::string join(const std::string* strings, size_t count, const std::string& sepString);
@@ -250,6 +246,7 @@ namespace omw
 
 
     //bool isValidUTF8(const std::string& str);
+
     bool isInteger(const std::string& str);
     bool isUInteger(const std::string& str);
     bool isHex(char ch);
