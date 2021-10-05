@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           24.09.2021
+date           06.10.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -24,7 +24,7 @@ namespace
         {
             const omw::string tmpInfo = info[i].toLower_asciiExt();
 
-            if ((tmpInfo.find("com0com") != omw::string::npos) && (tmpDevice.find("com0com#port#") == omw::string::npos))
+            if (tmpInfo.contains("com0com") && !tmpDevice.contains("com0com#port#"))
             {
                 return true;
             }
