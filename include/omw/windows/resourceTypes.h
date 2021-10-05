@@ -8,12 +8,17 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 \file resourceTypes.h
 \brief Resource definitions.
 
-This file has to be included by the resource file(s).
+This file has to be included by the resource file(s). It does not have to be
+included by the source code, unless one of the
+\ref omw::windows::getResource() "getResource()" functions is used, which is
+not recommended. Speciffic get resource functions (e.g.
+\ref omw::windows::getTextResource() "getTextResource()") should be used
+instead.
 
 */
 
-#ifndef OMW_WINDOWS_RESOURCETYPES_H
-#define OMW_WINDOWS_RESOURCETYPES_H
+#ifndef IG_OMW_WINDOWS_RESOURCETYPES_H
+#define IG_OMW_WINDOWS_RESOURCETYPES_H
 
 
 
@@ -24,4 +29,4 @@ This file has to be included by the resource file(s).
 
 
 
-#endif // OMW_WINDOWS_RESOURCETYPES_H
+#endif // IG_OMW_WINDOWS_RESOURCETYPES_H

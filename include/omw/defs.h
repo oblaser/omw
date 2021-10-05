@@ -1,11 +1,15 @@
 /*
 author         Oliver Blaser
-date           15.09.2021
+date           30.09.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#ifndef OMW_DEFS_H
-#define OMW_DEFS_H
+#ifndef IG_OMW_DEFS_H
+#define IG_OMW_DEFS_H
+
+
+#include <cstddef>
+#include <cstdint>
 
 
 // platform
@@ -79,4 +83,4 @@ constexpr const char* OMWi_file_to_filename(const char* p)
 #error invalid debug configuration
 #endif
 
-#endif // OMW_DEFS_H
+#endif // IG_OMW_DEFS_H

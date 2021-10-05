@@ -4,8 +4,8 @@ date        13.08.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#ifndef OMW_WINDOWS_ERROR_H
-#define OMW_WINDOWS_ERROR_H
+#ifndef IG_OMW_WINDOWS_ERROR_H
+#define IG_OMW_WINDOWS_ERROR_H
 
 #include "../../omw/defs.h"
 #ifdef OMW_PLAT_WIN
@@ -58,4 +58,4 @@ namespace omw
 }
 
 #endif // OMW_PLAT_WIN
-#endif // OMW_WINDOWS_ERROR_H
+#endif // IG_OMW_WINDOWS_ERROR_H

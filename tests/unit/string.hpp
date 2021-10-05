@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           14.07.2021
+date           28.07.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -72,6 +72,36 @@ TEST_CASE("string.h omw::string ctor")
     CHECK(std::strcmp(omw::string(str, str + std::strlen(str)).c_str(), str) == 0);
     CHECK(std::strcmp(omwstr.c_str(), "aaa") == 0);
     CHECK(std::strcmp(stdfromomw.c_str(), "aaa") == 0);
+}
+
+TEST_CASE("string.h omw::string::contains()")
+{
+    char chr;
+    const char* ptr;
+    std::string str;
+
+    const omw::string s("The quick brown fox jumps over the lazy dog");
+
+    chr = 'q';
+    ptr = "ox j";
+    str = "The q";
+    CHECK(s.contains(chr));
+    CHECK(s.contains(ptr));
+    CHECK(s.contains(str));
+
+    chr = 'x';
+    ptr = "jump";
+    str = "az";
+    CHECK(s.contains(chr));
+    CHECK(s.contains(ptr));
+    CHECK(s.contains(str));
+
+    chr = '-';
+    ptr = "mobile";
+    str = "cellphone";
+    CHECK_FALSE(s.contains(chr));
+    CHECK_FALSE(s.contains(ptr));
+    CHECK_FALSE(s.contains(str));
 }
 
 TEST_CASE("string.h omw::string::replaceFirst()")
@@ -224,6 +254,53 @@ TEST_CASE("string.h omw::string::replaceAll()")
     CHECK(nrv == std::vector<size_t>({ omw::string::npos, omw::string::npos, omw::string::npos }));
 }
 
+TEST_CASE("string.h omw::string::split(n)")
+{
+    const omw::string s("The quick brown fox jumps over the lazy dog");
+    std::vector<omw::string> t;
+    size_t n;
+
+    n = 43;
+    t = s.split(1);
+    REQUIRE(t.size() == n);
+    for (size_t i = 0; i < n; ++i)
+    {
+        REQUIRE(t[i].length() == 1);
+        CHECK(t[i][0] == s[i]);
+    }
+
+    n = 43;
+    t = s.split(1, n);
+    REQUIRE(t.size() == n);
+    for (size_t i = 0; i < (n - 1); ++i)
+    {
+        REQUIRE(t[i].length() == 1);
+        CHECK(t[i][0] == s[i]);
+    }
+    CHECK(t[(n - 1)] == "g");
+
+    n = 38;
+    t = s.split(1, n);
+    REQUIRE(t.size() == n);
+    for (size_t i = 0; i < (n - 1); ++i)
+    {
+        REQUIRE(t[i].length() == 1);
+        CHECK(t[i][0] == s[i]);
+    }
+    CHECK(t[(n - 1)] == "zy dog");
+
+    n = 5;
+    t = s.split(2, n);
+    REQUIRE(t.size() == n);
+    for (size_t i = 0; i < (n - 1); ++i)
+    {
+        REQUIRE(t[i].length() == 2);
+        CHECK(t[i][0] == s[i * 2 + 0]);
+        CHECK(t[i][1] == s[i * 2 + 1]);
+    }
+    CHECK(t[(n - 1)] == "k brown fox jumps over the lazy dog");
+}
+
 TEST_CASE("string.h omw::string case conversion")
 {
     const omw::string mixed = "0123 ThE QuIcK BrOwN FoX JuMpS OvEr tHe lAzY DoG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
@@ -324,6 +401,13 @@ TEST_CASE("string.h toHexStr()")
     CHECK(omw::toHexStr((int64_t)0x0123456789ABCDEF) == "0123456789ABCDEF");
     CHECK(omw::toHexStr((uint64_t)0x0123456789ABCDEF) == "0123456789ABCDEF");
 
+    CHECK(omw::toHexStr((int16_t)0x5678, '-') == "56-78");
+    CHECK(omw::toHexStr((uint16_t)0x5678, ' ') == "56 78");
+    CHECK(omw::toHexStr((int32_t)0x89ABCDEF, ' ') == "89 AB CD EF");
+    CHECK(omw::toHexStr((uint32_t)0x89ABCDEF, '+') == "89+AB+CD+EF");
+    CHECK(omw::toHexStr((int64_t)0x0123456789ABCDEF, 't') == "01t23t45t67t89tABtCDtEF");
+    CHECK(omw::toHexStr((uint64_t)0x0123456789ABCDEF, '-') == "01-23-45-67-89-AB-CD-EF");
+
     std::vector<char> vecC = { 0x30, 0x35, 'A', 'b' };
     CHECK(omw::toHexStr(vecC) == "30 35 41 62");
     CHECK(omw::toHexStr(vecC, '-') == "30-35-41-62");
@@ -418,6 +502,131 @@ TEST_CASE("string.h hexstovector()")
     TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00 05 a5 100 42"), std::out_of_range);
 }
 
+TEST_CASE("string.h sepHexStr()")
+{
+    const char* const r_sp = "01 23 ab 45 cd 67 ef 89";
+    const char* const r_hy = "01-23-ab-45-cd-67-ef-89";
+
+    const char* h_p;
+    std::string h_std;
+    omw::string h_omw;
+
+    h_p = "0123ab45cd67ef89";
+    h_std = h_p;
+    h_omw = h_p;
+    CHECK(omw::sepHexStr(h_p) == r_sp);
+    CHECK(omw::sepHexStr(h_std) == r_sp);
+    CHECK(omw::sepHexStr(h_omw) == r_sp);
+    CHECK(omw::sepHexStr(h_p, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_std, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_omw, '-') == r_hy);
+
+    h_p = "012*3ab45cd67ef*8*9";
+    h_std = h_p;
+    h_omw = h_p;
+    CHECK(omw::sepHexStr(h_p, '*', omw::toHexStr_defaultSepChar) == r_sp);
+    CHECK(omw::sepHexStr(h_std, '*', omw::toHexStr_defaultSepChar) == r_sp);
+    CHECK(omw::sepHexStr(h_omw, '*', omw::toHexStr_defaultSepChar) == r_sp);
+    CHECK(omw::sepHexStr(h_p, '*', '-') == r_hy);
+    CHECK(omw::sepHexStr(h_std, '*', '-') == r_hy);
+    CHECK(omw::sepHexStr(h_omw, '*', '-') == r_hy);
+
+    const char* const rmChars = "*-o";
+    h_p = "0-12*3ab45-cdo67ef*8*9";
+    h_std = h_p;
+    h_omw = h_p;
+    CHECK(omw::sepHexStr(h_p, rmChars, 3) == r_sp);
+    CHECK(omw::sepHexStr(h_std, rmChars, 3) == r_sp);
+    CHECK(omw::sepHexStr(h_omw, rmChars, 3) == r_sp);
+    CHECK(omw::sepHexStr(h_p, rmChars, 3, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_std, rmChars, 3, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_omw, rmChars, 3, '-') == r_hy);
+
+    const std::vector<char> rmChrV(rmChars, rmChars + 3);
+    CHECK(omw::sepHexStr(h_p, rmChrV) == r_sp);
+    CHECK(omw::sepHexStr(h_std, rmChrV) == r_sp);
+    CHECK(omw::sepHexStr(h_omw, rmChrV) == r_sp);
+    CHECK(omw::sepHexStr(h_p, rmChrV, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_std, rmChrV, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_omw, rmChrV, '-') == r_hy);
+
+    CHECK(omw::sepHexStr(h_p, "*-o/&%", 6) == r_sp);
+    CHECK_FALSE(omw::sepHexStr(h_p, "*-oa", 4) == r_sp);
+}
+
+TEST_CASE("string.h rmNonHex()")
+{
+    const std::string result = "adfe";
+
+    {
+        const char cbuffer[] = "asdf&qwertz-";
+        const char* cp = cbuffer;
+        const std::string cs = cp;
+        CHECK(omw::rmNonHex(cp) == result);
+        CHECK(omw::rmNonHex(cs) == result);
+
+        char buffer[] = "asdf&qwertz-";
+        char* p = buffer;
+        std::string s = p;
+        omw::rmNonHex(p);
+        omw::rmNonHex(s);
+        CHECK(result == buffer);
+        CHECK(s == result);
+    }
+
+    {
+        const char cbuffer[] = "adfe";
+        const char* cp = cbuffer;
+        const std::string cs = cp;
+        CHECK(omw::rmNonHex(cp) == result);
+        CHECK(omw::rmNonHex(cs) == result);
+
+        char buffer[] = "adfe";
+        char* p = buffer;
+        std::string s = p;
+        omw::rmNonHex(p);
+        omw::rmNonHex(s);
+        CHECK(result == buffer);
+        CHECK(s == result);
+    }
+}
+
+TEST_CASE("string.h join()")
+{
+    constexpr size_t count = 3;
+    const omw::string tokens[count] =
+    {
+        "asdf",
+        "456",
+        "%&/"
+    };
+
+    std::vector<omw::string> t(tokens, tokens + count);
+    CHECK(omw::join(t) == "asdf456%&/");
+    CHECK(omw::join(t, '-') == "asdf-456-%&/");
+}
+
+TEST_CASE("string.h String Vectors")
+{
+    constexpr size_t count = 3;
+    const char* t_p[count] = { "asdf", "456", "%&/" };
+    const std::string t_std[count] = { t_p[0], t_p[1], t_p[2] };
+    const omw::string t_omw[count] = { t_p[0], t_p[1], t_p[2] };
+
+    const std::vector<std::string> v_std = { t_p[0], t_p[1], t_p[2] };
+    const std::vector<omw::string> v_omw = { t_p[0], t_p[1], t_p[2] };
+
+    CHECK(omw::stringVector(t_p, count) == v_omw);
+    CHECK(omw::stringVector(t_std, count) == v_omw);
+    CHECK(omw::stringVector(t_omw, count) == v_omw);
+    CHECK(omw::stringVector(v_std) == v_omw);
+
+    CHECK(omw::stdStringVector(t_p, count) == v_std);
+    CHECK(omw::stdStringVector(t_std, count) == v_std);
+    CHECK(omw::stdStringVector(t_omw, count) == v_std);
+    CHECK(omw::stdStringVector(v_omw) == v_std);
+}
+
 TEST_CASE("string.h isInteger()")
 {
     CHECK(omw::isInteger("a123") == false);
@@ -451,8 +660,11 @@ TEST_CASE("string.h isInteger()")
 
 TEST_CASE("string.h isHex()")
 {
-    CHECK(omw::isHex("3F") == true);
-    CHECK(omw::isHex("3F5") == true);
+    const std::string s1 = "3F";
+    const char* p1 = "3F5";
+
+    CHECK(omw::isHex(s1) == true);
+    CHECK(omw::isHex(p1) == true);
     CHECK(omw::isHex("0123456789ABCDEF") == true);
     CHECK(omw::isHex("0123456789abcdef") == true);
     CHECK(omw::isHex("0123456789ABCDEF0123") == true);
@@ -462,18 +674,21 @@ TEST_CASE("string.h isHex()")
 
     for (int c = 0; c <= 0xFF; ++c)
     {
-        const char hexStr[] = { '5', 'a', (char)c, 0 };
+        const char chr = (char)c;
+        const char hexStr[] = { '5', 'a', chr, 0 };
         bool expectedResult;
 
-        if (((c >= '0') && (c <= '9')) ||
-            ((c >= 'A') && (c <= 'F')) ||
-            ((c >= 'a') && (c <= 'f')) ||
-            (c == 0))
+        if (((chr >= '0') && (chr <= '9')) ||
+            ((chr >= 'A') && (chr <= 'F')) ||
+            ((chr >= 'a') && (chr <= 'f')))
         {
             expectedResult = true;
         }
         else expectedResult = false;
 
+        CHECK(omw::isHex(chr) == expectedResult);
+
+        if (chr == 0) expectedResult = true;
         CHECK(omw::isHex(hexStr) == expectedResult);
     }
 }

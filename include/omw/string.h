@@ -1,16 +1,30 @@
 /*
 author         Oliver Blaser
-date           14.09.2021
+date           02.10.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#ifndef OMW_STRING_H
-#define OMW_STRING_H
+#ifndef IG_OMW_STRING_H
+#define IG_OMW_STRING_H
 
-#include <cstdint>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include "../omw/defs.h"
+
+
+#define OMWi_STRING_IMPLEMENT_CONTAINS (1)
+#if defined(_MSVC_LANG)
+#if (_MSVC_LANG > 202002L)
+#undef OMWi_STRING_IMPLEMENT_CONTAINS
+#endif
+#elif defined(__cplusplus)
+#if (__cplusplus > 202100L)
+#undef OMWi_STRING_IMPLEMENT_CONTAINS
+#endif
+#endif
+
 
 namespace omw
 {
@@ -46,6 +60,17 @@ namespace omw
 
 
 
+    using stdStringVector_t = std::vector<std::string>;
+    using stdStringVector_size_type = omw::stdStringVector_t::size_type;
+    constexpr stdStringVector_size_type stdStringVector_npos = (omw::stdStringVector_size_type)-1;
+
+    class string;
+    using stringVector_t = std::vector<omw::string>;
+    using stringVector_size_type = omw::stringVector_t::size_type;
+    constexpr stringVector_size_type stringVector_npos = (omw::stringVector_size_type)-1;
+
+
+
     class StringReplacePair
     {
     public:
@@ -74,6 +99,12 @@ namespace omw
         string(const char* first, const char* last);
         virtual ~string() {}
 
+#ifdef OMWi_STRING_IMPLEMENT_CONTAINS
+        bool contains(char ch) const;
+        bool contains(const char* str) const;
+#endif
+        bool contains(const std::string& str) const;
+
         omw::string& replaceFirst(const std::string& search, const std::string& replace, size_type startPos = 0);
         omw::string& replaceFirst(const omw::StringReplacePair& pair, size_type startPos = 0);
 
@@ -82,15 +113,24 @@ namespace omw
         omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
 
+        omw::stringVector_t split(omw::string::size_type tokenLength, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
+        //omw::stringVector_t split(char sepChar, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
+        //omw::stringVector_t split(const char* sepString, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
+        //omw::stringVector_t split(const std::string& sepString, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
+
         //! \name Case Conversion
         //! Methods named `.._ascii` convert only A-Z and a-z. Those named `.._asciiExt` additionally convert some UTF-8 code points.
         /// @{
+        //omw::string& lower(); // reserved name
         omw::string& lower_ascii();
         omw::string& lower_asciiExt();
+        //omw::string& upper(); // reserved name
         omw::string& upper_ascii();
         omw::string& upper_asciiExt();
+        //omw::string toLower() const; // reserved name
         omw::string toLower_ascii() const;
         omw::string toLower_asciiExt() const;
+        //omw::string toUpper() const; // reserved name
         omw::string toUpper_ascii() const;
         omw::string toUpper_asciiExt() const;
         /// @}
@@ -107,8 +147,8 @@ namespace omw
     omw::string to_string(const std::pair<T1, T2>& value, char sepChar = pairtos_defaultSepChar);
 
     template omw::string to_string(const std::pair<int32_t, int32_t>&, char);
-    template omw::string to_string(const std::pair<int64_t, int64_t>&, char);
     template omw::string to_string(const std::pair<uint32_t, uint32_t>&, char);
+    template omw::string to_string(const std::pair<int64_t, int64_t>&, char);
     template omw::string to_string(const std::pair<uint64_t, uint64_t>&, char);
     template omw::string to_string(const std::pair<float, float>&, char);
     template omw::string to_string(const std::pair<double, double>&, char);
@@ -118,8 +158,8 @@ namespace omw
 
     bool stob(const std::string& boolStr);
     std::pair<int32_t, int32_t> stoipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<int64_t, int64_t> stoi64pair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    //std::pair<int64_t, int64_t> stoi64pair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<uint64_t, uint64_t> stoui64pair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<float, float> stofpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<double, double> stodpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
@@ -127,6 +167,8 @@ namespace omw
 
 
 
+    //! \name Hex Strings
+    /// @{
     omw::string toHexStr(int8_t value);
     omw::string toHexStr(uint8_t value);
     omw::string toHexStr(int16_t value);
@@ -135,6 +177,12 @@ namespace omw
     omw::string toHexStr(uint32_t value);
     omw::string toHexStr(int64_t value);
     omw::string toHexStr(uint64_t value);
+    omw::string toHexStr(int16_t value, char sepChar);
+    omw::string toHexStr(uint16_t value, char sepChar);
+    omw::string toHexStr(int32_t value, char sepChar);
+    omw::string toHexStr(uint32_t value, char sepChar);
+    omw::string toHexStr(int64_t value, char sepChar);
+    omw::string toHexStr(uint64_t value, char sepChar);
     omw::string toHexStr(const std::vector<char>& data, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const std::vector<uint8_t>& data, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const char* data, size_t count, char sepChar = toHexStr_defaultSepChar);
@@ -148,12 +196,63 @@ namespace omw
 
 
 
+    omw::string sepHexStr(const std::string& str);
+    omw::string sepHexStr(const std::string& str, char sepChar);
+    omw::string sepHexStr(const std::string& str, char rmChar, char sepChar);
+    omw::string sepHexStr(const std::string& str, const char* rmChars, size_t count, char sepChar = toHexStr_defaultSepChar);
+    omw::string sepHexStr(const std::string& str, const std::vector<char>& rmChars, char sepChar = toHexStr_defaultSepChar);
+    //omw::string sepHexStr(const std::string& str, const char* rmString, char sepChar = toHexStr_defaultSepChar);
+    //omw::string sepHexStr(const std::string& str, const std::string& rmString, char sepChar = toHexStr_defaultSepChar);
+    //omw::string sepHexStr(const std::string& str, const std::string* rmStrings, size_t count, char sepChar = toHexStr_defaultSepChar);
+    //omw::string sepHexStr(const std::string& str, const omw::string* rmStrings, size_t count, char sepChar = toHexStr_defaultSepChar);
+    //omw::string sepHexStr(const std::string& str, const omw::stdStringVector_t& rmStrings, char sepChar = toHexStr_defaultSepChar);
+    //omw::string sepHexStr(const std::string& str, const omw::stringVector_t& rmStrings, char sepChar = toHexStr_defaultSepChar);
+
+    omw::string rmNonHex(const std::string& str);
+    void  rmNonHex(char* str);
+    void  rmNonHex(std::string& str);
+    /// @}
+
+
+
+    // TODO check overloads
+    //omw::string join(const std::string* strings, size_t count, char sepChar = '\0');
+    //omw::string join(const std::string* strings, size_t count, const char* sepString);
+    //omw::string join(const std::string* strings, size_t count, const std::string& sepString);
+    //omw::string join(const omw::stdStringVector_t& strings);
+    //omw::string join(const omw::stdStringVector_t& strings, char sepChar);
+    //omw::string join(const omw::stdStringVector_t& strings, const char* sepString);
+    //omw::string join(const omw::stdStringVector_t& strings, const std::string& sepString);
+    //omw::string join(const omw::stringVector_t& strings);
+    omw::string join(const omw::stringVector_t& strings, char sepChar = 0);
+    //omw::string join(const omw::stringVector_t& strings, const char* sepString);
+    //omw::string join(const omw::stringVector_t& strings, const std::string& sepString);
+
+
+
+    //! \name String Vectors
+    /// @{
+    omw::stringVector_t stringVector(const char* const* strings, size_t count);
+    omw::stringVector_t stringVector(const std::string* strings, size_t count);
+    omw::stringVector_t stringVector(const omw::string* strings, size_t count);
+    omw::stringVector_t stringVector(const omw::stdStringVector_t& strvec);
+
+    omw::stdStringVector_t stdStringVector(const char* const* strings, size_t count);
+    omw::stdStringVector_t stdStringVector(const std::string* strings, size_t count);
+    omw::stdStringVector_t stdStringVector(const omw::string* strings, size_t count);
+    omw::stdStringVector_t stdStringVector(const omw::stringVector_t& strvec);
+    /// @}
+
+
+
     //bool isValidUTF8(const std::string& str);
+
     bool isInteger(const std::string& str);
     bool isUInteger(const std::string& str);
+    bool isHex(char ch);
     bool isHex(const std::string& str);
 
     /*! @} */
 }
 
-#endif // OMW_STRING_H
+#endif // IG_OMW_STRING_H
