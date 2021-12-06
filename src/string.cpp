@@ -15,6 +15,12 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace
 {
+    template<typename T1, typename T2>
+    omw::string pair_to_string(const std::pair<T1, T2>& value, char sepChar)
+    {
+        return (std::to_string(value.first) + sepChar + std::to_string(value.second));
+    }
+
     // T has to be an integer type
     template <typename T>
     T hexstointeger(const omw::string& str, const std::string& fnName)
@@ -487,11 +493,42 @@ omw::string omw::to_string(bool value, bool asText)
     return (value ? "1" : "0");
 }
 
-template<typename T1, typename T2>
-omw::string omw::to_string(const std::pair<T1, T2>& value, char sepChar)
+omw::string omw::to_string(const std::pair<int32_t, int32_t>& value, char sepChar)
 {
-    return (std::to_string(value.first) + sepChar + std::to_string(value.second));
+    return ::pair_to_string(value, sepChar);
 }
+
+omw::string omw::to_string(const std::pair<uint32_t, uint32_t>& value, char sepChar)
+{
+    return ::pair_to_string(value, sepChar);
+}
+
+omw::string omw::to_string(const std::pair<int64_t, int64_t>& value, char sepChar)
+{
+    return ::pair_to_string(value, sepChar);
+}
+
+omw::string omw::to_string(const std::pair<uint64_t, uint64_t>& value, char sepChar)
+{
+    return ::pair_to_string(value, sepChar);
+}
+
+omw::string omw::to_string(const std::pair<float, float>& value, char sepChar)
+{
+    return ::pair_to_string(value, sepChar);
+}
+
+omw::string omw::to_string(const std::pair<double, double>& value, char sepChar)
+{
+    return ::pair_to_string(value, sepChar);
+}
+
+omw::string omw::to_string(const std::pair<long double, long double>& value, char sepChar)
+{
+    return ::pair_to_string(value, sepChar);
+}
+
+
 
 
 
@@ -923,22 +960,6 @@ omw::stdStringVector_t omw::stdStringVector(const omw::string* strings, size_t c
 omw::stdStringVector_t omw::stdStringVector(const omw::stringVector_t& strvec)
 {
     return convertStringVector<omw::stdStringVector_t, omw::stringVector_t>(strvec);
-}
-
-
-
-bool omw::isHex(char ch)
-{
-    omw::string digits = omw::hexStrDigitsUpper;
-    bool r = digits.contains(ch);
-
-    if (!r)
-    {
-        digits = omw::hexStrDigitsLower;
-        r = digits.contains(ch);
-    }
-
-    return r;
 }
 
 

@@ -4,8 +4,8 @@ date            06.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#ifndef IG_OMW_ALGORITHM_H
-#define IG_OMW_ALGORITHM_H
+#ifndef IG_OMW_CLI_H
+#define IG_OMW_CLI_H
 
 #include <vector>
 
@@ -27,4 +27,4 @@ namespace omw
     /*! @} */
 }
 
-#endif // IG_OMW_ALGORITHM_H
+#endif // IG_OMW_CLI_H

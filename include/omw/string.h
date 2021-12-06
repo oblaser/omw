@@ -155,16 +155,15 @@ namespace omw
     omw::string to_string(float value);
     omw::string to_string(double value);
     omw::string to_string(long double value);
+
     omw::string to_string(bool value, bool asText = true);
-    template<typename T1, typename T2>
-    omw::string to_string(const std::pair<T1, T2>& value, char sepChar = pairtos_defaultSepChar);
-    template omw::string to_string(const std::pair<int32_t, int32_t>&, char);
-    template omw::string to_string(const std::pair<uint32_t, uint32_t>&, char);
-    template omw::string to_string(const std::pair<int64_t, int64_t>&, char);
-    template omw::string to_string(const std::pair<uint64_t, uint64_t>&, char);
-    template omw::string to_string(const std::pair<float, float>&, char);
-    template omw::string to_string(const std::pair<double, double>&, char);
-    template omw::string to_string(const std::pair<long double, long double>&, char);
+    omw::string to_string(const std::pair<int32_t, int32_t>& value, char sepChar = pairtos_defaultSepChar);
+    omw::string to_string(const std::pair<uint32_t, uint32_t>& value, char sepChar = pairtos_defaultSepChar);
+    omw::string to_string(const std::pair<int64_t, int64_t>& value, char sepChar = pairtos_defaultSepChar);
+    omw::string to_string(const std::pair<uint64_t, uint64_t>& value, char sepChar = pairtos_defaultSepChar);
+    omw::string to_string(const std::pair<float, float>& value, char sepChar = pairtos_defaultSepChar);
+    omw::string to_string(const std::pair<double, double>& value, char sepChar = pairtos_defaultSepChar);
+    omw::string to_string(const std::pair<long double, long double>& value, char sepChar = pairtos_defaultSepChar);
 
 
 
@@ -268,7 +267,11 @@ namespace omw
     constexpr bool isCntrl(char ch) { return (((ch >= 0x00) && (ch <= 0x1F)) || (ch == 0x7F)); }
     constexpr bool isDigit(char ch) { return ((ch >= 0x30) && (ch <= 0x39)); }
     constexpr bool isGraph(char ch) { return ((ch >= 0x21) && (ch <= 0x7E)); }
-    bool isHex(char ch);
+    constexpr bool isHex(char ch)
+    {
+        return (((ch >= 0x30) && (ch <= 0x39)) || ((ch >= 0x41) && (ch <= 0x46)) ||
+            ((ch >= 0x61) && (ch <= 0x66)));
+    }
     constexpr bool isLower(char ch) { return ((ch >= 0x61) && (ch <= 0x7A)); }
     constexpr bool isNull(char ch) { return (ch == 0x00); }
     constexpr bool isPrint(char ch) { return ((ch >= 0x20) && (ch <= 0x7E)); }
