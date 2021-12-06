@@ -1,7 +1,7 @@
 /*
-author      Oliver Blaser
-date        28.09.2021
-copyright   MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            06.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include "omw/windows/windows.h"
@@ -16,6 +16,24 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include "omw/windows/error.h"
 #include "omw/windows/exception.h"
 #include "omw/string.h"
+
+#include <Windows.h>
+
+
+namespace
+{
+    typedef struct
+    {
+        DWORD f;
+        DWORD t;
+    } beepThreadParams_t;
+
+    DWORD WINAPI beep_thread(__in LPVOID lpParameter)
+    {
+        const beepThreadParams_t* const p = (beepThreadParams_t*)lpParameter;
+        return (Beep(p->f, p->t) ? 0 : 1);
+    }
+}
 
 
 
@@ -41,12 +59,45 @@ int64_t omw::windows::queryPerformanceFrequency()
     return f.QuadPart;
 }
 
-/*!
-* \fn int64_t omw::windows::perfCntrGetTick()
-* \return Value of the performance counter
-*
-* Alias for queryPerformanceCounter().
-*/
+double omw::windows::perfCntrCalcDuration(int64_t startTick, int64_t endTick)
+{
+    const double f = (double)omw::windows::queryPerformanceFrequency();
+    const double ticks = (double)(endTick - startTick);
+    return ticks / f;
+}
+
+uint32_t omw::windows::perfCntrCalcDuration_s(int64_t startTick)
+{
+    const int64_t endTick = omw::windows::perfCntrGetTick();
+    return omw::windows::perfCntrCalcDuration_s(startTick, endTick);
+}
+
+uint32_t omw::windows::perfCntrCalcDuration_s(int64_t startTick, int64_t endTick)
+{
+    return std::lround(omw::windows::perfCntrCalcDuration(startTick, endTick));
+}
+
+uint32_t omw::windows::perfCntrCalcDuration_ms(int64_t startTick)
+{
+    const int64_t endTick = omw::windows::perfCntrGetTick();
+    return omw::windows::perfCntrCalcDuration_ms(startTick, endTick);
+}
+
+uint32_t omw::windows::perfCntrCalcDuration_ms(int64_t startTick, int64_t endTick)
+{
+    return std::lround(omw::windows::perfCntrCalcDuration(startTick, endTick) * 1'000.0);
+}
+
+uint32_t omw::windows::perfCntrCalcDuration_us(int64_t startTick)
+{
+    const int64_t endTick = omw::windows::perfCntrGetTick();
+    return omw::windows::perfCntrCalcDuration_us(startTick, endTick);
+}
+
+uint32_t omw::windows::perfCntrCalcDuration_us(int64_t startTick, int64_t endTick)
+{
+    return std::lround(omw::windows::perfCntrCalcDuration(startTick, endTick) * 1'000'000.0);
+}
 
 //! @param t_s Duration in seconds
 //! @return The number of ticks which represent the duration
@@ -96,15 +147,78 @@ int64_t omw::windows::perfCntrCalcTickCount_us(uint32_t t_us)
     return omw::windows::perfCntrCalcTickCount(t_us / 1'000'000.0);
 }
 
+void omw::windows::perfCntrSleep(double t_s)
+{
+    int64_t startTick = omw::windows::perfCntrGetTick();
+    const int64_t duration = omw::windows::perfCntrCalcTickCount(t_s);
+    while (!omw::windows::perfCntrElapsed(startTick, duration));
+}
+
+void omw::windows::perfCntrSleep_s(uint32_t t_s)
+{
+    int64_t startTick = omw::windows::perfCntrGetTick();
+    const int64_t duration = omw::windows::perfCntrCalcTickCount_s(t_s);
+    while (!omw::windows::perfCntrElapsed(startTick, duration));
+}
+
+void omw::windows::perfCntrSleep_ms(uint32_t t_ms)
+{
+    int64_t startTick = omw::windows::perfCntrGetTick();
+    const int64_t duration = omw::windows::perfCntrCalcTickCount_ms(t_ms);
+    while (!omw::windows::perfCntrElapsed(startTick, duration));
+}
+
+void omw::windows::perfCntrSleep_us(uint32_t t_us)
+{
+    int64_t startTick = omw::windows::perfCntrGetTick();
+    const int64_t duration = omw::windows::perfCntrCalcTickCount_us(t_us);
+    while (!omw::windows::perfCntrElapsed(startTick, duration));
+}
+
+/*!
+* \fn int64_t omw::windows::perfCntrGetTick()
+* \return Value of the performance counter
+*
+* Alias for queryPerformanceCounter().
+*/
+
 /*!
 * \fn bool omw::windows::perfCntrElapsed(int64_t& oldTick, int64_t tickDuration)
 * \param [in, out] oldTick Reference to the variable that holds the last tick value
 * \param tickDuration The number of ticks which represent the duration between two elapsed events
 * \return `true` if the time has elapsed, otherwise `false`
-* 
+*
 * The `oldTick` variable should be initialized with the return value of perfCntrGetTick().
 * The `tickDuration` should be calculated once by perfCntrCalcTickCount() or `perfCntrCalcTickCount_..()`.
 */
+
+
+
+//! @param frequency In range [37, 32'767]
+//! @param duration_ms 
+//! @param blocking 
+//! @return <tt>true</tt> on success, <tt>false</tt> otherwise
+bool omw::windows::beep(uint32_t frequency, uint32_t duration_ms, bool blocking)
+{
+    bool r;
+
+    if (blocking) r = (Beep(frequency, duration_ms) != 0);
+    else
+    {
+        DWORD threadId;
+        HANDLE threadHandle;
+        static ::beepThreadParams_t params;
+
+        params.f = frequency;
+        params.t = duration_ms;
+
+        threadHandle = CreateThread(0, 0, ::beep_thread, &params, 0, &threadId);
+
+        r = (threadHandle != NULL);
+    }
+
+    return r;
+}
 
 
 
