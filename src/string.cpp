@@ -842,14 +842,25 @@ void omw::rmNonHex(std::string& str)
 
 
 
+omw::string omw::join(const omw::stringVector_t& strings)
+{
+    omw::string r = "";
+
+    for (omw::stringVector_size_type i = 0; i < strings.size(); ++i)
+    {
+        r += strings[i];
+    }
+
+    return r;
+}
+
 omw::string omw::join(const omw::stringVector_t& strings, char sepChar)
 {
     omw::string r = "";
 
     for (omw::stringVector_size_type i = 0; i < strings.size(); ++i)
     {
-        if ((i > 0) && (sepChar != 0)) r += sepChar;
-        //if (i > 0) r += omw::string(1, sepChar); TODO: uncomment this line and remove the last
+        if (i > 0) r += omw::string(1, sepChar);
         r += strings[i];
     }
 

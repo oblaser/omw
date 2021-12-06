@@ -718,6 +718,7 @@ TEST_CASE("string.h join()")
     std::vector<omw::string> t(tokens, tokens + count);
     CHECK(omw::join(t) == "asdf456%&/");
     CHECK(omw::join(t, '-') == "asdf-456-%&/");
+    CHECK(omw::join(std::vector<omw::string>()) == "");
 }
 
 TEST_CASE("string.h String Vectors")

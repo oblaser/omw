@@ -236,7 +236,8 @@ namespace omw
     //omw::string join(const omw::stdStringVector_t& strings, const char* sepString);
     //omw::string join(const omw::stdStringVector_t& strings, const std::string& sepString);
     //omw::string join(const omw::stringVector_t& strings);
-    omw::string join(const omw::stringVector_t& strings, char sepChar = 0);
+    omw::string join(const omw::stringVector_t& strings);
+    omw::string join(const omw::stringVector_t& strings, char sepChar);
     //omw::string join(const omw::stringVector_t& strings, const char* sepString);
     //omw::string join(const omw::stringVector_t& strings, const std::string& sepString);
 
