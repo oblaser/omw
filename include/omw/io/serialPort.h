@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           24.09.2021
+date           06.12.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -32,21 +32,21 @@ namespace omw
             NSTOPBITS_2 = 2      // 2
         };
 
-        enum PARITY
-        {
-            PARITY_NONE = 0,
-            PARITY_ODD,
-            PARITY_EVEN
-        };
+        //enum PARITY
+        //{
+        //    PARITY_NONE = 0,
+        //    PARITY_ODD,
+        //    PARITY_EVEN
+        //};
 
         class SerialPort
         {
         public:
             SerialPort();
-            SerialPort(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
+//            SerialPort(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
             virtual ~SerialPort() {}
 
-            int32_t config(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
+//            int32_t config(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
 
             int32_t getBaudRate() const;
             int32_t getDataBits() const;
@@ -74,6 +74,8 @@ namespace omw
         };
 
         std::vector<omw::string> getSerialPortList(bool onlyCOMx = true);
+        void sortSerialPortList(std::vector<omw::string>& ports);
+        void sortSerialPortList(std::vector<std::string>& ports);
     }
 }
 

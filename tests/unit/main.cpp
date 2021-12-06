@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           15.09.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            06.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include <iostream>
@@ -23,6 +23,7 @@ TEST_CASE("omw lib")
 
 
 #include "color.hpp"
+#include "io_serialPort.hpp"
 #include "string.hpp"
 #include "version.hpp"
 #include "windows_envVar.hpp"
