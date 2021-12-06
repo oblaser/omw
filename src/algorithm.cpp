@@ -72,3 +72,93 @@ namespace
     }
 }
 
+
+
+//! @param data big-endian right aligned
+//! @param count 
+//! @return 
+std::vector<uint8_t> omw::doubleDabble128(const uint8_t* data, size_t count)
+{
+    constexpr size_t bitWidth = 128;
+    using chunk_t = uint8_t;
+    constexpr size_t chunkWidth = 8;
+    constexpr size_t nChunks = bitWidth / chunkWidth;
+
+    std::vector<uint8_t> bcd(20);
+    std::bitset<bitWidth> bin;
+
+    //init
+    if (data)
+    {
+        for (size_t i = 0; i < nChunks; ++i)
+        {
+            chunk_t chunkValue = 0;
+            if (i < count) chunkValue = data[count - 1 - i];
+
+            chunk_t chunkMask = 1;
+
+            for (size_t j = 0; j < chunkWidth; ++j)
+            {
+                const size_t pos = i * chunkWidth + j;
+                bin.set(pos, ((chunkValue & chunkMask) != 0));
+                chunkMask <<= 1;
+            }
+        }
+    }
+    // else nop / initialized with 0
+
+    ::doubleDabble::dd(bcd, bin);
+
+    return bcd;
+}
+
+std::vector<uint8_t> omw::doubleDabble128(uint32_t valueH, uint32_t valueHM, uint32_t valueLM, uint32_t valueL)
+{
+    uint64_t value64H = valueH;
+    value64H <<= 32;
+    value64H |= valueHM;
+
+    uint64_t value64L = valueLM;
+    value64L <<= 32;
+    value64L |= valueL;
+
+    return omw::doubleDabble128(value64H, value64L);
+}
+
+std::vector<uint8_t> omw::doubleDabble128(uint64_t valueH, uint64_t valueL)
+{
+    constexpr size_t bitWidth = 128;
+    using chunk_t = uint64_t;
+    constexpr size_t chunkWidth = 64;
+
+    std::vector<uint8_t> bcd(20);
+    std::bitset<bitWidth> bin;
+
+    //init
+    {
+        chunk_t chunkValue;
+        chunk_t chunkMask;
+
+        // i = 0
+        chunkValue = valueL;
+        chunkMask = 1;
+        for (size_t j = 0; j < chunkWidth; ++j)
+        {
+            bin.set(j, ((chunkValue & chunkMask) != 0));
+            chunkMask <<= 1;
+        }
+
+        // i = 1
+        chunkValue = valueH;
+        chunkMask = 1;
+        for (size_t j = 0; j < chunkWidth; ++j)
+        {
+            bin.set(chunkWidth + j, ((chunkValue & chunkMask) != 0));
+            chunkMask <<= 1;
+        }
+    }
+
+    ::doubleDabble::dd(bcd, bin);
+
+    return bcd;
+}

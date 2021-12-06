@@ -26,6 +26,7 @@ TEST_CASE("omw lib")
 #include "cli.hpp"
 #include "color.hpp"
 #include "string.hpp"
+#include "utility.hpp"
 #include "version.hpp"
 #include "windows_envVar.hpp"
 #include "windows_string.hpp"
@@ -41,29 +42,43 @@ TEST_CASE("omw lib")
 
 TEST_CASE("windows.h")
 {
-    std::cout << std::endl << "Beep Test" << std::endl;
+    uint32_t freq1, freq2;
 
-    CHECK(omw::windows::beep(700, 200));
+    if (omw::info::version().rev() < 1000)
+    {
+        freq1 = 700;
+        freq2 = 900;
+    }
+    else
+    {
+        freq1 = 20000;
+        freq2 = 20000;
+    }
+
+    CHECK(omw::windows::beep(freq1, 200));
     omw::windows::perfCntrSleep_ms(205);
 
     const uint32_t dur = 200;
     const auto start = omw::windows::perfCntrGetTick();
-    CHECK(omw::windows::beep(800, dur, true));
+    CHECK(omw::windows::beep(freq2, dur, true));
     const auto stop = omw::windows::perfCntrGetTick();
 
     const double dDur = (double)dur / 1'000.0;
     const double measDur = omw::windows::perfCntrCalcDuration(start, stop);
     const double absError = std::abs(measDur - dDur);
     const double relError = absError / dDur;
+    const double absErrorTh = 0.01; // 10ms
+    const double relErrorTh = 0.01; // 1%
 
+    std::cout << "\nBeep Test" << std::endl;
     std::cout << "duration:\n";
-    std::cout << "absolute error [s]: " << absError << std::endl;
-    std::cout << "relative error [%]: " << (relError * 100) << std::endl;
-
-    CHECK(absError < 0.01); // 10ms
-    CHECK(relError < 0.01); // 1%
-
+    std::cout << "absolute error [s]: " << absError << " < " << absErrorTh << std::endl;
+    std::cout << "relative error [%]: " << (relError * 100) << " < " << (relErrorTh * 100) << std::endl;
     std::cout << std::endl;
+
+    CHECK(absError < absErrorTh);
+    CHECK(relError < relErrorTh);
+
 }
 
 #endif

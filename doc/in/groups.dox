@@ -25,3 +25,8 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 \defgroup grp_stringLib String Library
 \brief `#include <omw/string.h>`
 */
+
+/*!
+\defgroup grp_utility Utility
+\brief `#include <omw/utility.h>`
+*/

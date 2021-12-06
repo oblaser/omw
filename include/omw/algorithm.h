@@ -17,17 +17,15 @@ namespace omw
     * @{
     */
 
-
     //! \name Double Dabble
     /// @{
     std::vector<uint8_t> doubleDabble128(const uint8_t* data, size_t count = 16);
-    std::vector<uint8_t> doubleDabble128(const uint16_t* data, size_t count = 8);
-    std::vector<uint8_t> doubleDabble128(const uint32_t* data, size_t count = 4);
-    std::vector<uint8_t> doubleDabble128(const uint64_t* data, size_t count = 2);
+    //std::vector<uint8_t> doubleDabble128(const uint16_t* data, size_t count = 8);
+    //std::vector<uint8_t> doubleDabble128(const uint32_t* data, size_t count = 4);
+    //std::vector<uint8_t> doubleDabble128(const uint64_t* data, size_t count = 2);
     std::vector<uint8_t> doubleDabble128(uint32_t valueH, uint32_t valueHM, uint32_t valueLM, uint32_t valueL);
     std::vector<uint8_t> doubleDabble128(uint64_t valueH, uint64_t valueL);
     /// @}
-
 
     // grp_algorithm
     /*! @} */

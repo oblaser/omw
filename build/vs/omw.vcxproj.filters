@@ -45,7 +45,7 @@
     <ClCompile Include="..\..\src\color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\util.cpp">
+    <ClCompile Include="..\..\src\utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\algorithm.cpp">
@@ -95,7 +95,7 @@
     <ClInclude Include="..\..\include\omw\color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\omw\util.h">
+    <ClInclude Include="..\..\include\omw\utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\omw\algorithm.h">
