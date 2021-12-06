@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           02.10.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            06.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_STRING_H
@@ -93,21 +93,28 @@ namespace omw
     {
     public:
         string();
+        string(std::string::size_type count, char c);
         string(const char* str);
         string(const char* str, std::string::size_type count);
         string(const std::string& other, std::string::size_type pos = 0, std::string::size_type count = std::string::npos);
         string(const char* first, const char* last);
+
+        string(char c, std::string::size_type count = 1);
+
         virtual ~string() {}
 
 #ifdef OMWi_STRING_IMPLEMENT_CONTAINS
         bool contains(char ch) const;
         bool contains(const char* str) const;
-#endif
         bool contains(const std::string& str) const;
+#endif
 
         omw::string& replaceFirst(const std::string& search, const std::string& replace, size_type startPos = 0);
         omw::string& replaceFirst(const omw::StringReplacePair& pair, size_type startPos = 0);
 
+        omw::string& replaceAll(char search, char replace, size_type startPos = 0, size_t* nReplacements = nullptr);
+        omw::string& replaceAll(char search, const std::string& replace, size_type startPos = 0, size_t* nReplacements = nullptr);
+        omw::string& replaceAll(const std::string& search, char replace, size_type startPos = 0, size_t* nReplacements = nullptr);
         omw::string& replaceAll(const std::string& search, const std::string& replace, size_type startPos = 0, size_t* nReplacements = nullptr);
         omw::string& replaceAll(const omw::StringReplacePair& pair, size_type startPos = 0, size_t* nReplacements = nullptr);
         omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
@@ -141,11 +148,16 @@ namespace omw
 
 
 
-    omw::string to_string(bool value, bool textual = true);
-
+    omw::string to_string(int32_t value);
+    omw::string to_string(uint32_t value);
+    omw::string to_string(int64_t value);
+    omw::string to_string(uint64_t value);
+    omw::string to_string(float value);
+    omw::string to_string(double value);
+    omw::string to_string(long double value);
+    omw::string to_string(bool value, bool asText = true);
     template<typename T1, typename T2>
     omw::string to_string(const std::pair<T1, T2>& value, char sepChar = pairtos_defaultSepChar);
-
     template omw::string to_string(const std::pair<int32_t, int32_t>&, char);
     template omw::string to_string(const std::pair<uint32_t, uint32_t>&, char);
     template omw::string to_string(const std::pair<int64_t, int64_t>&, char);
@@ -247,10 +259,42 @@ namespace omw
 
     //bool isValidUTF8(const std::string& str);
 
+
+
+    //! \name Character Classification
+    /// @{
+    constexpr bool isBlank(char ch) { return ((ch == 0x09) || (ch == 0x20)); }
+    constexpr bool isCntrl(char ch) { return (((ch >= 0x00) && (ch <= 0x1F)) || (ch == 0x7F)); }
+    constexpr bool isDigit(char ch) { return ((ch >= 0x30) && (ch <= 0x39)); }
+    constexpr bool isGraph(char ch) { return ((ch >= 0x21) && (ch <= 0x7E)); }
+    bool isHex(char ch);
+    constexpr bool isLower(char ch) { return ((ch >= 0x61) && (ch <= 0x7A)); }
+    constexpr bool isNull(char ch) { return (ch == 0x00); }
+    constexpr bool isPrint(char ch) { return ((ch >= 0x20) && (ch <= 0x7E)); }
+    constexpr bool isPunct(char ch)
+    {
+        return (((ch >= 0x21) && (ch <= 0x2F)) || ((ch >= 0x3A) && (ch <= 0x40)) ||
+            ((ch >= 0x5B) && (ch <= 0x60)) || ((ch >= 0x7B) && (ch <= 0x7E)));
+    }
+    constexpr bool isSpace(char ch) { return (((ch >= 0x09) && (ch <= 0x0D)) || (ch == 0x20)); }
+    constexpr bool isUpper(char ch) { return ((ch >= 0x41) && (ch <= 0x5A)); }
+    constexpr bool isWhitespace(char ch) { return isSpace(ch); }
+    constexpr bool isAlpha(char ch) { return (isLower(ch) || isUpper(ch)); }
+    constexpr bool isAlnum(char ch) { return (isAlpha(ch) || isDigit(ch)); }
+
+    // same for UTF-8:
+    //bool is...(const char* utf8cp); // utf8cp = UTF-8 code point (e.g. "\xC3\xA4")
+    /// @}
+
+    //! \name String Classification
+    /// @{
     bool isInteger(const std::string& str);
     bool isUInteger(const std::string& str);
-    bool isHex(char ch);
     bool isHex(const std::string& str);
+    /// @}
+
+    size_t peekNewLine(const char* p);
+    size_t peekNewLine(const char* p, const char* end);
 
     /*! @} */
 }

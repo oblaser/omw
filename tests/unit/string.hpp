@@ -72,6 +72,8 @@ TEST_CASE("string.h omw::string ctor")
     CHECK(std::strcmp(omw::string(str, str + std::strlen(str)).c_str(), str) == 0);
     CHECK(std::strcmp(omwstr.c_str(), "aaa") == 0);
     CHECK(std::strcmp(stdfromomw.c_str(), "aaa") == 0);
+    CHECK(std::strcmp((omw::string(1, 'b')).c_str(), "b") == 0);
+    CHECK(std::strcmp((omw::string('c')).c_str(), "c") == 0);
 }
 
 TEST_CASE("string.h omw::string::contains()")
@@ -79,29 +81,36 @@ TEST_CASE("string.h omw::string::contains()")
     char chr;
     const char* ptr;
     std::string str;
+    omw::string omwstr;
 
     const omw::string s("The quick brown fox jumps over the lazy dog");
 
     chr = 'q';
     ptr = "ox j";
     str = "The q";
+    omwstr = "ck bro";
     CHECK(s.contains(chr));
     CHECK(s.contains(ptr));
     CHECK(s.contains(str));
+    CHECK(s.contains(omwstr));
 
     chr = 'x';
     ptr = "jump";
     str = "az";
+    omwstr = "ps ove";
     CHECK(s.contains(chr));
     CHECK(s.contains(ptr));
     CHECK(s.contains(str));
+    CHECK(s.contains(omwstr));
 
     chr = '-';
     ptr = "mobile";
     str = "cellphone";
+    omwstr = "case";
     CHECK_FALSE(s.contains(chr));
     CHECK_FALSE(s.contains(ptr));
     CHECK_FALSE(s.contains(str));
+    CHECK_FALSE(s.contains(omwstr));
 }
 
 TEST_CASE("string.h omw::string::replaceFirst()")
@@ -144,6 +153,91 @@ TEST_CASE("string.h omw::string::replaceAll()")
     omw::string s;
     size_t nReplacements;
 
+#pragma region char-char
+    s = str;
+    s.replaceAll('a', 'X', 0, &nReplacements);
+    CHECK(s == "X boy with X hXt");
+    CHECK(nReplacements == 3);
+
+    s = str;
+    s.replaceAll('a', 'X', 5, &nReplacements);
+    CHECK(s == "a boy with X hXt");
+    CHECK(nReplacements == 2);
+
+    s = str;
+    s.replaceAll('q', '#', 1, &nReplacements);
+    CHECK(s == str);
+    CHECK(nReplacements == 0);
+
+
+    s = str;
+    s.replaceAll('\0', '#', 0, &nReplacements);
+    CHECK(s == str);
+    CHECK(nReplacements == 0);
+
+    s = str;
+    s.replaceAll('t', '\0', 0, &nReplacements);
+    CHECK(s == std::string("a boy wi\0h a ha\0", std::strlen(str)));
+    CHECK(nReplacements == 2);
+#pragma endregion char-char
+
+#pragma region char-string
+    s = str;
+    s.replaceAll('a', "XYZ ", 0, &nReplacements);
+    CHECK(s == "XYZ  boy with XYZ  hXYZ t");
+    CHECK(nReplacements == 3);
+
+    s = str;
+    s.replaceAll('a', "XYZ ", 5, &nReplacements);
+    CHECK(s == "a boy with XYZ  hXYZ t");
+    CHECK(nReplacements == 2);
+
+    s = str;
+    s.replaceAll('q', "#", 1, &nReplacements);
+    CHECK(s == str);
+    CHECK(nReplacements == 0);
+
+
+    s = str;
+    s.replaceAll('\0', "$", 0, &nReplacements);
+    CHECK(s == str);
+    CHECK(nReplacements == 0);
+
+    s = str;
+    s.replaceAll('t', "", 0, &nReplacements);
+    CHECK(s == "a boy wih a ha");
+    CHECK(nReplacements == 2);
+#pragma endregion char-string
+
+#pragma region string-char
+    s = str;
+    s.replaceAll("a ", 'X', 0, &nReplacements);
+    CHECK(s == "Xboy with Xhat");
+    CHECK(nReplacements == 2);
+
+    s = str;
+    s.replaceAll("a ", 'X', 5, &nReplacements);
+    CHECK(s == "a boy with Xhat");
+    CHECK(nReplacements == 1);
+
+    s = str;
+    s.replaceAll("ABCDEFGHI", '#', 1, &nReplacements);
+    CHECK(s == str);
+    CHECK(nReplacements == 0);
+
+
+    s = str;
+    s.replaceAll("", '$', 0, &nReplacements);
+    CHECK(s == str);
+    CHECK(nReplacements == omw::string::npos);
+
+    s = str;
+    s.replaceAll("t", '\0', 0, &nReplacements);
+    CHECK(s == std::string("a boy wi\0h a ha\0", std::strlen(str)));
+    CHECK(nReplacements == 2);
+#pragma endregion string-char
+
+#pragma region string-string
     s = str;
     s.replaceAll("a ", "XYZ ", 0, &nReplacements);
     CHECK(s == "XYZ boy with XYZ hat");
@@ -165,7 +259,6 @@ TEST_CASE("string.h omw::string::replaceAll()")
     CHECK(nReplacements == 2);
 
 
-
     s = str;
     s.replaceAll("", "$", 0, &nReplacements);
     CHECK(s == str);
@@ -185,7 +278,7 @@ TEST_CASE("string.h omw::string::replaceAll()")
     s.replaceAll("", "", 3, &nReplacements);
     CHECK(s == str);
     CHECK(nReplacements == omw::string::npos);
-
+#pragma endregion string-string
 
 
     const omw::StringReplacePair rp1('a', "#t#");
@@ -345,6 +438,27 @@ TEST_CASE("string.h omw::string URL encoded")
 
 TEST_CASE("string.h to_string()")
 {
+    // std::to_string aliases
+    {
+        const int32_t i32 = -1234567890;
+        const uint32_t ui32 = 1234567890;
+        const int64_t i64 = -1234567890123456;
+        const uint64_t ui64 = 1234567890123456;
+        const float f = 1.41421f;
+        const double d = 2.71828;
+        const long double ld = 3.14159l;
+
+        CHECK(omw::to_string(i32) == std::to_string(i32));
+        CHECK(omw::to_string(ui32) == std::to_string(ui32));
+        CHECK(omw::to_string(i64) == std::to_string(i64));
+        CHECK(omw::to_string(ui64) == std::to_string(ui64));
+        CHECK(omw::to_string(f) == std::to_string(f));
+        CHECK(omw::to_string(d) == std::to_string(d));
+        CHECK(omw::to_string(ld) == std::to_string(ld));
+    }
+
+    CHECK(omw::to_string(false) == "false");
+    CHECK(omw::to_string(true) == "true");
     CHECK(omw::to_string(false, false) == "0");
     CHECK(omw::to_string(false, true) == "false");
     CHECK(omw::to_string(true, false) == "1");
@@ -627,6 +741,39 @@ TEST_CASE("string.h String Vectors")
     CHECK(omw::stdStringVector(v_omw) == v_std);
 }
 
+TEST_CASE("string.h Character Classification")
+{
+    char c;
+
+    for (size_t i = 0; i < 256; ++i)
+    {
+        c = (char)i;
+
+        CHECK(omw::isAlnum(c) == (0 != std::isalnum(static_cast<unsigned char>(i))));
+        CHECK(omw::isAlpha(c) == (0 != std::isalpha(static_cast<unsigned char>(i))));
+        CHECK(omw::isBlank(c) == (0 != std::isblank(static_cast<unsigned char>(i))));
+        CHECK(omw::isCntrl(c) == (0 != std::iscntrl(static_cast<unsigned char>(i))));
+        CHECK(omw::isDigit(c) == (0 != std::isdigit(static_cast<unsigned char>(i))));
+        CHECK(omw::isGraph(c) == (0 != std::isgraph(static_cast<unsigned char>(i))));
+        CHECK(omw::isHex(c) == (0 != std::isxdigit(static_cast<unsigned char>(i))));
+        CHECK(omw::isLower(c) == (0 != std::islower(static_cast<unsigned char>(i))));
+        CHECK(omw::isNull(c) == (i == 0));
+        CHECK(omw::isPrint(c) == (0 != std::isprint(static_cast<unsigned char>(i))));
+        CHECK(omw::isPunct(c) == (0 != std::ispunct(static_cast<unsigned char>(i))));
+        CHECK(omw::isSpace(c) == (0 != std::isspace(static_cast<unsigned char>(i))));
+        CHECK(omw::isUpper(c) == (0 != std::isupper(static_cast<unsigned char>(i))));
+        CHECK(omw::isWhitespace(c) == (0 != std::isspace(static_cast<unsigned char>(i))));
+    }
+}
+
+
+
+
+
+
+
+
+
 TEST_CASE("string.h isInteger()")
 {
     CHECK(omw::isInteger("a123") == false);
@@ -691,6 +838,179 @@ TEST_CASE("string.h isHex()")
         if (chr == 0) expectedResult = true;
         CHECK(omw::isHex(hexStr) == expectedResult);
     }
+}
+
+
+
+TEST_CASE("string.h peekNewLine()")
+{
+    const char* str;
+    const char* end;
+    size_t pos;
+
+
+
+    const char lf1[] = { 'a', 's', 'd', 'f', '\n', 'a', 's', 'd', 'f', '\n', '\n', 'a', 's', 'd', 'f' };
+    str = lf1;
+    end = str + sizeof(lf1);
+    pos = 0;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 4;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 5;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 9;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 10;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 14;
+    //CHECK(omw::peekNewLine(str + pos) == 0); // access violation
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+
+
+
+    const char lf2[] = { 'a', 's', 'd', 'f', '\n', 'a', 's', 'd', 'f', '\n', '\n', 'a', 's', 'd', 'f', '\n'};
+    str = lf2;
+    end = str + sizeof(lf2);
+    pos = 0;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 4;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 5;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 9;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 10;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 15;
+    //CHECK(omw::peekNewLine(str + pos) == 1); // access violation
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+
+
+
+    const char cr1[] = { 'a', 's', 'd', 'f', '\r', 'a', 's', 'd', 'f', '\r', '\r', 'a', 's', 'd', 'f' };
+    str = cr1;
+    end = str + sizeof(cr1);
+    pos = 0;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 4;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 5;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 9;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 10;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 14;
+    //CHECK(omw::peekNewLine(str + pos) == 0); // access violation
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+
+
+    const char cr2[] = { 'a', 's', 'd', 'f', '\r', 'a', 's', 'd', 'f', '\r', '\r', 'a', 's', 'd', 'f', '\r' };
+    str = cr2;
+    end = str + sizeof(cr2);
+    pos = 0;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 4;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 5;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 9;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 10;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 15;
+    //CHECK(omw::peekNewLine(str + pos) == 1); // access violation
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+
+
+
+    const char crlf1[] = { 'a', 's', 'd', 'f', '\r', '\n', 'a', 's', 'd', 'f', '\r', '\n', '\r', '\n', 'a', 's', 'd', 'f' };
+    str = crlf1;
+    end = str + sizeof(crlf1);
+    pos = 0;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 4;
+    CHECK(omw::peekNewLine(str + pos) == 2);
+    CHECK(omw::peekNewLine(str + pos, end) == 2);
+    pos = 5;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 6;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 10;
+    CHECK(omw::peekNewLine(str + pos) == 2);
+    CHECK(omw::peekNewLine(str + pos, end) == 2);
+    pos = 11;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 12;
+    CHECK(omw::peekNewLine(str + pos) == 2);
+    CHECK(omw::peekNewLine(str + pos, end) == 2);
+    pos = 13;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 17;
+    //CHECK(omw::peekNewLine(str + pos) == 0); // access violation
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+
+
+
+    const char crlf2[] = { 'a', 's', 'd', 'f', '\r', '\n', 'a', 's', 'd', 'f', '\r', '\n', '\r', '\n', 'a', 's', 'd', 'f', '\r', '\n' };
+    str = crlf2;
+    end = str + sizeof(crlf2);
+    pos = 0;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 4;
+    CHECK(omw::peekNewLine(str + pos) == 2);
+    CHECK(omw::peekNewLine(str + pos, end) == 2);
+    pos = 5;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 6;
+    CHECK(omw::peekNewLine(str + pos) == 0);
+    CHECK(omw::peekNewLine(str + pos, end) == 0);
+    pos = 10;
+    CHECK(omw::peekNewLine(str + pos) == 2);
+    CHECK(omw::peekNewLine(str + pos, end) == 2);
+    pos = 11;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 12;
+    CHECK(omw::peekNewLine(str + pos) == 2);
+    CHECK(omw::peekNewLine(str + pos, end) == 2);
+    pos = 13;
+    CHECK(omw::peekNewLine(str + pos) == 1);
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
+    pos = 18;
+    CHECK(omw::peekNewLine(str + pos) == 2);
+    CHECK(omw::peekNewLine(str + pos, end) == 2);
+    pos = 19;
+    //CHECK(omw::peekNewLine(str + pos) == 1); // access violation
+    CHECK(omw::peekNewLine(str + pos, end) == 1);
 }
 
 

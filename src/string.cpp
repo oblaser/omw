@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           02.10.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            06.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include <stdexcept>
@@ -153,6 +153,10 @@ omw::string::string()
     : std::string()
 {}
 
+omw::string::string(std::string::size_type count, char c)
+    : std::string(count, c)
+{}
+
 omw::string::string(const char* str)
     : std::string(str ? str : "")
 {}
@@ -169,6 +173,10 @@ omw::string::string(const char* first, const char* last)
     : std::string(first, last)
 {}
 
+omw::string::string(char c, std::string::size_type count)
+    : std::string(count, c)
+{}
+
 #ifdef OMWi_STRING_IMPLEMENT_CONTAINS
 bool omw::string::contains(char ch) const
 {
@@ -178,11 +186,11 @@ bool omw::string::contains(const char* str) const
 {
     return (this->find(str) != omw::string::npos);
 }
-#endif
 bool omw::string::contains(const std::string& str) const
 {
     return (this->find(str) != omw::string::npos);;
 }
+#endif
 
 //! @param search Substring to be replaced
 //! @param replace String for replacement
@@ -201,6 +209,49 @@ omw::string& omw::string::replaceFirst(const std::string& search, const std::str
 omw::string& omw::string::replaceFirst(const omw::StringReplacePair& pair, size_type startPos)
 {
     return replaceFirst(pair.search(), pair.replace(), startPos);
+}
+
+//! @param search Character to be replaced
+//! @param replace Character for replacement
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return `*this`
+omw::string& omw::string::replaceAll(char search, char replace, size_type startPos, size_t* nReplacements)
+{
+    size_t cnt = 0;
+
+    for (size_t i = startPos; i < length(); ++i)
+    {
+        if (at(i) == search)
+        {
+            at(i) = replace;
+            ++cnt;
+        }
+    }
+
+    if (nReplacements) *nReplacements = cnt;
+
+    return *this;
+}
+
+//! @param search Character to be replaced
+//! @param replace String for replacement
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return `*this`
+omw::string& omw::string::replaceAll(char search, const std::string& replace, size_type startPos, size_t* nReplacements)
+{
+    return replaceAll(omw::StringReplacePair(search, replace), startPos, nReplacements);
+}
+
+//! @param search Substring to be replaced
+//! @param replace Character for replacement
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return `*this`
+omw::string& omw::string::replaceAll(const std::string& search, char replace, size_type startPos, size_t* nReplacements)
+{
+    return replaceAll(omw::StringReplacePair(search, replace), startPos, nReplacements);
 }
 
 //! @param search Substring to be replaced
@@ -395,9 +446,44 @@ omw::string omw::string::toUrlEncoded() const
 
 
 
-omw::string omw::to_string(bool value, bool textual)
+omw::string omw::to_string(int32_t value)
 {
-    if (textual) return (value ? "true" : "false");
+    return std::to_string(value);
+}
+
+omw::string omw::to_string(uint32_t value)
+{
+    return std::to_string(value);
+}
+
+omw::string omw::to_string(int64_t value)
+{
+    return std::to_string(value);
+}
+
+omw::string omw::to_string(uint64_t value)
+{
+    return std::to_string(value);
+}
+
+omw::string omw::to_string(float value)
+{
+    return std::to_string(value);
+}
+
+omw::string omw::to_string(double value)
+{
+    return std::to_string(value);
+}
+
+omw::string omw::to_string(long double value)
+{
+    return std::to_string(value);
+}
+
+omw::string omw::to_string(bool value, bool asText)
+{
+    if (asText) return (value ? "true" : "false");
     return (value ? "1" : "0");
 }
 
@@ -643,7 +729,9 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char sepChar)
 }
 
 
-
+//! @param str 
+//! @return 
+//! Same as <tt>omw::sepHexStr(str, toHexStr_defaultSepChar)</tt>.
 omw::string omw::sepHexStr(const std::string& str)
 {
     return omw::sepHexStr(str, toHexStr_defaultSepChar);
@@ -761,6 +849,7 @@ omw::string omw::join(const omw::stringVector_t& strings, char sepChar)
     for (omw::stringVector_size_type i = 0; i < strings.size(); ++i)
     {
         if ((i > 0) && (sepChar != 0)) r += sepChar;
+        //if (i > 0) r += omw::string(1, sepChar); TODO: uncomment this line and remove the last
         r += strings[i];
     }
 
@@ -827,6 +916,22 @@ omw::stdStringVector_t omw::stdStringVector(const omw::stringVector_t& strvec)
 
 
 
+bool omw::isHex(char ch)
+{
+    omw::string digits = omw::hexStrDigitsUpper;
+    bool r = digits.contains(ch);
+
+    if (!r)
+    {
+        digits = omw::hexStrDigitsLower;
+        r = digits.contains(ch);
+    }
+
+    return r;
+}
+
+
+
 bool omw::isInteger(const std::string& str)
 {
     std::string::size_type startPos = 0;
@@ -860,20 +965,6 @@ bool omw::isUInteger(const std::string& str)
     return r;
 }
 
-bool omw::isHex(char ch)
-{
-    omw::string digits = omw::hexStrDigitsUpper;
-    bool r = digits.contains(ch);
-
-    if (!r)
-    {
-        digits = omw::hexStrDigitsLower;
-        r = digits.contains(ch);
-    }
-
-    return r;
-}
-
 bool omw::isHex(const std::string& str)
 {
     bool r;
@@ -891,6 +982,66 @@ bool omw::isHex(const std::string& str)
         }
     }
     else r = false;
+
+    return r;
+}
+
+
+
+//! @param p Pointer to the position in the string
+//! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
+//! 
+//! It's recommended to use <tt>omw::peekNewLine(const char*, const char*)</tt> to prevent access violations.
+//! 
+size_t omw::peekNewLine(const char* p)
+{
+    size_t r;
+
+    if (p)
+    {
+        if (*p == 0x0A) r = 1; // LF
+        else if ((*p == 0x0D) && (*(p + 1) != 0x0A)) r = 1; // CR
+        else if ((*p == 0x0D) && (*(p + 1) == 0x0A)) r = 2; // CR+LF
+        else r = 0;
+    }
+    else r = 0;
+
+    return r;
+}
+
+//! @param p Pointer to the position in the string
+//! @param end Pointer to the first position beyond the string
+//! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
+//! 
+//! If <b><tt>end</tt></b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used and access violations may occure.
+//! 
+size_t omw::peekNewLine(const char* p, const char* end)
+{
+    size_t r;
+
+    if (end)
+    {
+        if (p)
+        {
+            if ((end - p) > 0)
+            {
+                if (*p == 0x0A) r = 1; // LF
+                else if (*p == 0x0D)
+                {
+                    if ((end - p) > 1)
+                    {
+                        if (*(p + 1) == 0x0A) r = 2; // CR+LF
+                        else r = 1; // CR
+                    }
+                    else r = 1; // CR
+                }
+                else r = 0;
+            }
+            else r = 0;
+        }
+        else r = 0;
+    }
+    else r = peekNewLine(p);
 
     return r;
 }
