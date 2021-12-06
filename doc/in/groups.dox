@@ -1,7 +1,19 @@
 /*
-author         Oliver Blaser
-date           17.09.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            06.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
+*/
+
+
+
+/*!
+\defgroup grp_algorithm Algorithms
+\brief `#include <omw/algorithm.h>`
+*/
+
+/*!
+\defgroup grp_cli Command Line Interface
+\brief `#include <omw/cli.h>`
 */
 
 /*!

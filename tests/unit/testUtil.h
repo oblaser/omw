@@ -1,13 +1,14 @@
 /*
-author         Oliver Blaser
-date           15.09.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            15.09.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_TESTUTIL_H
 #define IG_TESTUTIL_H
 
 #include <iostream>
+#include <stdexcept>
 
 
 #define TESTUTIL_TRYCATCH_DECLARE_VAL(valueType, initialValue)  \

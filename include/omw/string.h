@@ -297,6 +297,7 @@ namespace omw
     size_t peekNewLine(const char* p);
     size_t peekNewLine(const char* p, const char* end);
 
+    // grp_stringLib
     /*! @} */
 }
 

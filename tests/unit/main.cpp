@@ -22,6 +22,8 @@ TEST_CASE("omw lib")
 }
 
 
+#include "algorithm.hpp"
+#include "cli.hpp"
 #include "color.hpp"
 #include "string.hpp"
 #include "version.hpp"
