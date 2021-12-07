@@ -134,6 +134,7 @@ namespace omw
                 constexpr int blinkOff = 25;
                 constexpr int reverseVideoOff = 27;
                 constexpr int concealOff = 28;
+                constexpr int reveal = concealOff;
                 constexpr int strikeOff = 29;
                 constexpr int fgColorBlack = foreground_base + colorBlack;
                 constexpr int fgColorRed = foreground_base + colorRed;
@@ -168,9 +169,9 @@ namespace omw
                 constexpr int defaultUnderlineColor = 59;
                 constexpr int super = 73;
                 constexpr int sub = 74;
-                constexpr int supSubOff = 75;
-                constexpr int superOff = supSubOff;
-                constexpr int subOff = supSubOff;
+                constexpr int superSubOff = 75;
+                constexpr int superOff = superSubOff;
+                constexpr int subOff = superSubOff;
                 constexpr int fgColorBrightBlack = brightForeground_base + colorBlack;
                 constexpr int fgColorBrightRed = brightForeground_base + colorRed;
                 constexpr int fgColorBrightGreen = brightForeground_base + colorGreen;
@@ -192,8 +193,8 @@ namespace omw
                 //! \name Arguments
                 //! Used as <b><tt>arg0</tt></b> in the seq() functions.
                 /// @{
-                constexpr int setColorArg_8bit = 5;
-                constexpr int setColorArg_rgb = 2;
+                constexpr int setColor_8bit = 5;
+                constexpr int setColor_rgb = 2;
                 /// @}
 
 

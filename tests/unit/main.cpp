@@ -51,6 +51,7 @@ TEST_CASE("omw lib")
 TEST_CASE("windows.h beep() & some perfCntr..()")
 {
     uint32_t freq1, freq2;
+    const uint32_t dur = 200;
 
     if (omw::info::version().rev() < 1000)
     {
@@ -63,10 +64,9 @@ TEST_CASE("windows.h beep() & some perfCntr..()")
         freq2 = 20000;
     }
 
-    CHECK(omw::windows::beep(freq1, 200));
-    omw::windows::perfCntrSleep_ms(205);
+    CHECK(omw::windows::beep(freq1, dur));
+    omw::windows::perfCntrSleep_ms(dur + 2);
 
-    const uint32_t dur = 200;
     const auto start = omw::windows::perfCntrGetTick();
     CHECK(omw::windows::beep(freq2, dur, true));
     const auto stop = omw::windows::perfCntrGetTick();
