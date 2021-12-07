@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            07.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -8,12 +8,20 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <omw/omw.h>
 
+#ifdef OMW_PLAT_WIN
+#include <omw/windows/windows.h>
+#endif
+
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp> // $(sdk)/catch2/catch.hpp
 
 
 TEST_CASE("omw lib")
 {
+#ifdef OMW_PLAT_WIN
+    CHECK(omw::windows::consoleEnableVT100());
+#endif
+
     std::cout << std::endl << "Testing OMW ..." << std::endl;
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
@@ -35,12 +43,12 @@ TEST_CASE("omw lib")
 
 
 
-#include <cmath>
-#include <omw/windows/windows.h>
 
 #ifdef OMW_PLAT_WIN
 
-TEST_CASE("windows.h")
+#include <cmath>
+
+TEST_CASE("windows.h beep() & some perfCntr..()")
 {
     uint32_t freq1, freq2;
 
@@ -70,15 +78,14 @@ TEST_CASE("windows.h")
     const double absErrorTh = 0.01; // 10ms
     const double relErrorTh = 0.01; // 1%
 
-    std::cout << "\nBeep Test" << std::endl;
+    std::cout << "\n" << omw::fgBrightBlack << "Beep Test" << std::endl;
     std::cout << "duration:\n";
     std::cout << "absolute error [s]: " << absError << " < " << absErrorTh << std::endl;
     std::cout << "relative error [%]: " << (relError * 100) << " < " << (relErrorTh * 100) << std::endl;
-    std::cout << std::endl;
+    std::cout << omw::normal << std::endl;
 
     CHECK(absError < absErrorTh);
     CHECK(relError < relErrorTh);
-
 }
 
 #endif

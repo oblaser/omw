@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            07.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -73,7 +73,6 @@ TEST_CASE("string.h omw::string ctor")
     CHECK(std::strcmp(omwstr.c_str(), "aaa") == 0);
     CHECK(std::strcmp(stdfromomw.c_str(), "aaa") == 0);
     CHECK(std::strcmp((omw::string(1, 'b')).c_str(), "b") == 0);
-    CHECK(std::strcmp((omw::string('c')).c_str(), "c") == 0);
 }
 
 TEST_CASE("string.h omw::string::contains()")

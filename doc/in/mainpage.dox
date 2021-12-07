@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           13.08.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            07.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 /*!
@@ -42,8 +42,7 @@ the sourcecode of the `omw::windows::getEnvironmentVariable()` function.
 
 \section mainpage_links Links
 - <a href="https://github.com/oblaser/omw" target="_blank">GitHub</a>
-- <a href="https://static.oblaser.ch/omw/doc/" target="_blank">Docs</a>
-- <a href="https://static.oblaser.ch/omw/download/" target="_blank">Downloads</a>
+- <a href="https://static.oblaser.ch/omw/" target="_blank">Website (doc, download)</a>
 
 
 

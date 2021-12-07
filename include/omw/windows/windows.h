@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            07.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -58,6 +58,8 @@ namespace omw
         /// @}
 
         bool beep(uint32_t frequency, uint32_t duration_ms, bool blocking = false);
+
+        bool consoleEnableVT100();
     }
 }
 

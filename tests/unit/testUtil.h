@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            15.09.2021
+date            07.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -9,6 +9,9 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <iostream>
 #include <stdexcept>
+#include <string>
+
+#include <omw/string.h>
 
 
 #define TESTUTIL_TRYCATCH_DECLARE_VAL(valueType, initialValue)  \
@@ -26,5 +29,12 @@ CHECK(tu_trycatch_correctCatch);                                                
 CHECK(tu_trycatch_val == tu_trycatch_initVal);                                              \
 // end TESTUTIL_TRYCATCH_CHECK()
 
+
+namespace tu
+{
+    int strcmp(const omw::string& a, const char* b) { return std::strcmp(a.c_str(), b); }
+    int strcmp(const char* a, const omw::string& b) { return std::strcmp(a, b.c_str()); }
+    int strcmp(const omw::string& a, const omw::string& b) { return std::strcmp(a.c_str(), b.c_str()); }
+}
 
 #endif // IG_TESTUTIL_H

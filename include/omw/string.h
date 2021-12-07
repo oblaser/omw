@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            07.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -98,9 +98,6 @@ namespace omw
         string(const char* str, std::string::size_type count);
         string(const std::string& other, std::string::size_type pos = 0, std::string::size_type count = std::string::npos);
         string(const char* first, const char* last);
-
-        string(char c, std::string::size_type count = 1);
-
         virtual ~string() {}
 
 #ifdef OMWi_STRING_IMPLEMENT_CONTAINS
@@ -300,7 +297,8 @@ namespace omw
     size_t peekNewLine(const char* p);
     size_t peekNewLine(const char* p, const char* end);
 
-    // grp_stringLib
+
+
     /*! @} */
 }
 

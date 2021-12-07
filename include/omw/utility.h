@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            07.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -18,7 +18,7 @@ namespace omw
     inline void toggle(bool& value) { value = !value; }
     inline void toggle(int& value) { value = (value ? 0 : 1); }
 
-    template <typename Type>
+    template <class Type>
     bool vectorContains(const std::vector<Type>& v, const Type& item)
     {
         bool r = false;

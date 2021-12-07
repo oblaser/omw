@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            07.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -215,6 +215,31 @@ bool omw::windows::beep(uint32_t frequency, uint32_t duration_ms, bool blocking)
         threadHandle = CreateThread(0, 0, ::beep_thread, &params, 0, &threadId);
 
         r = (threadHandle != NULL);
+    }
+
+    return r;
+}
+
+//! @return <tt>true</tt> on success, <tt>false</tt> otherwise
+//! 
+//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsolemode" target="_blank">SetConsoleMode()</a> ENABLE_VIRTUAL_TERMINAL_PROCESSING
+//! 
+bool omw::windows::consoleEnableVT100()
+{
+    bool r = false;
+
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    if (handle != INVALID_HANDLE_VALUE)
+    {
+        DWORD mode = 0;
+
+        if (GetConsoleMode(handle, &mode))
+        {
+            mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+            if (SetConsoleMode(handle, mode)) r = true;
+        }
     }
 
     return r;

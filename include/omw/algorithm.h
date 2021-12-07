@@ -27,7 +27,6 @@ namespace omw
     std::vector<uint8_t> doubleDabble128(uint64_t valueH, uint64_t valueL);
     /// @}
 
-    // grp_algorithm
     /*! @} */
 }
 

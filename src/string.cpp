@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            07.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -177,10 +177,6 @@ omw::string::string(const std::string& other, std::string::size_type pos, std::s
 
 omw::string::string(const char* first, const char* last)
     : std::string(first, last)
-{}
-
-omw::string::string(char c, std::string::size_type count)
-    : std::string(count, c)
 {}
 
 #ifdef OMWi_STRING_IMPLEMENT_CONTAINS

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            07.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -15,6 +15,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <catch2/catch.hpp>
 #include <omw/algorithm.h>
+#include <omw/cli.h>
 #include <omw/string.h>
 
 
@@ -67,6 +68,7 @@ TEST_CASE("algorithm.h doubleDabble128()")
     std::vector<DoubleDabbleTestRecord> testRecords =
     {
         DoubleDabbleTestRecord("0000000000000000000000000000000000000001", 0x00, 0x01),
+        DoubleDabbleTestRecord("0000000000000000000009223372036854775808", 0x00, INT64_MIN),
         DoubleDabbleTestRecord("00000000000000000000000000000000000" + omw::to_string(0xFFFF), 0x00, 0xFFFF),
         DoubleDabbleTestRecord("000000000000000000000000000000" + omw::to_string(INT_MAX), 0x00, INT_MAX),
         DoubleDabbleTestRecord("0000000000000001208925819614629174706175", 0xFFFF, 0xFFFFFFFFFFFFFFFF),
@@ -75,6 +77,8 @@ TEST_CASE("algorithm.h doubleDabble128()")
         DoubleDabbleTestRecord("0001512366075204170929049582354406559215", 0x0123456789abcdef, 0x0123456789abcdef),
         DoubleDabbleTestRecord("0000000000000000000000000000000000000000", 0x00, 0x00)
     };
+
+    bool stdOut = false;
 
     for (size_t i = 0; i < testRecords.size(); ++i)
     {
@@ -87,14 +91,17 @@ TEST_CASE("algorithm.h doubleDabble128()")
         const bool resEqExpres = (resStr == tr.expResult);
         const bool allOverloadsEq = ((resStr == ovrld_a) && (resStr == ovrld_b));
 
-        if (!(resEqExpres && allOverloadsEq))
-        {
-            std::cout << "\ndouble dabble test record #" << i << std::endl;
-        }
-
         CHECK(resStr == tr.expResult);
         CHECK(allOverloadsEq);
+
+        if (!(resEqExpres && allOverloadsEq))
+        {
+            std::cout << omw::fgBrightCyan << "double dabble test record #" << i << omw::normal << "\n" << std::endl;
+            stdOut = true;
+        }
     }
+
+    if (stdOut) std::cout << std::endl;
 
     const uint8_t alignTest[] = { 0x02, 0x01 };
     const std::vector<uint8_t> alignTestExpResult = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x05, 0x13 };
