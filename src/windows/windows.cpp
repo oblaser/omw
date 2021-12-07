@@ -222,9 +222,9 @@ bool omw::windows::beep(uint32_t frequency, uint32_t duration_ms, bool blocking)
 
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsolemode" target="_blank">SetConsoleMode()</a> ENABLE_VIRTUAL_TERMINAL_PROCESSING
+//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsolemode" target="_blank">SetConsoleMode()</a> <b><tt>|= ENABLE_VIRTUAL_TERMINAL_PROCESSING</tt></b>
 //! 
-bool omw::windows::consoleEnableVT100()
+bool omw::windows::consoleEnVirtualTermProc()
 {
     bool r = false;
 
@@ -243,6 +243,31 @@ bool omw::windows::consoleEnableVT100()
     }
 
     return r;
+}
+
+//! @param cp Code page identifier
+//! @return <tt>true</tt> on success, <tt>false</tt> otherwise
+//! 
+//! Sets the input and output code page of the console.
+//! 
+//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsolecp" target="_blank">SetConsoleCP()</a>.
+//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp" target="_blank">SetConsoleOutputCP()</a>.
+//! 
+//! See the list of <a href="https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers" target="_blank">code page identifier</a>.
+//! 
+bool omw::windows::consoleSetCodePage(uint32_t cp)
+{
+    return (SetConsoleCP((UINT)cp) && SetConsoleOutputCP((UINT)cp));
+}
+
+
+//! @return <tt>true</tt> on success, <tt>false</tt> otherwise
+//! 
+//! See consoleSetCodePage().
+//! 
+bool omw::windows::consoleSetCodePageUTF8()
+{
+    return omw::windows::consoleSetCodePage(65001);
 }
 
 

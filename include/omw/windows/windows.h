@@ -59,7 +59,12 @@ namespace omw
 
         bool beep(uint32_t frequency, uint32_t duration_ms, bool blocking = false);
 
-        bool consoleEnableVT100();
+        //! \name Console
+        /// @{
+        bool consoleEnVirtualTermProc();
+        bool consoleSetCodePage(uint32_t cp);
+        bool consoleSetCodePageUTF8();
+        /// @}
     }
 }
 

@@ -40,6 +40,9 @@ namespace omw
     const char* const UTF8CP_00E4 = "\xC3\xA4";
     const char* const UTF8CP_00F6 = "\xC3\xB6";
     const char* const UTF8CP_00FC = "\xC3\xBC";
+    const char* const UTF8CP_2580 = "\xE2\x96\x80";
+    const char* const UTF8CP_2584 = "\xE2\x96\x84";
+    const char* const UTF8CP_2588 = "\xE2\x96\x88";
     /// @}
 
     //! \name UFT-8 Code Point Aliases

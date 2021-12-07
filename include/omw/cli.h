@@ -11,6 +11,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "../omw/color.h"
 #include "../omw/defs.h"
 #include "../omw/string.h"
 
@@ -211,23 +212,199 @@ namespace omw
         }
     }
 
+#pragma region ostream-manip
     //! \name Out Stream Manipulators
     /// @{
+
+    // ! @param color Number in 256-color lookup [0, 255]
+    // ! 
+    // ! See <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit" target="_blank">color table</a> on Wikipedia.
+    // ! 
+    //template<class CharT, class Traits = std::char_traits<CharT>>
+    //inline std::basic_ostream<CharT, Traits>& backColor(std::basic_ostream<CharT, Traits>& os, int color) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setBackColor, omw::ansiesc::csi::sgr::setColor_8bit, color)); }
+    //
+    //template<class CharT, class Traits = std::char_traits<CharT>>
+    //inline std::basic_ostream<CharT, Traits>& backColor(std::basic_ostream<CharT, Traits>& os, const omw::Color& color) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setBackColor, omw::ansiesc::csi::sgr::setColor_rgb, color.r(), color.g(), color.b())); }
+
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBlack(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBlack)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBlue(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBlue)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBrightBlack(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightBlack)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBrightBlue(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightBlue)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBrightCyan(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightCyan)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBrightGreen(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightGreen)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBrightMagenta(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightMagenta)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBrightRed(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightRed)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBrightWhite(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightWhite)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgBrightYellow(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightYellow)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgCyan(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorCyan)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgDefault(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorDefault)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgGreen(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorGreen)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgMagenta(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorMagenta)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgRed(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorRed)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgWhite(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorWhite)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& bgYellow(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorYellow)); }
+
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& blinkFast(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::blinkFast)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& blinkOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::blinkOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& blinkSlow(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::blinkSlow)); }
     template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& bold(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bold)); }
     template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& boldOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::boldOff)); }
     template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& conceal(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::conceal)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& concealOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::concealOff)); }
+
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& defaultBackColor(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultBackColor)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& defaultColors(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultBackColor, omw::ansiesc::csi::sgr::defaultForeColor, omw::ansiesc::csi::sgr::defaultUnderlineColor)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& defaultFont(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultFont)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& defaultForeColor(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultForeColor)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& defaultUnderlineColor(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultUnderlineColor)); }
+
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& encircled(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::encircled)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& encircledOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::encircledOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& faint(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::faint)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& faintOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::faintOff)); }
+
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgBlack(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBlack)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgBlue(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBlue)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& fgBrightBlack(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightBlack)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgBrightBlue(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightBlue)); }
     template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& fgBrightCyan(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightCyan)); }
     template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgBrightGreen(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightGreen)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgBrightMagenta(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightMagenta)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgBrightRed(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightRed)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgBrightWhite(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightWhite)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& fgBrightYellow(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightYellow)); }
     template<class CharT, class Traits = std::char_traits<CharT>>
-    inline std::basic_ostream<CharT, Traits>& normal(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::reset)); }
+    inline std::basic_ostream<CharT, Traits>& fgCyan(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorCyan)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgDefault(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorDefault)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgGreen(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorGreen)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgMagenta(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorMagenta)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgRed(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorRed)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgWhite(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorWhite)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fgYellow(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorYellow)); }
+
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& font1(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font1)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& font2(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font2)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& font3(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font3)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& font4(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font4)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& font5(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font5)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& font6(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font6)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& font7(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font7)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& font8(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font8)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& font9(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font9)); }
+
     //template<class CharT, class Traits = std::char_traits<CharT>>
-    //inline std::basic_ostream<CharT, Traits>& name(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::param)); }
+    //inline std::basic_ostream<CharT, Traits>& foreColor(std::basic_ostream<CharT, Traits>& os, int color) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setForeColor, omw::ansiesc::csi::sgr::setColor_8bit, color)); }
+    //
+    //template<class CharT, class Traits = std::char_traits<CharT>>
+    //inline std::basic_ostream<CharT, Traits>& foreColor(std::basic_ostream<CharT, Traits>& os, const omw::Color& color) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setForeColor, omw::ansiesc::csi::sgr::setColor_rgb, color.r(), color.g(), color.b())); }
+
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& fraktur(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fraktur)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& frakturOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::frakturOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& framed(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::framed)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& framedOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::framedOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& italic(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::italic)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& italicOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::italicOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& normal(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::reset)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& overlined(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::overlined)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& overlinedOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::overlinedOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& reveal(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::reveal)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& reverseVideo(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::reverseVideo)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& reverseVideoOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::reverseVideoOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& strike(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::strike)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& strikeOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::strikeOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& sub(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::sub)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& subOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::subOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& super(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::super)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& superOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::superOff)); }
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& underline(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::underline)); }
+
+    //template<class CharT, class Traits = std::char_traits<CharT>>
+    //inline std::basic_ostream<CharT, Traits>& underlineColor(std::basic_ostream<CharT, Traits>& os, int color) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setUnderlineColor, omw::ansiesc::csi::sgr::setColor_8bit, color)); }
+    //
+    //template<class CharT, class Traits = std::char_traits<CharT>>
+    //inline std::basic_ostream<CharT, Traits>& underlineColor(std::basic_ostream<CharT, Traits>& os, const omw::Color& color) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setUnderlineColor, omw::ansiesc::csi::sgr::setColor_rgb, color.r(), color.g(), color.b())); }
+
+    template<class CharT, class Traits = std::char_traits<CharT>>
+    inline std::basic_ostream<CharT, Traits>& underlineOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::underlineOff)); }
     /// @}
+#pragma endregion ostream-manip
 
 
     /*! @} */

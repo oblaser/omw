@@ -19,7 +19,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 TEST_CASE("omw lib")
 {
 #ifdef OMW_PLAT_WIN
-    CHECK(omw::windows::consoleEnableVT100());
+    CHECK(omw::windows::consoleEnVirtualTermProc());
 #endif
 
     std::cout << std::endl << "Testing OMW ..." << std::endl;
