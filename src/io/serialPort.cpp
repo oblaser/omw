@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           06.12.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            08.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include <algorithm>
@@ -37,14 +37,16 @@ namespace
 }
 
 
+#ifndef OMWi_SERIAL_PORT_PREVIEW
 
-omw::io::SerialPort::SerialPort()
+omw::SerialPort::SerialPort()
 {
 }
 
+#endif
 
 
-std::vector<omw::string> omw::io::getSerialPortList(bool onlyCOMx)
+std::vector<omw::string> omw::getSerialPortList(bool onlyCOMx)
 {
     const std::vector<omw::string> devices = omw::windows::getAllDosDevices();
     std::vector<omw::string> serialPorts;
@@ -64,7 +66,7 @@ std::vector<omw::string> omw::io::getSerialPortList(bool onlyCOMx)
     return serialPorts;
 }
 
-void omw::io::sortSerialPortList(std::vector<omw::string>& ports)
+void omw::sortSerialPortList(std::vector<omw::string>& ports)
 {
 #if /*simple*/ 0
     std::sort(ports.begin(), ports.end());
@@ -109,9 +111,9 @@ void omw::io::sortSerialPortList(std::vector<omw::string>& ports)
 #endif
 }
 
-void omw::io::sortSerialPortList(std::vector<std::string>& ports)
+void omw::sortSerialPortList(std::vector<std::string>& ports)
 {
     omw::stringVector_t tmpPorts = omw::stringVector(ports);
-    omw::io::sortSerialPortList(tmpPorts);
+    omw::sortSerialPortList(tmpPorts);
     ports = omw::stdStringVector(tmpPorts);
 }
