@@ -210,41 +210,41 @@ int main(int argc, char** argv)
 
         for (int i = 8; i <= 15; ++i) cout << omw::backColor(i) << colorTableChar;
 
-        cout << "\n\n";
+        cout << omw::normal << "\n\n";
 
 #if 0
         constexpr int startIndexes[12] = { 16, 52, 88, 124, 160, 196, 34, 70, 106, 142, 178, 214 };
         for (int i = 0; i < 12; ++i)
         {
             for (int j = 0; j < 18; ++j) cout << omw::backColor(startIndexes[i] + j) << colorTableChar;
-            cout << endl;
+            cout << omw::normal << endl;
         }
 #else
         constexpr int startIndexes[6] = { 16, 52, 88, 124, 160, 196 };
         for (int i = 0; i < 6; ++i)
         {
             for (int j = 0; j < 36; ++j) cout << omw::backColor(startIndexes[i] + j) << colorTableChar;
-            cout << endl;
+            cout << omw::normal << endl;
         }
 #endif
 
-        cout << "\n";
+        cout << omw::normal << "\n";
 
         cout << omw::backColor(16) << colorTableChar;
         for (int i = 232; i <= 255; ++i) cout << omw::backColor(i) << colorTableChar;
         cout << omw::backColor(231) << colorTableChar;
 
-        cout << "\n\n";
+        cout << omw::normal << "\n\n";
 
         constexpr int incStep = 3;
         int barWidth = 0;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, 0, 0) << " "; ++barWidth; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, i, 0) << " "; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, i, 0) << " "; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, i, i) << " "; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, 0, i) << " "; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, 0, i) << " "; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, i, i) << " "; } cout << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, 0, 0) << " "; ++barWidth; } cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, i, 0) << " "; } cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, i, 0) << " "; } cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, i, i) << " "; } cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, 0, i) << " "; } cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, 0, i) << " "; } cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, i, i) << " "; } cout << omw::normal << endl;
         for (int i = 0; i < barWidth; ++i) cout << omw::backColor(intToColor(std::lround((double)0x5FF * (double)i / (double)barWidth))) << " ";
 
         cout << omw::normal << endl;

@@ -51,7 +51,58 @@ The other overloads can throw
 
 \section omw_windows_consoleCodePage_infoText Console Code Page
 
-The setting of 
+The setting of <b><tt>consoleSet..CodePage()</tt></b> functions is set for the current console window, and stays the same
+after termination. Therefore the setting should be set back to the previous code page then leaving the application
+
+<b>Example main.cpp</b>
+```
+#include <iostream>
+
+#include <omw/omw.h>
+#ifdef OMW_PLAT_WIN
+#include <omw/windows/windows.h>
+#endif
+
+using std::cout;
+using std::endl;
+
+namespace
+{
+#ifdef OMW_PLAT_WIN
+    void setCpBack(uint32_t cpIn, uint32_t cpOut)
+    {
+        if (!omw::windows::consoleSetInCodePage(cpIn)) cout << "faild to set in code page back to " << cpIn << endl;
+        if (!omw::windows::consoleSetOutCodePage(cpOut)) cout << "faild to set out code page back to " << cpOut << endl;
+    }
+#endif
+}
+
+int main(int argc, char** argv)
+{
+    int r = 0;
+
+#ifdef OMW_PLAT_WIN
+    const uint32_t cpIn = omw::windows::consoleGetInCodePage();
+    const uint32_t cpOut = omw::windows::consoleGetOutCodePage();
+
+    if (!omw::windows::consoleSetCodePageUTF8())
+    {
+        cout << "faild to set code page to UTF-8" << endl;
+        setCpBack(cpIn, cpOut);
+    }
+#endif
+
+    // app code ...
+    // ...
+    // ...
+
+#ifdef OMW_PLAT_WIN
+    setCpBack(cpIn, cpOut);
+#endif
+
+    return r;
+}
+```
 
 
 
