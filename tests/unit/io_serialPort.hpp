@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            08.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -45,10 +45,10 @@ TEST_CASE("serialPort.h sortSerialPortList()")
     };
     const std::vector<std::string> stdExpectedResult = omw::stdStringVector(expectedResult);
 
-    omw::io::sortSerialPortList(ports);
+    omw::sortSerialPortList(ports);
     CHECK(ports == expectedResult);
 
-    omw::io::sortSerialPortList(stdPorts);
+    omw::sortSerialPortList(stdPorts);
     CHECK(stdPorts == stdExpectedResult);
 }
 

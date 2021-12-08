@@ -367,14 +367,10 @@ bool omw::windows::consoleSetOutCodePage(uint32_t cp)
     return (SetConsoleOutputCP((UINT)cp) != 0);
 }
 
+//! @brief Sets the input and output code page of the console.
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! Sets the input and output code page of the console. See \ref omw_windows_consoleCodePage_infoText.
-//! 
-//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsolecp" target="_blank">SetConsoleCP()</a>.
-//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp" target="_blank">SetConsoleOutputCP()</a>.
-//! 
-//! See the list of <a href="https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers" target="_blank">code page identifier</a>.
+//! See \ref omw_windows_consoleCodePage_infoText.
 //! 
 bool omw::windows::consoleSetCodePage(uint32_t cp)
 {

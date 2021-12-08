@@ -51,8 +51,15 @@ The other overloads can throw
 
 \section omw_windows_consoleCodePage_infoText Console Code Page
 
+See the corresponding doc of the Windows API functions
+<a href="https://docs.microsoft.com/en-us/windows/console/getconsolecp" target="_blank">GetConsoleCP()</a>,
+<a href="https://docs.microsoft.com/en-us/windows/console/getconsoleoutputcp" target="_blank">GetConsoleOutputCP()</a>,
+<a href="https://docs.microsoft.com/en-us/windows/console/setconsolecp" target="_blank">SetConsoleCP()</a> and
+<a href="https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp" target="_blank">SetConsoleOutputCP()</a>.
+<br/>See also: <a href="https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers" target="_blank">List of code page identifier</a>.
+
 The setting of <b><tt>consoleSet..CodePage()</tt></b> functions is set for the current console window, and stays the same
-after termination. Therefore the setting should be set back to the previous code page then leaving the application
+after termination. Therefore the setting should be set back to the previous code page then leaving the application.
 
 <b>Example main.cpp</b>
 ```

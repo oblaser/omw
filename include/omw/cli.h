@@ -322,9 +322,14 @@ namespace omw
 
     template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& defaultBackColor(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultBackColor)); }
+
+    //! @brief Resets all color settings.
+    //! 
+    //! - omw::defaultBackColor
+    //! - omw::defaultForeColor
+    //! - omw::defaultUnderlineColor
     template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& defaultColors(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultBackColor, omw::ansiesc::csi::sgr::defaultForeColor, omw::ansiesc::csi::sgr::defaultUnderlineColor)); }
-
     template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& defaultFont(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultFont)); }
     template<class CharT, class Traits = std::char_traits<CharT>>
