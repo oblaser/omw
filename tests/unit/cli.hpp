@@ -68,7 +68,7 @@ TEST_CASE("cli.h SGR sequence biulders")
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(sgr2), "\033[4;59;6;16;45;68;7m") == 0);
 }
 
-TEST_CASE("cli.h SGR")
+TEST_CASE("cli.h SGR parameters and arguments")
 {
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::reset), "\033[0m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bold), "\033[1m") == 0);
@@ -183,6 +183,14 @@ TEST_CASE("cli.h SGR")
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightWhite), "\033[107m") == 0);
     //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[108m") == 0);
     //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[109m") == 0);
+}
+
+TEST_CASE("cli.h SGR")
+{
+    for (size_t i = 0; i < 10; ++i)
+    {
+        CHECK(tu::strcmp(omw::font(i).arg(), "\033[" + omw::to_string(omw::ansiesc::csi::sgr::font_base + i) + "m") == 0);
+    }
 }
 
 
