@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            08.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -13,6 +13,12 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <omw/omw.h>
 #ifdef OMW_PLAT_WIN
 #include <omw/windows/windows.h>
+#endif
+
+#ifdef OMW_PLAT_WIN
+#define TESTING_WIN_CODE_PAGE_CHANGES (0) // set accordingly 0/1
+#else
+#define TESTING_WIN_CODE_PAGE_CHANGES (0)
 #endif
 
 using std::cout;
@@ -63,17 +69,35 @@ namespace
 
         return col_value;
     }
+
+#ifdef OMW_PLAT_WIN
+    void setCpBack(uint32_t cpIn, uint32_t cpOut)
+    {
+        if (!omw::windows::consoleSetInCodePage(cpIn)) cout << "faild to set in code page back to " << cpIn << endl;
+        if (!omw::windows::consoleSetOutCodePage(cpOut)) cout << "faild to set out code page back to " << cpOut << endl;
+    }
+#endif
 }
 
 
+
+#if !TESTING_WIN_CODE_PAGE_CHANGES
 
 int main(int argc, char** argv)
 {
     int r = 0;
 
 #ifdef OMW_PLAT_WIN
+    const uint32_t cpIn = omw::windows::consoleGetInCodePage();
+    const uint32_t cpOut = omw::windows::consoleGetOutCodePage();
+
+    if (!omw::windows::consoleSetCodePageUTF8())
+    {
+        cout << "faild to set code page to UTF-8" << endl;
+        setCpBack(cpIn, cpOut);
+    }
+
     if (!omw::windows::consoleEnVirtualTermProc()) cout << "faild to enable VT100" << endl;
-    if (!omw::windows::consoleSetCodePageUTF8()) cout << "faild to set code page to UTF-8" << endl;
 #endif
 
 #pragma region sgr
@@ -234,6 +258,10 @@ int main(int argc, char** argv)
 
     cout << endl;
 
+#ifdef OMW_PLAT_WIN
+    setCpBack(cpIn, cpOut);
+#endif
+
 #if defined(OMW_DEBUG) && 1
     cout << "===============\nreturn " << r << endl << "press enter..." << endl;
     int ___dbg_getc = getc(stdin);
@@ -241,3 +269,59 @@ int main(int argc, char** argv)
 
     return r;
 }
+
+#else // !TESTING_WIN_CODE_PAGE_CHANGES
+
+const char* const testStringChp = "\xCE\xB1\xCE\xB2\xCE\xB3\xCE\xB4\xCE\xB5\xCE\xB6\xCE\xB7\xCE\xB8\xCE\xB9\xCE\xBA\xCE\xBB\xCE\xBC\xCE\xBD\xCE\xBE\xCE\xBF\xCF\x80\xCF\x81\xCF\x82\xCF\x83\xCF\x8\xCF\x85\xCF\x86\xCF\x87\xCF\x88\xCF\x89";
+const std::string testStringStd = "\xCE\xB1\xCE\xB2\xCE\xB3\xCE\xB4\xCE\xB5\xCE\xB6\xCE\xB7\xCE\xB8\xCE\xB9\xCE\xBA\xCE\xBB\xCE\xBC\xCE\xBD\xCE\xBE\xCE\xBF\xCF\x80\xCF\x81\xCF\x82\xCF\x83\xCF\x8\xCF\x85\xCF\x86\xCF\x87\xCF\x88\xCF\x89";
+const omw::string testStringOmw = "\xCE\xB1\xCE\xB2\xCE\xB3\xCE\xB4\xCE\xB5\xCE\xB6\xCE\xB7\xCE\xB8\xCE\xB9\xCE\xBA\xCE\xBB\xCE\xBC\xCE\xBD\xCE\xBE\xCE\xBF\xCF\x80\xCF\x81\xCF\x82\xCF\x83\xCF\x8\xCF\x85\xCF\x86\xCF\x87\xCF\x88\xCF\x89";
+const omw::string testStringComposed = "composed string " + omw::string(omw::UTF8CP_2580) + omw::UTF8CP_2584 + std::string(omw::UTF8CP_2588) + " " +
+omw::string(omw::UTF8CP_auml) + omw::UTF8CP_ouml + omw::string(omw::UTF8CP_uuml) + omw::UTF8CP_Auml + omw::string(omw::UTF8CP_Ouml) + omw::UTF8CP_Uuml;
+
+static void normal();
+static void utf8(uint32_t, uint32_t);
+
+
+int main(int argc, char** argv)
+{
+    int r = 0;
+
+    const char* const invArg = "invalid arguments";
+
+    const uint32_t cpIn = omw::windows::consoleGetInCodePage();
+    const uint32_t cpOut = omw::windows::consoleGetOutCodePage();
+
+    cout << "in code page:  " << cpIn << endl;
+    cout << "out code page: " << cpOut << endl;
+
+    if (argc == 1) normal();
+    else if (argc == 2)
+    {
+        if (omw::string(argv[1]) == "-u8") utf8(cpIn, cpOut);
+        else { cout << invArg << endl; r = -1; }
+    }
+    else { cout << invArg << endl; r = -1; }
+
+    return r;
+}
+
+
+void normal()
+{
+    cout << testStringChp << endl;
+    cout << testStringStd << endl;
+    cout << testStringOmw << endl;
+}
+
+void utf8(uint32_t cpIn, uint32_t cpOut)
+{
+    if (!omw::windows::consoleSetCodePageUTF8()) cout << "faild to set code page to UTF-8" << endl;
+
+    normal();
+
+#if 1 // set to 0 only for R&D
+    setCpBack(cpIn, cpOut);
+#endif
+}
+
+#endif // !TESTING_WIN_CODE_PAGE_CHANGES

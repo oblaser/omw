@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            08.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -245,10 +245,37 @@ bool omw::windows::consoleEnVirtualTermProc()
     return r;
 }
 
-//! @param cp Code page identifier
+//! @return The code page on success, 0 otherwise
+//! 
+//! https://docs.microsoft.com/en-us/windows/console/getconsolecp
+//! 
+uint32_t omw::windows::consoleGetInCodePage()
+{
+    return (uint32_t)GetConsoleCP();
+}
+
+//! @return The code page on success, 0 otherwise
+//! 
+//! https://docs.microsoft.com/en-us/windows/console/getconsoleoutputcp
+//! 
+uint32_t omw::windows::consoleGetOutCodePage()
+{
+    return (uint32_t)GetConsoleOutputCP();
+}
+
+bool omw::windows::consoleSetInCodePage(uint32_t cp)
+{
+    return (SetConsoleCP((UINT)cp) != 0);
+}
+
+bool omw::windows::consoleSetOutCodePage(uint32_t cp)
+{
+    return (SetConsoleOutputCP((UINT)cp) != 0);
+}
+
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! Sets the input and output code page of the console.
+//! Sets the input and output code page of the console. See \ref omw_windows_consoleCodePage_infoText.
 //! 
 //! <a href="https://docs.microsoft.com/en-us/windows/console/setconsolecp" target="_blank">SetConsoleCP()</a>.
 //! <a href="https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp" target="_blank">SetConsoleOutputCP()</a>.
@@ -257,17 +284,18 @@ bool omw::windows::consoleEnVirtualTermProc()
 //! 
 bool omw::windows::consoleSetCodePage(uint32_t cp)
 {
-    return (SetConsoleCP((UINT)cp) && SetConsoleOutputCP((UINT)cp));
+    return (omw::windows::consoleSetInCodePage(cp) &&
+        omw::windows::consoleSetOutCodePage(cp));
 }
 
 
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! See consoleSetCodePage().
+//! See \ref omw_windows_consoleCodePage_infoText.
 //! 
 bool omw::windows::consoleSetCodePageUTF8()
 {
-    return omw::windows::consoleSetCodePage(65001);
+    return omw::windows::consoleSetCodePage(CP_UTF8);
 }
 
 

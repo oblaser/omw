@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           09.06.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            08.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 /*! \file omw.h */
@@ -27,21 +27,6 @@ Also read the \ref mainpage_conventions_strings section on the <i>Main Page</i>.
 
 
 
-\section omw_windows_getResrc_infoText Getting Resources
-
-The overloads of `getResource()` with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
-Possible code values:
- - `omw::windows::EC_OK`
- - `omw::windows::EC_RESOURCE_NOT_FOUND`
- - `omw::windows::EC_RESOURCE_NOT_LOADED`
-
-The other overloads can throw
- - `omw::windows::resource_not_found` if the resource could not be found
- - `std::runtime_error` if the resource could not be loaded or on C++ standard runtime errors
-
-
-
-
 \section omw_windows_strConv_infoText String Conversion Functions
 
 The functions `utf8_to_wstr()` and `wstr_to_utf8()` are used to convert between UTF-8 `char` strings used by this library
@@ -61,5 +46,27 @@ The other overloads can throw
  - `std::invalid_argument` when invalid arguments are passed to the function (such as null pointers)
  - `omw::windows::invalid_unicode` when src contains invalid unicode codepoints
  - `std::runtime_error` on unexpected behaviour of underlaying function
+
+
+
+\section omw_windows_consoleCodePage_infoText Console Code Page
+
+The setting of 
+
+
+
+\section omw_windows_getResrc_infoText Getting Resources
+
+The overloads of `getResource()` with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
+Possible code values:
+ - `omw::windows::EC_OK`
+ - `omw::windows::EC_RESOURCE_NOT_FOUND`
+ - `omw::windows::EC_RESOURCE_NOT_LOADED`
+
+The other overloads can throw
+ - `omw::windows::resource_not_found` if the resource could not be found
+ - `std::runtime_error` if the resource could not be loaded or on C++ standard runtime errors
+
+
 
 */

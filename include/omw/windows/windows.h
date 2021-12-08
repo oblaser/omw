@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            08.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -62,6 +62,11 @@ namespace omw
         //! \name Console
         /// @{
         bool consoleEnVirtualTermProc();
+
+        uint32_t consoleGetInCodePage();
+        uint32_t consoleGetOutCodePage();
+        bool consoleSetInCodePage(uint32_t cp);
+        bool consoleSetOutCodePage(uint32_t cp);
         bool consoleSetCodePage(uint32_t cp);
         bool consoleSetCodePageUTF8();
         /// @}
