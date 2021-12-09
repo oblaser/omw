@@ -123,8 +123,8 @@ int main(int argc, char** argv)
 
     {
         cout << "\n";
-        std::wcout << omw::backColor(0b100) << omw::fgBrightWhite << "SGR and char string to std::wcout" << omw::normal << endl;
-        std::wcout << omw::backColor(0b101) << omw::fgBrightYellow << L"SGR and wchar_t string to std::wcout" << omw::normal << endl;
+        std::wcout << omw::backColor(0b100) << omw::fgBrightWhite << "SGR and char string to std::" << omw::bold << "w" << omw::boldOff << "cout" << omw::normal << endl;
+        std::wcout << omw::backColor(0b101) << omw::fgBrightYellow << L"SGR and wchar_t string to std::" << omw::bold << "w" << omw::boldOff << "cout" << omw::normal << endl;
     }
 
     {
