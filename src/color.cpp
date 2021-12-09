@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           17.09.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            08.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include <cmath>
@@ -435,18 +435,18 @@ int32_t omw::alphaComposit(int32_t a_ACCC, int32_t b_ACCC)
 {
     const uint8_t tmpA[] =
     {
-        (a_ACCC >> 24) & 0xFF, // alpha
-        (a_ACCC >> 16) & 0xFF, // color component 1
-        (a_ACCC >> 8) & 0xFF,  // color component 2
-        a_ACCC & 0xFF          // color component 3
+        (uint8_t)((a_ACCC >> 24) & 0xFF),   // alpha
+        (uint8_t)((a_ACCC >> 16) & 0xFF),   // color component 1
+        (uint8_t)((a_ACCC >> 8) & 0xFF),    // color component 2
+        (uint8_t)(a_ACCC & 0xFF)            // color component 3
     };
 
     const uint8_t tmpB[] =
     {
-        (b_ACCC >> 24) & 0xFF,
-        (b_ACCC >> 16) & 0xFF,
-        (b_ACCC >> 8) & 0xFF,
-        b_ACCC & 0xFF
+        (uint8_t)((b_ACCC >> 24) & 0xFF),
+        (uint8_t)((b_ACCC >> 16) & 0xFF),
+        (uint8_t)((b_ACCC >> 8) & 0xFF),
+        (uint8_t)(b_ACCC & 0xFF)
     };
 
     int32_t result;

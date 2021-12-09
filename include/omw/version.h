@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           14.08.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            08.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_VERSION_H
@@ -37,7 +37,13 @@ namespace omw
         friend bool operator>=(const omw::Version& left, const omw::Version& right);
         friend bool operator==(const omw::Version& left, const omw::Version& right);
         friend bool operator!=(const omw::Version& left, const omw::Version& right);
-        friend std::ostream& operator<<(std::ostream& os, const omw::Version& v);
+
+        template<class CharT, class Traits = std::char_traits<CharT>>
+        friend std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, const omw::Version& v) 
+        {
+            // since the version string consists only out of ASCII chars, here is no std::basic_ostream<c,t>::widen() needed.
+            return (os << v.toString().c_str());
+        }
 
     private:
         static constexpr size_t dataSize = 3;

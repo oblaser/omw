@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           14.08.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            08.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include <string>
@@ -176,10 +176,4 @@ bool omw::operator==(const omw::Version& left, const omw::Version& right)
 bool omw::operator!=(const omw::Version& left, const omw::Version& right)
 {
     return (!(left == right));
-}
-
-std::ostream& omw::operator<<(std::ostream& os, const omw::Version& v)
-{
-    os << v.toString();
-    return os;
 }

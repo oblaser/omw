@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           09.06.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            08.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 /*! \file omw.h */
@@ -27,24 +27,11 @@ Also read the \ref mainpage_conventions_strings section on the <i>Main Page</i>.
 
 
 
-\section omw_windows_getResrc_infoText Getting Resources
-
-The overloads of `getResource()` with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
-Possible code values:
- - `omw::windows::EC_OK`
- - `omw::windows::EC_RESOURCE_NOT_FOUND`
- - `omw::windows::EC_RESOURCE_NOT_LOADED`
-
-The other overloads can throw
- - `omw::windows::resource_not_found` if the resource could not be found
- - `std::runtime_error` if the resource could not be loaded or on C++ standard runtime errors
-
-
-
-
 \section omw_windows_strConv_infoText String Conversion Functions
 
-The functions `utf8_to_wstr()` and `wstr_to_utf8()` are used to convert between UTF-8 `char` strings used by this library
+`#include <omw/windows/string.h>`
+
+The functions `utf8_to_wstr()` and `wstr_to_utf8()` are used to convert between UTF-8 `char` strings
 and `WCHAR` strings used in the Windows API. Both do have several overloads.
 
 The overloads with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
@@ -61,5 +48,87 @@ The other overloads can throw
  - `std::invalid_argument` when invalid arguments are passed to the function (such as null pointers)
  - `omw::windows::invalid_unicode` when src contains invalid unicode codepoints
  - `std::runtime_error` on unexpected behaviour of underlaying function
+
+An example can be seen in the sourcecode of the `omw::windows::getEnvironmentVariable()` function.
+
+
+
+\section omw_windows_consoleCodePage_infoText Console Code Page
+
+See the corresponding doc of the Windows API functions
+<a href="https://docs.microsoft.com/en-us/windows/console/getconsolecp" target="_blank">GetConsoleCP()</a>,
+<a href="https://docs.microsoft.com/en-us/windows/console/getconsoleoutputcp" target="_blank">GetConsoleOutputCP()</a>,
+<a href="https://docs.microsoft.com/en-us/windows/console/setconsolecp" target="_blank">SetConsoleCP()</a> and
+<a href="https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp" target="_blank">SetConsoleOutputCP()</a>.
+<br/>See also: <a href="https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers" target="_blank">List of code page identifier</a>.
+
+The setting of <b><tt>consoleSet..CodePage()</tt></b> functions is set for the current console window, and stays the same
+after termination. Therefore the setting should be set back to the previous code page then leaving the application.
+
+<b>Example main.cpp</b>
+```
+#include <iostream>
+
+#include <omw/omw.h>
+#ifdef OMW_PLAT_WIN
+#include <omw/windows/windows.h>
+#endif
+
+using std::cout;
+using std::endl;
+
+namespace
+{
+#ifdef OMW_PLAT_WIN
+    void setCpBack(uint32_t cpIn, uint32_t cpOut)
+    {
+        if (!omw::windows::consoleSetInCodePage(cpIn)) cout << "faild to set in code page back to " << cpIn << endl;
+        if (!omw::windows::consoleSetOutCodePage(cpOut)) cout << "faild to set out code page back to " << cpOut << endl;
+    }
+#endif
+}
+
+int main(int argc, char** argv)
+{
+    int r = 0;
+
+#ifdef OMW_PLAT_WIN
+    const uint32_t cpIn = omw::windows::consoleGetInCodePage();
+    const uint32_t cpOut = omw::windows::consoleGetOutCodePage();
+
+    if (!omw::windows::consoleSetCodePageUTF8())
+    {
+        cout << "faild to set code page to UTF-8" << endl;
+        setCpBack(cpIn, cpOut);
+    }
+#endif
+
+    // app code ...
+    // ...
+    // ...
+
+#ifdef OMW_PLAT_WIN
+    setCpBack(cpIn, cpOut);
+#endif
+
+    return r;
+}
+```
+
+
+
+\section omw_windows_getResrc_infoText Getting Resources
+
+The overloads of `getResource()` with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
+Possible code values:
+ - `omw::windows::EC_OK`
+ - `omw::windows::EC_RESOURCE_NOT_FOUND`
+ - `omw::windows::EC_RESOURCE_NOT_LOADED`
+
+The other overloads can throw
+ - `omw::windows::resource_not_found` if the resource could not be found
+ - `std::runtime_error` if the resource could not be loaded or on C++ standard runtime errors
+
+
 
 */

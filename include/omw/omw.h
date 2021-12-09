@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           06.12.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            08.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_H
@@ -12,7 +12,6 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include "../omw/defs.h"
 #include "../omw/string.h"
 #include "../omw/version.h"
-#include "../omw/utility.h"
 
 namespace omw
 {

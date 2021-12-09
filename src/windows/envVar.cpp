@@ -1,6 +1,6 @@
 /*
 author      Oliver Blaser
-date        10.06.2021
+date        24.09.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -102,7 +102,7 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName, Err
 
                 if (currentSize < (omw::windows::envVarValueMaxSize - bufferSizeGrow))
                 {
-                    wVal.assign((currentSize + bufferSizeGrow), 0);
+                    wVal.resize((currentSize + bufferSizeGrow));
                 }
                 else
                 {

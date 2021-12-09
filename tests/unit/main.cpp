@@ -33,6 +33,7 @@ TEST_CASE("omw lib")
 #include "algorithm.hpp"
 #include "cli.hpp"
 #include "color.hpp"
+#include "io_serialPort.hpp"
 #include "string.hpp"
 #include "utility.hpp"
 #include "version.hpp"

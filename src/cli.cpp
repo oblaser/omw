@@ -1,12 +1,15 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            08.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#include <iostream>
+#include <cmath>
 
 #include "omw/cli.h"
+
+namespace csi = omw::ansiesc::csi;
+namespace sgr = csi::sgr;
 
 namespace
 {
@@ -114,7 +117,19 @@ omw::string omw::ansiesc::csi::sgr::seq(const int* argv, size_t argc)
 /*!
 * \fn inline omw::string omw::ansiesc::csi::sgr::seq(const std::vector<int>& args)
 * \param args Parameters and arguments of the sequence
-* 
+*
 * Builds an composed SGR escape sequence: <b><tt>ESC [ \<args[0]\> ; \<args[1]\> ; ... ; \<args[args.size() - 1]\> m</tt></b>.
 * 
+* See seq(const int*, size_t).
 */
+
+//int omw::ansiesc::csi::sgr::to8bitGray(uint8_t value)
+//{
+//    return sgr::to8bitGray((double)value / 255.0);
+//}
+//
+//int omw::ansiesc::csi::sgr::to8bitGray(double normValue)
+//{
+//    if ((normValue < 0) || (normValue > 1)) normValue -= std::floor(normValue);
+//    return col8bit_grayscale26[std::lround(normValue * (sizeof(sgr::col8bit_grayscale26) / sizeof(sgr::col8bit_grayscale26[0])))];
+//}

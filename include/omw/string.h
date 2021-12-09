@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            08.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -32,7 +32,7 @@ namespace omw
     * @{
     */
 
-    //! \name UTF-8 Code Points
+    //! \name UTF-8 Byte Strings
     /// @{
     const char* const UTF8CP_00C4 = "\xC3\x84";
     const char* const UTF8CP_00D6 = "\xC3\x96";
@@ -45,7 +45,7 @@ namespace omw
     const char* const UTF8CP_2588 = "\xE2\x96\x88";
     /// @}
 
-    //! \name UFT-8 Code Point Aliases
+    //! \name UFT-8 Byte String Aliases
     /// @{
     const char* const UTF8CP_Auml = omw::UTF8CP_00C4;
     const char* const UTF8CP_Ouml = omw::UTF8CP_00D6;

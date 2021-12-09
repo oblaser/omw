@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            08.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -16,6 +16,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "../../omw/windows/error.h"
 #include "../../omw/windows/exception.h"
 #include "../../omw/windows/string.h"
+#include "../../omw/string.h"
 
 #include <Windows.h>
 
@@ -23,6 +24,9 @@ namespace omw
 {
     namespace windows
     {
+        std::vector<omw::string> getAllDosDevices();
+        std::vector<omw::string> queryDosDevice(const std::string& device);
+
         //! \name Performance Counter
         /// @{
         int64_t queryPerformanceCounter();
@@ -62,6 +66,11 @@ namespace omw
         //! \name Console
         /// @{
         bool consoleEnVirtualTermProc();
+
+        uint32_t consoleGetInCodePage();
+        uint32_t consoleGetOutCodePage();
+        bool consoleSetInCodePage(uint32_t cp);
+        bool consoleSetOutCodePage(uint32_t cp);
         bool consoleSetCodePage(uint32_t cp);
         bool consoleSetCodePageUTF8();
         /// @}

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            08.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -12,10 +12,104 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
-#include "omw/defs.h"
+#include "omw/string.h"
 #include "omw/windows/error.h"
 #include "omw/windows/exception.h"
-#include "omw/string.h"
+#include "omw/windows/string.h"
+
+#include <Windows.h>
+
+
+
+namespace
+{
+    // expected format: string1\0string2\0\0
+    std::vector<omw::string> multiStringConvert(LPCWSTR multiStr)
+    {
+        const WCHAR* p = multiStr;
+
+        std::vector<const WCHAR*> wStrings;
+        do
+        {
+            wStrings.push_back(p);
+            while (*p != 0) ++p;
+            ++p;
+        }
+        while (*p != 0);
+
+        std::vector<omw::string> strings;
+        for (size_t i = 0; i < wStrings.size(); ++i)
+        {
+            std::string tmpStr;
+            omw::windows::wstr_to_utf8(wStrings[i], tmpStr);
+            strings.push_back(tmpStr);
+        }
+
+        return strings;
+    }
+
+    std::vector<omw::string> queryDosDevice_base(const WCHAR* deviceName)
+    {
+        std::vector<WCHAR> buffer;
+        buffer.resize(8192);
+
+        bool querying = true;
+        while (querying)
+        {
+            const DWORD r = QueryDosDeviceW(deviceName, buffer.data(), buffer.size());
+
+            if (r == 0)
+            {
+                DWORD error = GetLastError();
+
+                if (error == ERROR_INSUFFICIENT_BUFFER)
+                {
+                    buffer.resize(buffer.size() * 2);
+                }
+                else
+                {
+                    // TODO: add some error handling
+
+                    buffer.clear();
+                    buffer.push_back(0);
+                    buffer.push_back(0);
+
+                    querying = false;
+                }
+            }
+            else
+            {
+                querying = false;
+            }
+        }
+
+        return multiStringConvert(buffer.data());
+    }
+}
+
+
+
+std::vector<omw::string> omw::windows::getAllDosDevices()
+{
+    return queryDosDevice_base(nullptr);
+}
+
+//! @param device 
+//! @return
+//! 
+//! \b Exceptions
+//! - `omw::windows::utf8_to_wstr()` is called and may throw exceptions
+//!  
+std::vector<omw::string> omw::windows::queryDosDevice(const std::string& device)
+{
+    constexpr size_t bufferSize = 512;
+    WCHAR buffer[bufferSize];
+
+    omw::windows::utf8_to_wstr(device, buffer, bufferSize);
+
+    // TODO: buffer grow
+    return queryDosDevice_base(buffer);
+}
 
 #include <Windows.h>
 
@@ -222,7 +316,7 @@ bool omw::windows::beep(uint32_t frequency, uint32_t duration_ms, bool blocking)
 
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsolemode" target="_blank">SetConsoleMode()</a> <b><tt>|= ENABLE_VIRTUAL_TERMINAL_PROCESSING</tt></b>
+//! See <a href="https://docs.microsoft.com/en-us/windows/console/setconsolemode" target="_blank">SetConsoleMode()</a> and <b><tt>ENABLE_VIRTUAL_TERMINAL_PROCESSING</tt></b>
 //! 
 bool omw::windows::consoleEnVirtualTermProc()
 {
@@ -245,29 +339,61 @@ bool omw::windows::consoleEnVirtualTermProc()
     return r;
 }
 
-//! @param cp Code page identifier
+//! @return The code page on success, 0 otherwise
+//! 
+//! See \ref omw_windows_consoleCodePage_infoText.
+//! 
+uint32_t omw::windows::consoleGetInCodePage()
+{
+    return (uint32_t)GetConsoleCP();
+}
+
+//! @return The code page on success, 0 otherwise
+//! 
+//! See \ref omw_windows_consoleCodePage_infoText.
+//! 
+uint32_t omw::windows::consoleGetOutCodePage()
+{
+    return (uint32_t)GetConsoleOutputCP();
+}
+
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! Sets the input and output code page of the console.
+//! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsolecp" target="_blank">SetConsoleCP()</a>.
-//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp" target="_blank">SetConsoleOutputCP()</a>.
+bool omw::windows::consoleSetInCodePage(uint32_t cp)
+{
+    return (SetConsoleCP((UINT)cp) != 0);
+}
+
+//! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! See the list of <a href="https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers" target="_blank">code page identifier</a>.
+//! See \ref omw_windows_consoleCodePage_infoText.
+//! 
+bool omw::windows::consoleSetOutCodePage(uint32_t cp)
+{
+    return (SetConsoleOutputCP((UINT)cp) != 0);
+}
+
+//! @brief Sets the input and output code page of the console.
+//! @return <tt>true</tt> on success, <tt>false</tt> otherwise
+//! 
+//! See \ref omw_windows_consoleCodePage_infoText.
 //! 
 bool omw::windows::consoleSetCodePage(uint32_t cp)
 {
-    return (SetConsoleCP((UINT)cp) && SetConsoleOutputCP((UINT)cp));
+    return (omw::windows::consoleSetInCodePage(cp) &&
+        omw::windows::consoleSetOutCodePage(cp));
 }
 
 
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! See consoleSetCodePage().
+//! Passes <b><tt>CP_UTF8</tt></b> to consoleSetCodePage().
 //! 
 bool omw::windows::consoleSetCodePageUTF8()
 {
-    return omw::windows::consoleSetCodePage(65001);
+    return omw::windows::consoleSetCodePage(CP_UTF8);
 }
 
 

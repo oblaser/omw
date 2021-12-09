@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           17.09.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            17.09.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_COLOR_H
