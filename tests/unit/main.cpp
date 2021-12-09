@@ -26,7 +26,7 @@ TEST_CASE("omw lib")
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 
-    REQUIRE(omw::info::version() == omw::Version(0, 1, 1));
+    REQUIRE(omw::info::version() == omw::Version(0, 1, 1002));
 }
 
 
