@@ -1,12 +1,12 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            09.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 /*!
 
-\mainpage OMW - A C++ Middleware Library
+\mainpage omw - A C++ Middleware Library
 
 Besides the
 \htmlonly

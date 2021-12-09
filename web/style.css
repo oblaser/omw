@@ -1,0 +1,51 @@
+/*
+author          Oliver Blaser
+date            09.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
+*/
+
+:root
+{
+    --colorBg: #1f4785;
+    --colorText: #d1cab2;
+    --colorHighlight: #ffd900;
+
+    --fontFamily: "Trebuchet MS", Verdana, Helvetica, sans-serif;
+}
+
+
+body
+{
+    background-color: var(--colorBg);
+    
+    color: var(--colorText);
+
+    font-family: Helvetica, sans-serif;
+    font-size: 16px;
+}
+
+.mainContainer
+{
+    margin-left: auto;
+    margin-right: auto;
+    width: 98%;
+    max-width: 900px;
+}
+
+.linkBox
+{
+    display: inline-block;
+    text-decoration: none;
+    border: #b4b4b4 1px solid;
+    border-radius: 8px;
+    padding: 8px 25px;
+    margin-top: 8px;
+    margin-left: 5px;
+}
+
+.linkBoxContainer
+{
+}
+
+a { color: var(--colorHighlight); }
+a:hover { color: inherit; }
