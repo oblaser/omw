@@ -341,7 +341,7 @@ bool omw::windows::consoleEnVirtualTermProc()
 
 //! @return The code page on success, 0 otherwise
 //! 
-//! https://docs.microsoft.com/en-us/windows/console/getconsolecp
+//! See \ref omw_windows_consoleCodePage_infoText.
 //! 
 uint32_t omw::windows::consoleGetInCodePage()
 {
@@ -350,18 +350,26 @@ uint32_t omw::windows::consoleGetInCodePage()
 
 //! @return The code page on success, 0 otherwise
 //! 
-//! https://docs.microsoft.com/en-us/windows/console/getconsoleoutputcp
+//! See \ref omw_windows_consoleCodePage_infoText.
 //! 
 uint32_t omw::windows::consoleGetOutCodePage()
 {
     return (uint32_t)GetConsoleOutputCP();
 }
 
+//! @return <tt>true</tt> on success, <tt>false</tt> otherwise
+//! 
+//! See \ref omw_windows_consoleCodePage_infoText.
+//! 
 bool omw::windows::consoleSetInCodePage(uint32_t cp)
 {
     return (SetConsoleCP((UINT)cp) != 0);
 }
 
+//! @return <tt>true</tt> on success, <tt>false</tt> otherwise
+//! 
+//! See \ref omw_windows_consoleCodePage_infoText.
+//! 
 bool omw::windows::consoleSetOutCodePage(uint32_t cp)
 {
     return (SetConsoleOutputCP((UINT)cp) != 0);
@@ -381,7 +389,7 @@ bool omw::windows::consoleSetCodePage(uint32_t cp)
 
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! See \ref omw_windows_consoleCodePage_infoText.
+//! Passes <b><tt>CP_UTF8</tt></b> to consoleSetCodePage().
 //! 
 bool omw::windows::consoleSetCodePageUTF8()
 {

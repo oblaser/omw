@@ -41,7 +41,7 @@ namespace omw
         template<class CharT, class Traits = std::char_traits<CharT>>
         friend std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, const omw::Version& v) 
         {
-            // since in the version string are only ASCII chars, here is no std::widen() needed.
+            // since the version string consists only out of ASCII chars, here is no std::basic_ostream<c,t>::widen() needed.
             return (os << v.toString().c_str());
         }
 
