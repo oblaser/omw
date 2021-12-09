@@ -110,8 +110,8 @@ int main(int argc, char** argv)
     cout << omw::fgBrightBlue << "bright" << omw::fgBlue << "blue" << endl;
     cout << omw::fgBrightMagenta << "bright" << omw::fgMagenta << "magenta" << endl;
     cout << omw::fgBrightCyan << "bright" << omw::fgCyan << "cyan" << endl;
-    cout << omw::fgBrightWhite << "bright" << omw::fgWhite << "white" << endl;
-    cout << omw::normal << omw::bgBrightWhite;
+    cout << omw::fgBrightWhite << "bright" << omw::fgWhite << "white" << omw::normal << endl;
+    cout << omw::bgBrightWhite;
     cout << omw::fgBrightBlack << "bright" << omw::fgBlack << "black" << endl;
     cout << omw::fgBrightRed << "bright" << omw::fgRed << "red" << endl;
     cout << omw::fgBrightGreen << "bright" << omw::fgGreen << "green" << endl;
@@ -120,6 +120,12 @@ int main(int argc, char** argv)
     cout << omw::fgBrightMagenta << "bright" << omw::fgMagenta << "magenta" << endl;
     cout << omw::fgBrightCyan << "bright" << omw::fgCyan << "cyan" << endl;
     cout << omw::fgBrightWhite << "bright" << omw::fgWhite << "white" << omw::normal << endl;
+
+    {
+        cout << "\n";
+        std::wcout << omw::backColor(0b100) << omw::fgBrightWhite << "SGR and char string to std::wcout" << omw::normal << endl;
+        std::wcout << omw::backColor(0b101) << omw::fgBrightYellow << L"SGR and wchar_t string to std::wcout" << omw::normal << endl;
+    }
 
     {
         const omw::string colorTableChar = omw::string(omw::UTF8CP_2588) + omw::string(omw::UTF8CP_2588);
@@ -188,16 +194,13 @@ int main(int argc, char** argv)
         cout << omw::font6 << "font 6: The quick brown fox jumps over the lazy dog." << endl;
         cout << omw::font7 << "font 7: The quick brown fox jumps over the lazy dog." << endl;
         cout << omw::font8 << "font 8: The quick brown fox jumps over the lazy dog." << endl;
-        cout << omw::font9 << "font 9: The quick brown fox jumps over the lazy dog." << endl;
-        cout << omw::normal;
+        cout << omw::font9 << "font 9: The quick brown fox jumps over the lazy dog." << omw::normal << endl;
     }
 
     cout << "\n";
-    cout << "the q" << omw::underline << "uick b" << omw::bold << "rown" << sgr::seq(sgr::underlineOff, sgr::boldOff, sgr::fgColorGreen) << " fox jumps" << endl;
-    cout << omw::normal;
+    cout << "the q" << omw::underline << "uick b" << omw::bold << "rown" << sgr::seq(sgr::underlineOff, sgr::boldOff, sgr::fgColorGreen) << " fox jumps" << omw::normal << endl;
     cout << "the" << omw::underline << omw::underlineColor(sgr::col8bit_brightMagenta) << " qu" << omw::fgBrightYellow << "ick br" << omw::bgBrightBlack << "own" <<
-        omw::underlineColor(sgr::col8bit_standardCyan) << "fox" << omw::defaultColors << " jumps" << endl;
-    cout << omw::normal;
+        omw::underlineColor(sgr::col8bit_standardCyan) << "fox" << omw::defaultColors << " jumps" << omw::normal << endl;
 
     {
         const omw::string colorTableChar = "  ";
@@ -206,7 +209,7 @@ int main(int argc, char** argv)
 
         for (int i = 0; i <= 7; ++i) cout << omw::backColor(i) << colorTableChar;
 
-        cout << endl;
+        cout << omw::normal << endl;
 
         for (int i = 8; i <= 15; ++i) cout << omw::backColor(i) << colorTableChar;
 
