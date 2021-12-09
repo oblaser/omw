@@ -43,9 +43,5 @@ body
     margin-left: 5px;
 }
 
-.linkBoxContainer
-{
-}
-
 a { color: var(--colorHighlight); }
 a:hover { color: inherit; }
