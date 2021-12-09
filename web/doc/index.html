@@ -16,6 +16,54 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     -->
+
+    <style>
+    .docVersionsContainer
+    {
+        text-align: center;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .docBoxContainer
+    {
+        display: inline-block;
+        text-align: center;
+        vertical-align: top;
+        margin: 0px 5px;
+        width: 125px;
+    }
+
+    .docBox
+    {
+        display: block;
+        border-radius: 8px;
+        padding: 8px 20px;
+    }
+
+    .docHeadBox
+    {
+        font-weight: bold;
+        color: var(--colorBg);
+        background-color: var(--colorText);
+    }
+
+    .docLinkBox
+    {
+        color: var(--colorText);
+        text-decoration: none;
+        border: var(--colorText) 1px solid;
+        margin-top: 8px;
+    }
+    .docLinkBox:hover
+    {
+        color: var(--colorHighlight);
+        border-color: var(--colorHighlight);
+        background-color: rgba(255, 255, 255, 0.3);
+        font-weight: bold;
+    }
+
+    </style>
 </head>
 <body>
     <div class="mainContainer">
@@ -23,11 +71,40 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
         <h3>Documentation</h3>
 
-        <div style="font-weight:bold;">Version</div>
-        <div class="linkBoxContainer">
-            <a class="linkBox" href="./github-master/">GitHub master</a>
-            <a class="linkBox" href="./0.1.0/">0.1.0</a>
+        <div class="docVersionsContainer">
+            <div class="docBoxContainer">
+                <div class="docBox docHeadBox">GitHub</div>
+                <a class="docBox docLinkBox" href="./github-master/">master</a>
+            </div>
+            <div class="docBoxContainer">
+                <div class="docBox docHeadBox">Version 0.1</div>
+                <a class="docBox docLinkBox" href="./0.1.1/">0.1.1</a>
+                <a class="docBox docLinkBox" href="./0.1.0/">0.1.0</a>
+            </div>
         </div>
+
+        <!--#p rm    # demo -->
+        <div class="docVersionsContainer">
+            <div class="docBoxContainer">
+                <div class="docBox docHeadBox">Version 1.0</div>
+                <a class="docBox docLinkBox" href="#">1.0.x</a>
+                <a class="docBox docLinkBox" href="#">1.0.x</a>
+                <a class="docBox docLinkBox" href="#">1.0.x</a>
+            </div>
+            <div class="docBoxContainer">
+                <div class="docBox docHeadBox">Version 0.2</div>
+                <a class="docBox docLinkBox" href="#">0.2.x</a>
+                <a class="docBox docLinkBox" href="#">0.2.x</a>
+            </div>
+            <div class="docBoxContainer">
+                <div class="docBox docHeadBox">Version 0.1</div>
+                <a class="docBox docLinkBox" href="./0.1.1/">0.1.1</a>
+                <a class="docBox docLinkBox" href="./0.1.0/">0.1.0</a>
+                <a class="docBox docLinkBox" href="#">0.1.x</a>
+                <a class="docBox docLinkBox" href="#">0.1.x</a>
+            </div>
+        </div>
+        <!--#p endrm    #demo -->
 
         <!--#p include "../footer.html" -->
     </div>

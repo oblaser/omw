@@ -32,16 +32,5 @@ body
     max-width: 900px;
 }
 
-.linkBox
-{
-    display: inline-block;
-    text-decoration: none;
-    border: #b4b4b4 1px solid;
-    border-radius: 8px;
-    padding: 8px 25px;
-    margin-top: 8px;
-    margin-left: 5px;
-}
-
 a { color: var(--colorHighlight); }
 a:hover { color: inherit; }
