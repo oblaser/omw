@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            08.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -24,19 +24,15 @@ class
 \htmlonly
 </a>
 \endhtmlonly
-references, there are some macros defined in omw/defs.h wich is included in the main include file omw/omw.h.
+references, there are some macros defined in omw/defs.h which is included in the main include file omw/omw.h.
 
 
 
 \section mainpage_conventions Conventions
 
 \subsection mainpage_conventions_strings Strings
-According to <a href="http://utf8everywhere.org/" target="_blank">UTF-8 Everywhere</a> strings inside the library are of type `char`
-(or `std::string` respectively) and formatted as UTF-8.
-
-If you call functions in the Windows API you should use the <tt>foobar<b>W</b>()</tt> functions and Microsofts `WCHAR` types to call the API and
-use the \ref omw_windows_strConv_infoText (<i>omw/windows/string.h</i>) to convert between the two string types. An example can be seen in
-the sourcecode of the `omw::windows::getEnvironmentVariable()` function.
+Calls to the Windows API should use the <tt>foobar<b>W</b>()</tt> functions and Microsofts `WCHAR` types to call the API.
+The \ref omw_windows_strConv_infoText can be used to convert between the two string types.
 
 
 

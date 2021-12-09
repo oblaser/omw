@@ -29,7 +29,9 @@ Also read the \ref mainpage_conventions_strings section on the <i>Main Page</i>.
 
 \section omw_windows_strConv_infoText String Conversion Functions
 
-The functions `utf8_to_wstr()` and `wstr_to_utf8()` are used to convert between UTF-8 `char` strings used by this library
+`#include <omw/windows/string.h>`
+
+The functions `utf8_to_wstr()` and `wstr_to_utf8()` are used to convert between UTF-8 `char` strings
 and `WCHAR` strings used in the Windows API. Both do have several overloads.
 
 The overloads with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
@@ -46,6 +48,8 @@ The other overloads can throw
  - `std::invalid_argument` when invalid arguments are passed to the function (such as null pointers)
  - `omw::windows::invalid_unicode` when src contains invalid unicode codepoints
  - `std::runtime_error` on unexpected behaviour of underlaying function
+
+An example can be seen in the sourcecode of the `omw::windows::getEnvironmentVariable()` function.
 
 
 

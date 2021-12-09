@@ -316,7 +316,7 @@ bool omw::windows::beep(uint32_t frequency, uint32_t duration_ms, bool blocking)
 
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! <a href="https://docs.microsoft.com/en-us/windows/console/setconsolemode" target="_blank">SetConsoleMode()</a> <b><tt>|= ENABLE_VIRTUAL_TERMINAL_PROCESSING</tt></b>
+//! See <a href="https://docs.microsoft.com/en-us/windows/console/setconsolemode" target="_blank">SetConsoleMode()</a> and <b><tt>ENABLE_VIRTUAL_TERMINAL_PROCESSING</tt></b>
 //! 
 bool omw::windows::consoleEnVirtualTermProc()
 {
