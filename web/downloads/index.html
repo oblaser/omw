@@ -14,16 +14,179 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
     <link type="text/css" rel="stylesheet" href="../style.css">
 
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    
+    <style>
+    #dwnldContainer
+    {
+        margin-top: 40px;
+        margin-bottom: 10px;
+    }
+
+    .releaseContainer
+    {
+        margin-top: 20px;
+    }
+
+    .releaseTitle
+    {
+        font-size: large;
+        margin-bottom: 7px;
+    }
+
+    .releaseData
+    {
+        vertical-align: top;
+        display: inline-block;
+        margin: 7px 7px;
+        border-radius: 8px;
+        width: 250px;
+        border: var(--colorText) 1px solid;
+    }
+
+    .releaseDataTitle
+    {
+        /*color: var(--colorBg); /**/
+        background-color: rgba(255, 255, 255, 0.2);
+        font-weight: bold;
+        text-align: center;
+        padding: 5px;
+        border-bottom: var(--colorText) 1px solid;
+    }
+
+    .releaseDataContent
+    {
+        padding: 10px;
+    }
+
+    .dlDataItem
+    {
+        margin: 5px 0px;
+    }
+    .dlDataItem a { text-decoration: none; }
+    .dlDataItem a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
     <div class="mainContainer">
         <!--#p include "../header.html" -->
 
-        <h3>Downloads</h3>
+        <div class="pageTitle">Downloads</div>
 
-        <a href="./files/">files</a>
+        <p>
+            The binary release can be placed in a SDK directory, the compiler and linker set up accordingly, you know the drill.
+            The source release on the other hand is meant to be placed in the project directory and compiled along with the project source.
+        </p>
+        <p>
+            Building a library should be done using the source code (not the source release) in the repository and the build tools in the build directory.
+        </p>
+
+        <div id="dwnldContainer">
+
+            <div class="releaseContainer">
+                <div class="releaseTitle">Release v0.1.1</div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Binaries</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="./files/omw_win32_v0.1.1.zip" download>Windows static x86</a></div>
+                    </div>
+                </div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Source</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="./files/omw_src_v0.1.1.zip" download>Source (zip)</a></div>
+                    </div>
+                </div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Documentation</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="/omw/doc/0.1.1">Online</a></div>
+                        <div class="dlDataItem"><a href="./files/omw_doc_v0.1.1.zip" download>HTML (zip)</a></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="releaseContainer">
+                <div class="releaseTitle">Release v0.1.0</div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Binaries</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="./files/omw_win32_v0.1.0.zip" download>Windows static x86</a></div>
+                    </div>
+                </div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Source</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="./files/omw_src_v0.1.0.zip" download>Source (zip)</a></div>
+                    </div>
+                </div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Documentation</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="/omw/doc/0.1.0">Online</a></div>
+                        <div class="dlDataItem"><a href="./files/omw_doc_v0.1.0.zip" download>HTML (zip)</a></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--#p rm    # demo -->
+            <div class="releaseContainer">
+                <div class="releaseTitle">Release Test</div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Binaries</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="#" download>Windows static x86</a></div>
+                        <div class="dlDataItem"><a href="#" download>Linux x86_64</a></div>
+                        <div class="dlDataItem"><a href="#" download>Linux arm</a></div>
+                    </div>
+                </div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Source</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="#" download>Source (zip)</a></div>
+                        <div class="dlDataItem">Some text asdf</div>
+                    </div>
+                </div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Documentation</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="#" download>Online</a></div>
+                        <div class="dlDataItem"><a href="#" download>HTML (zip)</a></div>
+                        <div class="dlDataItem"><a href="#" download>PDF</a></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="releaseContainer">
+                <div class="releaseTitle">Release Lorem Ipsum</div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Binary</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="#" download>Windows static x86</a></div>
+                        <div class="dlDataItem"><a href="#" download>Linux x86_64</a></div>
+                        <div class="dlDataItem"><a href="#" download>Linux arm</a></div>
+                    </div>
+                </div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Source</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="./files/omw_src_v0.1.0.zip" download>Source (zip)</a></div>
+                        <div class="dlDataItem">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Non impedit repellat numquam similique quia.
+                        </div>
+                    </div>
+                </div>
+                <div class="releaseData">
+                    <div class="releaseDataTitle">Documentation</div>
+                    <div class="releaseDataContent">
+                        <div class="dlDataItem"><a href="#" download>Online</a></div>
+                        <div class="dlDataItem"><a href="#" download>HTML (zip)</a></div>
+                        <div class="dlDataItem"><a href="#" download>pdf</a></div>
+                    </div>
+                </div>
+            </div>
+            <!--#p endrm    #demo -->
+        </div>
 
         <!--#p include "../footer.html" -->
     </div>
