@@ -8,7 +8,7 @@ const releaseData =
 [
 //#p rm
     {
-        title: "Protype",
+        title: "Prototype",
         binaries:
         [
             { type: "link", text: "asdf", href: "./files/#", download: true },
@@ -73,30 +73,28 @@ const releaseData =
         title: "Release v0.1.1",
         binaries:
         [
-            { type: "link", text: "Windows static x86", href: "./files/omw_win32_v0.1.1.zip", download: true }
+            { type: "link", text: "Windows (zip)", href: "./files/omw_win_v0.1.1.zip", download: true }
         ],
         source:
         [
+            { type: "link", text: "Source (tar.gz)", href: "./files/omw_src_v0.1.1.tar.gz", download: true },
             { type: "link", text: "Source (zip)", href: "./files/omw_src_v0.1.1.zip", download: true }
         ],
         doc:
         [
-            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.1.1.zip", download: true },
+            { type: "link", text: "HTML (tar.gz)", href: "./files/omw_doc_v0.1.1.tar.gz", download: true },
+            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.1.1.zip", download: true }
         ]
     },
     {
         title: "Release v0.1.0",
-        binaries:
-        [
-            { type: "link", text: "Windows static x86", href: "./files/omw_win32_v0.1.0.zip", download: true }
-        ],
         source:
         [
             { type: "link", text: "Source (zip)", href: "./files/omw_src_v0.1.0.zip", download: true }
         ],
         doc:
         [
-            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.1.0.zip", download: true },
+            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.1.0.zip", download: true }
         ]
     }
 ];

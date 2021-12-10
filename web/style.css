@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            09.12.2021
+date            10.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -40,3 +40,11 @@ a:hover { color: inherit; }
     font-size: larger;
     font-weight: bold;
 }
+
+.headerlink
+{
+    margin: 0px 0px 0px 3px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.1);
+}
+.headerlink:hover { color: var(--colorText); }

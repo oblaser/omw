@@ -4,6 +4,11 @@ date            10.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
+function htmlHeaderLink(idStr)
+{
+    return '<a class="headerlink" href="#' + idStr + '">&para;</a>';
+}
+
 //#p ins function htmlRelaseData(title, data)
 //#p rmn 1
 function htmlRelaseData(title, data = releaseData[0].binaries)
@@ -48,7 +53,10 @@ function htmlRelase(data = releaseData[0])
 {
     let html = '';
 
+    let idString = data.title.replaceAll(" ", "_").replaceAll(".", "-");
+
     html += '<div class="releaseContainer">';
+    //html += '<div id="' + idString + '" class="releaseTitle">' + data.title + htmlHeaderLink(idString) + '</div>'; // nonsens, because it's generated with js. Considering to change to php
     html += '<div class="releaseTitle">' + data.title + '</div>';
     if(typeof data.binaries !== 'undefined') html += htmlRelaseData('Binaries', data.binaries)
     if(typeof data.source !== 'undefined') html += htmlRelaseData('Source', data.source)
