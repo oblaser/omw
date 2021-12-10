@@ -1,6 +1,6 @@
 <!--
 author          Oliver Blaser
-date            09.12.2021
+date            10.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 -->
 
@@ -15,7 +15,9 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
     <link type="text/css" rel="stylesheet" href="../style.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    
+    <script src="./data.js"></script>
+    <script src="./index.js"></script>
+
     <style>
     #dwnldContainer
     {
@@ -46,8 +48,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
     .releaseDataTitle
     {
-        /*color: var(--colorBg); /**/
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.15);
         font-weight: bold;
         text-align: center;
         padding: 5px;
@@ -69,7 +70,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 </head>
 <body>
     <div class="mainContainer">
-        <!--#p include "../header.html" -->
+        <!--#p include "../00_include/header.html" -->
 
         <div class="pageTitle">Downloads</div>
 
@@ -82,54 +83,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
         </p>
 
         <div id="dwnldContainer">
-
-            <div class="releaseContainer">
-                <div class="releaseTitle">Release v0.1.1</div>
-                <div class="releaseData">
-                    <div class="releaseDataTitle">Binaries</div>
-                    <div class="releaseDataContent">
-                        <div class="dlDataItem"><a href="./files/omw_win32_v0.1.1.zip" download>Windows static x86</a></div>
-                    </div>
-                </div>
-                <div class="releaseData">
-                    <div class="releaseDataTitle">Source</div>
-                    <div class="releaseDataContent">
-                        <div class="dlDataItem"><a href="./files/omw_src_v0.1.1.zip" download>Source (zip)</a></div>
-                    </div>
-                </div>
-                <div class="releaseData">
-                    <div class="releaseDataTitle">Documentation</div>
-                    <div class="releaseDataContent">
-                        <div class="dlDataItem"><a href="/omw/doc/0.1.1">Online</a></div>
-                        <div class="dlDataItem"><a href="./files/omw_doc_v0.1.1.zip" download>HTML (zip)</a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="releaseContainer">
-                <div class="releaseTitle">Release v0.1.0</div>
-                <div class="releaseData">
-                    <div class="releaseDataTitle">Binaries</div>
-                    <div class="releaseDataContent">
-                        <div class="dlDataItem"><a href="./files/omw_win32_v0.1.0.zip" download>Windows static x86</a></div>
-                    </div>
-                </div>
-                <div class="releaseData">
-                    <div class="releaseDataTitle">Source</div>
-                    <div class="releaseDataContent">
-                        <div class="dlDataItem"><a href="./files/omw_src_v0.1.0.zip" download>Source (zip)</a></div>
-                    </div>
-                </div>
-                <div class="releaseData">
-                    <div class="releaseDataTitle">Documentation</div>
-                    <div class="releaseDataContent">
-                        <div class="dlDataItem"><a href="/omw/doc/0.1.0">Online</a></div>
-                        <div class="dlDataItem"><a href="./files/omw_doc_v0.1.0.zip" download>HTML (zip)</a></div>
-                    </div>
-                </div>
-            </div>
-
-            <!--#p rm    # demo -->
+            <!--#p rm    # test -->
             <div class="releaseContainer">
                 <div class="releaseTitle">Release Test</div>
                 <div class="releaseData">
@@ -156,7 +110,6 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
                     </div>
                 </div>
             </div>
-
             <div class="releaseContainer">
                 <div class="releaseTitle">Release Lorem Ipsum</div>
                 <div class="releaseData">
@@ -185,10 +138,10 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
                     </div>
                 </div>
             </div>
-            <!--#p endrm    #demo -->
+            <!--#p endrm    # test -->
         </div>
 
-        <!--#p include "../footer.html" -->
+        <!--#p include "../00_include/footer.html" -->
     </div>
 </body>
 </html>
