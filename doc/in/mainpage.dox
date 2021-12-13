@@ -1,31 +1,12 @@
 /*
 author          Oliver Blaser
-date            09.12.2021
+date            13.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 /*!
 
 \mainpage omw - A C++ Middleware Library
-
-Besides the
-\htmlonly
-<a class="el" href="./namespaces.html">
-\endhtmlonly
-namespace
-\htmlonly
-</a>
-\endhtmlonly
-and
-\htmlonly
-<a class="el" href="./annotated.html">
-\endhtmlonly
-class
-\htmlonly
-</a>
-\endhtmlonly
-references, there are some macros defined in omw/defs.h which is included in the main include file omw/omw.h.
-
 
 
 \section mainpage_conventions Conventions

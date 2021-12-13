@@ -1,32 +1,44 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            13.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 
 
 /*!
-\defgroup grp_algorithm Algorithms
-\brief `#include <omw/algorithm.h>`
+\defgroup grp_macro Macros
+`#include <omw/defs.h>`
 */
 
 /*!
-\defgroup grp_cli Command Line Interface
-\brief `#include <omw/cli.h>`
+\defgroup grp_algorithm Algorithms Library
+`#include <omw/algorithm.h>`
 */
 
 /*!
 \defgroup grp_colorLib Color Library
-\brief `#include <omw/color.h>`
+`#include <omw/color.h>`
+*/
+
+/*!
+\defgroup grp_cli Command Line Interface Library
+`#include <omw/cli.h>`
 */
 
 /*!
 \defgroup grp_stringLib String Library
-\brief `#include <omw/string.h>`
+`#include <omw/string.h>`
+*/
+
+// https://en.cppreference.com/w/cpp/utility
+/*!
+\defgroup grp_utility Utilies Library
+`#include <omw/utility.h>`
 */
 
 /*!
-\defgroup grp_utility Utility
-\brief `#include <omw/utility.h>`
+\defgroup grp_utility_typeSupport Type Support
+\ingroup grp_utility
+`#include <omw/omwint.h>`
 */

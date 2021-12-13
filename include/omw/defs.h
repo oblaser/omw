@@ -1,43 +1,92 @@
 /*
 author         Oliver Blaser
-date           30.09.2021
+date           13.12.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_DEFS_H
 #define IG_OMW_DEFS_H
 
+/*! \addtogroup grp_macro
+* @{
+*/
 
-#include <cstddef>
-#include <cstdint>
 
-
-// platform
-#if (defined(_WIN32) && !defined(_WIN64))
-//! Defined as 1 if target is x86 Windows. Otherwise, undefined.
-#define OMW_PLAT_WIN32 (1)
-#endif
-#ifdef _WIN64
-//! Defined as 1 if target is x64 Windows. Otherwise, undefined.
-#define OMW_PLAT_WIN64 (1)
-#endif
-#ifdef __unix__
-//! Defined as 1 if `__unix__` is defined. Otherwise, undefined.
-#define OMW_PLAT_UNIX (1)
-#endif
-#if (defined(OMW_PLAT_WIN32) || defined(OMW_PLAT_WIN64))
-//! Defined as 1 if `OMW_PLAT_WIN32` or `OMW_PLAT_WIN64` is defined. Otherwise, undefined.
-#define OMW_PLAT_WIN (1)
-#endif
-
-// debugging
+//! \name Misc
+/// @{
 #ifdef _DEBUG
 #define OMW_DEBUG (1)
 #else
 #undef OMW_DEBUG
 #endif
+#ifdef OMWi_DOXYGEN_EXCLUDE_FROM_DOC
+#define OMW_DEBUG (1)
+#endif // OMWi_DOXYGEN_EXCLUDE_FROM_DOC
+/*!
+* \def OMW_DEBUG
+* \brief Defined as `1` if `_DEBUG` is defined, undefined otherwise.
+*/
 
 
+
+//! @brief Returns the filename of the current file as `const char*`.
+//! 
+//! Similar to `__FILE__`, but does not contain the full path.
+//! 
+#define OMW__FILENAME__     (OMWi_file_to_filename(__FILE__))
+
+/// @}
+
+
+
+//! \name Platform
+/// @{
+#ifdef OMWi_DOXYGEN_EXCLUDE_FROM_DOC
+#define OMW_PLAT_WIN32 (1)
+#endif // OMWi_DOXYGEN_EXCLUDE_FROM_DOC
+
+#if (defined(_WIN32) && !defined(_WIN64))
+#define OMW_PLAT_WIN32 (1)
+#endif
+#ifdef _WIN64
+#define OMW_PLAT_WIN64 (1)
+#endif
+#ifdef __unix__
+#define OMW_PLAT_UNIX (1)
+#endif
+#if (defined(OMW_PLAT_WIN32) || defined(OMW_PLAT_WIN64))
+#define OMW_PLAT_WIN (1)
+#endif
+
+/*!
+* \def OMW_PLAT_WIN32
+* \brief Defined as `1` if target is 32-bit Windows, undefined otherwise.
+*/
+/*!
+* \def OMW_PLAT_WIN64
+* \brief Defined as `1` if target is 64-bit Windows, undefined otherwise.
+*/
+/*!
+* \def OMW_PLAT_UNIX
+* \brief Defined as `1` if `__unix__` is defined, undefined otherwise.
+*/
+/*!
+* \def OMW_PLAT_WIN
+* \brief Defined as `1` if `OMW_PLAT_WIN32` or `OMW_PLAT_WIN64` is defined, undefined otherwise.
+*/
+/// @}
+
+/*! @} */
+
+
+
+//
+// internal
+//
+
+#ifndef OMWi_DOXYGEN_EXCLUDE_FROM_DOC
+
+#define OMWi_DISPSTR(x) (x)
 
 constexpr const char* OMWi_file_to_filename(const char* p)
 {
@@ -53,27 +102,7 @@ constexpr const char* OMWi_file_to_filename(const char* p)
     return fn;
 }
 
-//! @brief Macro wich returns the current source filename.
-//! 
-//! Similar to `__FILE__` but does not contain the full path.
-#define OMW__FILENAME__     (OMWi_file_to_filename(__FILE__))
-
-
-
-
-
-#define OMW_SIZE_MAX ((size_t)-1)
-
-
-
-
-
-
-//
-// internal use
-//
-
-#define OMWi_DISPSTR(x) (x)
+#endif // OMWi_DOXYGEN_EXCLUDE_FROM_DOC
 
 // check for invalid combinations
 #if ((defined(OMW_PLAT_WIN32) || defined(OMW_PLAT_WIN64) || defined(OMW_PLAT_WIN)) && defined(OMW_PLAT_UNIX))

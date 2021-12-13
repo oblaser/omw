@@ -29,7 +29,7 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 //! @param varName Name of the environment variable
 //! @return Value of the environment variable
 //! 
-//! Can throw
+//! \b Exceptions
 //! - omw::windows::envVar_not_found
 //! - omw::windows::invalid_unicode
 //! - std::runtime_error

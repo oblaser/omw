@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            10.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -16,7 +16,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "../omw/string.h"
 
 
-#ifndef DOXYGEN_EXCLUDE_FROM_DOC
+#ifndef OMWi_DOXYGEN_EXCLUDE_FROM_DOC
 // TODO: move to stream.cpp/.h or similar, and document it properly
 namespace omw
 {
@@ -48,7 +48,7 @@ namespace omw
     //    return os;
     //}
 }
-#endif // DOXYGEN_EXCLUDE_FROM_DOC
+#endif // OMWi_DOXYGEN_EXCLUDE_FROM_DOC
 
 
 namespace omw
@@ -289,7 +289,7 @@ namespace omw
         }
     }
 
-#pragma region ostream-manip
+#pragma region sgr-ostream-manip
     //! \name Out Stream Manipulators
     /// @{
     inline omw::ansiesc_ostream_manip_t backColor(int color8bit) { return omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setBackColor, omw::ansiesc::csi::sgr::setColor_8bit, color8bit); }
@@ -474,7 +474,7 @@ namespace omw
     template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& underlineOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::underlineOff).c_str()); }
     /// @}
-#pragma endregion ostream-manip
+#pragma endregion sgr-ostream-manip
 
 
     /*! @} */

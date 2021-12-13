@@ -5,7 +5,7 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 /*!
-\file resourceTypes.h
+\file
 \brief Resource definitions.
 
 This file has to be included by the resource file(s). It does not have to be
