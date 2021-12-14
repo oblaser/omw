@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            13.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -13,6 +13,10 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace omw
 {
+    /*! \addtogroup grp_utility
+    * @{
+    */
+
     class Version
     {
     public:
@@ -51,6 +55,8 @@ namespace omw
 
         void setData(const std::string& versionStr);
     };
+
+    /*! @} */
 }
 
 #endif // IG_OMW_VERSION_H

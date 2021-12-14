@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            09.12.2021
+date            11.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -33,7 +33,9 @@ TEST_CASE("omw lib")
 #include "algorithm.hpp"
 #include "cli.hpp"
 #include "color.hpp"
+#include "int.hpp"
 #include "io_serialPort.hpp"
+#include "math.hpp"
 #include "string.hpp"
 #include "utility.hpp"
 #include "version.hpp"

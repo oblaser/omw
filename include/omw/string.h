@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            13.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -12,6 +12,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <vector>
 
 #include "../omw/defs.h"
+#include "../omw/int.h"
 
 
 #define OMWi_STRING_IMPLEMENT_CONTAINS (1)
@@ -157,6 +158,8 @@ namespace omw
     omw::string to_string(long double value);
 
     omw::string to_string(bool value, bool asText = true);
+    omw::string to_string(const omw::int128_t& value);
+    omw::string to_string(const omw::uint128_t& value);
     omw::string to_string(const std::pair<int32_t, int32_t>& value, char sepChar = pairtos_defaultSepChar);
     omw::string to_string(const std::pair<uint32_t, uint32_t>& value, char sepChar = pairtos_defaultSepChar);
     omw::string to_string(const std::pair<int64_t, int64_t>& value, char sepChar = pairtos_defaultSepChar);
@@ -164,6 +167,15 @@ namespace omw
     omw::string to_string(const std::pair<float, float>& value, char sepChar = pairtos_defaultSepChar);
     omw::string to_string(const std::pair<double, double>& value, char sepChar = pairtos_defaultSepChar);
     omw::string to_string(const std::pair<long double, long double>& value, char sepChar = pairtos_defaultSepChar);
+
+    
+
+    omw::string i128tos(int64_t valueH, uint64_t valueL);
+    omw::string i128tos(int32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL);
+    omw::string i128tos(const uint8_t* data, size_t count);
+    omw::string ui128tos(uint64_t valueH, uint64_t valueL);
+    omw::string ui128tos(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL);
+    omw::string ui128tos(const uint8_t* data, size_t count);
 
 
 

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            13.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -8,6 +8,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "omw/algorithm.h"
 #include "omw/defs.h"
 #include "omw/string.h"
 
@@ -275,7 +276,7 @@ omw::string& omw::string::replaceAll(const std::string& search, const std::strin
             pos = find(search, pos + replace.length());
         }
     }
-    else cnt = OMW_SIZE_MAX;
+    else cnt = SIZE_MAX;
 
     if (nReplacements) *nReplacements = cnt;
 
@@ -302,20 +303,20 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
     size_t cnt = 0;
     size_t tmpCnt;
 
-    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), OMW_SIZE_MAX);
+    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), SIZE_MAX);
 
     for (size_t i = 0; i < pairs.size(); ++i)
     {
         replaceAll(pairs[i], startPos, &tmpCnt);
         if (nReplacements) nReplacements->at(i) = tmpCnt;
-        if (tmpCnt != OMW_SIZE_MAX)
+        if (tmpCnt != SIZE_MAX)
         {
             cnt += tmpCnt;
             allInvalid = false;
         }
     }
 
-    if (allInvalid) cnt = OMW_SIZE_MAX;
+    if (allInvalid) cnt = SIZE_MAX;
 
     if (nReplacementsTotal) *nReplacementsTotal = cnt;
 
@@ -489,6 +490,20 @@ omw::string omw::to_string(bool value, bool asText)
     return (value ? "1" : "0");
 }
 
+omw::string omw::to_string(const omw::int128_t& value)
+{
+    const omw::uint128_t tmp = omw::uint128_t(value);
+    return (value.isNegative() ? "-" + omw::to_string(-tmp) : omw::to_string(tmp));
+}
+
+omw::string omw::to_string(const omw::uint128_t& value)
+{
+    omw::string str = omw::toHexStr(omw::doubleDabble(value), 0);
+    size_t startPos = 0;
+    while ((str[startPos] == '0') && (startPos < (str.length() - 1))) ++startPos;
+    return omw::string(str, startPos);
+}
+
 omw::string omw::to_string(const std::pair<int32_t, int32_t>& value, char sepChar)
 {
     return ::pair_to_string(value, sepChar);
@@ -526,6 +541,40 @@ omw::string omw::to_string(const std::pair<long double, long double>& value, cha
 
 
 
+omw::string omw::i128tos(int64_t valueH, uint64_t valueL)
+{
+    omw::int128_t tmp;
+    tmp.sets(valueH, valueL);
+    return omw::to_string(tmp);
+}
+
+omw::string omw::i128tos(int32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
+{
+    omw::int128_t tmp;
+    tmp.sets(valueHH, valueLH, valueHL, valueLL);
+    return omw::to_string(tmp);
+}
+
+omw::string omw::i128tos(const uint8_t* data, size_t count)
+{
+    return omw::to_string(omw::int128_t(data, count));
+}
+
+omw::string omw::ui128tos(uint64_t valueH, uint64_t valueL)
+{
+    return omw::to_string(omw::uint128_t(valueH, valueL));
+}
+
+omw::string omw::ui128tos(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
+{
+    return omw::to_string(omw::uint128_t(valueHH, valueLH, valueHL, valueLL));
+}
+
+omw::string omw::ui128tos(const uint8_t* data, size_t count)
+{
+    return omw::to_string(omw::uint128_t(data, count));
+}
+
 
 
 //! @param boolStr Boolean string representation
@@ -534,7 +583,7 @@ omw::string omw::to_string(const std::pair<long double, long double>& value, cha
 //! \b true and \b 1 converts to `true`, \b false and \b 0 to `false`. The input is not case sensitive.
 //! 
 //! \b Exceptions
-//! - `std::out_of_range` if the value isn't element of `{ "0", "1", "true", "false" }`
+//! - `std::out_of_range` if the value isn't an element of `{ "0", "1", "true", "false" }`
 //! - <tt><a href="https://en.cppreference.com/w/cpp/string/basic_string/stol" target="_blank">std::stoi()</a></tt> is called and may throw `std::out_of_range` or `std::invalid_argument`
 //! 
 bool omw::stob(const std::string& boolStr)
@@ -575,9 +624,6 @@ std::pair<int32_t, int32_t> omw::stoipair(const std::string& str, char sepChar)
 
     return std::pair<int32_t, int32_t>(std::stoi(first), std::stoi(second));
 }
-
-// https://en.cppreference.com/w/cpp/string/basic_string/stoul
-// https://en.cppreference.com/w/cpp/string/basic_string/stof
 
 
 

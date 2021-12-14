@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            13.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -11,17 +11,25 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "omw/string.h"
 #include "omw/version.h"
 
+namespace
+{
+}
 
+
+
+/*!
+* \class omw::Version
+* 
+* `#include <omw/version.h>`
+*/
 
 omw::Version::Version()
     : version{ 0, 0, 0 }
-{
-}
+{}
 
 omw::Version::Version(int major, int minor, int revision)
     : version{ major, minor, revision }
-{
-}
+{}
 
 //! @param versionStr A `major.minor.revision` formatted string
 //! 

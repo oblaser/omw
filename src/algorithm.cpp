@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.12.2021
+date            13.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -12,7 +12,7 @@ namespace
 {
     namespace doubleDabble
     {
-        void dd_add3(std::vector<uint8_t>& bcd)
+        void add3(std::vector<uint8_t>& bcd)
         {
             for (size_t i = 0; i < bcd.size(); ++i)
             {
@@ -46,7 +46,7 @@ namespace
         }
 
         template <size_t N>
-        void dd_leftShift(std::vector<uint8_t>& bcd, std::bitset<N>& bin)
+        void leftShift(std::vector<uint8_t>& bcd, std::bitset<N>& bin)
         {
             for (size_t i = 0; i < (bcd.size() - 1); ++i)
             {
@@ -65,8 +65,8 @@ namespace
         {
             for (size_t i = 0; i < N; ++i)
             {
-                ::doubleDabble::dd_add3(bcd);
-                ::doubleDabble::dd_leftShift(bcd, bin);
+                ::doubleDabble::add3(bcd);
+                ::doubleDabble::leftShift(bcd, bin);
             }
         }
     }
@@ -87,7 +87,7 @@ std::vector<uint8_t> omw::doubleDabble128(const uint8_t* data, size_t count)
     std::vector<uint8_t> bcd(20);
     std::bitset<bitWidth> bin;
 
-    //init
+    // init
     if (data)
     {
         for (size_t i = 0; i < nChunks; ++i)
@@ -112,15 +112,15 @@ std::vector<uint8_t> omw::doubleDabble128(const uint8_t* data, size_t count)
     return bcd;
 }
 
-std::vector<uint8_t> omw::doubleDabble128(uint32_t valueH, uint32_t valueHM, uint32_t valueLM, uint32_t valueL)
+std::vector<uint8_t> omw::doubleDabble128(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
 {
-    uint64_t value64H = valueH;
+    uint64_t value64H = valueHH;
     value64H <<= 32;
-    value64H |= valueHM;
+    value64H |= valueLH;
 
-    uint64_t value64L = valueLM;
+    uint64_t value64L = valueHL;
     value64L <<= 32;
-    value64L |= valueL;
+    value64L |= valueLL;
 
     return omw::doubleDabble128(value64H, value64L);
 }
@@ -134,7 +134,7 @@ std::vector<uint8_t> omw::doubleDabble128(uint64_t valueH, uint64_t valueL)
     std::vector<uint8_t> bcd(20);
     std::bitset<bitWidth> bin;
 
-    //init
+    // init
     {
         chunk_t chunkValue;
         chunk_t chunkMask;
@@ -154,6 +154,27 @@ std::vector<uint8_t> omw::doubleDabble128(uint64_t valueH, uint64_t valueL)
         for (size_t j = 0; j < chunkWidth; ++j)
         {
             bin.set(chunkWidth + j, ((chunkValue & chunkMask) != 0));
+            chunkMask <<= 1;
+        }
+    }
+
+    ::doubleDabble::dd(bcd, bin);
+
+    return bcd;
+}
+
+std::vector<uint8_t> omw::doubleDabble(const omw::uint128_t& value)
+{
+    std::vector<uint8_t> bcd(20);
+    std::bitset<128> bin;
+
+    // init
+    {
+        omw::uint128_t chunkMask = 1;
+
+        for (size_t i = 0; i < 128; ++i)
+        {
+            bin.set(i, ((value & chunkMask) != 0));
             chunkMask <<= 1;
         }
     }

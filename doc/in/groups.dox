@@ -27,6 +27,11 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 /*!
+\defgroup grp_numerics Numerics Library
+`#include <omw/math.h>`
+*/
+
+/*!
 \defgroup grp_stringLib String Library
 `#include <omw/string.h>`
 */
