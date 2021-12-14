@@ -1,6 +1,6 @@
 /*
 author      Oliver Blaser
-date        13.08.2021
+date        14.12.2021
 copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -54,13 +54,20 @@ const uint8_t* omw::windows::getResource(int idr, int type, size_t* size, omw::w
     {
         HGLOBAL rcData = LoadResource(handle, rc);
 
-        const size_t tmpSize = SizeofResource(handle, rc);
-        data = (uint8_t*)LockResource(rcData);
+        if (rcData == NULL)
+        {
+            ec = ErrorCode(omw::windows::EC_RESOURCE_NOT_LOADED, OMWi_DISPSTR("could not load resource"));
+        }
+        else
+        {
+            const size_t tmpSize = SizeofResource(handle, rc);
+            data = (uint8_t*)LockResource(rcData);
 
-        if (size) *size = tmpSize;
+            if (size) *size = tmpSize;
 
-        if (rcData && tmpSize && data) ec = ErrorCode(omw::windows::EC_OK, OMWi_DISPSTR("OK"));
-        else ec = ErrorCode(omw::windows::EC_RESOURCE_NOT_LOADED, OMWi_DISPSTR("could not load resource"));
+            if ((tmpSize > 0) && data) ec = ErrorCode(omw::windows::EC_OK, OMWi_DISPSTR("OK"));
+            else ec = ErrorCode(omw::windows::EC_RESOURCE_NOT_LOADED, OMWi_DISPSTR("could not load resource"));
+        }
     }
     else ec = ErrorCode(omw::windows::EC_RESOURCE_NOT_FOUND, OMWi_DISPSTR("resource not found"));
 
