@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            14.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -8,6 +8,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include <cstdint> // creates a merge conflict and has to be removed. See devmaster branch.
 #include "omw/defs.h"
 #include "omw/string.h"
 
@@ -275,7 +276,7 @@ omw::string& omw::string::replaceAll(const std::string& search, const std::strin
             pos = find(search, pos + replace.length());
         }
     }
-    else cnt = OMW_SIZE_MAX;
+    else cnt = SIZE_MAX;
 
     if (nReplacements) *nReplacements = cnt;
 
@@ -302,20 +303,20 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
     size_t cnt = 0;
     size_t tmpCnt;
 
-    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), OMW_SIZE_MAX);
+    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), SIZE_MAX);
 
     for (size_t i = 0; i < pairs.size(); ++i)
     {
         replaceAll(pairs[i], startPos, &tmpCnt);
         if (nReplacements) nReplacements->at(i) = tmpCnt;
-        if (tmpCnt != OMW_SIZE_MAX)
+        if (tmpCnt != SIZE_MAX)
         {
             cnt += tmpCnt;
             allInvalid = false;
         }
     }
 
-    if (allInvalid) cnt = OMW_SIZE_MAX;
+    if (allInvalid) cnt = SIZE_MAX;
 
     if (nReplacementsTotal) *nReplacementsTotal = cnt;
 
@@ -548,7 +549,7 @@ bool omw::stob(const std::string& boolStr)
     if (boolInt == 1) return true;
     if (boolInt == 0) return false;
 
-    throw std::out_of_range("stob");
+    throw std::out_of_range("omw::stob");
 }
 
 //! @param str Pair string representation
@@ -561,7 +562,7 @@ bool omw::stob(const std::string& boolStr)
 //! 
 std::pair<int32_t, int32_t> omw::stoipair(const std::string& str, char sepChar)
 {
-    const std::string fnName = "stoipair";
+    const std::string fnName = "omw::stoipair";
 
     std::string::size_type sp = str.find(sepChar);
 
@@ -692,7 +693,7 @@ omw::string omw::toHexStr(const uint8_t* data, size_t count, char sepChar)
 //! 
 int32_t omw::hexstoi(const std::string& str)
 {
-    return hexstointeger<int32_t>(str, "hexstoi");
+    return hexstointeger<int32_t>(str, "omw::hexstoi");
 }
 
 //! @param str Hexadecimal string representation
@@ -704,7 +705,7 @@ int32_t omw::hexstoi(const std::string& str)
 //! 
 int64_t omw::hexstoi64(const std::string& str)
 {
-    return hexstointeger<int64_t>(str, "hexstoi64");
+    return hexstointeger<int64_t>(str, "omw::hexstoi64");
 }
 
 //! @param str Hexadecimal string representation
@@ -716,7 +717,7 @@ int64_t omw::hexstoi64(const std::string& str)
 //! 
 uint32_t omw::hexstoui(const std::string& str)
 {
-    return hexstointeger<uint32_t>(str, "hexstoui");
+    return hexstointeger<uint32_t>(str, "omw::hexstoui");
 }
 
 //! @param str Hexadecimal string representation
@@ -728,12 +729,12 @@ uint32_t omw::hexstoui(const std::string& str)
 //! 
 uint64_t omw::hexstoui64(const std::string& str)
 {
-    return hexstointeger<uint64_t>(str, "hexstoui64");
+    return hexstointeger<uint64_t>(str, "omw::hexstoui64");
 }
 
 std::vector<uint8_t> omw::hexstovector(const std::string& str, char sepChar)
 {
-    const std::string fnName = "hexstovector";
+    const std::string fnName = "omw::hexstovector";
 
     std::vector<std::string> hexStrings;
     for (std::string::size_type pos = 0; pos != std::string::npos;)

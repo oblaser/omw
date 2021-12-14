@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            13.12.2021
+date            14.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -69,9 +69,7 @@ after termination. Therefore the setting should be set back to the previous code
 #include <iostream>
 
 #include <omw/omw.h>
-#ifdef OMW_PLAT_WIN
 #include <omw/windows/windows.h>
-#endif
 
 using std::cout;
 using std::endl;

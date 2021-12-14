@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            13.12.2021
+date            14.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -24,6 +24,37 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 /*!
 \defgroup grp_cli Command Line Interface Library
 `#include <omw/cli.h>`
+
+\section grp_cli_section_ansiEscWin ANSI escape on Windows
+The parsing of ANSI escape sequences (VT100) has to be enabled. Depending of the result, the mode of the omw library can be set:
+```
+#include <iostream>
+
+#include <omw/omw.h>
+#include <omw/windows/windows.h>
+
+using std::cout;
+using std::endl;
+
+int main()
+{
+#ifdef OMW_PLAT_WIN
+    const bool vtEnable = omw::windows::consoleEnVirtualTermProc();
+    omw::ansiesc::enable(vtEnable);
+    if(!vtEnable) cout << "faild to enable virtual terminal processing" << endl;
+#else // optional
+    const bool vtEnable = true;
+    omw::ansiesc::enable(vtEnable);
+#endif
+
+    // app code ...
+    // ...
+    // ...
+
+    return 0;
+}
+```
+See also \ref ns_omw_ansiesc_section_ansiEscMode and `omw::windows::consoleEnVirtualTermProc()`.
 */
 
 /*!
