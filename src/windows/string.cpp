@@ -1,7 +1,7 @@
 /*
-author      Oliver Blaser
-date        09.06.2021
-copyright   MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            15.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include "omw/windows/string.h"
@@ -17,9 +17,13 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include "omw/windows/exception.h"
 #include "..\..\include\omw\string.h"
 
+#include <Windows.h>
+
+
+
 //! @brief Converts an UTF-8 string to a Windows API compatible wide string.
 //! @param src The input string
-//! @param [out] dest Pointer to the output buffer
+//! @param [out] LPWSTR_dest Pointer (`LPWSTR`) to the output buffer (`WCHAR[]`)
 //! @param destSize Size of the destination buffer (number of `WCHAR`)
 //! @return Number of wide chars written to dest (not including the terminating null character)
 //! 
@@ -27,8 +31,10 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 //! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-size_t omw::windows::utf8_to_wstr(const std::string& src, LPWSTR dest, size_t destSize)
+size_t omw::windows::utf8_to_wstr(const std::string& src, void* LPWSTR_dest, size_t destSize)
 {
+    LPWSTR dest = reinterpret_cast<LPWSTR>(LPWSTR_dest);
+
     size_t r;
     ErrorCode ec;
 
@@ -45,15 +51,17 @@ size_t omw::windows::utf8_to_wstr(const std::string& src, LPWSTR dest, size_t de
 
 //! @brief Converts an UTF-8 string to a Windows API compatible wide string.
 //! @param src The input string
-//! @param [out] dest Pointer to the output buffer
+//! @param [out] LPWSTR_dest Pointer (`LPWSTR`) to the output buffer (`WCHAR[]`)
 //! @param destSize Size of the destination buffer (number of `WCHAR`)
 //! @param [out] ec See \ref omw_windows_strConv_infoText
 //! @return Number of wide chars written to dest (not including the terminating null character)
 //! 
 //! The \b src argument can also be of type <tt>const char*</tt> (implicit <tt>std::string()</tt> constructor).
 //! 
-size_t omw::windows::utf8_to_wstr(const std::string& src, LPWSTR dest, size_t destSize, ErrorCode& ec)
+size_t omw::windows::utf8_to_wstr(const std::string& src, void* LPWSTR_dest, size_t destSize, ErrorCode& ec)
 {
+    LPWSTR dest = reinterpret_cast<LPWSTR>(LPWSTR_dest);
+
     int r;
 
     if (destSize > (size_t)INT_MAX) destSize = INT_MAX;
@@ -99,15 +107,17 @@ size_t omw::windows::utf8_to_wstr(const std::string& src, LPWSTR dest, size_t de
 }
 
 //! @brief Converts a Windows API compatible wide string to an UTF-8 string.
-//! @param src The input string
+//! @param src The input string (`LPCWCH`)
 //! @param [out] dest Pointer to the output buffer
 //! @param destSize Size of the destination buffer
 //! @return Number of bytes written to dest (not including the terminating null character)
 //! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-size_t omw::windows::wstr_to_utf8(LPCWCH src, char* dest, size_t destSize)
+size_t omw::windows::wstr_to_utf8(const void* LPCWCH_src, char* dest, size_t destSize)
 {
+    LPCWCH src = reinterpret_cast<LPCWCH>(LPCWCH_src);
+
     size_t r;
     ErrorCode ec;
 
@@ -123,13 +133,15 @@ size_t omw::windows::wstr_to_utf8(LPCWCH src, char* dest, size_t destSize)
 }
 
 //! @brief Converts a Windows API compatible wide string to an UTF-8 string.
-//! @param src The input string
+//! @param src The input string (`LPCWCH`)
 //! @param [out] dest Pointer to the output buffer
 //! @param destSize Size of the destination buffer
 //! @param [out] ec See \ref omw_windows_strConv_infoText
 //! @return Number of bytes written to dest (not including the terminating null character)
-size_t omw::windows::wstr_to_utf8(LPCWCH src, char* dest, size_t destSize, ErrorCode& ec)
+size_t omw::windows::wstr_to_utf8(const void* LPCWCH_src, char* dest, size_t destSize, ErrorCode& ec)
 {
+    LPCWCH src = reinterpret_cast<LPCWCH>(LPCWCH_src);
+
     int r;
 
     if (destSize > (size_t)INT_MAX) destSize = INT_MAX;
@@ -175,13 +187,15 @@ size_t omw::windows::wstr_to_utf8(LPCWCH src, char* dest, size_t destSize, Error
 }
 
 //! @brief Converts a Windows API compatible wide string to an UTF-8 string.
-//! @param src The input string
+//! @param src The input string (`LPCWCH`)
 //! @param [out] dest Reference to the output string
 //! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-void omw::windows::wstr_to_utf8(LPCWCH src, std::string& dest)
+void omw::windows::wstr_to_utf8(const void* LPCWCH_src, std::string& dest)
 {
+    LPCWCH src = reinterpret_cast<LPCWCH>(LPCWCH_src);
+
     ErrorCode ec;
 
     wstr_to_utf8(src, dest, ec);
@@ -196,11 +210,13 @@ void omw::windows::wstr_to_utf8(LPCWCH src, std::string& dest)
 }
 
 //! @brief Converts a Windows API compatible wide string to an UTF-8 string.
-//! @param src The input string
+//! @param src The input string (`LPCWCH`)
 //! @param [out] dest Reference to the output string
 //! @param [out] ec See \ref omw_windows_strConv_infoText
-void omw::windows::wstr_to_utf8(LPCWCH src, std::string& dest, ErrorCode& ec)
+void omw::windows::wstr_to_utf8(const void* LPCWCH_src, std::string& dest, ErrorCode& ec)
 {
+    LPCWCH src = reinterpret_cast<LPCWCH>(LPCWCH_src);
+
     const size_t bufferSizeInitial = 300;   // adapt unit test "windows_string.hpp" if
     const size_t bufferSizeGrow = 100;      // one of these values change
 
