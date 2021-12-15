@@ -13,7 +13,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "testUtil.h"
 
 #include <catch2/catch.hpp>
-#include <omw/omwint.h>
+#include <omw/int.h>
 
 
 

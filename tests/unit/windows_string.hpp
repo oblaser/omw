@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           11.06.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            11.06.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef TEST_OMW_WINDOWS_STRING_H

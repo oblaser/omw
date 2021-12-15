@@ -84,7 +84,7 @@ TEST_CASE("algorithm.h doubleDabble128()")
     {
         const DoubleDabbleTestRecord& tr = testRecords[i];
 
-        const omw::string resStr = omw::toHexStr(omw::doubleDabble128(tr.value8buffer), 0);
+        const omw::string resStr = omw::toHexStr(omw::doubleDabble128(tr.value8buffer, 16), 0);
         const omw::string ovrld_a = omw::toHexStr(omw::doubleDabble128(tr.value32H, tr.value32HM, tr.value32LM, tr.value32L), 0);
         const omw::string ovrld_b = omw::toHexStr(omw::doubleDabble128(tr.value64H, tr.value64L), 0);
 
