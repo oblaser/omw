@@ -1,19 +1,16 @@
 /*
 author          Oliver Blaser
-date            09.12.2021
+date            14.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include <iostream>
 
 #include <omw/omw.h>
-
-#ifdef OMW_PLAT_WIN
 #include <omw/windows/windows.h>
-#endif
 
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp> // $(sdk)/catch2/catch.hpp
+#include <catch2/catch.hpp>
 
 
 TEST_CASE("omw lib")
