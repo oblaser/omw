@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            13.12.2021
+date            15.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -539,40 +539,82 @@ omw::string omw::to_string(const std::pair<long double, long double>& value, cha
     return ::pair_to_string(value, sepChar);
 }
 
-
-
+//! 
+//! Converts a signed 128-bit integer to a string.
+//! 
+//! See also `omw::Base_Int128::sets(int64_t, uint64_t)`.
+//! 
 omw::string omw::i128tos(int64_t valueH, uint64_t valueL)
 {
-    omw::int128_t tmp;
+    omw::SignedInt128 tmp;
     tmp.sets(valueH, valueL);
     return omw::to_string(tmp);
 }
 
+//! 
+//! Converts a signed 128-bit integer to a string.
+//! 
+//! See also `omw::Base_Int128::sets(int32_t, uint32_t, uint32_t, uint32_t)`.
+//! 
 omw::string omw::i128tos(int32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
 {
-    omw::int128_t tmp;
+    omw::SignedInt128 tmp;
     tmp.sets(valueHH, valueLH, valueHL, valueLL);
     return omw::to_string(tmp);
 }
 
+//! 
+//! Converts a signed 128-bit integer to a string.
+//! 
+//! \b Exceptions
+//! - `std::out_of_range` if `count` is grather than 16
+//! - `std::invalid_argument` if `data` is a nullptr
+//! 
+//! See also `omw::SignedInt128(const uint8_t*, size_t)`.
+//! 
 omw::string omw::i128tos(const uint8_t* data, size_t count)
 {
-    return omw::to_string(omw::int128_t(data, count));
+    const std::string fnName = "omw::i128tos";
+    if (count > 16) throw std::out_of_range(fnName);
+    if (!data) throw std::invalid_argument(fnName);
+    return omw::to_string(omw::SignedInt128(data, count));
 }
 
+//! 
+//! Converts an unsigned 128-bit integer to a string.
+//! 
+//! See also `omw::UnsignedInt128(uint64_t, uint64_t)`.
+//! 
 omw::string omw::ui128tos(uint64_t valueH, uint64_t valueL)
 {
-    return omw::to_string(omw::uint128_t(valueH, valueL));
+    return omw::to_string(omw::UnsignedInt128(valueH, valueL));
 }
 
+//! 
+//! Converts an unsigned 128-bit integer to a string.
+//! 
+//! See also `omw::UnsignedInt128(uint32_t, uint32_t, uint32_t, uint32_t)`.
+//! 
 omw::string omw::ui128tos(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
 {
-    return omw::to_string(omw::uint128_t(valueHH, valueLH, valueHL, valueLL));
+    return omw::to_string(omw::UnsignedInt128(valueHH, valueLH, valueHL, valueLL));
 }
 
+//! 
+//! Converts an unsigned 128-bit integer to a string.
+//! 
+//! \b Exceptions
+//! - `std::out_of_range` if `count` is grather than 16
+//! - `std::invalid_argument` if `data` is a nullptr
+//! 
+//! See also `omw::UnsignedInt128(const uint8_t*, size_t)`.
+//! 
 omw::string omw::ui128tos(const uint8_t* data, size_t count)
 {
-    return omw::to_string(omw::uint128_t(data, count));
+    const std::string fnName = "omw::ui128tos";
+    if (count > 16) throw std::out_of_range(fnName);
+    if (!data) throw std::invalid_argument(fnName);
+    return omw::to_string(omw::UnsignedInt128(data, count));
 }
 
 
@@ -807,15 +849,17 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char sepChar)
     return values;
 }
 
-
-//! @param str 
-//! @return 
-//! Same as <tt>omw::sepHexStr(str, toHexStr_defaultSepChar)</tt>.
+//! 
+//! Same as `omw::sepHexStr(const std::string&, char)` with `omw::toHexStr_defaultSepChar`.
+//! 
 omw::string omw::sepHexStr(const std::string& str)
 {
-    return omw::sepHexStr(str, toHexStr_defaultSepChar);
+    return omw::sepHexStr(str, omw::toHexStr_defaultSepChar);
 }
 
+//! 
+//! Separates a concatonated hex string with the separation character (e.g. `sepChar = '-' | 00112233 ==> 00-11-22-33`).
+//! 
 omw::string omw::sepHexStr(const std::string& str, char sepChar)
 {
     return ::separateHexStr(omw::string(str), sepChar);
@@ -890,8 +934,6 @@ omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmCh
 //{
 //    return omw::sepHexStr(str, rmStrings.data(), rmStrings.size(), sepChar);
 //}
-
-
 
 omw::string omw::rmNonHex(const std::string& str)
 {
@@ -1087,7 +1129,7 @@ size_t omw::peekNewLine(const char* p)
 //! @param end Pointer to the first position beyond the string
 //! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
 //! 
-//! If <b><tt>end</tt></b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used and access violations may occure.
+//! If <b><tt>end</tt></b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used, hence access violations may occure.
 //! 
 size_t omw::peekNewLine(const char* p, const char* end)
 {

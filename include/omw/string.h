@@ -1,12 +1,13 @@
 /*
 author          Oliver Blaser
-date            13.12.2021
+date            15.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_STRING_H
 #define IG_OMW_STRING_H
 
+#include <cstdint>
 #include <string>
 #include <utility>
 #include <vector>
@@ -15,6 +16,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "../omw/int.h"
 
 
+#ifndef OMWi_DOXYGEN_EXCLUDE_FROM_DOC
 #define OMWi_STRING_IMPLEMENT_CONTAINS (1)
 #if defined(_MSVC_LANG)
 #if (_MSVC_LANG > 202002L)
@@ -25,6 +27,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #undef OMWi_STRING_IMPLEMENT_CONTAINS
 #endif
 #endif
+#endif // OMWi_DOXYGEN_EXCLUDE_FROM_DOC
 
 
 namespace omw
@@ -149,6 +152,8 @@ namespace omw
 
 
 
+    //! \name Convert To String
+    /// @{
     omw::string to_string(int32_t value);
     omw::string to_string(uint32_t value);
     omw::string to_string(int64_t value);
@@ -168,17 +173,17 @@ namespace omw
     omw::string to_string(const std::pair<double, double>& value, char sepChar = pairtos_defaultSepChar);
     omw::string to_string(const std::pair<long double, long double>& value, char sepChar = pairtos_defaultSepChar);
 
-    
-
     omw::string i128tos(int64_t valueH, uint64_t valueL);
     omw::string i128tos(int32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL);
     omw::string i128tos(const uint8_t* data, size_t count);
     omw::string ui128tos(uint64_t valueH, uint64_t valueL);
     omw::string ui128tos(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL);
     omw::string ui128tos(const uint8_t* data, size_t count);
+    /// @}
 
 
-
+    //! \name Convert From String
+    /// @{
     bool stob(const std::string& boolStr);
     std::pair<int32_t, int32_t> stoipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
@@ -187,6 +192,7 @@ namespace omw
     //std::pair<float, float> stofpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<double, double> stodpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<long double, long double> stoldpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    /// @}
 
 
 
@@ -217,8 +223,6 @@ namespace omw
     uint64_t hexstoui64(const std::string& str);
     std::vector<uint8_t> hexstovector(const std::string& str, char sepChar = toHexStr_defaultSepChar);
 
-
-
     omw::string sepHexStr(const std::string& str);
     omw::string sepHexStr(const std::string& str, char sepChar);
     omw::string sepHexStr(const std::string& str, char rmChar, char sepChar);
@@ -232,8 +236,8 @@ namespace omw
     //omw::string sepHexStr(const std::string& str, const omw::stringVector_t& rmStrings, char sepChar = toHexStr_defaultSepChar);
 
     omw::string rmNonHex(const std::string& str);
-    void  rmNonHex(char* str);
-    void  rmNonHex(std::string& str);
+    void rmNonHex(char* str);
+    void rmNonHex(std::string& str);
     /// @}
 
 

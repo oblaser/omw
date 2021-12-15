@@ -7,6 +7,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #ifndef IG_OMW_ALGORITHM_H
 #define IG_OMW_ALGORITHM_H
 
+#include <cstdint>
 #include <vector>
 
 #include "../omw/int.h"

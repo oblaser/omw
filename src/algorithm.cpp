@@ -174,7 +174,7 @@ std::vector<uint8_t> omw::doubleDabble(const omw::uint128_t& value)
 
         for (size_t i = 0; i < 128; ++i)
         {
-            bin.set(i, ((value & chunkMask) != 0));
+            bin.set(i, static_cast<bool>(value & chunkMask));
             chunkMask <<= 1;
         }
     }

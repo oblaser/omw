@@ -1,7 +1,15 @@
 /*
 author          Oliver Blaser
-date            13.12.2021
+date            15.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
+*/
+
+/*
+* Operator Implementation Philosophy
+*
+* Operators declared inside a class do not use any other overloaded
+* operators. Operators declared outside a class do not use each other,
+* but can use operators declared inside a class.
 */
 
 #include <stdexcept>
@@ -30,30 +38,13 @@ namespace
         quad_ui32_to_128(h, l, to_ui64(valueHH), valueLH, valueHL, valueLL);
     }
 
-    void func()
-    {
-        omw::uint128_t a = 9;
-        omw::uint128_t b = OMW_128BIT_MSB(omw::uint128_t);
-
-        if (a) { b = 10; }
-        if (!a && 3) { b = 10; }
-
-        char chr = 4;
-        omw::uint128_t c = omw::uint128_t(chr);
-        c = omw::uint128_t(-5);
-        omw::int128_t sc = omw::int128_t(chr);
-        c = (a + b);
-        c = 300000000 + b;
-        c = 3 + b;
-        c = a + 4;
-
-        c = 3 + 3;
-
-        c += 5;
-
-        omw::int128_t x = -1;
-        x.set(2);
-    }
+    // r < 0    a < b
+    // r == 0   a = b
+    // r > 0    a > b
+    int cmp(const omw::SignedInt128& a, const omw::SignedInt128& b) { return 0; }
+    int cmp(const omw::SignedInt128& a, const omw::UnsignedInt128& b) { return 0; }
+    int cmp(const omw::UnsignedInt128& a, const omw::SignedInt128& b) { return 0; }
+    int cmp(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b) { return 0; }
 }
 
 
@@ -68,6 +59,9 @@ omw::Base_Int128::Base_Int128(const omw::Base_Int128& other)
     copy(other);
 }
 
+//! 
+//! Uses `omw::Base_Int128::sets(int64_t)` to initialize.
+//! 
 omw::Base_Int128::Base_Int128(int64_t value)
     : m_h(0), m_l(0)
 {
@@ -84,17 +78,6 @@ omw::Base_Int128::Base_Int128(uint32_t valueHH, uint32_t valueLH, uint32_t value
     set(valueHH, valueLH, valueHL, valueLL);
 }
 
-void omw::Base_Int128::set(int value)
-{
-    sets(value);
-}
-
-void omw::Base_Int128::set(unsigned int value)
-{
-    m_h = 0;
-    m_l = value;
-}
-
 void omw::Base_Int128::set(uint64_t valueH, uint64_t valueL)
 {
     m_h = valueH;
@@ -106,18 +89,9 @@ void omw::Base_Int128::set(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL,
     quad_ui32_to_128(m_h, m_l, valueHH, valueLH, valueHL, valueLL);
 }
 
-//! @param data Pointer to a big endian byte buffer
-//! @param count Number of bytes to read
 //! 
-//! Parses the value from a byte buffer.
+//! Extends the sign bit.
 //! 
-//! Alias for `omw::Base_Int128::setu(const uint8_t*, size_t)`.
-//! 
-void omw::Base_Int128::set(const uint8_t* data, size_t count)
-{
-    setu(data, count);
-}
-
 void omw::Base_Int128::sets(int64_t value)
 {
     m_l = ::to_ui64(value);
@@ -140,7 +114,7 @@ void omw::Base_Int128::sets(int32_t valueHH, uint32_t valueLH, uint32_t valueHL,
 //! @param data Pointer to a big endian byte buffer
 //! @param count Number of bytes to read
 //! 
-//! Parses the value from a byte buffer.
+//! Interprets the value from a byte buffer as signed: The sign bit (MSB of `data[0]`) is extended.
 //! 
 //! If `data` or `count` is `0`, the object remains unchanged.
 //! 
@@ -163,6 +137,9 @@ void omw::Base_Int128::sets(const uint8_t* data, size_t count)
     }
 }
 
+//! 
+//! Does not extend the sign bit.
+//! 
 void omw::Base_Int128::setu(uint64_t value)
 {
     m_h = 0;
@@ -172,7 +149,7 @@ void omw::Base_Int128::setu(uint64_t value)
 //! @param data Pointer to a big endian byte buffer
 //! @param count Number of bytes to read
 //! 
-//! Parses the value from a byte buffer.
+//! Interprets the value from a byte buffer as unsigned.
 //! 
 //! If `data` or `count` is `0`, the object remains unchanged.
 //! 
@@ -195,8 +172,8 @@ void omw::Base_Int128::setu(const uint8_t* data, size_t count)
 
 void omw::Base_Int128::copy(const omw::Base_Int128& other)
 {
-    this->m_h = other.hi();
-    this->m_l = other.lo();
+    m_h = other.hi();
+    m_l = other.lo();
 }
 
 void omw::Base_Int128::readBuffer(const uint8_t* data, size_t count)
@@ -204,47 +181,126 @@ void omw::Base_Int128::readBuffer(const uint8_t* data, size_t count)
     for (size_t i = 0; i < count; ++i)
     {
         *this <<= 8;
-        *this |= data[i];
+        *this |= omw::Base_Int128(0, data[i]);
     }
 }
 
 omw::Base_Int128& omw::Base_Int128::operator+=(const omw::Base_Int128& b)
 {
-    const omw::Base_Int128 r = *this + b;
-    this->copy(r);
+    m_h += b.hi();
+    m_l += b.lo();
+    if (m_l == 0) { ++m_h; }
     return *this;
 }
 
 omw::Base_Int128& omw::Base_Int128::operator-=(const omw::Base_Int128& b)
 {
-    const omw::Base_Int128 r = *this - b;
-    this->copy(r);
+    m_h -= b.hi();
+    m_l -= b.lo();
+    if (m_l == baseTypeAllBits) { --m_h; }
+    return *this;
+}
+
+omw::Base_Int128& omw::Base_Int128::operator&=(const omw::Base_Int128& b)
+{
+    m_h &= b.hi();
+    m_l &= b.lo();
+    return *this;
+}
+
+omw::Base_Int128& omw::Base_Int128::operator|=(const omw::Base_Int128& b)
+{
+    m_h |= b.hi();
+    m_l |= b.lo();
+    return *this;
+}
+
+omw::Base_Int128& omw::Base_Int128::operator^=(const omw::Base_Int128& b)
+{
+    m_h ^= b.hi();
+    m_l ^= b.lo();
+    return *this;
+}
+
+omw::Base_Int128& omw::Base_Int128::operator<<=(unsigned int count)
+{
+    if (count < baseTypeWith)
+    {
+        base_type carry = m_l >> (baseTypeWith - count);
+        m_h <<= count;
+        m_h |= carry;
+        m_l <<= count;
+    }
+    else if (count == baseTypeWith)
+    {
+        m_h = m_l;
+        m_l = 0;
+    }
+    else // count > baseTypeWith
+    {
+        m_h = m_l;
+        m_h <<= (count - baseTypeWith);
+        m_l = 0;
+    }
+
+    return *this;
+}
+
+omw::Base_Int128& omw::Base_Int128::operator>>=(unsigned int count)
+{
+    if (count < baseTypeWith)
+    {
+        base_type carry = m_h << (baseTypeWith - count);
+        m_l >>= count;
+        m_l |= carry;
+        m_h >>= count;
+    }
+    else if (count == baseTypeWith)
+    {
+        m_l = m_h;
+        m_h = 0;
+    }
+    else // count > baseTypeWith
+    {
+        m_l = m_h;
+        m_l >>= (count - baseTypeWith);
+        m_h = 0;
+    }
+
     return *this;
 }
 
 omw::Base_Int128& omw::Base_Int128::operator++()
 {
-    *this += omw::Base_Int128(0, 1);
+    ++m_h;
+    ++m_l;
+    if (m_l == 0) { ++m_h; }
     return *this;
 }
 
 omw::Base_Int128& omw::Base_Int128::operator--()
 {
-    *this -= omw::Base_Int128(0, 1);
+    --m_h;
+    --m_l;
+    if (m_l == baseTypeAllBits) { --m_h; }
     return *this;
 }
 
 omw::Base_Int128 omw::Base_Int128::operator++(int)
 {
-    const omw::Base_Int128 tmp = *this;
-    ++(*this);
+    const omw::Base_Int128 tmp(*this);
+    ++m_h;
+    ++m_l;
+    if (m_l == 0) { ++m_h; }
     return tmp;
 }
 
 omw::Base_Int128 omw::Base_Int128::operator--(int)
 {
-    const omw::Base_Int128 tmp = *this;
-    --(*this);
+    const omw::Base_Int128 tmp(*this);
+    --m_h;
+    --m_l;
+    if (m_l == baseTypeAllBits) { --m_h; }
     return tmp;
 }
 
@@ -258,7 +314,6 @@ omw::SignedInt128::SignedInt128(const omw::SignedInt128& other)
     : omw::Base_Int128(other)
 {}
 
-//! @param value 
 //! 
 //! Uses `omw::Base_Int128::sets(int64_t)` to initialize.
 //! 
@@ -276,8 +331,6 @@ omw::SignedInt128::SignedInt128(uint32_t valueHH, uint32_t valueLH, uint32_t val
     : omw::Base_Int128(valueHH, valueLH, valueHL, valueLL)
 {}
 
-//! @param data 
-//! @param count 
 //! 
 //! Uses `omw::Base_Int128::sets(const uint8_t*, size_t)` to initialize.
 //! 
@@ -291,15 +344,6 @@ omw::SignedInt128::SignedInt128(const omw::Base_Int128& other)
     : omw::Base_Int128(other)
 {}
 
-//! @param value 
-//! 
-//! See `omw::Base_Int128::sets(int64_t)`.
-//! 
-void omw::SignedInt128::set(int64_t value)
-{
-    sets(value);
-}
-
 int64_t omw::SignedInt128::high() const
 {
     return ::to_i64(m_h);
@@ -312,17 +356,17 @@ bool omw::SignedInt128::isNegative() const
 
 //! @return `-1` if the value is negative, `1` otherwise
 //! 
-//! Caution! For the mathematical sign (signum) function see `omw::sign()`.
+//! Caution: This is not the mathematical sign (signum) function.
 //! 
 int omw::SignedInt128::sign() const
 {
     return (isNegative() ? -1 : 1);
 }
 
-//! @brief Bit equal conversion to `omw::UnsignedInt128`.
-omw::SignedInt128::operator omw::UnsignedInt128() const
+omw::SignedInt128& omw::SignedInt128::operator=(const omw::SignedInt128& b)
 {
-    return omw::UnsignedInt128(*this);
+    copy(b);
+    return *this;
 }
 
 
@@ -335,9 +379,14 @@ omw::UnsignedInt128::UnsignedInt128(const omw::UnsignedInt128& other)
     : omw::Base_Int128(other)
 {}
 
-omw::UnsignedInt128::UnsignedInt128(uint64_t value)
-    : omw::Base_Int128(0, value)
-{}
+//! 
+//! Uses `omw::Base_Int128::sets(int64_t)` to initialize.
+//! 
+omw::UnsignedInt128::UnsignedInt128(int64_t value)
+    : omw::Base_Int128()
+{
+    sets(value);
+}
 
 omw::UnsignedInt128::UnsignedInt128(uint64_t valueH, uint64_t valueL)
     : omw::Base_Int128(valueH, valueL)
@@ -347,8 +396,6 @@ omw::UnsignedInt128::UnsignedInt128(uint32_t valueHH, uint32_t valueLH, uint32_t
     : omw::Base_Int128(valueHH, valueLH, valueHL, valueLL)
 {}
 
-//! @param data 
-//! @param count 
 //! 
 //! Uses `omw::Base_Int128::setu(const uint8_t*, size_t)` to initialize.
 //! 
@@ -362,109 +409,77 @@ omw::UnsignedInt128::UnsignedInt128(const omw::Base_Int128& other)
     : omw::Base_Int128(other)
 {}
 
-void omw::UnsignedInt128::set(uint64_t value)
+omw::UnsignedInt128& omw::UnsignedInt128::operator=(const omw::UnsignedInt128& b)
 {
-    m_h = 0;
-    m_l = value;
-}
-
-//! @brief Bit equal conversion to `omw::SignedInt128`.
-omw::UnsignedInt128::operator omw::SignedInt128() const
-{
-    return omw::SignedInt128(*this);
+    copy(b);
+    return *this;
 }
 
 
 
-omw::Base_Int128 omw::operator+(const omw::Base_Int128& a)
-{
-    return a;
-}
+#pragma region operators
 
-omw::SignedInt128 omw::operator+(const omw::SignedInt128& a)
-{
-    return a;
-}
+#define OMWi_IMPLEMENT_OPERATOR_UNARY_PLUS(a)   \
+return a                                        \
+// end OMWi_IMPLEMENT_OPERATOR_UNARY_PLUS
 
-omw::UnsignedInt128 omw::operator+(const omw::UnsignedInt128& a)
-{
-    return omw::UnsignedInt128();
-}
+#define OMWi_IMPLEMENT_OPERATOR_UNARY_MINUS(a)  \
+omw::Base_Int128 r(~a.hi(), ~a.lo());           \
+++r;                                            \
+return r                                        \
+// end OMWi_IMPLEMENT_OPERATOR_UNARY_MINUS
 
-omw::Base_Int128 omw::operator-(const omw::Base_Int128& a)
-{
-    omw::Base_Int128 tmp = ~a;
-    ++tmp;
-    return tmp;
-}
+// SIA = Sign Independent Arithmetic
+#define OMWi_IMPLEMENT_SIA_ASSIGN_ALIAS_OPERATOR(op, a, b) \
+omw::Base_Int128 r(a);                          \
+r op##= b;                                      \
+return r                                        \
+// end OMWi_IMPLEMENT_SIA_ASSIGN_ALIAS_OPERATOR
 
-omw::SignedInt128 omw::operator-(const omw::SignedInt128& a)
-{
-    const omw::Base_Int128 tmp = a;
-    return omw::SignedInt128(-tmp);
-}
+#define OMWi_IMPLEMENT_OPERATOR_BIT_NOT(a)  \
+return omw::Base_Int128(~a.hi(), ~a.lo())   \
+// end OMWi_IMPLEMENT_OPERATOR_BIT_NOT
 
-omw::UnsignedInt128 omw::operator-(const omw::UnsignedInt128& a)
-{
-    const omw::Base_Int128 tmp = a;
-    return omw::UnsignedInt128(-tmp);
-}
 
-omw::Base_Int128 omw::operator+(const omw::Base_Int128& a, const omw::Base_Int128& b)
-{
-    uint64_t h = a.hi() + b.hi();
-    uint64_t l = a.lo() + b.lo();
-    if (l == 0) ++h;
-    return omw::Base_Int128(h, l);
-}
 
-omw::SignedInt128 omw::operator+(const omw::SignedInt128& a, const omw::Base_Int128& b)
-{
-    const omw::Base_Int128 tmpA = a;
-    return omw::SignedInt128(tmpA + b);
-}
+#define OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(T, op) \
+T omw::operator op (const T& a, const T& b) { OMWi_IMPLEMENT_SIA_ASSIGN_ALIAS_OPERATOR(op, a, b); } \
+// end OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR
 
-omw::UnsignedInt128 omw::operator+(const omw::UnsignedInt128& a, const omw::Base_Int128& b)
-{
-    const omw::Base_Int128 tmpA = a;
-    return omw::UnsignedInt128(tmpA + b);
-}
+#define OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(T, op)  \
+T omw::operator op (const T& a, unsigned int count) { OMWi_IMPLEMENT_SIA_ASSIGN_ALIAS_OPERATOR(op, a, count); } \
+// end OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR
 
-omw::Base_Int128 omw::operator-(const omw::Base_Int128& a, const omw::Base_Int128& b)
-{
-    return a + -b;
-}
+#define OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(op)    \
+OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(omw::Base_Int128, op)     \
+OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(omw::SignedInt128, op)    \
+OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(omw::UnsignedInt128, op)  \
+// end OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS
 
-omw::SignedInt128 omw::operator-(const omw::SignedInt128& a, const omw::Base_Int128& b)
-{
-    const omw::Base_Int128 tmpA = a;
-    return omw::SignedInt128(tmpA - b);
-}
+#define OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(op)      \
+OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::Base_Int128, op)       \
+OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::SignedInt128, op)      \
+OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::UnsignedInt128, op)    \
+// end OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS
 
-omw::UnsignedInt128 omw::operator-(const omw::UnsignedInt128& a, const omw::Base_Int128& b)
-{
-    const omw::Base_Int128 tmpA = a;
-    return omw::UnsignedInt128(tmpA - b);
-}
 
-omw::Base_Int128 omw::operator~(const omw::Base_Int128& a)
-{
-    return omw::Base_Int128(~a.hi(), ~a.lo());
-}
 
-omw::SignedInt128 omw::operator~(const omw::SignedInt128& a)
-{
-    omw::Base_Int128 tmp = a;
-    return omw::SignedInt128(~tmp);
-}
+omw::SignedInt128 omw::operator+(const omw::SignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_UNARY_PLUS(a); }
+omw::UnsignedInt128 omw::operator+(const omw::UnsignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_UNARY_PLUS(a); }
+omw::SignedInt128 omw::operator-(const omw::SignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_UNARY_MINUS(a); }
+omw::UnsignedInt128 omw::operator-(const omw::UnsignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_UNARY_MINUS(a); }
 
-omw::UnsignedInt128 omw::operator~(const omw::UnsignedInt128& a)
-{
-    omw::Base_Int128 tmp = a;
-    return omw::UnsignedInt128(~tmp);
-}
+OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(+)
+OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(-)
 
-bool omw::operator==(const omw::SignedInt128& a, const omw::SignedInt128& b)
-{
-    return ((a.hi() == b.hi()) && (a.lo() == b.lo()));
-}
+omw::SignedInt128 omw::operator~(const omw::SignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_BIT_NOT(a); }
+omw::UnsignedInt128 omw::operator~(const omw::UnsignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_BIT_NOT(a); }
+
+OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(&)
+OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(|)
+OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(^)
+OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(<<)
+OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(>>)
+
+
+#pragma endregion operators
