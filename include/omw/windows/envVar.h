@@ -1,7 +1,7 @@
 /*
-author      Oliver Blaser
-date        09.06.2021
-copyright   MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            09.06.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_WINDOWS_ENVVAR_H
@@ -14,8 +14,6 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 
 #include "../../omw/windows/error.h"
-
-#include <Windows.h>
 
 namespace omw
 {

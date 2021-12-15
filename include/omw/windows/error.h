@@ -1,7 +1,7 @@
 /*
-author      Oliver Blaser
-date        13.08.2021
-copyright   MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            13.08.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_WINDOWS_ERROR_H
