@@ -19,7 +19,7 @@ namespace
 
 /*!
 * \class omw::Version
-* 
+*
 * `#include <omw/version.h>`
 */
 
@@ -143,45 +143,50 @@ void omw::Version::setData(const std::string& versionStr)
     }
 }
 
-bool omw::operator<(const omw::Version& left, const omw::Version& right)
-{
-    if (left.maj() > right.maj()) return false;
-    if (left.maj() < right.maj()) return true;
 
-    if (left.min() > right.min()) return false;
-    if (left.min() < right.min()) return true;
 
-    if (left.rev() > right.rev()) return false;
-    if (left.rev() < right.rev()) return true;
-
-    return false;
-}
-
-bool omw::operator>(const omw::Version& left, const omw::Version& right)
-{
-    return (!(left < right) && !(left == right));
-}
-
-bool omw::operator<=(const omw::Version& left, const omw::Version& right)
-{
-    return (!(left > right));
-}
-
-bool omw::operator>=(const omw::Version& left, const omw::Version& right)
-{
-    return (!(left < right));
-}
-
-bool omw::operator==(const omw::Version& left, const omw::Version& right)
+bool omw::operator==(const omw::Version& a, const omw::Version& b)
 {
     return (
-        (left.maj() == right.maj()) &&
-        (left.min() == right.min()) &&
-        (left.rev() == right.rev())
+        (a.maj() == b.maj()) &&
+        (a.min() == b.min()) &&
+        (a.rev() == b.rev())
         );
 }
 
-bool omw::operator!=(const omw::Version& left, const omw::Version& right)
+bool omw::operator!=(const omw::Version& a, const omw::Version& b)
 {
-    return (!(left == right));
+    return !(a == b);
+}
+
+bool omw::operator<(const omw::Version& a, const omw::Version& b)
+{
+    bool r = false;
+
+    if (a.maj() < b.maj()) r = true;
+    else if (a.maj() == b.maj())
+    {
+        if (a.min() < b.min()) r = true;
+        else if (a.min() == b.min())
+        {
+            if (a.rev() < b.rev()) r = true;
+        }
+    }
+
+    return r;
+}
+
+bool omw::operator>(const omw::Version& a, const omw::Version& b)
+{
+    return (b < a);
+}
+
+bool omw::operator<=(const omw::Version& a, const omw::Version& b)
+{
+    return !(a > b);
+}
+
+bool omw::operator>=(const omw::Version& a, const omw::Version& b)
+{
+    return !(a < b);
 }
