@@ -60,6 +60,8 @@ namespace omw
 
         uint64_t high() const { return m_h; }
         uint64_t hi() const { return high(); }
+        int64_t highs() const;
+        int64_t his() const { return highs(); }
         uint64_t low() const { return m_l; }
         uint64_t lo() const { return low(); }
 
@@ -78,6 +80,8 @@ namespace omw
         void readBuffer(const uint8_t* data, size_t count);
 
     public:
+        //! \name Operators
+        /// @{
         omw::Base_Int128& operator+=(const omw::Base_Int128& b);
         omw::Base_Int128& operator-=(const omw::Base_Int128& b);
         omw::Base_Int128& operator&=(const omw::Base_Int128& b);
@@ -90,6 +94,7 @@ namespace omw
         omw::Base_Int128& operator--();
         omw::Base_Int128 operator++(int);
         omw::Base_Int128 operator--(int);
+        /// @}
     };
 
     class SignedInt128 : public omw::Base_Int128
@@ -104,16 +109,14 @@ namespace omw
         SignedInt128(const omw::Base_Int128& other);
         virtual ~SignedInt128() {}
 
-        int64_t high() const;
-        uint64_t high_ui() const { return m_h; }
-        int64_t hi() const { return high(); }
-        uint64_t hi_ui() const { return high_ui(); }
-
         bool isNegative() const;
         int sign() const;
 
     public:
+        //! \name Operators
+        /// @{
         omw::SignedInt128& operator=(const omw::SignedInt128& b);
+        /// @}
     };
 
     class UnsignedInt128 : public omw::Base_Int128
@@ -129,9 +132,14 @@ namespace omw
         virtual ~UnsignedInt128() {}
 
     public:
+        //! \name Operators
+        /// @{
         omw::UnsignedInt128& operator=(const omw::UnsignedInt128& b);
+        /// @}
     };
 
+    //! \name Operators
+    /// @{
     omw::SignedInt128 operator+(const omw::SignedInt128& a);
     omw::UnsignedInt128 operator+(const omw::UnsignedInt128& a);
 
@@ -169,35 +177,34 @@ namespace omw
     omw::SignedInt128 operator>>(const omw::SignedInt128& a, unsigned int count);
     omw::UnsignedInt128 operator>>(const omw::UnsignedInt128& a, unsigned int count);
 
-    //bool operator==(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    //bool operator==(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    //bool operator==(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    //bool operator==(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
-    //
-    //bool operator!=(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    //bool operator!=(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    //bool operator!=(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    //bool operator!=(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
-    //
-    //bool operator<(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    //bool operator<(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    //bool operator<(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    //bool operator<(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
-    //
-    //bool operator>(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    //bool operator>(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    //bool operator>(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    //bool operator>(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
-    //
-    //bool operator<=(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    //bool operator<=(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    //bool operator<=(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    //bool operator<=(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
-    //
-    //bool operator>=(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    //bool operator>=(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    //bool operator>=(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    //bool operator>=(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator==(const omw::SignedInt128& a, const omw::SignedInt128& b);
+    bool operator!=(const omw::SignedInt128& a, const omw::SignedInt128& b);
+    bool operator<(const omw::SignedInt128& a, const omw::SignedInt128& b);
+    bool operator>(const omw::SignedInt128& a, const omw::SignedInt128& b);
+    bool operator<=(const omw::SignedInt128& a, const omw::SignedInt128& b);
+    bool operator>=(const omw::SignedInt128& a, const omw::SignedInt128& b);
+
+    bool operator==(const omw::SignedInt128& a, const omw::UnsignedInt128& b); /*!< Takes care of the signedness. */
+    bool operator!=(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator<(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator>(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator<=(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator>=(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
+
+    bool operator==(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
+    bool operator!=(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
+    bool operator<(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
+    bool operator>(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
+    bool operator<=(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
+    bool operator>=(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
+
+    bool operator==(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator!=(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator<(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator>(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator<=(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator>=(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    /// @}
 
     using int128_t = omw::SignedInt128;
     using uint128_t = omw::UnsignedInt128;

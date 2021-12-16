@@ -17,7 +17,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 
 
-TEST_CASE("omwint.h func()")
+TEST_CASE("int.h func()")
 {
 }
 

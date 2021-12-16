@@ -8,8 +8,9 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 * Operator Implementation Philosophy
 *
 * Operators declared inside a class do not use any other overloaded
-* operators. Operators declared outside a class do not use each other,
-* but can use operators declared inside a class.
+* operators. Operators declared outside a class do not use each
+* other (except comparsion operators), but can use operators declared
+* inside a class.
 */
 
 #include <stdexcept>
@@ -37,14 +38,6 @@ namespace
     {
         quad_ui32_to_128(h, l, to_ui64(valueHH), valueLH, valueHL, valueLL);
     }
-
-    // r < 0    a < b
-    // r == 0   a = b
-    // r > 0    a > b
-    int cmp(const omw::SignedInt128& a, const omw::SignedInt128& b) { return 0; }
-    int cmp(const omw::SignedInt128& a, const omw::UnsignedInt128& b) { return 0; }
-    int cmp(const omw::UnsignedInt128& a, const omw::SignedInt128& b) { return 0; }
-    int cmp(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b) { return 0; }
 }
 
 
@@ -168,6 +161,11 @@ void omw::Base_Int128::setu(const uint8_t* data, size_t count)
             readBuffer(data, count);
         }
     }
+}
+
+int64_t omw::Base_Int128::highs() const
+{
+    return ::to_i64(m_h);
 }
 
 void omw::Base_Int128::copy(const omw::Base_Int128& other)
@@ -344,14 +342,9 @@ omw::SignedInt128::SignedInt128(const omw::Base_Int128& other)
     : omw::Base_Int128(other)
 {}
 
-int64_t omw::SignedInt128::high() const
-{
-    return ::to_i64(m_h);
-}
-
 bool omw::SignedInt128::isNegative() const
 {
-    return (high_ui() & OMW_64BIT_MSB);
+    return (m_h & OMW_64BIT_MSB);
 }
 
 //! @return `-1` if the value is negative, `1` otherwise
@@ -440,8 +433,6 @@ return r                                        \
 return omw::Base_Int128(~a.hi(), ~a.lo())   \
 // end OMWi_IMPLEMENT_OPERATOR_BIT_NOT
 
-
-
 #define OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(T, op) \
 T omw::operator op (const T& a, const T& b) { OMWi_IMPLEMENT_SIA_ASSIGN_ALIAS_OPERATOR(op, a, b); } \
 // end OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR
@@ -462,6 +453,13 @@ OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::SignedInt128, op)      \
 OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::UnsignedInt128, op)    \
 // end OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS
 
+#define OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(Ta, Tb)              \
+bool omw::operator!=(const Ta& a, const Tb& b) { return !(a == b); }    \
+bool omw::operator>(const Ta& a, const Tb& b) { return (b < a); }       \
+bool omw::operator<=(const Ta& a, const Tb& b) { return !(a > b); }     \
+bool omw::operator>=(const Ta& a, const Tb& b) { return !(a < b); }     \
+// end OMWi_DEFINE_NOT_EQUAL_OPERATOR
+
 
 
 omw::SignedInt128 omw::operator+(const omw::SignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_UNARY_PLUS(a); }
@@ -481,5 +479,51 @@ OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(^)
 OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(<<)
 OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(>>)
 
+
+
+
+
+bool omw::operator==(const omw::SignedInt128& a, const omw::SignedInt128& b)
+{
+    return ((a.hi() == b.hi()) && (a.lo() == b.lo()));
+}
+
+bool omw::operator<(const omw::SignedInt128& a, const omw::SignedInt128& b)
+{
+    return ((a.his() < b.his()) ||
+        ((a.his() == b.his()) && (a.lo() < b.lo())));
+}
+
+bool omw::operator==(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b)
+{
+    return ((a.hi() == b.hi()) && (a.lo() == b.lo()));
+}
+
+bool omw::operator<(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b)
+{
+    return ((a.hi() < b.hi()) ||
+        ((a.hi() == b.hi()) && (a.lo() < b.lo())));
+}
+
+bool omw::operator==(const omw::SignedInt128& a, const omw::UnsignedInt128& b)
+{
+    return (!a.isNegative() && (a.hi() == b.hi()) && (a.lo() == b.lo()));
+}
+
+bool omw::operator<(const omw::SignedInt128& a, const omw::UnsignedInt128& b)
+{
+    return ((a.hi() & OMW_64BIT_MSB) ||
+        (b.hi() & OMW_64BIT_MSB) ||
+        (a.hi() < b.hi()) ||
+        ((a.hi() == b.hi()) && (a.lo() < b.lo()))
+        );
+}
+
+OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::SignedInt128, omw::SignedInt128)
+OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::SignedInt128, omw::UnsignedInt128)
+bool omw::operator==(const omw::UnsignedInt128& a, const omw::SignedInt128& b) { return (b == a); }
+bool omw::operator<(const omw::UnsignedInt128& a, const omw::SignedInt128& b) { return (b > a); }
+OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::UnsignedInt128, omw::SignedInt128)
+OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::UnsignedInt128, omw::UnsignedInt128)
 
 #pragma endregion operators
