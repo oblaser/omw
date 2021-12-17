@@ -6,11 +6,11 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <iostream>
 
+#define CATCH_CONFIG_MAIN
+#include "catch2/catch.hpp"
+
 #include <omw/omw.h>
 #include <omw/windows/windows.h>
-
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
 
 
 TEST_CASE("omw lib")

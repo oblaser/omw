@@ -10,9 +10,9 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "catch2/catch.hpp"
 #include "testUtil.h"
 
-#include <catch2/catch.hpp>
 #include <omw/int.h>
 
 

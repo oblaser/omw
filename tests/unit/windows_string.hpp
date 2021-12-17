@@ -14,7 +14,8 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
-#include <catch2/catch.hpp>
+#include "catch2/catch.hpp"
+
 #include <omw/windows/string.h>
 
 
