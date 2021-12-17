@@ -7,6 +7,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #ifndef TEST_OMW_ALGORITHM_H
 #define TEST_OMW_ALGORITHM_H
 
+#include <cstdint>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -16,6 +17,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <omw/algorithm.h>
 #include <omw/cli.h>
+#include <omw/int.h>
 #include <omw/string.h>
 
 
@@ -71,7 +73,7 @@ TEST_CASE("algorithm.h doubleDabble128()")
         DoubleDabbleTestRecord("0000000000000000000000000000000000000001", 0x00, 0x01),
         DoubleDabbleTestRecord("0000000000000000000009223372036854775808", 0x00, INT64_MIN),
         DoubleDabbleTestRecord("00000000000000000000000000000000000" + omw::to_string(0xFFFF), 0x00, 0xFFFF),
-        DoubleDabbleTestRecord("000000000000000000000000000000" + omw::to_string(INT_MAX), 0x00, INT_MAX),
+        DoubleDabbleTestRecord("000000000000000000000000000000" + omw::to_string(INT32_MAX), 0x00, INT32_MAX),
         DoubleDabbleTestRecord("0000000000000001208925819614629174706175", 0xFFFF, 0xFFFFFFFFFFFFFFFF),
         DoubleDabbleTestRecord("0000000000000000604462909807314587354597", 0x8000, 0x00000000000005E5),
         DoubleDabbleTestRecord("0340282366920938463463374607431768211455", 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF),

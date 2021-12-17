@@ -591,9 +591,9 @@ TEST_CASE("string.h hexstoui64()")
     CHECK(omw::hexstoui64("ff") == 255);
     CHECK(omw::hexstoui64("FFffFFff") == 4294967295);
     CHECK(omw::hexstoui64("FFffFFfe") == 4294967294);
-    CHECK(omw::hexstoui64("ffffFFFFffffFFFF") == 18446744073709551615);
-    CHECK(omw::hexstoui64("ffffFFFFffffFFFe") == 18446744073709551614);
-    CHECK(omw::hexstoui64("0ffffFFFFffffFFFF") == 18446744073709551615);
+    CHECK(omw::hexstoui64("ffffFFFFffffFFFF") == 18446744073709551615u);
+    CHECK(omw::hexstoui64("ffffFFFFffffFFFe") == 18446744073709551614u);
+    CHECK(omw::hexstoui64("0ffffFFFFffffFFFF") == 18446744073709551615u);
 
     TESTUTIL_TRYCATCH_DECLARE_VAL(uint64_t, 0x11112);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64(""), std::invalid_argument);
