@@ -10,10 +10,19 @@ then
     exit 1
 fi
 
-make
-if [ $? -ne 0 ]
+if [ -z $1 ]
 then
-    exit 2
+    make
+    if [ $? -ne 0 ]
+    then
+        exit 2
+    fi
+else
+    make $1
+    if [ $? -ne 0 ]
+    then
+        exit 2
+    fi
 fi
 
 exit 0

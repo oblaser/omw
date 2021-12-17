@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            17.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -782,7 +782,9 @@ TEST_CASE("string.h isInteger()")
     CHECK(omw::isInteger("-") == false);
     CHECK(omw::isInteger("-abc") == false);
     CHECK(omw::isInteger("123abc") == false);
+    CHECK(omw::isInteger("123 abc") == false);
     CHECK(omw::isInteger("-123abc") == false);
+    CHECK(omw::isInteger("-123 abc") == false);
     CHECK(omw::isInteger("0") == true);
     CHECK(omw::isInteger("-0") == true);
     CHECK(omw::isInteger("-1") == true);
@@ -796,7 +798,9 @@ TEST_CASE("string.h isInteger()")
     CHECK(omw::isUInteger("-") == false);
     CHECK(omw::isUInteger("-abc") == false);
     CHECK(omw::isUInteger("123abc") == false);
+    CHECK(omw::isUInteger("123 abc") == false);
     CHECK(omw::isUInteger("-123abc") == false);
+    CHECK(omw::isUInteger("-123 abc") == false);
     CHECK(omw::isUInteger("0") == true);
     CHECK(omw::isUInteger("-0") == false);
     CHECK(omw::isUInteger("-1") == false);

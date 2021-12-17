@@ -21,8 +21,8 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #define OMW_8BIT_MSB (0x80)
 
 #define OMW_16BIT_ALL (0xFFFF)
-#define OMW_16BIT_LSB (0x00001)
-#define OMW_16BIT_MSB (0x80000)
+#define OMW_16BIT_LSB (0x0001)
+#define OMW_16BIT_MSB (0x8000)
 
 #define OMW_32BIT_ALL (0xFFFFFFFF)
 #define OMW_32BIT_LSB (0x00000001)
@@ -66,7 +66,7 @@ namespace omw
         uint64_t low() const { return m_l; }
         uint64_t lo() const { return low(); }
 
-        explicit operator bool() const { return (m_h || m_l); }
+        explicit operator bool() const { return (m_h || m_l); } /*!< If the value is 0, `false` is returned. `true` for any other value. */
 
     protected:
         static constexpr size_t baseTypeWith = 64;
