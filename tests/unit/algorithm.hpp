@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            17.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -24,7 +24,7 @@ class DoubleDabbleTestRecord
 {
 public:
     DoubleDabbleTestRecord(const omw::string& expectedResult, uint64_t valueH, uint64_t valueL)
-        : value64H(valueH), value64L(valueL), expResult(expectedResult)
+        : value128(valueH, valueL), value64H(valueH), value64L(valueL), expResult(expectedResult)
     {
         value32H = (uint32_t)(valueH >> 32);
         value32HM = (uint32_t)valueH;
@@ -50,6 +50,7 @@ public:
     }
     virtual ~DoubleDabbleTestRecord() {}
 
+    omw::uint128_t value128;
     uint8_t value8buffer[16];
     uint32_t value32H;
     uint32_t value32HM;
@@ -87,9 +88,13 @@ TEST_CASE("algorithm.h doubleDabble128()")
         const omw::string resStr = omw::toHexStr(omw::doubleDabble128(tr.value8buffer, 16), 0);
         const omw::string ovrld_a = omw::toHexStr(omw::doubleDabble128(tr.value32H, tr.value32HM, tr.value32LM, tr.value32L), 0);
         const omw::string ovrld_b = omw::toHexStr(omw::doubleDabble128(tr.value64H, tr.value64L), 0);
+        const omw::string ovrld_c = omw::toHexStr(omw::doubleDabble(tr.value128), 0);
 
         const bool resEqExpres = (resStr == tr.expResult);
-        const bool allOverloadsEq = ((resStr == ovrld_a) && (resStr == ovrld_b));
+        const bool allOverloadsEq = (
+            (resStr == ovrld_a) &&
+            (resStr == ovrld_b) &&
+            (resStr == ovrld_c));
 
         CHECK(resStr == tr.expResult);
         CHECK(allOverloadsEq);

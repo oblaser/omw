@@ -177,6 +177,7 @@ namespace omw
     omw::SignedInt128 operator>>(const omw::SignedInt128& a, unsigned int count);
     omw::UnsignedInt128 operator>>(const omw::UnsignedInt128& a, unsigned int count);
 
+    // All combinations of the comparison operators are needed to achieve sign awareness.
     bool operator==(const omw::SignedInt128& a, const omw::SignedInt128& b);
     bool operator!=(const omw::SignedInt128& a, const omw::SignedInt128& b);
     bool operator<(const omw::SignedInt128& a, const omw::SignedInt128& b);
@@ -184,19 +185,19 @@ namespace omw
     bool operator<=(const omw::SignedInt128& a, const omw::SignedInt128& b);
     bool operator>=(const omw::SignedInt128& a, const omw::SignedInt128& b);
 
-    bool operator==(const omw::SignedInt128& a, const omw::UnsignedInt128& b); /*!< Takes care of the signedness. */
-    bool operator!=(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    bool operator<(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    bool operator>(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    bool operator<=(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
-    bool operator>=(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator==(const omw::SignedInt128& a, const omw::UnsignedInt128& b);
+    bool operator!=(const omw::SignedInt128& a, const omw::UnsignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
+    bool operator<(const omw::SignedInt128& a, const omw::UnsignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
+    bool operator>(const omw::SignedInt128& a, const omw::UnsignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
+    bool operator<=(const omw::SignedInt128& a, const omw::UnsignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
+    bool operator>=(const omw::SignedInt128& a, const omw::UnsignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
 
-    bool operator==(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    bool operator!=(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    bool operator<(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    bool operator>(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    bool operator<=(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
-    bool operator>=(const omw::UnsignedInt128& a, const omw::SignedInt128& b);
+    bool operator==(const omw::UnsignedInt128& a, const omw::SignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
+    bool operator!=(const omw::UnsignedInt128& a, const omw::SignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
+    bool operator<(const omw::UnsignedInt128& a, const omw::SignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
+    bool operator>(const omw::UnsignedInt128& a, const omw::SignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
+    bool operator<=(const omw::UnsignedInt128& a, const omw::SignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
+    bool operator>=(const omw::UnsignedInt128& a, const omw::SignedInt128& b); /*!< Sign aware, see `omw::operator==(const omw::SignedInt128&, const omw::UnsignedInt128&)`. */
 
     bool operator==(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
     bool operator!=(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);

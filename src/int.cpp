@@ -505,6 +505,13 @@ bool omw::operator<(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b)
         ((a.hi() == b.hi()) && (a.lo() < b.lo())));
 }
 
+//! 
+//! Sign aware comparsion operator. Negative signed integers compare always
+//! less than unsigned integers. Unsigned integers grater than the maximal
+//! signed value compare always greater than signed integers. Signed and
+//! unsigned integers only compare equal if their represented value is the
+//! same.
+//! 
 bool omw::operator==(const omw::SignedInt128& a, const omw::UnsignedInt128& b)
 {
     return (!a.isNegative() && (a.hi() == b.hi()) && (a.lo() == b.lo()));
