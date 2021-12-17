@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            14.12.2021
+date            17.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -15,10 +15,6 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 TEST_CASE("omw lib")
 {
-#ifdef OMW_PLAT_WIN
-    CHECK(omw::windows::consoleEnVirtualTermProc());
-#endif
-
     std::cout << std::endl << "Testing OMW ..." << std::endl;
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
@@ -27,8 +23,10 @@ TEST_CASE("omw lib")
 }
 
 
-#include "algorithm.hpp"
+
 #include "cli.hpp"
+
+#include "algorithm.hpp"
 #include "color.hpp"
 #include "io_serialPort.hpp"
 #include "string.hpp"
