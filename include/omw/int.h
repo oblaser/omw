@@ -69,11 +69,8 @@ namespace omw
         explicit operator bool() const { return (m_h || m_l); } /*!< If the value is 0, `false` is returned. `true` for any other value. */
 
     protected:
-        static constexpr size_t baseTypeWith = 64;
-        using base_type = uint64_t;
-        static constexpr base_type baseTypeAllBits = OMW_64BIT_ALL;
-        base_type m_h;
-        base_type m_l;
+        uint64_t m_h;
+        uint64_t m_l;
 
         void copy(const omw::Base_Int128& other);
 

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            15.12.2021
+date            17.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -21,6 +21,10 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace
 {
+    typedef uint64_t base_type;
+    static constexpr size_t baseTypeWith = 64;
+    static constexpr base_type baseTypeAllBits = OMW_64BIT_ALL;
+
     int64_t to_i64(uint64_t value) noexcept { return *(reinterpret_cast<int64_t*>(&value)); }
     uint64_t to_ui64(int64_t value) noexcept { return *(reinterpret_cast<uint64_t*>(&value)); }
 
@@ -185,17 +189,18 @@ void omw::Base_Int128::readBuffer(const uint8_t* data, size_t count)
 
 omw::Base_Int128& omw::Base_Int128::operator+=(const omw::Base_Int128& b)
 {
+    const base_type l_old = m_l;
     m_h += b.hi();
     m_l += b.lo();
-    if (m_l == 0) { ++m_h; }
+    if (m_l < l_old) { ++m_h; }
     return *this;
 }
 
 omw::Base_Int128& omw::Base_Int128::operator-=(const omw::Base_Int128& b)
 {
+    if (m_l < b.lo()) { --m_h; }
     m_h -= b.hi();
     m_l -= b.lo();
-    if (m_l == baseTypeAllBits) { --m_h; }
     return *this;
 }
 
@@ -474,10 +479,10 @@ omw::SignedInt128 omw::operator~(const omw::SignedInt128& a) { OMWi_IMPLEMENT_OP
 omw::UnsignedInt128 omw::operator~(const omw::UnsignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_BIT_NOT(a); }
 
 OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(&)
-OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(|)
+OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(| )
 OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(^)
-OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(<<)
-OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(>>)
+OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(<< )
+OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(>> )
 
 
 

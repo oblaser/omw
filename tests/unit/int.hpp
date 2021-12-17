@@ -294,8 +294,53 @@ TEST_CASE("int.h omw::Base_Int128 setu")
     CHECK(eq(x, 123, 456));
 }
 
+TEST_CASE("int.h omw::Base_Int128 bool conversion operators")
+{
+    omw::Base_Int128 x;
+
+    if (x) { CHECK(1 != 1); }
+    else { CHECK(1 == 1); }
+
+    x.set(0, 1);
+    if (x) { CHECK(1 == 1); }
+    else { CHECK(1 != 1); }
+
+    x.set(1, 0);
+    if (x) { CHECK(1 == 1); }
+    else { CHECK(1 != 1); }
+
+    x.set(1, 1);
+    if (x) { CHECK(1 == 1); }
+    else { CHECK(1 != 1); }
+
+
+
+    x.set(0, 1);
+    if (x && true) { CHECK(1 == 1); }
+    else { CHECK(1 != 1); }
+
+    x.set(0, 0);
+    if (x && true) { CHECK(1 != 1); }
+    else { CHECK(1 == 1); }
+}
+
 TEST_CASE("int.h omw::Base_Int128 operators")
 {
+    omw::Base_Int128 x;
+
+    x.set(0, 0);
+    x += omw::Base_Int128(0, 5);
+    CHECK(eq(x, 0, 5));
+
+    x -= omw::Base_Int128(0, 8);
+    CHECK(eq(x, 0xFFFFffffFFFFffff, 0xFFFFffffFFFFfffD));
+
+    x += omw::Base_Int128(0xFFFFffffFFFFffff, 0xFFFFffffFFFFffff);
+    CHECK(eq(x, 0xFFFFffffFFFFffff, 0xFFFFffffFFFFfffC));
+
+    x.set(0, UINT64_MAX);
+    x += omw::Base_Int128(0, 5);
+    CHECK(eq(x, 1, 4));
 }
 
 
