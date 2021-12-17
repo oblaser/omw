@@ -115,15 +115,14 @@ int main(int argc, char** argv)
     cout << omw::fgBrightMagenta << "bright" << omw::fgMagenta << "magenta" << endl;
     cout << omw::fgBrightCyan << "bright" << omw::fgCyan << "cyan" << endl;
     cout << omw::fgBrightWhite << "bright" << omw::fgWhite << "white" << omw::normal << endl;
-    cout << omw::bgBrightWhite;
-    cout << omw::fgBrightBlack << "bright" << omw::fgBlack << "black" << endl;
-    cout << omw::fgBrightRed << "bright" << omw::fgRed << "red" << endl;
-    cout << omw::fgBrightGreen << "bright" << omw::fgGreen << "green" << endl;
-    cout << omw::fgBrightYellow << "bright" << omw::fgYellow << "yellow" << endl;
-    cout << omw::fgBrightBlue << "bright" << omw::fgBlue << "blue" << endl;
-    cout << omw::fgBrightMagenta << "bright" << omw::fgMagenta << "magenta" << endl;
-    cout << omw::fgBrightCyan << "bright" << omw::fgCyan << "cyan" << endl;
-    cout << omw::fgBrightWhite << "bright" << omw::fgWhite << "white" << omw::normal << endl;
+    cout << omw::bgBrightWhite << omw::fgBrightBlack << "bright" << omw::fgBlack << "black" << omw::normal << endl;
+    cout << omw::bgBrightWhite << omw::fgBrightRed << "bright" << omw::fgRed << "red" << omw::normal << endl;
+    cout << omw::bgBrightWhite << omw::fgBrightGreen << "bright" << omw::fgGreen << "green" << omw::normal << endl;
+    cout << omw::bgBrightWhite << omw::fgBrightYellow << "bright" << omw::fgYellow << "yellow" << omw::normal << endl;
+    cout << omw::bgBrightWhite << omw::fgBrightBlue << "bright" << omw::fgBlue << "blue" << omw::normal << endl;
+    cout << omw::bgBrightWhite << omw::fgBrightMagenta << "bright" << omw::fgMagenta << "magenta" << omw::normal << endl;
+    cout << omw::bgBrightWhite << omw::fgBrightCyan << "bright" << omw::fgCyan << "cyan" << omw::normal << endl;
+    cout << omw::bgBrightWhite << omw::fgBrightWhite << "bright" << omw::fgWhite << "white" << omw::normal << endl;
 
     {
         cout << "\n";
