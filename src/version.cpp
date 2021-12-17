@@ -139,7 +139,7 @@ void omw::Version::setData(const std::string& versionStr)
     }
     catch (...)
     {
-        throw std::invalid_argument(OMWi_DISPSTR("invalid format"));
+        throw std::invalid_argument(OMWi_DISPSTR("omw::Version::setData: invalid format"));
     }
 }
 

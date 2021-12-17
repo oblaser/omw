@@ -70,6 +70,22 @@ const releaseData =
     },
 //#p endrm
     {
+        title: "Pre-Release v0.1.1002a",
+        binaries:
+        [
+            { type: "link", text: "Windows (zip)", href: "./files/omw_win_v0.1.1002a.zip", download: true }
+        ],
+        source:
+        [
+            { type: "link", text: "Source (tar.gz)", href: "./files/omw_src_v0.1.1002a.tar.gz", download: true },
+            { type: "link", text: "Source (zip)", href: "./files/omw_src_v0.1.1002a.zip", download: true }
+        ],
+        doc:
+        [
+            { type: "link", text: "online (GitHub master)", href: "../doc/" }
+        ]
+    },
+    {
         title: "Release v0.1.1",
         binaries:
         [

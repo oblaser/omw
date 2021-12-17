@@ -97,7 +97,11 @@ int main(int argc, char** argv)
         setCpBack(cpIn, cpOut);
     }
 
-    if (!omw::windows::consoleEnVirtualTermProc()) cout << "faild to enable VT100" << endl;
+    {
+        const bool vtEnable = omw::windows::consoleEnVirtualTermProc();
+        omw::ansiesc::enable(vtEnable);
+        if(!vtEnable) cout << "faild to enable virtual terminal processing" << endl;
+    }
 #endif
 
 #pragma region sgr

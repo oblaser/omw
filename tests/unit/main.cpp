@@ -1,27 +1,20 @@
 /*
 author          Oliver Blaser
-date            11.12.2021
+date            17.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include <iostream>
 
 #include <omw/omw.h>
-
-#ifdef OMW_PLAT_WIN
 #include <omw/windows/windows.h>
-#endif
 
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp> // $(sdk)/catch2/catch.hpp
+#include <catch2/catch.hpp>
 
 
 TEST_CASE("omw lib")
 {
-#ifdef OMW_PLAT_WIN
-    CHECK(omw::windows::consoleEnVirtualTermProc());
-#endif
-
     std::cout << std::endl << "Testing OMW ..." << std::endl;
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
@@ -30,8 +23,10 @@ TEST_CASE("omw lib")
 }
 
 
-#include "algorithm.hpp"
+
 #include "cli.hpp"
+
+#include "algorithm.hpp"
 #include "color.hpp"
 #include "int.hpp"
 #include "io_serialPort.hpp"

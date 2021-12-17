@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            17.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -21,10 +21,63 @@ TEST_CASE("cli.h ANSI ESC")
 {
     CHECK(omw::ansiesc::argSepChar == ';');
     CHECK(omw::ansiesc::escChar == '\033');
-    CHECK(omw::ansiesc::csiChar == '[');
-    CHECK(omw::ansiesc::stChar == '\\');
-    CHECK(omw::ansiesc::oscChar == ']');
-    CHECK(omw::ansiesc::sosChar == 'X');
+
+    CHECK(omw::ansiesc::singleShiftTwo == 'N');
+    CHECK(omw::ansiesc::singleShiftThree == 'O');
+    CHECK(omw::ansiesc::deviceControlString == 'P');
+    CHECK(omw::ansiesc::controlSequenceIntroducer == '[');
+    CHECK(omw::ansiesc::stringTerminator == '\\');
+    CHECK(omw::ansiesc::osCommand == ']');
+    CHECK(omw::ansiesc::startOfString == 'X');
+    CHECK(omw::ansiesc::privacyMessage == '^');
+    CHECK(omw::ansiesc::appProgramCommand == '_');
+}
+
+TEST_CASE("cli.h ANSI ESC mode and sequence builder")
+{
+    // check initial state
+    CHECK(omw::ansiesc::getMode() == omw::ansiesc::MODE_DEFAULT);
+#ifdef _WIN32
+    CHECK(omw::ansiesc::isEnabled() == false);
+#else
+    CHECK(omw::ansiesc::isEnabled() == true);
+#endif
+
+    omw::ansiesc::enable();
+    CHECK(omw::ansiesc::getMode() == omw::ansiesc::MODE_ENABLED);
+    CHECK(omw::ansiesc::isEnabled() == true);
+
+    omw::ansiesc::disable();
+    CHECK(omw::ansiesc::getMode() == omw::ansiesc::MODE_DISABLED);
+    CHECK(omw::ansiesc::isEnabled() == false);
+
+    omw::ansiesc::setMode(omw::ansiesc::MODE_DEFAULT);
+    CHECK(omw::ansiesc::getMode() == omw::ansiesc::MODE_DEFAULT);
+#ifdef _WIN32
+    CHECK(omw::ansiesc::isEnabled() == false);
+#else
+    CHECK(omw::ansiesc::isEnabled() == true);
+#endif
+
+    omw::ansiesc::setMode(omw::ansiesc::MODE_ENABLED);
+    CHECK(omw::ansiesc::getMode() == omw::ansiesc::MODE_ENABLED);
+    CHECK(omw::ansiesc::isEnabled() == true);
+
+    CHECK(tu::strcmp(omw::ansiesc::seq('?'), "\033?") == 0);
+    CHECK(tu::strcmp(omw::ansiesc::seq('#', "<arg>"), "\033#<arg>") == 0);
+    CHECK(tu::strcmp(omw::ansiesc::seq('&', std::to_string(-56)), "\033&-56") == 0);
+
+    omw::ansiesc::setMode(omw::ansiesc::MODE_DISABLED);
+    CHECK(omw::ansiesc::getMode() == omw::ansiesc::MODE_DISABLED);
+    CHECK(omw::ansiesc::isEnabled() == false);
+
+    CHECK(tu::strcmp(omw::ansiesc::seq('?'), "") == 0);
+    CHECK(tu::strcmp(omw::ansiesc::seq('#', "<arg>"), "") == 0);
+    CHECK(tu::strcmp(omw::ansiesc::seq('&', std::to_string(-56)), "") == 0);
+
+
+
+    omw::ansiesc::enable(); // needed for the next test cases
 }
 
 TEST_CASE("cli.h CSI sequence biulders")
@@ -192,6 +245,14 @@ TEST_CASE("cli.h SGR")
         CHECK(tu::strcmp(omw::font(i).arg(), "\033[" + omw::to_string(omw::ansiesc::csi::sgr::font_base + i) + "m") == 0);
     }
 }
+
+#ifdef OMW_PLAT_WIN
+TEST_CASE("set ansiesc mode")
+{
+    omw::ansiesc::enable(omw::windows::consoleEnVirtualTermProc());
+    CHECK(1 == 1);
+}
+#endif
 
 
 #endif // TEST_OMW_CLI_H

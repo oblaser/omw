@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            10.12.2021
+date            14.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -73,9 +73,17 @@ namespace omw
     */
 
 
-    //! @brief ANSI Escape Sequences
+    //! @brief ANSI escape sequences
     //! 
     //! Further information on <a href="https://en.wikipedia.org/wiki/ANSI_escape_code" target="_blank">ANSI Escape Code (Wikipedia)</a>.
+    //! 
+    //! \section ns_omw_ansiesc_section_ansiEscMode ANSI escape sequence builder mode
+    //! 
+    //! The mode setting is a library internal global variable, it is not thread save.
+    //! 
+    //! On Windows the default mode is processed as disabled, and as enabled on all other platforms.
+    //! 
+    //! See also \ref grp_cli_section_ansiEscWin.
     //! 
     namespace ansiesc
     {
@@ -83,10 +91,53 @@ namespace omw
 
         constexpr char escChar = '\x1B';
 
-        constexpr char csiChar = '[';
-        constexpr char stChar = '\\';
-        constexpr char oscChar = ']';
-        constexpr char sosChar = 'X';
+        //! \name Sequence Types
+        /// @{
+        constexpr char SS2 = 'N';
+        constexpr char SS3 = 'O';
+        constexpr char DCS = 'P';
+        constexpr char CSI = '[';
+        constexpr char ST = '\\';
+        constexpr char OSC = ']';
+        constexpr char SOS = 'X';
+        constexpr char PM = '^';
+        constexpr char APC = '_';
+        constexpr char RIS = 'c';
+        /// @}
+
+        //! \name Sequence Types Aliases
+        /// @{
+        constexpr char singleShiftTwo = SS2;
+        constexpr char singleShiftThree = SS3;
+        constexpr char deviceControlString = DCS;
+        constexpr char controlSequenceIntroducer = CSI;
+        constexpr char stringTerminator = ST;
+        constexpr char osCommand = OSC;
+        constexpr char startOfString = SOS;
+        constexpr char privacyMessage = PM;
+        constexpr char appProgramCommand = APC;
+        constexpr char resetToInitialState = RIS;
+        /// @}
+
+        omw::string seq(char type, const omw::string& argstr = "");
+
+        //! \name ANSI escape sequence builder mode
+        /// @{
+
+        //! @brief ANSI escape sequence builder mode
+        enum MODE
+        {
+            MODE_DEFAULT = 0,   /*!< Default. See \ref ns_omw_ansiesc_section_ansiEscMode */
+            MODE_DISABLED,      /*!< Disabled. The sequence builders return an empty string. */
+            MODE_ENABLED        /*!< Enabled */
+        };
+
+        void setMode(int mode);
+        int getMode();
+        void enable(bool state = true);
+        void disable();
+        bool isEnabled();
+        /// @}
 
         //! @brief CSI (Control Sequence Introducer)
         namespace csi
@@ -127,12 +178,9 @@ namespace omw
             constexpr int entireAndScrlBk = 3;
             /// @}
 
-            inline omw::string seq(char cs, const omw::string& arg = "") { return (omw::string(1, omw::ansiesc::escChar) + omw::ansiesc::csiChar + arg + cs); }
-            inline omw::string seq(char cs, int arg) { return omw::ansiesc::csi::seq(cs, omw::to_string(arg)); }
-            inline omw::string seq(char cs, int arg0, int arg1)
-            {
-                return omw::ansiesc::csi::seq(cs, omw::to_string(arg0) + omw::ansiesc::argSepChar + omw::to_string(arg1));
-            }
+            omw::string seq(char ctrlSeqType, const omw::string& argstr = "");
+            omw::string seq(char ctrlSeqType, int arg);
+            omw::string seq(char ctrlSeqType, int arg0, int arg1);
 
             //! @brief SGR (Select Graphic Rendition)
             namespace sgr
@@ -249,15 +297,12 @@ namespace omw
                 constexpr int setColor_rgb = 2;
                 /// @}
 
-                inline omw::string seq(const omw::string& args = "") { return omw::ansiesc::csi::seq(omw::ansiesc::csi::SGR, args); }
-                inline omw::string seq(int param) { return omw::ansiesc::csi::sgr::seq(omw::to_string(param)); }
-                inline omw::string seq(int param, int arg0, int arg1)
-                {
-                    return omw::ansiesc::csi::sgr::seq(omw::to_string(param) + omw::ansiesc::argSepChar + omw::to_string(arg0) + omw::ansiesc::argSepChar + omw::to_string(arg1));
-                }
+                omw::string seq(const omw::string& argstr = "");
+                omw::string seq(int param);
+                omw::string seq(int param, int arg0, int arg1);
                 omw::string seq(int param, int arg0, int arg1, int arg2, int arg3);
                 omw::string seq(const int* argv, size_t argc);
-                inline omw::string seq(const std::vector<int>& args) { return omw::ansiesc::csi::sgr::seq(args.data(), args.size()); }
+                omw::string seq(const std::vector<int>& args);
 
                 //! \name 8-bit Colors
                 //! See <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit" target="_blank">color table</a> on Wikipedia.
@@ -278,7 +323,19 @@ namespace omw
                 constexpr int col8bit_brightRed = 13;
                 constexpr int col8bit_brightWhite = 14;
                 constexpr int col8bit_brightYellow = 15;
-                constexpr int col8bit_grayscale26[26] = { 16, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 231 };
+                constexpr int col8bit_grayscale[24] =
+                {
+                    232, 233, 234, 235, 236, 237, 238, 239,
+                    240, 241, 242, 243, 244, 245, 246, 247,
+                    248, 249, 250, 251, 252, 253, 254, 255
+                }; /*!< Grayscale from black to white in 24 steps, excluding black and white. */
+                constexpr int col8bit_fullGrayscale[26] =
+                {
+                     16, 232, 233, 234, 235, 236, 237, 238,
+                    239, 240, 241, 242, 243, 244, 245, 246,
+                    247, 248, 249, 250, 251, 252, 253, 254,
+                    255, 231
+                }; /*!< Grayscale including black and white. */
 
                 //int to8bitColor(uint8_t r, uint8_t g, uint8_t b);
                 //int to8bitColor(const omw::Color& color);

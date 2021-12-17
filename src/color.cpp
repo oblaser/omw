@@ -163,7 +163,7 @@ void omw::Color::set(const std::string& css)
     {
         col = omw::hexstoi(colStr);
     }
-    else throw std::invalid_argument(OMWi_DISPSTR("Hex string has to be 3 or 6 digits long"));
+    else throw std::invalid_argument(OMWi_DISPSTR("omw::Color::set: Hex string has to be 3 or 6 digits long"));
 
     set(col);
 }
