@@ -294,6 +294,36 @@ TEST_CASE("int.h omw::Base_Int128 setu")
     CHECK(eq(x, 123, 456));
 }
 
+TEST_CASE("int.h omw::Base_Int128 getters")
+{
+    omw::Base_Int128 x;
+
+    x.set(0, 0);
+    CHECK(x.hi() == 0);
+    CHECK(x.his() == 0);
+    CHECK(x.lo() == 0);
+
+    x.set(0, 123456789);
+    CHECK(x.hi() == 0);
+    CHECK(x.his() == 0);
+    CHECK(x.lo() == 123456789);
+
+    x.set(1234567890123, 0);
+    CHECK(x.hi() == 1234567890123);
+    CHECK(x.his() == 1234567890123);
+    CHECK(x.lo() == 0);
+
+    x.set(0x8000000000000000, 0);
+    CHECK(x.hi() == 9223372036854775808u);
+    CHECK(x.his() == INT64_MIN);
+    CHECK(x.lo() == 0);
+
+    x.set(UINT64_MAX, 0);
+    CHECK(x.hi() == UINT64_MAX);
+    CHECK(x.his() == -1);
+    CHECK(x.lo() == 0);
+}
+
 TEST_CASE("int.h omw::Base_Int128 bool conversion operators")
 {
     omw::Base_Int128 x;
@@ -328,19 +358,166 @@ TEST_CASE("int.h omw::Base_Int128 operators")
 {
     omw::Base_Int128 x;
 
+    // += -=
+    x.set(0, 0);
+    x += omw::Base_Int128(0, 54);
+    CHECK(eq(x, 0, 54));
+    x -= omw::Base_Int128(0, 47);
+    CHECK(eq(x, 0, 7));
+    x += omw::Base_Int128(0, 123);
+    CHECK(eq(x, 0, 130));
+    x -= omw::Base_Int128(0, 63);
+    CHECK(eq(x, 0, 67));
+
     x.set(0, 0);
     x += omw::Base_Int128(0, 5);
     CHECK(eq(x, 0, 5));
-
     x -= omw::Base_Int128(0, 8);
-    CHECK(eq(x, 0xFFFFffffFFFFffff, 0xFFFFffffFFFFfffD));
+    CHECK(eq(x, UINT64_MAX, UINT64_MAX - 2));
+    x += omw::Base_Int128(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x, UINT64_MAX, UINT64_MAX - 3));
 
-    x += omw::Base_Int128(0xFFFFffffFFFFffff, 0xFFFFffffFFFFffff);
-    CHECK(eq(x, 0xFFFFffffFFFFffff, 0xFFFFffffFFFFfffC));
+    x.set(0, UINT64_MAX - 2);
+    x += omw::Base_Int128(0, 6);
+    CHECK(eq(x, 1, 3));
+    x -= omw::Base_Int128(0, UINT64_MAX);
+    CHECK(eq(x, 0, 4));
+    x -= omw::Base_Int128(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x, 0, 5));
 
-    x.set(0, UINT64_MAX);
-    x += omw::Base_Int128(0, 5);
-    CHECK(eq(x, 1, 4));
+
+    // &= |= ^=
+    x.set(0, 0);
+    x |= omw::Base_Int128(0xFFFFFFFF5555AAAA, 0x12345678);
+    CHECK(eq(x, 0xFFFFFFFF5555AAAA, 0x12345678));
+    x &= omw::Base_Int128(0x5555AAAA00FF00FF, 0xFFFF0000FFFF0000);
+    CHECK(eq(x, 0x5555AAAA005500AA, 0x12340000));
+    x ^= omw::Base_Int128(0x55AA00FF0AAF055F, 0x987600009999ABCD);
+    CHECK(eq(x, 0x00FFAA550AFA05F5, 0x987600008BADABCD));
+
+
+    // <<=
+    x.set(0, 1);
+    x <<= 3;
+    CHECK(eq(x, 0, 8));
+    x.set(1, 0);
+    x <<= 3;
+    CHECK(eq(x, 8, 0));
+    x.set(0, 0xA5);
+    x <<= 32;
+    CHECK(eq(x, 0, 0xA500000000));
+    x.set(0, 1);
+    x <<= 65;
+    CHECK(eq(x, 2, 0));
+    x.set(UINT64_MAX, UINT64_MAX);
+    x <<= 127;
+    CHECK(eq(x, 0x8000000000000000, 0));
+    x.set(0, 1);
+    x <<= 128;
+    CHECK(eq(x, 0, 0));
+    x.set(UINT64_MAX, UINT64_MAX);
+    x <<= 128;
+    CHECK(eq(x, 0, 0));
+    x.set(0, 0x12345678);
+    x <<= 32;
+    CHECK(eq(x, 0, 0x1234567800000000));
+    x.set(0x1234567800000000, 0x12345678);
+    x <<= 48;
+    CHECK(eq(x, 0x1234, 0x5678000000000000));
+
+
+    // >>=
+    x.set(0x800000000000, 0);
+    x >>= 3;
+    CHECK(eq(x, 0x100000000000, 0));
+    x.set(0, 0x800000000000);
+    x >>= 3;
+    CHECK(eq(x, 0, 0x100000000000));
+    x.set(0, 0xA500000000);
+    x >>= 32;
+    CHECK(eq(x, 0, 0xA5));
+    x.set(0x800000000000, 1);
+    x >>= 65;
+    CHECK(eq(x, 0, 0x400000000000));
+    x.set(UINT64_MAX, UINT64_MAX);
+    x >>= 127;
+    CHECK(eq(x, 0, 1));
+    x.set(0x800000000000, 0);
+    x >>= 128;
+    CHECK(eq(x, 0, 0));
+    x.set(UINT64_MAX, UINT64_MAX);
+    x >>= 128;
+    CHECK(eq(x, 0, 0));
+    x.set(0x1234567800000000, 0);
+    x >>= 32;
+    CHECK(eq(x, 0x12345678, 0));
+    x.set(0x1234567800000000, 123456);
+    x >>= 48;
+    CHECK(eq(x, 0x1234, 0x5678000000000000));
+
+
+    // a++
+    x.set(0, 0xFFFFFFFFFFFFFFFD);
+    CHECK(eq(x++, 0, 0xFFFFFFFFFFFFFFFD));
+    CHECK(eq(x++, 0, 0xFFFFFFFFFFFFFFFE));
+    CHECK(eq(x++, 0, 0xFFFFFFFFFFFFFFFF));
+    CHECK(eq(x++, 1, 0));
+    CHECK(eq(x, 1, 1));
+
+    x.set(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFD);
+    CHECK(eq(x++, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFD));
+    CHECK(eq(x++, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFE));
+    CHECK(eq(x++, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF));
+    CHECK(eq(x++, 0, 0));
+    CHECK(eq(x, 0, 1));
+
+
+    // ++a
+    x.set(0, 0xFFFFFFFFFFFFFFFC);
+    CHECK(eq(++x, 0, 0xFFFFFFFFFFFFFFFD));
+    CHECK(eq(++x, 0, 0xFFFFFFFFFFFFFFFE));
+    CHECK(eq(++x, 0, 0xFFFFFFFFFFFFFFFF));
+    CHECK(eq(++x, 1, 0));
+    CHECK(eq(++x, 1, 1));
+
+    x.set(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFC);
+    CHECK(eq(++x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFD));
+    CHECK(eq(++x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFE));
+    CHECK(eq(++x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF));
+    CHECK(eq(++x, 0, 0));
+    CHECK(eq(++x, 0, 1));
+
+
+    // a--
+    x.set(1, 1);
+    CHECK(eq(x--, 1, 1));
+    CHECK(eq(x--, 1, 0));
+    CHECK(eq(x--, 0, 0xFFFFFFFFFFFFFFFF));
+    CHECK(eq(x--, 0, 0xFFFFFFFFFFFFFFFE));
+    CHECK(eq(x, 0, 0xFFFFFFFFFFFFFFFD));
+
+    x.set(0, 1);
+    CHECK(eq(x--, 0, 1));
+    CHECK(eq(x--, 0, 0));
+    CHECK(eq(x--, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF));
+    CHECK(eq(x--, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFE));
+    CHECK(eq(x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFD));
+
+
+    // --a
+    x.set(1, 2);
+    CHECK(eq(--x, 1, 1));
+    CHECK(eq(--x, 1, 0));
+    CHECK(eq(--x, 0, 0xFFFFFFFFFFFFFFFF));
+    CHECK(eq(--x, 0, 0xFFFFFFFFFFFFFFFE));
+    CHECK(eq(--x, 0, 0xFFFFFFFFFFFFFFFD));
+
+    x.set(0, 2);
+    CHECK(eq(--x, 0, 1));
+    CHECK(eq(--x, 0, 0));
+    CHECK(eq(--x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF));
+    CHECK(eq(--x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFE));
+    CHECK(eq(--x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFD));
 }
 
 

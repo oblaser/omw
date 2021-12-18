@@ -17,13 +17,15 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include "omw/int.h"
 
-#define N_BYTES_128 (16) // 16 * 8 bit = 128 bit
+
 
 namespace
 {
     typedef uint64_t base_type;
-    static constexpr size_t baseTypeWith = 64;
+    static constexpr unsigned int baseTypeWith = 64;
     static constexpr base_type baseTypeAllBits = OMW_64BIT_ALL;
+
+    static constexpr size_t nBytes128 = 16; // 16 * 8 bit = 128 bit
 
     int64_t to_i64(uint64_t value) noexcept { return *(reinterpret_cast<int64_t*>(&value)); }
     uint64_t to_ui64(int64_t value) noexcept { return *(reinterpret_cast<uint64_t*>(&value)); }
@@ -124,7 +126,7 @@ void omw::Base_Int128::sets(const uint8_t* data, size_t count)
     {
         if (count > 0)
         {
-            if (count > N_BYTES_128) throw std::overflow_error("omw::Base_Int128::sets");
+            if (count > nBytes128) throw std::overflow_error("omw::Base_Int128::sets");
 
             if (data[0] & 0x80) set(OMW_64BIT_ALL, OMW_64BIT_ALL);
             else setu(0);
@@ -159,7 +161,7 @@ void omw::Base_Int128::setu(const uint8_t* data, size_t count)
     {
         if (count > 0)
         {
-            if (count > N_BYTES_128) throw std::overflow_error("omw::Base_Int128::setu");
+            if (count > nBytes128) throw std::overflow_error("omw::Base_Int128::setu");
 
             setu(0);
             readBuffer(data, count);
@@ -239,10 +241,15 @@ omw::Base_Int128& omw::Base_Int128::operator<<=(unsigned int count)
         m_h = m_l;
         m_l = 0;
     }
-    else // count > baseTypeWith
+    else if (count < 128)
     {
         m_h = m_l;
         m_h <<= (count - baseTypeWith);
+        m_l = 0;
+    }
+    else // count >= 128
+    {
+        m_h = 0;
         m_l = 0;
     }
 
@@ -263,10 +270,15 @@ omw::Base_Int128& omw::Base_Int128::operator>>=(unsigned int count)
         m_l = m_h;
         m_h = 0;
     }
-    else // count > baseTypeWith
+    else if (count < 128)
     {
         m_l = m_h;
         m_l >>= (count - baseTypeWith);
+        m_h = 0;
+    }
+    else // count >= 128
+    {
+        m_l = 0;
         m_h = 0;
     }
 
@@ -275,7 +287,6 @@ omw::Base_Int128& omw::Base_Int128::operator>>=(unsigned int count)
 
 omw::Base_Int128& omw::Base_Int128::operator++()
 {
-    ++m_h;
     ++m_l;
     if (m_l == 0) { ++m_h; }
     return *this;
@@ -283,7 +294,6 @@ omw::Base_Int128& omw::Base_Int128::operator++()
 
 omw::Base_Int128& omw::Base_Int128::operator--()
 {
-    --m_h;
     --m_l;
     if (m_l == baseTypeAllBits) { --m_h; }
     return *this;
@@ -292,7 +302,6 @@ omw::Base_Int128& omw::Base_Int128::operator--()
 omw::Base_Int128 omw::Base_Int128::operator++(int)
 {
     const omw::Base_Int128 tmp(*this);
-    ++m_h;
     ++m_l;
     if (m_l == 0) { ++m_h; }
     return tmp;
@@ -301,7 +310,6 @@ omw::Base_Int128 omw::Base_Int128::operator++(int)
 omw::Base_Int128 omw::Base_Int128::operator--(int)
 {
     const omw::Base_Int128 tmp(*this);
-    --m_h;
     --m_l;
     if (m_l == baseTypeAllBits) { --m_h; }
     return tmp;
