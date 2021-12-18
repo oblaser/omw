@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            15.12.2021
+date            18.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -592,14 +592,16 @@ omw::string omw::i128tos(int32_t valueHH, uint32_t valueLH, uint32_t valueHL, ui
 //! - `std::out_of_range` if `count` is grather than 16
 //! - `std::invalid_argument` if `data` is a nullptr
 //! 
-//! See also `omw::SignedInt128(const uint8_t*, size_t)`.
+//! See also `omw::Base_Int128::sets(const uint8_t*, size_t)`.
 //! 
 omw::string omw::i128tos(const uint8_t* data, size_t count)
 {
     const std::string fnName = "omw::i128tos";
     if (count > 16) throw std::out_of_range(fnName);
     if (!data) throw std::invalid_argument(fnName);
-    return omw::to_string(omw::SignedInt128(data, count));
+    omw::SignedInt128 value;
+    value.sets(data, count);
+    return omw::to_string(value);
 }
 
 //! 
@@ -629,14 +631,16 @@ omw::string omw::ui128tos(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, 
 //! - `std::out_of_range` if `count` is grather than 16
 //! - `std::invalid_argument` if `data` is a nullptr
 //! 
-//! See also `omw::UnsignedInt128(const uint8_t*, size_t)`.
+//! See also `omw::Base_Int128::setu(const uint8_t*, size_t)`.
 //! 
 omw::string omw::ui128tos(const uint8_t* data, size_t count)
 {
     const std::string fnName = "omw::ui128tos";
     if (count > 16) throw std::out_of_range(fnName);
     if (!data) throw std::invalid_argument(fnName);
-    return omw::to_string(omw::UnsignedInt128(data, count));
+    omw::UnsignedInt128 value;
+    value.setu(data, count);
+    return omw::to_string(value);
 }
 
 

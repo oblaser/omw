@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            17.12.2021
+date            18.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -45,7 +45,7 @@ namespace omw
     public:
         Base_Int128();
         Base_Int128(const omw::Base_Int128& other);
-        explicit Base_Int128(int64_t value);
+        Base_Int128(int64_t value);
         Base_Int128(uint64_t valueH, uint64_t valueL);
         Base_Int128(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL);
         virtual ~Base_Int128() {}
@@ -103,7 +103,6 @@ namespace omw
         SignedInt128(int64_t value);
         SignedInt128(uint64_t valueH, uint64_t valueL);
         SignedInt128(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL);
-        SignedInt128(const uint8_t* data, size_t count);
         SignedInt128(const omw::Base_Int128& other);
         virtual ~SignedInt128() {}
 
@@ -125,7 +124,6 @@ namespace omw
         UnsignedInt128(int64_t value);
         UnsignedInt128(uint64_t valueH, uint64_t valueL);
         UnsignedInt128(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL);
-        UnsignedInt128(const uint8_t* data, size_t count);
         UnsignedInt128(const omw::Base_Int128& other);
         virtual ~UnsignedInt128() {}
 
@@ -144,34 +142,27 @@ namespace omw
     omw::SignedInt128 operator-(const omw::SignedInt128& a);
     omw::UnsignedInt128 operator-(const omw::UnsignedInt128& a);
 
-    omw::Base_Int128 operator+(const omw::Base_Int128& a, const omw::Base_Int128& b);
-    omw::SignedInt128 operator+(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    omw::UnsignedInt128 operator+(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    omw::SignedInt128 operator+(const omw::SignedInt128& a, const omw::Base_Int128& b);
+    omw::UnsignedInt128 operator+(const omw::UnsignedInt128& a, const omw::Base_Int128& b);
 
-    omw::Base_Int128 operator-(const omw::Base_Int128& a, const omw::Base_Int128& b);
-    omw::SignedInt128 operator-(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    omw::UnsignedInt128 operator-(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    omw::SignedInt128 operator-(const omw::SignedInt128& a, const omw::Base_Int128& b);
+    omw::UnsignedInt128 operator-(const omw::UnsignedInt128& a, const omw::Base_Int128& b);
 
     omw::SignedInt128 operator~(const omw::SignedInt128& a);
     omw::UnsignedInt128 operator~(const omw::UnsignedInt128& a);
 
-    omw::Base_Int128 operator&(const omw::Base_Int128& a, const omw::Base_Int128& b);
-    omw::SignedInt128 operator&(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    omw::UnsignedInt128 operator&(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    omw::SignedInt128 operator&(const omw::SignedInt128& a, const omw::Base_Int128& b);
+    omw::UnsignedInt128 operator&(const omw::UnsignedInt128& a, const omw::Base_Int128& b);
 
-    omw::Base_Int128 operator|(const omw::Base_Int128& a, const omw::Base_Int128& b);
-    omw::SignedInt128 operator|(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    omw::UnsignedInt128 operator|(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    omw::SignedInt128 operator|(const omw::SignedInt128& a, const omw::Base_Int128& b);
+    omw::UnsignedInt128 operator|(const omw::UnsignedInt128& a, const omw::Base_Int128& b);
 
-    omw::Base_Int128 operator^(const omw::Base_Int128& a, const omw::Base_Int128& b);
-    omw::SignedInt128 operator^(const omw::SignedInt128& a, const omw::SignedInt128& b);
-    omw::UnsignedInt128 operator^(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
+    omw::SignedInt128 operator^(const omw::SignedInt128& a, const omw::Base_Int128& b);
+    omw::UnsignedInt128 operator^(const omw::UnsignedInt128& a, const omw::Base_Int128& b);
 
-    omw::Base_Int128 operator<<(const omw::Base_Int128& a, unsigned int count);
     omw::SignedInt128 operator<<(const omw::SignedInt128& a, unsigned int count);
     omw::UnsignedInt128 operator<<(const omw::UnsignedInt128& a, unsigned int count);
 
-    omw::Base_Int128 operator>>(const omw::Base_Int128& a, unsigned int count);
     omw::SignedInt128 operator>>(const omw::SignedInt128& a, unsigned int count);
     omw::UnsignedInt128 operator>>(const omw::UnsignedInt128& a, unsigned int count);
 

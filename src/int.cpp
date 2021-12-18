@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            17.12.2021
+date            18.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -342,15 +342,6 @@ omw::SignedInt128::SignedInt128(uint32_t valueHH, uint32_t valueLH, uint32_t val
     : omw::Base_Int128(valueHH, valueLH, valueHL, valueLL)
 {}
 
-//! 
-//! Uses `omw::Base_Int128::sets(const uint8_t*, size_t)` to initialize.
-//! 
-omw::SignedInt128::SignedInt128(const uint8_t* data, size_t count)
-    : omw::Base_Int128()
-{
-    sets(data, count);
-}
-
 omw::SignedInt128::SignedInt128(const omw::Base_Int128& other)
     : omw::Base_Int128(other)
 {}
@@ -402,15 +393,6 @@ omw::UnsignedInt128::UnsignedInt128(uint32_t valueHH, uint32_t valueLH, uint32_t
     : omw::Base_Int128(valueHH, valueLH, valueHL, valueLL)
 {}
 
-//! 
-//! Uses `omw::Base_Int128::setu(const uint8_t*, size_t)` to initialize.
-//! 
-omw::UnsignedInt128::UnsignedInt128(const uint8_t* data, size_t count)
-    : omw::Base_Int128()
-{
-    setu(data, count);
-}
-
 omw::UnsignedInt128::UnsignedInt128(const omw::Base_Int128& other)
     : omw::Base_Int128(other)
 {}
@@ -447,7 +429,7 @@ return omw::Base_Int128(~a.hi(), ~a.lo())   \
 // end OMWi_IMPLEMENT_OPERATOR_BIT_NOT
 
 #define OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(T, op) \
-T omw::operator op (const T& a, const T& b) { OMWi_IMPLEMENT_SIA_ASSIGN_ALIAS_OPERATOR(op, a, b); } \
+T omw::operator op (const T& a, const omw::Base_Int128& b) { OMWi_IMPLEMENT_SIA_ASSIGN_ALIAS_OPERATOR(op, a, b); } \
 // end OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR
 
 #define OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(T, op)  \
@@ -455,13 +437,11 @@ T omw::operator op (const T& a, unsigned int count) { OMWi_IMPLEMENT_SIA_ASSIGN_
 // end OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR
 
 #define OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(op)    \
-OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(omw::Base_Int128, op)     \
 OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(omw::SignedInt128, op)    \
 OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(omw::UnsignedInt128, op)  \
 // end OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS
 
 #define OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(op)      \
-OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::Base_Int128, op)       \
 OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::SignedInt128, op)      \
 OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::UnsignedInt128, op)    \
 // end OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS
@@ -475,9 +455,24 @@ bool omw::operator>=(const Ta& a, const Tb& b) { return !(a < b); }     \
 
 
 
+//! 
+//! Does nothing else than returning `a`.
+//! 
 omw::SignedInt128 omw::operator+(const omw::SignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_UNARY_PLUS(a); }
+
+//! 
+//! Does nothing else than returning `a`.
+//! 
 omw::UnsignedInt128 omw::operator+(const omw::UnsignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_UNARY_PLUS(a); }
+
+//! 
+//! Returns the two's complement of `a`.
+//! 
 omw::SignedInt128 omw::operator-(const omw::SignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_UNARY_MINUS(a); }
+
+//! 
+//! Returns the two's complement of `a`.
+//! 
 omw::UnsignedInt128 omw::operator-(const omw::UnsignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_UNARY_MINUS(a); }
 
 OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(+)

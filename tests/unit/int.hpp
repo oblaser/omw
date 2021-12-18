@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            17.12.2021
+date            18.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -360,25 +360,31 @@ TEST_CASE("int.h omw::Base_Int128 operators")
 
     // += -=
     x.set(0, 0);
-    x += omw::Base_Int128(0, 54);
+    x += 54;
     CHECK(eq(x, 0, 54));
-    x -= omw::Base_Int128(0, 47);
+    x -= 47;
     CHECK(eq(x, 0, 7));
-    x += omw::Base_Int128(0, 123);
+    x += 123;
     CHECK(eq(x, 0, 130));
-    x -= omw::Base_Int128(0, 63);
+    x -= 63;
     CHECK(eq(x, 0, 67));
+    x -= -67;
+    CHECK(eq(x, 0, 134));
 
     x.set(0, 0);
-    x += omw::Base_Int128(0, 5);
+    x += 5;
     CHECK(eq(x, 0, 5));
-    x -= omw::Base_Int128(0, 8);
+    x -= 8;
     CHECK(eq(x, UINT64_MAX, UINT64_MAX - 2));
     x += omw::Base_Int128(UINT64_MAX, UINT64_MAX);
     CHECK(eq(x, UINT64_MAX, UINT64_MAX - 3));
+    x += -1;
+    CHECK(eq(x, UINT64_MAX, UINT64_MAX - 4));
+    x -= -1;
+    CHECK(eq(x, UINT64_MAX, UINT64_MAX - 3));
 
     x.set(0, UINT64_MAX - 2);
-    x += omw::Base_Int128(0, 6);
+    x += 6;
     CHECK(eq(x, 1, 3));
     x -= omw::Base_Int128(0, UINT64_MAX);
     CHECK(eq(x, 0, 4));
@@ -394,6 +400,8 @@ TEST_CASE("int.h omw::Base_Int128 operators")
     CHECK(eq(x, 0x5555AAAA005500AA, 0x12340000));
     x ^= omw::Base_Int128(0x55AA00FF0AAF055F, 0x987600009999ABCD);
     CHECK(eq(x, 0x00FFAA550AFA05F5, 0x987600008BADABCD));
+    x |= -1;
+    CHECK(eq(x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF));
 
 
     // <<=
@@ -524,18 +532,396 @@ TEST_CASE("int.h omw::Base_Int128 operators")
 
 TEST_CASE("int.h omw::SignedInt128")
 {
+    omw::SignedInt128 x;
+    CHECK(eq(x, 0, 0));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128();
+    CHECK(eq(x, 0, 0));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(0);
+    CHECK(eq(x, 0, 0));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(1);
+    CHECK(eq(x, 0, 1));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(123);
+    CHECK(eq(x, 0, 123));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(-123);
+    CHECK(eq(x, UINT64_MAX, -123));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+
+    x = omw::SignedInt128(-1);
+    CHECK(eq(x, UINT64_MAX, UINT64_MAX));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+
+    x = omw::SignedInt128(INT32_MIN);
+    CHECK(eq(x, UINT64_MAX, INT32_MIN));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+
+    x = omw::SignedInt128(INT32_MAX);
+    CHECK(eq(x, 0, INT32_MAX));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(UINT32_MAX);
+    CHECK(eq(x, 0, UINT32_MAX));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(UINT64_MAX);
+    CHECK(eq(x, UINT64_MAX, UINT64_MAX));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+
+    x = omw::SignedInt128(INT64_MAX);
+    CHECK(eq(x, 0, INT64_MAX));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(INT64_MIN);
+    CHECK(eq(x, UINT64_MAX, INT64_MIN));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+
+
+    uint64_t tmpH = 0;
+    x = omw::SignedInt128(tmpH, 0);
+    CHECK(eq(x, 0, 0));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(0x0123456789abcdef, 0xa0b1c2d3e4f56789);
+    CHECK(eq(x, 0x0123456789abcdef, 0xa0b1c2d3e4f56789));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(0x1234567890abcdef, 0xa0b1c2d3e4f56789);
+    CHECK(eq(x, 0x1234567890abcdef, 0xa0b1c2d3e4f56789));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(0xa0b1c2d3e4f56789, 0x1234567890abcdef);
+    CHECK(eq(x, 0xa0b1c2d3e4f56789, 0x1234567890abcdef));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+
+
+
+    x = omw::SignedInt128(0, 0, 0, 0);
+    CHECK(eq(x, 0, 0));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(0x01234567, 0x12345678, 0xABCDEF01, 0x98765432);
+    CHECK(eq(x, 0x0123456712345678, 0xABCDEF0198765432));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    x = omw::SignedInt128(0xABCDEF01, 0x12345678, 0x01234567, 0x98765432);
+    CHECK(eq(x, 0xABCDEF0112345678, 0x0123456798765432));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+
+    x = omw::SignedInt128(0x98765432, 0x12345678, 0xABCDEF01, 0x01234567);
+    CHECK(eq(x, 0x9876543212345678, 0xABCDEF0101234567));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+
+
+
+    omw::SignedInt128 signedOther;
+
+    signedOther = 123;
+    x = signedOther;
+    CHECK(eq(x, 0, 123));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+    x = omw::SignedInt128(signedOther);
+    CHECK(eq(x, 0, 123));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    signedOther = -123;
+    x = signedOther;
+    CHECK(eq(x, UINT64_MAX, -123));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+    x = omw::SignedInt128(signedOther);
+    CHECK(eq(x, UINT64_MAX, -123));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+
+
+
+    omw::UnsignedInt128 unsignedOther;
+
+    unsignedOther = 123;
+    x = unsignedOther;
+    CHECK(eq(x, 0, 123));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+    x = omw::SignedInt128(unsignedOther);
+    CHECK(eq(x, 0, 123));
+    CHECK(x.isNegative() == false);
+    CHECK(x.sign() == 1);
+
+    unsignedOther = -123;
+    x = unsignedOther;
+    CHECK(eq(x, UINT64_MAX, -123));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
+    x = omw::SignedInt128(unsignedOther);
+    CHECK(eq(x, UINT64_MAX, -123));
+    CHECK(x.isNegative() == true);
+    CHECK(x.sign() == -1);
 }
 
 
 
 TEST_CASE("int.h omw::UnsignedInt128")
 {
+    omw::UnsignedInt128 x;
+    CHECK(eq(x, 0, 0));
+
+    x = omw::UnsignedInt128();
+    CHECK(eq(x, 0, 0));
+
+    x = omw::UnsignedInt128(0);
+    CHECK(eq(x, 0, 0));
+
+    x = omw::UnsignedInt128(1);
+    CHECK(eq(x, 0, 1));
+
+    x = omw::UnsignedInt128(123);
+    CHECK(eq(x, 0, 123));
+
+    x = omw::UnsignedInt128(-123);
+    CHECK(eq(x, UINT64_MAX, -123));
+
+    x = omw::UnsignedInt128(-1);
+    CHECK(eq(x, UINT64_MAX, UINT64_MAX));
+
+    x = omw::UnsignedInt128(INT32_MIN);
+    CHECK(eq(x, UINT64_MAX, INT32_MIN));
+
+    x = omw::UnsignedInt128(INT32_MAX);
+    CHECK(eq(x, 0, INT32_MAX));
+
+    x = omw::UnsignedInt128(UINT32_MAX);
+    CHECK(eq(x, 0, UINT32_MAX));
+
+    x = omw::UnsignedInt128(UINT64_MAX);
+    CHECK(eq(x, UINT64_MAX, UINT64_MAX));
+
+    x = omw::UnsignedInt128(INT64_MAX);
+    CHECK(eq(x, 0, INT64_MAX));
+
+    x = omw::UnsignedInt128(INT64_MIN);
+    CHECK(eq(x, UINT64_MAX, INT64_MIN));
+
+
+    uint64_t tmpH = 0;
+    x = omw::UnsignedInt128(tmpH, 0);
+    CHECK(eq(x, 0, 0));
+
+    x = omw::UnsignedInt128(0x0123456789abcdef, 0xa0b1c2d3e4f56789);
+    CHECK(eq(x, 0x0123456789abcdef, 0xa0b1c2d3e4f56789));
+
+    x = omw::UnsignedInt128(0x1234567890abcdef, 0xa0b1c2d3e4f56789);
+    CHECK(eq(x, 0x1234567890abcdef, 0xa0b1c2d3e4f56789));
+
+    x = omw::UnsignedInt128(0xa0b1c2d3e4f56789, 0x1234567890abcdef);
+    CHECK(eq(x, 0xa0b1c2d3e4f56789, 0x1234567890abcdef));
+
+
+
+    x = omw::UnsignedInt128(0, 0, 0, 0);
+    CHECK(eq(x, 0, 0));
+
+    x = omw::UnsignedInt128(0x01234567, 0x12345678, 0xABCDEF01, 0x98765432);
+    CHECK(eq(x, 0x0123456712345678, 0xABCDEF0198765432));
+
+    x = omw::UnsignedInt128(0xABCDEF01, 0x12345678, 0x01234567, 0x98765432);
+    CHECK(eq(x, 0xABCDEF0112345678, 0x0123456798765432));
+
+    x = omw::UnsignedInt128(0x98765432, 0x12345678, 0xABCDEF01, 0x01234567);
+    CHECK(eq(x, 0x9876543212345678, 0xABCDEF0101234567));
+
+
+
+    omw::UnsignedInt128 unsignedOther;
+
+    unsignedOther = 123;
+    x = unsignedOther;
+    CHECK(eq(x, 0, 123));
+    x = omw::UnsignedInt128(unsignedOther);
+    CHECK(eq(x, 0, 123));
+
+    unsignedOther = -123;
+    x = unsignedOther;
+    CHECK(eq(x, UINT64_MAX, -123));
+    x = omw::UnsignedInt128(unsignedOther);
+    CHECK(eq(x, UINT64_MAX, -123));
+
+
+
+    omw::SignedInt128 signedOther;
+
+    signedOther = 123;
+    x = signedOther;
+    CHECK(eq(x, 0, 123));
+    x = omw::UnsignedInt128(signedOther);
+    CHECK(eq(x, 0, 123));
+
+    signedOther = -123;
+    x = signedOther;
+    CHECK(eq(x, UINT64_MAX, -123));
+    x = omw::UnsignedInt128(signedOther);
+    CHECK(eq(x, UINT64_MAX, -123));
 }
 
 
 
-TEST_CASE("int.h arithmetic operators")
+TEST_CASE("int.h arithmetic operators signed")
 {
+    omw::int128_t x;
+
+    // unary + -
+    x = 123;
+    CHECK(eq(+x, 0, 123));
+    x = -123;
+    CHECK(eq(+x, UINT64_MAX, -123));
+    x = 123;
+    CHECK(eq(-x, UINT64_MAX, -123));
+    x = -123;
+    CHECK(eq(-x, 0, 123));
+
+
+    // +
+    x.set(0, 0);
+    CHECK(eq(x + 54, 0, 54));
+    CHECK(eq(x + -123, UINT64_MAX, 0xFFFFFFFFFFFFFF85));
+    CHECK(eq(x + INT64_MIN, UINT64_MAX, 0x8000000000000000));
+    CHECK(eq(x + INT64_MAX, 0, 0x7FFFFFFFFFFFFFFF));
+    CHECK(eq(x + UINT64_MAX, UINT64_MAX, UINT64_MAX));
+    CHECK(eq(x + omw::int128_t(0, UINT64_MAX), 0, UINT64_MAX));
+    CHECK(eq(x + 0xFFFFFFFFFFFFFFFD, UINT64_MAX, -3));
+    CHECK(eq(x + omw::int128_t(0, 0xFFFFFFFFFFFFFFFD), 0, 0xFFFFFFFFFFFFFFFD));
+
+    x.set(0, 5);
+    CHECK(eq(x + 54, 0, 59));
+    CHECK(eq(x + -123, UINT64_MAX, 0xFFFFFFFFFFFFFF8A));
+    CHECK(eq(x + INT64_MIN, UINT64_MAX, 0x8000000000000005));
+    CHECK(eq(x + INT64_MAX, 0, 0x8000000000000004));
+    CHECK(eq(x + UINT64_MAX, 0, 4));
+    CHECK(eq(x + omw::int128_t(0, UINT64_MAX), 1, 4));
+    CHECK(eq(x + 0xFFFFFFFFFFFFFFFD, 0, 2));
+    CHECK(eq(x + omw::int128_t(0, 0xFFFFFFFFFFFFFFFD), 1, 2));
+
+
+    // -
+    x.set(0, 0);
+    CHECK(eq(x - 54, UINT64_MAX, -54));
+    CHECK(eq(x - -123, 0, 123));
+    CHECK(eq(x - INT64_MIN, 0, 0x8000000000000000));
+    CHECK(eq(x - INT64_MAX, UINT64_MAX, 0x8000000000000001));
+    CHECK(eq(x - UINT64_MAX, 0, 1));
+    CHECK(eq(x - omw::int128_t(0, UINT64_MAX), UINT64_MAX, 1));
+    CHECK(eq(x - 0xFFFFFFFFFFFFFFFD, 0, 3));
+    CHECK(eq(x - omw::int128_t(0, 0xFFFFFFFFFFFFFFFD), UINT64_MAX, 3));
+
+    x.set(0, 5);
+    CHECK(eq(x - 54, UINT64_MAX, -49));
+    CHECK(eq(x - -123, 0, 128));
+    CHECK(eq(x - INT64_MIN, 0, 0x8000000000000005));
+    CHECK(eq(x - INT64_MAX, UINT64_MAX, 0x8000000000000006));
+    CHECK(eq(x - UINT64_MAX, 0, 6));
+    CHECK(eq(x - omw::int128_t(0, UINT64_MAX), UINT64_MAX, 6));
+    CHECK(eq(x - 0xFFFFFFFFFFFFFFFD, 0, 8));
+    CHECK(eq(x - omw::int128_t(0, 0xFFFFFFFFFFFFFFFD), UINT64_MAX, 8));
+
+
+    // & | ^
+    x.set(0, 0);
+    CHECK(eq(x | omw::Base_Int128(0xFFFFFFFF5555AAAA, 0x12345678), 0xFFFFFFFF5555AAAA, 0x12345678));
+
+    x.set(0xFFFFFFFF5555AAAA, 0x12345678);
+    CHECK(eq(x & omw::Base_Int128(0x5555AAAA00FF00FF, 0xFFFF0000FFFF0000), 0x5555AAAA005500AA, 0x12340000));
+
+    x.set(0x5555AAAA005500AA, 0x12340000);
+    CHECK(eq(x ^ omw::Base_Int128(0x55AA00FF0AAF055F, 0x987600009999ABCD), 0x00FFAA550AFA05F5, 0x987600008BADABCD));
+
+
+    // <<
+    x.set(0, 1);
+    CHECK(eq(x << 3, 0, 8));
+
+    x.set(1, 0);
+    CHECK(eq(x << 3, 8, 0));
+
+    x.set(0, 0xA5);
+    CHECK(eq(x << 32, 0, 0xA500000000));
+
+    x.set(0, 1);
+    CHECK(eq(x << 65, 2, 0));
+
+    x.set(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x << 127, 0x8000000000000000, 0));
+
+    x.set(0, 1);
+    CHECK(eq(x << 128, 0, 0));
+
+    x.set(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x << 128, 0, 0));
+
+    x.set(0, 0x12345678);
+    CHECK(eq(x << 32, 0, 0x1234567800000000));
+
+    x.set(0x1234567800000000, 0x12345678);
+    CHECK(eq(x << 48, 0x1234, 0x5678000000000000));
+
+
+    // >>
+    x.set(0x800000000000, 0);
+    CHECK(eq(x >> 3, 0x100000000000, 0));
+
+    x.set(0, 0x800000000000);
+    CHECK(eq(x >> 3, 0, 0x100000000000));
+
+    x.set(0, 0xA500000000);
+    CHECK(eq(x >> 32, 0, 0xA5));
+
+    x.set(0x800000000000, 1);
+    CHECK(eq(x >> 65, 0, 0x400000000000));
+
+    x.set(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x >> 127, 0, 1));
+
+    x.set(0x800000000000, 0);
+    CHECK(eq(x >> 128, 0, 0));
+
+    x.set(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x >> 128, 0, 0));
+
+    x.set(0x1234567800000000, 0);
+    CHECK(eq(x >> 32, 0x12345678, 0));
+
+    x.set(0x1234567800000000, 123456);
+    CHECK(eq(x >> 48, 0x1234, 0x5678000000000000));
 }
 
 TEST_CASE("int.h compairson operators")
