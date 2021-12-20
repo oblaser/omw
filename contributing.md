@@ -16,8 +16,8 @@ translated are passed through the `OMWi_DISPSTR(x)` macro to make it easier to f
 in future edits, wich may support multiple languages.
 
 ## Tools
-- cmake and make
-- doxygen
-- [potoroo](https://github.com/oblaser/potoroo) (0.2.0-pre-release or newer) see `/web`
-- Visual Studio
-- Visual Studio Code (used to write and create/deploy/build the contents of the `/doc` and `/web` directories)
+- Build on Linux: `cmake` and `build-essential`
+- Build on Windows: `Visual Studio`
+- `doxygen`
+- [`potoroo`](https://github.com/oblaser/potoroo) (0.2.0-pre-release or newer) see `/web`
+- `Visual Studio Code` (used to write and create/deploy/build the contents of the `/doc` and `/web` directories)
