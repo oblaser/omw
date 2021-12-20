@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            18.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -924,8 +924,364 @@ TEST_CASE("int.h arithmetic operators signed")
     CHECK(eq(x >> 48, 0x1234, 0x5678000000000000));
 }
 
-TEST_CASE("int.h compairson operators")
+
+
+TEST_CASE("int.h arithmetic operators unsigned")
 {
+    omw::uint128_t x;
+
+    // unary + -
+    x = 123;
+    CHECK(eq(+x, 0, 123));
+    x = -123;
+    CHECK(eq(+x, UINT64_MAX, -123));
+    x = 123;
+    CHECK(eq(-x, UINT64_MAX, -123));
+    x = -123;
+    CHECK(eq(-x, 0, 123));
+
+
+    // +
+    x.set(0, 0);
+    CHECK(eq(x + 54, 0, 54));
+    CHECK(eq(x + -123, UINT64_MAX, 0xFFFFFFFFFFFFFF85));
+    CHECK(eq(x + INT64_MIN, UINT64_MAX, 0x8000000000000000));
+    CHECK(eq(x + INT64_MAX, 0, 0x7FFFFFFFFFFFFFFF));
+    CHECK(eq(x + UINT64_MAX, UINT64_MAX, UINT64_MAX));
+    CHECK(eq(x + omw::uint128_t(0, UINT64_MAX), 0, UINT64_MAX));
+    CHECK(eq(x + 0xFFFFFFFFFFFFFFFD, UINT64_MAX, -3));
+    CHECK(eq(x + omw::uint128_t(0, 0xFFFFFFFFFFFFFFFD), 0, 0xFFFFFFFFFFFFFFFD));
+
+    x.set(0, 5);
+    CHECK(eq(x + 54, 0, 59));
+    CHECK(eq(x + -123, UINT64_MAX, 0xFFFFFFFFFFFFFF8A));
+    CHECK(eq(x + INT64_MIN, UINT64_MAX, 0x8000000000000005));
+    CHECK(eq(x + INT64_MAX, 0, 0x8000000000000004));
+    CHECK(eq(x + UINT64_MAX, 0, 4));
+    CHECK(eq(x + omw::uint128_t(0, UINT64_MAX), 1, 4));
+    CHECK(eq(x + 0xFFFFFFFFFFFFFFFD, 0, 2));
+    CHECK(eq(x + omw::uint128_t(0, 0xFFFFFFFFFFFFFFFD), 1, 2));
+
+
+    // -
+    x.set(0, 0);
+    CHECK(eq(x - 54, UINT64_MAX, -54));
+    CHECK(eq(x - -123, 0, 123));
+    CHECK(eq(x - INT64_MIN, 0, 0x8000000000000000));
+    CHECK(eq(x - INT64_MAX, UINT64_MAX, 0x8000000000000001));
+    CHECK(eq(x - UINT64_MAX, 0, 1));
+    CHECK(eq(x - omw::uint128_t(0, UINT64_MAX), UINT64_MAX, 1));
+    CHECK(eq(x - 0xFFFFFFFFFFFFFFFD, 0, 3));
+    CHECK(eq(x - omw::uint128_t(0, 0xFFFFFFFFFFFFFFFD), UINT64_MAX, 3));
+
+    x.set(0, 5);
+    CHECK(eq(x - 54, UINT64_MAX, -49));
+    CHECK(eq(x - -123, 0, 128));
+    CHECK(eq(x - INT64_MIN, 0, 0x8000000000000005));
+    CHECK(eq(x - INT64_MAX, UINT64_MAX, 0x8000000000000006));
+    CHECK(eq(x - UINT64_MAX, 0, 6));
+    CHECK(eq(x - omw::uint128_t(0, UINT64_MAX), UINT64_MAX, 6));
+    CHECK(eq(x - 0xFFFFFFFFFFFFFFFD, 0, 8));
+    CHECK(eq(x - omw::uint128_t(0, 0xFFFFFFFFFFFFFFFD), UINT64_MAX, 8));
+
+
+    // & | ^
+    x.set(0, 0);
+    CHECK(eq(x | omw::Base_Int128(0xFFFFFFFF5555AAAA, 0x12345678), 0xFFFFFFFF5555AAAA, 0x12345678));
+
+    x.set(0xFFFFFFFF5555AAAA, 0x12345678);
+    CHECK(eq(x & omw::Base_Int128(0x5555AAAA00FF00FF, 0xFFFF0000FFFF0000), 0x5555AAAA005500AA, 0x12340000));
+
+    x.set(0x5555AAAA005500AA, 0x12340000);
+    CHECK(eq(x ^ omw::Base_Int128(0x55AA00FF0AAF055F, 0x987600009999ABCD), 0x00FFAA550AFA05F5, 0x987600008BADABCD));
+
+
+    // <<
+    x.set(0, 1);
+    CHECK(eq(x << 3, 0, 8));
+
+    x.set(1, 0);
+    CHECK(eq(x << 3, 8, 0));
+
+    x.set(0, 0xA5);
+    CHECK(eq(x << 32, 0, 0xA500000000));
+
+    x.set(0, 1);
+    CHECK(eq(x << 65, 2, 0));
+
+    x.set(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x << 127, 0x8000000000000000, 0));
+
+    x.set(0, 1);
+    CHECK(eq(x << 128, 0, 0));
+
+    x.set(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x << 128, 0, 0));
+
+    x.set(0, 0x12345678);
+    CHECK(eq(x << 32, 0, 0x1234567800000000));
+
+    x.set(0x1234567800000000, 0x12345678);
+    CHECK(eq(x << 48, 0x1234, 0x5678000000000000));
+
+
+    // >>
+    x.set(0x800000000000, 0);
+    CHECK(eq(x >> 3, 0x100000000000, 0));
+
+    x.set(0, 0x800000000000);
+    CHECK(eq(x >> 3, 0, 0x100000000000));
+
+    x.set(0, 0xA500000000);
+    CHECK(eq(x >> 32, 0, 0xA5));
+
+    x.set(0x800000000000, 1);
+    CHECK(eq(x >> 65, 0, 0x400000000000));
+
+    x.set(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x >> 127, 0, 1));
+
+    x.set(0x800000000000, 0);
+    CHECK(eq(x >> 128, 0, 0));
+
+    x.set(UINT64_MAX, UINT64_MAX);
+    CHECK(eq(x >> 128, 0, 0));
+
+    x.set(0x1234567800000000, 0);
+    CHECK(eq(x >> 32, 0x12345678, 0));
+
+    x.set(0x1234567800000000, 123456);
+    CHECK(eq(x >> 48, 0x1234, 0x5678000000000000));
+}
+
+TEST_CASE("int.h compairson operators signed")
+{
+    omw::int128_t a, b;
+
+    a.sets(-123);
+    b.sets(-123);
+    CHECK(a == b);
+    CHECK_FALSE(a != b);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(a > b);
+    CHECK(a <= b);
+    CHECK(a >= b);
+
+    a.sets(1);
+    b.sets(0);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK_FALSE(a < b);
+    CHECK(a > b);
+    CHECK_FALSE(a <= b);
+    CHECK(a >= b);
+
+    a.set(UINT64_MAX, 0);
+    b.sets(-1);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK(a < b);
+    CHECK_FALSE(a > b);
+    CHECK(a <= b);
+    CHECK_FALSE(a >= b);
+
+    a.set(UINT64_MAX, 123);
+    b.set(UINT64_MAX, 122);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK_FALSE(a < b);
+    CHECK(a > b);
+    CHECK_FALSE(a <= b);
+    CHECK(a >= b);
+
+    a.set(0x7000000000000000, 123);
+    b.set(0x7000000000000000, 122);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK_FALSE(a < b);
+    CHECK(a > b);
+    CHECK_FALSE(a <= b);
+    CHECK(a >= b);
+
+    a.set(0xF000000000000000, 123);
+    b.set(0xF000000000000000, 122);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK_FALSE(a < b);
+    CHECK(a > b);
+    CHECK_FALSE(a <= b);
+    CHECK(a >= b);
+
+    a.set(0, UINT64_MAX);
+    b.set(1, 0);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK(a < b);
+    CHECK_FALSE(a > b);
+    CHECK(a <= b);
+    CHECK_FALSE(a >= b);
+}
+
+TEST_CASE("int.h compairson operators unsigned")
+{
+    omw::uint128_t a, b;
+
+    a.setu(123);
+    b.setu(123);
+    CHECK(a == b);
+    CHECK_FALSE(a != b);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(a > b);
+    CHECK(a <= b);
+    CHECK(a >= b);
+
+    a.sets(1);
+    b.sets(0);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK_FALSE(a < b);
+    CHECK(a > b);
+    CHECK_FALSE(a <= b);
+    CHECK(a >= b);
+
+    a.set(UINT64_MAX, 0);
+    b.sets(-1);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK(a < b);
+    CHECK_FALSE(a > b);
+    CHECK(a <= b);
+    CHECK_FALSE(a >= b);
+
+    a.set(UINT64_MAX, 123);
+    b.set(UINT64_MAX, 122);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK_FALSE(a < b);
+    CHECK(a > b);
+    CHECK_FALSE(a <= b);
+    CHECK(a >= b);
+
+    a.set(0x7000000000000000, 123);
+    b.set(0x7000000000000000, 122);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK_FALSE(a < b);
+    CHECK(a > b);
+    CHECK_FALSE(a <= b);
+    CHECK(a >= b);
+
+    a.set(0xF000000000000000, 123);
+    b.set(0xF000000000000000, 122);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK_FALSE(a < b);
+    CHECK(a > b);
+    CHECK_FALSE(a <= b);
+    CHECK(a >= b);
+
+    a.set(0, UINT64_MAX);
+    b.set(1, 0);
+    CHECK_FALSE(a == b);
+    CHECK(a != b);
+    CHECK(a < b);
+    CHECK_FALSE(a > b);
+    CHECK(a <= b);
+    CHECK_FALSE(a >= b);
+}
+
+TEST_CASE("int.h compairson operators mixed")
+{
+    omw::int128_t s;
+    omw::uint128_t u;
+
+    CHECK(s == u);
+    CHECK(u == s);
+    CHECK_FALSE(s != u);
+    CHECK_FALSE(u != s);
+    CHECK_FALSE(s < u);
+    CHECK_FALSE(u < s);
+    CHECK_FALSE(s > u);
+    CHECK_FALSE(u > s);
+    CHECK(s <= u);
+    CHECK(u <= s);
+    CHECK(s >= u);
+    CHECK(u >= s);
+
+    s = 123;
+    u = 123;
+    CHECK(s == u);
+    CHECK(u == s);
+    CHECK_FALSE(s != u);
+    CHECK_FALSE(u != s);
+    CHECK_FALSE(s < u);
+    CHECK_FALSE(u < s);
+    CHECK_FALSE(s > u);
+    CHECK_FALSE(u > s);
+    CHECK(s <= u);
+    CHECK(u <= s);
+    CHECK(s >= u);
+    CHECK(u >= s);
+
+    s = 54;
+    u = 123;
+    CHECK_FALSE(s == u);
+    CHECK_FALSE(u == s);
+    CHECK(s != u);
+    CHECK(u != s);
+    CHECK(s < u);
+    CHECK_FALSE(u < s);
+    CHECK_FALSE(s > u);
+    CHECK(u > s);
+    CHECK(s <= u);
+    CHECK_FALSE(u <= s);
+    CHECK_FALSE(s >= u);
+    CHECK(u >= s);
+
+    s = 123;
+    u = 54;
+    CHECK_FALSE(s == u);
+    CHECK_FALSE(u == s);
+    CHECK(s != u);
+    CHECK(u != s);
+    CHECK_FALSE(s < u);
+    CHECK(u < s);
+    CHECK(s > u);
+    CHECK_FALSE(u > s);
+    CHECK_FALSE(s <= u);
+    CHECK(u <= s);
+    CHECK(s >= u);
+    CHECK_FALSE(u >= s);
+
+    s = -1;
+    u = 123;
+    CHECK_FALSE(s == u);
+    CHECK_FALSE(u == s);
+    CHECK(s != u);
+    CHECK(u != s);
+    CHECK(s < u);
+    CHECK_FALSE(u < s);
+    CHECK_FALSE(s > u);
+    CHECK(u > s);
+    CHECK(s <= u);
+    CHECK_FALSE(u <= s);
+    CHECK_FALSE(s >= u);
+    CHECK(u >= s);
+
+    s = 123;
+    u.set(INT64_MAX, INT64_MAX);
+    CHECK_FALSE(s == u);
+    CHECK_FALSE(u == s);
+    CHECK(s != u);
+    CHECK(u != s);
+    CHECK(s < u);
+    CHECK_FALSE(u < s);
+    CHECK_FALSE(s > u);
+    CHECK(u > s);
+    CHECK(s <= u);
+    CHECK_FALSE(u <= s);
+    CHECK_FALSE(s >= u);
+    CHECK(u >= s);
 }
 
 
