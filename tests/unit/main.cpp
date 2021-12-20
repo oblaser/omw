@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            17.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -19,7 +19,7 @@ TEST_CASE("omw lib")
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 
-    REQUIRE(omw::info::version() == omw::Version(0, 1, 1002));
+    REQUIRE(omw::info::version() == omw::Version(0, 2, 0));
 }
 
 

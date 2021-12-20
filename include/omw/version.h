@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            15.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -21,13 +21,14 @@ namespace omw
     {
     public:
         Version();
-        Version(int major, int minor, int revision);
+        Version(int major, int minor, int patch, const char* preRelease = nullptr, const char* build = nullptr);
+        Version(int major, int minor, int patch, const std::string& preRelease = "", const std::string& build = "");
         explicit Version(const char* versionStr);
         explicit Version(const std::string& versionStr);
 
-        int maj() const;
-        int min() const;
-        int rev() const;
+        int major() const;
+        int minor() const;
+        int patch() const;
 
         const int* data() const;
         size_t size() const;

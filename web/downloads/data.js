@@ -70,36 +70,22 @@ const releaseData =
     },
 //#p endrm
     {
-        title: "Release v0.1.2",
+        title: "Release v0.2.0-a",
         binaries:
         [
-            { type: "link", text: "Windows (zip)", href: "./files/omw_win_v0.1.2.zip", download: true }
+            { type: "link", text: "Windows (zip)", href: "./files/omw_win_v0.2.0-a.zip", download: true },
+            { type: "link", text: "Linux x86_64 (tar.gz)", href: "./files/omw_linux_x86_64_v0.2.0-a.tar.gz", download: true },
+            { type: "text", text: "Linux binaries are in experimantal state." }
         ],
         source:
         [
-            { type: "link", text: "Source (tar.gz)", href: "./files/omw_src_v0.1.2.tar.gz", download: true },
-            { type: "link", text: "Source (zip)", href: "./files/omw_src_v0.1.2.zip", download: true }
+            { type: "link", text: "Source (tar.gz)", href: "./files/omw_src_v0.2.0-a.tar.gz", download: true },
+            { type: "link", text: "Source (zip)", href: "./files/omw_src_v0.2.0-a.zip", download: true }
         ],
         doc:
         [
-            { type: "link", text: "HTML (tar.gz)", href: "./files/omw_doc_v0.1.2.tar.gz", download: true },
-            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.1.2.zip", download: true }
-        ]
-    },
-    {
-        title: "Pre-Release v0.1.1002a",
-        binaries:
-        [
-            { type: "link", text: "Windows (zip)", href: "./files/omw_win_v0.1.1002a.zip", download: true }
-        ],
-        source:
-        [
-            { type: "link", text: "Source (tar.gz)", href: "./files/omw_src_v0.1.1002a.tar.gz", download: true },
-            { type: "link", text: "Source (zip)", href: "./files/omw_src_v0.1.1002a.zip", download: true }
-        ],
-        doc:
-        [
-            { type: "link", text: "online (GitHub master)", href: "../doc/" }
+            { type: "link", text: "HTML (tar.gz)", href: "./files/omw_doc_v0.2.0-a.tar.gz", download: true },
+            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.2.0-a.zip", download: true }
         ]
     },
     {
