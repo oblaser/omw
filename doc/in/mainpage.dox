@@ -12,6 +12,9 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 \section mainpage_guidelines Guidelines
 
+Names like `OMWi_...` or similar are for library internal use only. There is no need to
+call or read them.
+
 \subsection mainpage_guidelines_include Including Files
 It is not necessary to explicitly not include the windows headers on other platforms.
 The contents of the headers in the `omw/windows` directory are hidden on every other platform.
@@ -22,7 +25,7 @@ The contents of the headers in the `omw/windows` directory are hidden on every o
 
 
 \section mainpage_links Links
-- <a href="https://static.oblaser.ch/omw/">Website</a>
+- <a href="https://static.oblaser.ch/omw/">Project Website</a>
 - <a href="https://github.com/oblaser/omw">GitHub</a>
 
 */

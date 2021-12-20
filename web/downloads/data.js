@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            10.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -69,6 +69,23 @@ const releaseData =
         ]
     },
 //#p endrm
+    {
+        title: "Release v0.1.2",
+        binaries:
+        [
+            { type: "link", text: "Windows (zip)", href: "./files/omw_win_v0.1.2.zip", download: true }
+        ],
+        source:
+        [
+            { type: "link", text: "Source (tar.gz)", href: "./files/omw_src_v0.1.2.tar.gz", download: true },
+            { type: "link", text: "Source (zip)", href: "./files/omw_src_v0.1.2.zip", download: true }
+        ],
+        doc:
+        [
+            { type: "link", text: "HTML (tar.gz)", href: "./files/omw_doc_v0.1.2.tar.gz", download: true },
+            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.1.2.zip", download: true }
+        ]
+    },
     {
         title: "Pre-Release v0.1.1002a",
         binaries:
