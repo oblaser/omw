@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            17.09.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -58,10 +58,7 @@ namespace omw
         omw::string toCssStr() const;
 
         omw::Color& operator+=(const omw::Color& operand);
-        friend omw::Color operator+(const omw::Color& lhs, const omw::Color& rhs);
-        friend bool operator==(const omw::Color& left, const omw::Color& right);
-        friend bool operator!=(const omw::Color& left, const omw::Color& right);
-
+        
         //! \name Windows API Support
         /// @{
         void from_win(uint32_t winCol);
@@ -82,6 +79,12 @@ namespace omw
         uint8_t bValue;
         uint8_t aValue;
     };
+
+
+
+    omw::Color operator+(const omw::Color& lhs, const omw::Color& rhs);
+    bool operator==(const omw::Color& lhs, const omw::Color& rhs);
+    bool operator!=(const omw::Color& lhs, const omw::Color& rhs);
 
 
 

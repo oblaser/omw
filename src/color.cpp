@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -340,34 +340,6 @@ omw::Color& omw::Color::operator+=(const omw::Color& operand)
     return *this;
 }
 
-//! @param lhs B
-//! @param rhs A
-//! @return Alpha composit of A over B
-//! 
-//! If one of the colors is invalid, the result is also invalid. However all color values are computed anyway.
-//! 
-omw::Color omw::operator+(const omw::Color& lhs, const omw::Color& rhs)
-{
-    omw::Color r(lhs);
-    r += rhs;
-    return r;
-}
-
-//! @param left 
-//! @param right 
-//! 
-//! Checks for equality of the validity and color values.
-//! 
-bool omw::operator==(const omw::Color& left, const omw::Color& right)
-{
-    return ((left.isValid() == right.isValid()) && (left.toARGB() == right.toARGB()));
-}
-
-bool omw::operator!=(const omw::Color& left, const omw::Color& right)
-{
-    return !(left == right);
-}
-
 //! See omw::fromWinColor()
 void omw::Color::from_win(uint32_t winCol)
 {
@@ -423,6 +395,37 @@ uint32_t omw::Color::to_wxW_RGBA() const
     col <<= 8;
     col |= r();
     return col;
+}
+
+
+
+//! @param lhs B
+//! @param rhs A
+//! @return Alpha composit of A over B
+//! 
+//! If one of the colors is invalid, the result is also invalid. However all color values are computed anyway.
+//! 
+omw::Color omw::operator+(const omw::Color& lhs, const omw::Color& rhs)
+{
+    omw::Color r(lhs);
+    r += rhs;
+    return r;
+}
+
+//! 
+//! Checks for equality of the validity and the color values.
+//!  
+bool omw::operator==(const omw::Color& lhs, const omw::Color& rhs)
+{
+    return ((lhs.isValid() == rhs.isValid()) && (lhs.toARGB() == rhs.toARGB()));
+}
+
+//! 
+//! See `omw::operator==(const omw::Color&, const omw::Color&)`.
+//! 
+bool omw::operator!=(const omw::Color& lhs, const omw::Color& rhs)
+{
+    return !(lhs == rhs);
 }
 
 
@@ -505,7 +508,7 @@ void omw::alphaComposit_apply(int32_t a_ACCC, int32_t& b_ACCC)
 //! 
 void omw::alphaComposit_apply(const omw::Color& a, omw::Color& b)
 {
-    b = omw::alphaComposit(a, b);
+    b += a;
 }
 
 
