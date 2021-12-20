@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -368,7 +368,9 @@ bool omw::operator!=(const omw::Color& left, const omw::Color& right)
     return !(left == right);
 }
 
+//! 
 //! See omw::fromWinColor()
+//! 
 void omw::Color::from_win(uint32_t winCol)
 {
     uint8_t r = winCol & 0xFF;
@@ -377,7 +379,9 @@ void omw::Color::from_win(uint32_t winCol)
     set(r, g, b, 0xFF);
 }
 
+//! 
 //! See omw::fromWinColor()
+//! 
 uint32_t omw::Color::to_win() const
 {
     uint32_t col = b();
@@ -395,7 +399,9 @@ void omw::Color::from_wxW_RGB(uint32_t wxWCol)
     from_wxW_RGBA(0xFF000000 | wxWCol);
 }
 
+//! 
 //! See omw::fromWxColor()
+//! 
 void omw::Color::from_wxW_RGBA(uint32_t wxWCol)
 {
     uint8_t r = wxWCol & 0xFF;
@@ -412,7 +418,9 @@ uint32_t omw::Color::to_wxW_RGB() const
     return (to_wxW_RGBA() & 0x00FFFFFF);
 }
 
+//! 
 //! See omw::fromWxColor()
+//! 
 uint32_t omw::Color::to_wxW_RGBA() const
 {
     uint32_t col = a();

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            13.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -9,16 +9,20 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 \mainpage omw - A C++ Middleware Library
 
 
-\section mainpage_conventions Conventions
 
-\subsection mainpage_conventions_strings Strings
-Calls to the Windows API should use the <tt>foobar<b>W</b>()</tt> functions and Microsofts `WCHAR` types to call the API.
-The \ref omw_windows_strConv_infoText can be used to convert between the two string types.
+\section mainpage_guidelines Guidelines
+
+\subsection mainpage_guidelines_include Including Files
+It is not necessary to explicitly not include the windows headers on other platforms.
+The contents of the headers in the `omw/windows` directory are hidden on every other platform.
+
+\subsection mainpage_guidelines_callWinAPI Calling the Windows API
+- \ref omw_windows_callWinAPI
 
 
 
 \section mainpage_links Links
+- <a href="https://static.oblaser.ch/omw/">Website</a>
 - <a href="https://github.com/oblaser/omw">GitHub</a>
-- <a href="https://static.oblaser.ch/omw/">Website (doc, download)</a>
 
 */
