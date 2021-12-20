@@ -13,7 +13,8 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include <cctype>
 #include <string>
 
-#include <catch2/catch.hpp>
+#include "catch2/catch.hpp"
+
 #include <omw/windows/envVar.h>
 
 

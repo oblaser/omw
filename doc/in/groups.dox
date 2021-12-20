@@ -58,6 +58,11 @@ See also \ref ns_omw_ansiesc_section_ansiEscMode and `omw::windows::consoleEnVir
 */
 
 /*!
+\defgroup grp_numerics Numerics Library
+`#include <omw/math.h>`
+*/
+
+/*!
 \defgroup grp_stringLib String Library
 `#include <omw/string.h>`
 */

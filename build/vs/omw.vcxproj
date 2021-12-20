@@ -129,7 +129,9 @@
     <ClCompile Include="..\..\src\cli.cpp" />
     <ClCompile Include="..\..\src\color.cpp" />
     <ClCompile Include="..\..\src\io\serialPort.cpp" />
+    <ClCompile Include="..\..\src\math.cpp" />
     <ClCompile Include="..\..\src\omw.cpp" />
+    <ClCompile Include="..\..\src\int.cpp" />
     <ClCompile Include="..\..\src\string.cpp" />
     <ClCompile Include="..\..\src\utility.cpp" />
     <ClCompile Include="..\..\src\version.cpp" />
@@ -146,7 +148,9 @@
     <ClInclude Include="..\..\include\omw\color.h" />
     <ClInclude Include="..\..\include\omw\defs.h" />
     <ClInclude Include="..\..\include\omw\io\serialPort.h" />
+    <ClInclude Include="..\..\include\omw\math.h" />
     <ClInclude Include="..\..\include\omw\omw.h" />
+    <ClInclude Include="..\..\include\omw\int.h" />
     <ClInclude Include="..\..\include\omw\string.h" />
     <ClInclude Include="..\..\include\omw\utility.h" />
     <ClInclude Include="..\..\include\omw\version.h" />

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            15.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -13,6 +13,10 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace omw
 {
+    /*! \addtogroup grp_utility
+    * @{
+    */
+
     class Version
     {
     public:
@@ -31,15 +35,8 @@ namespace omw
         std::vector<int> toVector() const;
         std::string toString() const;
 
-        friend bool operator<(const omw::Version& left, const omw::Version& right);
-        friend bool operator>(const omw::Version& left, const omw::Version& right);
-        friend bool operator<=(const omw::Version& left, const omw::Version& right);
-        friend bool operator>=(const omw::Version& left, const omw::Version& right);
-        friend bool operator==(const omw::Version& left, const omw::Version& right);
-        friend bool operator!=(const omw::Version& left, const omw::Version& right);
-
         template<class CharT, class Traits = std::char_traits<CharT>>
-        friend std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, const omw::Version& v) 
+        friend std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, const omw::Version& v)
         {
             // since the version string consists only out of ASCII chars, here is no std::basic_ostream<c,t>::widen() needed.
             return (os << v.toString().c_str());
@@ -51,6 +48,18 @@ namespace omw
 
         void setData(const std::string& versionStr);
     };
+
+    //! \name Operators
+    /// @{
+    bool operator==(const omw::Version& a, const omw::Version& b);
+    bool operator!=(const omw::Version& a, const omw::Version& b);
+    bool operator<(const omw::Version& a, const omw::Version& b);
+    bool operator>(const omw::Version& a, const omw::Version& b);
+    bool operator<=(const omw::Version& a, const omw::Version& b);
+    bool operator>=(const omw::Version& a, const omw::Version& b);
+    /// @}
+
+    /*! @} */
 }
 
 #endif // IG_OMW_VERSION_H

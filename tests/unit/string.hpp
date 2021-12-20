@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -12,9 +12,9 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "catch2/catch.hpp"
 #include "testUtil.h"
 
-#include <catch2/catch.hpp>
 #include <omw/string.h>
 
 
@@ -437,24 +437,47 @@ TEST_CASE("string.h omw::string URL encoded")
 
 TEST_CASE("string.h to_string()")
 {
-    // std::to_string aliases
-    {
-        const int32_t i32 = -1234567890;
-        const uint32_t ui32 = 1234567890;
-        const int64_t i64 = -1234567890123456;
-        const uint64_t ui64 = 1234567890123456;
-        const float f = 1.41421f;
-        const double d = 2.71828;
-        const long double ld = 3.14159l;
+    const int32_t i32 = -1234567890;
+    const uint32_t ui32 = 1234567890;
+    const int64_t i64 = -1234567890123456;
+    const uint64_t ui64 = 1234567890123456;
+    const float f = 1.41421f;
+    const double d = 2.71828;
+    const long double ld = 3.14159l;
 
-        CHECK(omw::to_string(i32) == std::to_string(i32));
-        CHECK(omw::to_string(ui32) == std::to_string(ui32));
-        CHECK(omw::to_string(i64) == std::to_string(i64));
-        CHECK(omw::to_string(ui64) == std::to_string(ui64));
-        CHECK(omw::to_string(f) == std::to_string(f));
-        CHECK(omw::to_string(d) == std::to_string(d));
-        CHECK(omw::to_string(ld) == std::to_string(ld));
-    }
+    CHECK(omw::to_string(i32) == std::to_string(i32));
+    CHECK(omw::to_string(ui32) == std::to_string(ui32));
+    CHECK(omw::to_string(i64) == std::to_string(i64));
+    CHECK(omw::to_string(ui64) == std::to_string(ui64));
+    CHECK(omw::to_string(0xFFFFFFFFFFFFFFFF) == std::to_string(0xFFFFFFFFFFFFFFFF));
+    CHECK(omw::to_string(f) == std::to_string(f));
+    CHECK(omw::to_string(d) == std::to_string(d));
+    CHECK(omw::to_string(ld) == std::to_string(ld));
+
+
+
+    CHECK(omw::to_string(omw::int128_t(0)) == "0");
+    CHECK(omw::to_string(omw::uint128_t(0)) == "0");
+    CHECK(omw::to_string(omw::int128_t(i32)) == std::to_string(i32));
+    CHECK(omw::to_string(omw::uint128_t(ui32)) == std::to_string(ui32));
+    CHECK(omw::to_string(omw::int128_t(i64)) == std::to_string(i64));
+    CHECK(omw::to_string(omw::uint128_t(ui64)) == std::to_string(ui64));
+    CHECK(omw::to_string(omw::int128_t(0xFFFFFFFFFFFFFFFF)) ==     "-1");
+    CHECK(omw::to_string(omw::uint128_t(0xFFFFFFFFFFFFFFFF)) ==    "340282366920938463463374607431768211455");
+
+    CHECK(omw::to_string(omw::int128_t(1, 0)) == "18446744073709551616");
+    CHECK(omw::to_string(omw::int128_t(0, 0xFFFFFFFFFFFFFFFF)) ==  "18446744073709551615");
+    CHECK(omw::to_string(omw::int128_t(0x7FFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "170141183460469231731687303715884105727");
+    CHECK(omw::to_string(omw::int128_t(0x8000000000000000, 0)) == "-170141183460469231731687303715884105728");
+    CHECK(omw::to_string(omw::int128_t(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "-1");
+
+    CHECK(omw::to_string(omw::uint128_t(1, 0)) == "18446744073709551616");
+    CHECK(omw::to_string(omw::uint128_t(0, 0xFFFFFFFFFFFFFFFF)) == "18446744073709551615");
+    CHECK(omw::to_string(omw::uint128_t(0x7FFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "170141183460469231731687303715884105727");
+    CHECK(omw::to_string(omw::uint128_t(0x8000000000000000, 0)) == "170141183460469231731687303715884105728");
+    CHECK(omw::to_string(omw::uint128_t(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "340282366920938463463374607431768211455");
+
+
 
     CHECK(omw::to_string(false) == "false");
     CHECK(omw::to_string(true) == "true");
@@ -462,6 +485,8 @@ TEST_CASE("string.h to_string()")
     CHECK(omw::to_string(false, true) == "false");
     CHECK(omw::to_string(true, false) == "1");
     CHECK(omw::to_string(true, true) == "true");
+
+
 
     std::pair<int, int> pair1(-1, 123);
     CHECK(omw::to_string(pair1) == "-1;123");
@@ -591,9 +616,9 @@ TEST_CASE("string.h hexstoui64()")
     CHECK(omw::hexstoui64("ff") == 255);
     CHECK(omw::hexstoui64("FFffFFff") == 4294967295);
     CHECK(omw::hexstoui64("FFffFFfe") == 4294967294);
-    CHECK(omw::hexstoui64("ffffFFFFffffFFFF") == 18446744073709551615);
-    CHECK(omw::hexstoui64("ffffFFFFffffFFFe") == 18446744073709551614);
-    CHECK(omw::hexstoui64("0ffffFFFFffffFFFF") == 18446744073709551615);
+    CHECK(omw::hexstoui64("ffffFFFFffffFFFF") == 18446744073709551615u);
+    CHECK(omw::hexstoui64("ffffFFFFffffFFFe") == 18446744073709551614u);
+    CHECK(omw::hexstoui64("0ffffFFFFffffFFFF") == 18446744073709551615u);
 
     TESTUTIL_TRYCATCH_DECLARE_VAL(uint64_t, 0x11112);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64(""), std::invalid_argument);
@@ -782,7 +807,9 @@ TEST_CASE("string.h isInteger()")
     CHECK(omw::isInteger("-") == false);
     CHECK(omw::isInteger("-abc") == false);
     CHECK(omw::isInteger("123abc") == false);
+    CHECK(omw::isInteger("123 abc") == false);
     CHECK(omw::isInteger("-123abc") == false);
+    CHECK(omw::isInteger("-123 abc") == false);
     CHECK(omw::isInteger("0") == true);
     CHECK(omw::isInteger("-0") == true);
     CHECK(omw::isInteger("-1") == true);
@@ -796,7 +823,9 @@ TEST_CASE("string.h isInteger()")
     CHECK(omw::isUInteger("-") == false);
     CHECK(omw::isUInteger("-abc") == false);
     CHECK(omw::isUInteger("123abc") == false);
+    CHECK(omw::isUInteger("123 abc") == false);
     CHECK(omw::isUInteger("-123abc") == false);
+    CHECK(omw::isUInteger("-123 abc") == false);
     CHECK(omw::isUInteger("0") == true);
     CHECK(omw::isUInteger("-0") == false);
     CHECK(omw::isUInteger("-1") == false);
@@ -874,7 +903,7 @@ TEST_CASE("string.h peekNewLine()")
 
 
 
-    const char lf2[] = { 'a', 's', 'd', 'f', '\n', 'a', 's', 'd', 'f', '\n', '\n', 'a', 's', 'd', 'f', '\n'};
+    const char lf2[] = { 'a', 's', 'd', 'f', '\n', 'a', 's', 'd', 'f', '\n', '\n', 'a', 's', 'd', 'f', '\n' };
     str = lf2;
     end = str + sizeof(lf2);
     pos = 0;

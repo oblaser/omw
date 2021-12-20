@@ -10,9 +10,9 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 #include <cstdint>
 #include <stdexcept>
 
+#include "catch2/catch.hpp"
 #include "testUtil.h"
 
-#include <catch2/catch.hpp>
 #include <omw/color.h>
 
 

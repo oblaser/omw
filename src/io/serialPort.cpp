@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            17.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -17,6 +17,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace
 {
+#ifdef OMW_PLAT_WIN
     bool isCom0com(const std::string& device)
     {
         const omw::string tmpDevice = (omw::string(device)).toLower_asciiExt();
@@ -34,6 +35,7 @@ namespace
 
         return false;
     }
+#endif // OMW_PLAT_WIN
 }
 
 
@@ -48,9 +50,11 @@ omw::SerialPort::SerialPort()
 
 std::vector<omw::string> omw::getSerialPortList(bool onlyCOMx)
 {
-    const std::vector<omw::string> devices = omw::windows::getAllDosDevices();
     std::vector<omw::string> serialPorts;
 
+#ifdef OMW_PLAT_WIN
+    const std::vector<omw::string> devices = omw::windows::getAllDosDevices();
+    
     for (size_t i = 0; i < devices.size(); ++i)
     {
         bool isC0C = false;
@@ -62,12 +66,15 @@ std::vector<omw::string> omw::getSerialPortList(bool onlyCOMx)
             serialPorts.push_back(devices[i]);
         }
     }
+#endif // OMW_PLAT_WIN
 
     return serialPorts;
 }
 
 void omw::sortSerialPortList(std::vector<omw::string>& ports)
 {
+#ifdef OMW_PLAT_WIN
+
 #if /*simple*/ 0
     std::sort(ports.begin(), ports.end());
 #else
@@ -109,6 +116,12 @@ void omw::sortSerialPortList(std::vector<omw::string>& ports)
         ports.push_back(otherPorts[i]);
     }
 #endif
+
+#else // OMW_PLAT_WIN
+
+    std::sort(ports.begin(), ports.end());
+
+#endif // OMW_PLAT_WIN
 }
 
 void omw::sortSerialPortList(std::vector<std::string>& ports)

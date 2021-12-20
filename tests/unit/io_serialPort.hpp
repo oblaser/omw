@@ -10,9 +10,9 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "catch2/catch.hpp"
 #include "testUtil.h"
 
-#include <catch2/catch.hpp>
 #include <omw/io/serialPort.h>
 #include <omw/string.h>
 
@@ -32,6 +32,7 @@ TEST_CASE("serialPort.h sortSerialPortList()")
     };
     std::vector<std::string> stdPorts = omw::stdStringVector(ports);
 
+#ifdef OMW_PLAT_WIN
     const std::vector<omw::string> expectedResult =
     {
         "COM1",
@@ -43,6 +44,19 @@ TEST_CASE("serialPort.h sortSerialPortList()")
         "vCOM43",
         "vCOM6"
     };
+#else // OMW_PLAT_WIN
+    const std::vector<omw::string> expectedResult =
+    {
+        "AVC2",
+        "COM1",
+        "COM23",
+        "COM4",
+        "com0com3",
+        "vCOM4",
+        "vCOM43",
+        "vCOM6"
+    };
+#endif // OMW_PLAT_WIN
     const std::vector<std::string> stdExpectedResult = omw::stdStringVector(expectedResult);
 
     omw::sortSerialPortList(ports);

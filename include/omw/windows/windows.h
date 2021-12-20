@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            15.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -12,13 +12,13 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <cstdint>
 
+#include "../../omw/string.h"
 #include "../../omw/windows/envVar.h"
 #include "../../omw/windows/error.h"
 #include "../../omw/windows/exception.h"
 #include "../../omw/windows/string.h"
-#include "../../omw/string.h"
 
-#include <Windows.h>
+
 
 namespace omw
 {

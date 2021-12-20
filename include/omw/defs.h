@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           13.12.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            13.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_DEFS_H

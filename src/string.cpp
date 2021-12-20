@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            14.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -8,9 +8,31 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
-#include <cstdint> // creates a merge conflict and has to be removed. See devmaster branch.
+#include "omw/algorithm.h"
 #include "omw/defs.h"
 #include "omw/string.h"
+
+
+
+#define OMWi_CONVERT_STRING_VECTOR(out_t, in_t, stringVector)   \
+out_t r;                                                        \
+r.reserve((out_t::size_type)stringVector.size());               \
+for (in_t::size_type i = 0; i < stringVector.size(); ++i)       \
+{                                                               \
+    r.push_back(out_t::value_type(stringVector[i].c_str()));    \
+}                                                               \
+return r                                                        \
+// end OMWi_CONVERT_STRING_VECTOR
+
+#define OMWi_CREATE_STRING_VECTOR(out_t, strings, count)    \
+out_t r;                                                    \
+r.reserve(count);                                           \
+for (size_t i = 0; i < count; ++i)                          \
+{                                                           \
+    r.push_back(out_t::value_type(strings[i]));             \
+}                                                           \
+return r                                                    \
+// end OMWi_CREATE_STRING_VECTOR
 
 
 
@@ -65,35 +87,35 @@ namespace
         return omw::join(hexstr.split(2), sepChar);
     }
 
-    // out_t and in_t have to be std::vector<omw::string> and std::vector<std::string> or vice versa.
-    template <class out_t, class in_t>
-    out_t convertStringVector(const in_t& stringVector)
-    {
-        out_t r;
-        r.reserve((out_t::size_type)stringVector.size());
+    //// out_t and in_t have to be std::vector<omw::string> and std::vector<std::string> or vice versa.
+    //template <class out_t, class in_t>
+    //out_t convertStringVector(const in_t& stringVector)
+    //{
+    //    out_t r;
+    //    r.reserve((out_t::size_type)stringVector.size());
+    //
+    //    for (in_t::size_type i = 0; i < stringVector.size(); ++i)
+    //    {
+    //        r.push_back(out_t::value_type(stringVector[i].c_str()));
+    //    }
+    //
+    //    return r;
+    //}
 
-        for (in_t::size_type i = 0; i < stringVector.size(); ++i)
-        {
-            r.push_back(out_t::value_type(stringVector[i].c_str()));
-        }
-
-        return r;
-    }
-
-    // out_t has to be std::vector<omw::string> or std::vector<std::string>
-    template <class out_t>
-    out_t stringVector(const char* const* strings, size_t count)
-    {
-        out_t r;
-        r.reserve(count);
-
-        for (size_t i = 0; i < count; ++i)
-        {
-            r.push_back(out_t::value_type(strings[i]));
-        }
-
-        return r;
-    }
+    //// out_t has to be std::vector<omw::string> or std::vector<std::string>
+    //template <class out_t>
+    //out_t stringVector(const char* const* strings, size_t count)
+    //{
+    //    out_t r;
+    //    r.reserve(count);
+    //
+    //    for (size_t i = 0; i < count; ++i)
+    //    {
+    //        r.push_back(out_t::value_type(strings[i]));
+    //    }
+    //
+    //    return r;
+    //}
 }
 
 
@@ -490,6 +512,20 @@ omw::string omw::to_string(bool value, bool asText)
     return (value ? "1" : "0");
 }
 
+omw::string omw::to_string(const omw::int128_t& value)
+{
+    const omw::uint128_t tmp(value);
+    return (value.isNegative() ? "-" + omw::to_string(-tmp) : omw::to_string(tmp));
+}
+
+omw::string omw::to_string(const omw::uint128_t& value)
+{
+    omw::string str = omw::toHexStr(omw::doubleDabble(value), 0);
+    size_t startPos = 0;
+    while ((str[startPos] == '0') && (startPos < (str.length() - 1))) ++startPos;
+    return omw::string(str, startPos);
+}
+
 omw::string omw::to_string(const std::pair<int32_t, int32_t>& value, char sepChar)
 {
     return ::pair_to_string(value, sepChar);
@@ -527,15 +563,13 @@ omw::string omw::to_string(const std::pair<long double, long double>& value, cha
 
 
 
-
-
 //! @param boolStr Boolean string representation
 //! @return Bool value of the string
 //! 
 //! \b true and \b 1 converts to `true`, \b false and \b 0 to `false`. The input is not case sensitive.
 //! 
 //! \b Exceptions
-//! - `std::out_of_range` if the value isn't element of `{ "0", "1", "true", "false" }`
+//! - `std::out_of_range` if the value isn't an element of `{ "0", "1", "true", "false" }`
 //! - <tt><a href="https://en.cppreference.com/w/cpp/string/basic_string/stol" target="_blank">std::stoi()</a></tt> is called and may throw `std::out_of_range` or `std::invalid_argument`
 //! 
 bool omw::stob(const std::string& boolStr)
@@ -576,9 +610,6 @@ std::pair<int32_t, int32_t> omw::stoipair(const std::string& str, char sepChar)
 
     return std::pair<int32_t, int32_t>(std::stoi(first), std::stoi(second));
 }
-
-// https://en.cppreference.com/w/cpp/string/basic_string/stoul
-// https://en.cppreference.com/w/cpp/string/basic_string/stof
 
 
 
@@ -762,15 +793,17 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char sepChar)
     return values;
 }
 
-
-//! @param str 
-//! @return 
-//! Same as <tt>omw::sepHexStr(str, toHexStr_defaultSepChar)</tt>.
+//! 
+//! Same as `omw::sepHexStr(const std::string&, char)` with `omw::toHexStr_defaultSepChar`.
+//! 
 omw::string omw::sepHexStr(const std::string& str)
 {
-    return omw::sepHexStr(str, toHexStr_defaultSepChar);
+    return omw::sepHexStr(str, omw::toHexStr_defaultSepChar);
 }
 
+//! 
+//! Separates a concatonated hex string with the separation character (e.g. `sepChar = '-' | 00112233 ==> 00-11-22-33`).
+//! 
 omw::string omw::sepHexStr(const std::string& str, char sepChar)
 {
     return ::separateHexStr(omw::string(str), sepChar);
@@ -846,8 +879,6 @@ omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmCh
 //    return omw::sepHexStr(str, rmStrings.data(), rmStrings.size(), sepChar);
 //}
 
-
-
 omw::string omw::rmNonHex(const std::string& str)
 {
     omw::string r = str;
@@ -861,7 +892,7 @@ void omw::rmNonHex(char* str)
     {
         std::string tmpStr = str;
         omw::rmNonHex(tmpStr);
-        std::copy_n(tmpStr.c_str(), tmpStr.size() + 1, str);
+        std::copy(tmpStr.c_str(), tmpStr.c_str() + tmpStr.size() + 1, str);
     }
 }
 
@@ -905,7 +936,9 @@ omw::string omw::join(const omw::stringVector_t& strings, char sepChar)
 
 omw::stringVector_t omw::stringVector(const char* const* strings, size_t count)
 {
-    return ::stringVector<omw::stringVector_t>(strings, count);
+    //return ::stringVector<omw::stringVector_t>(strings, count);
+
+    OMWi_CREATE_STRING_VECTOR(omw::stringVector_t, strings, count);
 }
 
 omw::stringVector_t omw::stringVector(const std::string* strings, size_t count)
@@ -918,7 +951,9 @@ omw::stringVector_t omw::stringVector(const std::string* strings, size_t count)
         v.push_back((strings + i)->c_str());
     }
 
-    return ::stringVector<omw::stringVector_t>(v.data(), count);
+    //return ::stringVector<omw::stringVector_t>(v.data(), count);
+
+    OMWi_CREATE_STRING_VECTOR(omw::stringVector_t, v.data(), count);
 }
 
 omw::stringVector_t omw::stringVector(const omw::string* strings, size_t count)
@@ -928,12 +963,16 @@ omw::stringVector_t omw::stringVector(const omw::string* strings, size_t count)
 
 omw::stringVector_t omw::stringVector(const omw::stdStringVector_t& strvec)
 {
-    return convertStringVector<omw::stringVector_t, omw::stdStringVector_t>(strvec);
+    //return convertStringVector<omw::stringVector_t, omw::stdStringVector_t>(strvec);
+
+    OMWi_CONVERT_STRING_VECTOR(omw::stringVector_t, omw::stdStringVector_t, strvec);
 }
 
 omw::stdStringVector_t omw::stdStringVector(const char* const* strings, size_t count)
 {
-    return ::stringVector<omw::stdStringVector_t>(strings, count);
+    //return ::stringVector<omw::stdStringVector_t>(strings, count);
+
+    OMWi_CREATE_STRING_VECTOR(omw::stdStringVector_t, strings, count);
 }
 
 omw::stdStringVector_t omw::stdStringVector(const std::string* strings, size_t count)
@@ -951,12 +990,16 @@ omw::stdStringVector_t omw::stdStringVector(const omw::string* strings, size_t c
         v.push_back((strings + i)->c_str());
     }
 
-    return ::stringVector<omw::stdStringVector_t>(v.data(), count);
+    //return ::stringVector<omw::stdStringVector_t>(v.data(), count);
+
+    OMWi_CREATE_STRING_VECTOR(omw::stdStringVector_t, v.data(), count);
 }
 
 omw::stdStringVector_t omw::stdStringVector(const omw::stringVector_t& strvec)
 {
-    return convertStringVector<omw::stdStringVector_t, omw::stringVector_t>(strvec);
+    //return convertStringVector<omw::stdStringVector_t, omw::stringVector_t>(strvec);
+
+    OMWi_CONVERT_STRING_VECTOR(omw::stdStringVector_t, omw::stringVector_t, strvec);
 }
 
 
@@ -1042,7 +1085,7 @@ size_t omw::peekNewLine(const char* p)
 //! @param end Pointer to the first position beyond the string
 //! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
 //! 
-//! If <b><tt>end</tt></b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used and access violations may occure.
+//! If <b><tt>end</tt></b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used, hence access violations may occure.
 //! 
 size_t omw::peekNewLine(const char* p, const char* end)
 {

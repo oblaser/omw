@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            14.12.2021
+date            17.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -10,9 +10,9 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "catch2/catch.hpp"
 #include "testUtil.h"
 
-#include <catch2/catch.hpp>
 #include <omw/cli.h>
 
 
@@ -245,6 +245,14 @@ TEST_CASE("cli.h SGR")
         CHECK(tu::strcmp(omw::font(i).arg(), "\033[" + omw::to_string(omw::ansiesc::csi::sgr::font_base + i) + "m") == 0);
     }
 }
+
+#ifdef OMW_PLAT_WIN
+TEST_CASE("set ansiesc mode")
+{
+    omw::ansiesc::enable(omw::windows::consoleEnVirtualTermProc());
+    CHECK(1 == 1);
+}
+#endif
 
 
 #endif // TEST_OMW_CLI_H

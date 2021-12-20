@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
+date            17.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -13,7 +13,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include "../../omw/string.h"
 
-#define OMWi_SERIAL_PORT_PREVIEW (1)
+#define OMWi_SERIAL_PORT_PREVIEW (1) // def/undef
 
 namespace omw
 {
