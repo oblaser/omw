@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          17.12.2021
+# date          19.12.2021
 # copyright     MIT - Copyright (c) 2021 Oliver Blaser
 
 # Options:
@@ -28,4 +28,4 @@ fi
 
 
 ./make_build.sh
-if [ $? -eq 0 ]; then ./test.sh $1; fi
+if [ $? -eq 0 ]; then ./run_test.sh $1; fi
