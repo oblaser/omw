@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            13.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -73,44 +73,6 @@ namespace
 }
 
 
-
-//! @param data big-endian right aligned
-//! @param count 
-//! @return 
-std::vector<uint8_t> omw::doubleDabble128(const uint8_t* data, size_t count)
-{
-    constexpr size_t bitWidth = 128;
-    using chunk_t = uint8_t;
-    constexpr size_t chunkWidth = 8;
-    constexpr size_t nChunks = bitWidth / chunkWidth;
-
-    std::vector<uint8_t> bcd(20);
-    std::bitset<bitWidth> bin;
-
-    // init
-    if (data)
-    {
-        for (size_t i = 0; i < nChunks; ++i)
-        {
-            chunk_t chunkValue = 0;
-            if (i < count) chunkValue = data[count - 1 - i];
-
-            chunk_t chunkMask = 1;
-
-            for (size_t j = 0; j < chunkWidth; ++j)
-            {
-                const size_t pos = i * chunkWidth + j;
-                bin.set(pos, ((chunkValue & chunkMask) != 0));
-                chunkMask <<= 1;
-            }
-        }
-    }
-    // else nop / initialized with 0
-
-    ::doubleDabble::dd(bcd, bin);
-
-    return bcd;
-}
 
 std::vector<uint8_t> omw::doubleDabble128(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
 {

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            18.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -514,7 +514,7 @@ omw::string omw::to_string(bool value, bool asText)
 
 omw::string omw::to_string(const omw::int128_t& value)
 {
-    const omw::uint128_t tmp = omw::uint128_t(value);
+    const omw::uint128_t tmp(value);
     return (value.isNegative() ? "-" + omw::to_string(-tmp) : omw::to_string(tmp));
 }
 
@@ -559,88 +559,6 @@ omw::string omw::to_string(const std::pair<double, double>& value, char sepChar)
 omw::string omw::to_string(const std::pair<long double, long double>& value, char sepChar)
 {
     return ::pair_to_string(value, sepChar);
-}
-
-//! 
-//! Converts a signed 128-bit integer to a string.
-//! 
-//! See also `omw::Base_Int128::sets(int64_t, uint64_t)`.
-//! 
-omw::string omw::i128tos(int64_t valueH, uint64_t valueL)
-{
-    omw::SignedInt128 tmp;
-    tmp.sets(valueH, valueL);
-    return omw::to_string(tmp);
-}
-
-//! 
-//! Converts a signed 128-bit integer to a string.
-//! 
-//! See also `omw::Base_Int128::sets(int32_t, uint32_t, uint32_t, uint32_t)`.
-//! 
-omw::string omw::i128tos(int32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
-{
-    omw::SignedInt128 tmp;
-    tmp.sets(valueHH, valueLH, valueHL, valueLL);
-    return omw::to_string(tmp);
-}
-
-//! 
-//! Converts a signed 128-bit integer to a string.
-//! 
-//! \b Exceptions
-//! - `std::out_of_range` if `count` is grather than 16
-//! - `std::invalid_argument` if `data` is a nullptr
-//! 
-//! See also `omw::Base_Int128::sets(const uint8_t*, size_t)`.
-//! 
-omw::string omw::i128tos(const uint8_t* data, size_t count)
-{
-    const std::string fnName = "omw::i128tos";
-    if (count > 16) throw std::out_of_range(fnName);
-    if (!data) throw std::invalid_argument(fnName);
-    omw::SignedInt128 value;
-    value.sets(data, count);
-    return omw::to_string(value);
-}
-
-//! 
-//! Converts an unsigned 128-bit integer to a string.
-//! 
-//! See also `omw::UnsignedInt128(uint64_t, uint64_t)`.
-//! 
-omw::string omw::ui128tos(uint64_t valueH, uint64_t valueL)
-{
-    return omw::to_string(omw::UnsignedInt128(valueH, valueL));
-}
-
-//! 
-//! Converts an unsigned 128-bit integer to a string.
-//! 
-//! See also `omw::UnsignedInt128(uint32_t, uint32_t, uint32_t, uint32_t)`.
-//! 
-omw::string omw::ui128tos(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
-{
-    return omw::to_string(omw::UnsignedInt128(valueHH, valueLH, valueHL, valueLL));
-}
-
-//! 
-//! Converts an unsigned 128-bit integer to a string.
-//! 
-//! \b Exceptions
-//! - `std::out_of_range` if `count` is grather than 16
-//! - `std::invalid_argument` if `data` is a nullptr
-//! 
-//! See also `omw::Base_Int128::setu(const uint8_t*, size_t)`.
-//! 
-omw::string omw::ui128tos(const uint8_t* data, size_t count)
-{
-    const std::string fnName = "omw::ui128tos";
-    if (count > 16) throw std::out_of_range(fnName);
-    if (!data) throw std::invalid_argument(fnName);
-    omw::UnsignedInt128 value;
-    value.setu(data, count);
-    return omw::to_string(value);
 }
 
 

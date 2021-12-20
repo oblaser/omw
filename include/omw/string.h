@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            15.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -172,13 +172,6 @@ namespace omw
     omw::string to_string(const std::pair<float, float>& value, char sepChar = pairtos_defaultSepChar);
     omw::string to_string(const std::pair<double, double>& value, char sepChar = pairtos_defaultSepChar);
     omw::string to_string(const std::pair<long double, long double>& value, char sepChar = pairtos_defaultSepChar);
-
-    omw::string i128tos(int64_t valueH, uint64_t valueL);
-    omw::string i128tos(int32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL);
-    omw::string i128tos(const uint8_t* data, size_t count);
-    omw::string ui128tos(uint64_t valueH, uint64_t valueL);
-    omw::string ui128tos(uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL);
-    omw::string ui128tos(const uint8_t* data, size_t count);
     /// @}
 
 

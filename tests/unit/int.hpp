@@ -1269,7 +1269,7 @@ TEST_CASE("int.h compairson operators mixed")
     CHECK(u >= s);
 
     s = 123;
-    u.set(INT64_MAX, INT64_MAX);
+    u.set(INT64_MAX, 0);
     CHECK_FALSE(s == u);
     CHECK_FALSE(u == s);
     CHECK(s != u);

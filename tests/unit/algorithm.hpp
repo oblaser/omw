@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            17.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -32,28 +32,10 @@ public:
         value32HM = (uint32_t)valueH;
         value32LM = (uint32_t)(valueL >> 32);
         value32L = (uint32_t)valueL;
-
-        value8buffer[0] = (uint8_t)(value32H >> 24);
-        value8buffer[1] = (uint8_t)(value32H >> 16);
-        value8buffer[2] = (uint8_t)(value32H >> 8);
-        value8buffer[3] = (uint8_t)(value32H);
-        value8buffer[4] = (uint8_t)(value32HM >> 24);
-        value8buffer[5] = (uint8_t)(value32HM >> 16);
-        value8buffer[6] = (uint8_t)(value32HM >> 8);
-        value8buffer[7] = (uint8_t)(value32HM);
-        value8buffer[8] = (uint8_t)(value32LM >> 24);
-        value8buffer[9] = (uint8_t)(value32LM >> 16);
-        value8buffer[10] = (uint8_t)(value32LM >> 8);
-        value8buffer[11] = (uint8_t)(value32LM);
-        value8buffer[12] = (uint8_t)(value32L >> 24);
-        value8buffer[13] = (uint8_t)(value32L >> 16);
-        value8buffer[14] = (uint8_t)(value32L >> 8);
-        value8buffer[15] = (uint8_t)(value32L);
     }
     virtual ~DoubleDabbleTestRecord() {}
 
     omw::uint128_t value128;
-    uint8_t value8buffer[16];
     uint32_t value32H;
     uint32_t value32HM;
     uint32_t value32LM;
@@ -87,18 +69,16 @@ TEST_CASE("algorithm.h doubleDabble128()")
     {
         const DoubleDabbleTestRecord& tr = testRecords[i];
 
-        const omw::string resStr = omw::toHexStr(omw::doubleDabble128(tr.value8buffer, 16), 0);
         const omw::string ovrld_a = omw::toHexStr(omw::doubleDabble128(tr.value32H, tr.value32HM, tr.value32LM, tr.value32L), 0);
         const omw::string ovrld_b = omw::toHexStr(omw::doubleDabble128(tr.value64H, tr.value64L), 0);
         const omw::string ovrld_c = omw::toHexStr(omw::doubleDabble(tr.value128), 0);
 
-        const bool resEqExpres = (resStr == tr.expResult);
+        const bool resEqExpres = (ovrld_a == tr.expResult);
         const bool allOverloadsEq = (
-            (resStr == ovrld_a) &&
-            (resStr == ovrld_b) &&
-            (resStr == ovrld_c));
+            (ovrld_a == ovrld_b) &&
+            (ovrld_a == ovrld_c));
 
-        CHECK(resStr == tr.expResult);
+        CHECK(ovrld_a == tr.expResult);
         CHECK(allOverloadsEq);
 
         if (!(resEqExpres && allOverloadsEq))
@@ -109,10 +89,6 @@ TEST_CASE("algorithm.h doubleDabble128()")
     }
 
     if (stdOut) std::cout << std::endl;
-
-    const uint8_t alignTest[] = { 0x02, 0x01 };
-    const std::vector<uint8_t> alignTestExpResult = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x05, 0x13 };
-    CHECK(omw::doubleDabble128(alignTest, sizeof(alignTest)) == alignTestExpResult);
 }
 
 
