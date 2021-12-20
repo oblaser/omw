@@ -4,8 +4,11 @@
 
 ## Naming
 Names are in lower camel case and normally don't use the underscore `_`.
+
 Classes however are in upper camel case. Exception classes are in lowercase and use the underscore.
 > For basse classes I don't have a clear idea. It may differ from case to case.
+
+Macros are in uppercase and start with `OMW_`.
 
 ## Translation/Language
 At the moment english is the only language available. But the strings wich can be
