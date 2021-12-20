@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            18.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -502,17 +502,6 @@ bool omw::operator<(const omw::SignedInt128& a, const omw::SignedInt128& b)
         ((a.his() == b.his()) && (a.lo() < b.lo())));
 }
 
-bool omw::operator==(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b)
-{
-    return ((a.hi() == b.hi()) && (a.lo() == b.lo()));
-}
-
-bool omw::operator<(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b)
-{
-    return ((a.hi() < b.hi()) ||
-        ((a.hi() == b.hi()) && (a.lo() < b.lo())));
-}
-
 //! 
 //! Sign aware comparsion operator. Negative signed integers compare always
 //! less than unsigned integers. Unsigned integers grater than the maximal
@@ -527,17 +516,41 @@ bool omw::operator==(const omw::SignedInt128& a, const omw::UnsignedInt128& b)
 
 bool omw::operator<(const omw::SignedInt128& a, const omw::UnsignedInt128& b)
 {
-    return ((a.hi() & OMW_64BIT_MSB) ||
+    return (
+        (a.hi() & OMW_64BIT_MSB) ||
         (b.hi() & OMW_64BIT_MSB) ||
         (a.hi() < b.hi()) ||
         ((a.hi() == b.hi()) && (a.lo() < b.lo()))
         );
 }
 
+bool omw::operator==(const omw::UnsignedInt128& a, const omw::SignedInt128& b) { return (b == a); }
+
+bool omw::operator<(const omw::UnsignedInt128& a, const omw::SignedInt128& b)
+{
+    return (
+        !(a.hi() & OMW_64BIT_MSB) &&
+        !(b.hi() & OMW_64BIT_MSB) &&
+        (
+            (a.hi() < b.hi()) || 
+            ((a.hi() == b.hi()) && (a.lo() < b.lo()))
+        )
+        );
+}
+
+bool omw::operator==(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b)
+{
+    return ((a.hi() == b.hi()) && (a.lo() == b.lo()));
+}
+
+bool omw::operator<(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b)
+{
+    return ((a.hi() < b.hi()) ||
+        ((a.hi() == b.hi()) && (a.lo() < b.lo())));
+}
+
 OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::SignedInt128, omw::SignedInt128)
 OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::SignedInt128, omw::UnsignedInt128)
-bool omw::operator==(const omw::UnsignedInt128& a, const omw::SignedInt128& b) { return (b == a); }
-bool omw::operator<(const omw::UnsignedInt128& a, const omw::SignedInt128& b) { return (b > a); }
 OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::UnsignedInt128, omw::SignedInt128)
 OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::UnsignedInt128, omw::UnsignedInt128)
 
