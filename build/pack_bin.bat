@@ -22,18 +22,18 @@
 
 
 
-rmdir /s /q built\omw_win
+rmdir /s /q packed\omw_win
 
-xcopy /i /s /e ..\include built\omw_win\omw\include\
+xcopy /i /s /e ..\include packed\omw_win\omw\include\
 
-xcopy /i ..\lib\omw-d.lib built\omw_win\omw\lib\
-xcopy /i ..\lib\omw.lib built\omw_win\omw\lib\
+xcopy /i ..\lib\omw-d.lib packed\omw_win\omw\lib\
+xcopy /i ..\lib\omw.lib packed\omw_win\omw\lib\
 
-copy release_readme.txt built\omw_win\omw\readme.txt
-xcopy ..\license.txt built\omw_win\omw
+copy dep_readme.txt packed\omw_win\omw\readme.txt
+xcopy ..\license.txt packed\omw_win\omw
 
-cd built\omw_win
+cd packed\omw_win
 "C:\Program Files\7-Zip\7z.exe" a omw_win_vX.X.X.zip omw\
 cd ..\..
 
-move built\omw_win\omw_win_vX.X.X.zip built\omw_win_vX.X.X.zip
+move packed\omw_win\omw_win_vX.X.X.zip packed\omw_win_vX.X.X.zip

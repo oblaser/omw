@@ -6,10 +6,10 @@
 
 source dep_omw_globals.sh
 
-builtDir="./built"
+packedDir="./packed"
 outDirName="omw_src"
-outDir="$builtDir/$outDirName"
-archive="$builtDir/omw_src_v$versionstr.tar.gz"
+outDir="$packedDir/$outDirName"
+archive="$packedDir/omw_src_v$versionstr.tar.gz"
 
 rm -rf $outDir
 
@@ -20,7 +20,7 @@ mkdir $outDir/omw/src
 cp -r ../include/* $outDir/omw/include
 cp -r ../src/* $outDir/omw/src
 
-cp release_readme.txt $outDir/omw/readme.txt
+cp dep_readme.txt $outDir/omw/readme.txt
 cp ../license.txt $outDir/omw
 
 rm -f $archive

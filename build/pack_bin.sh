@@ -7,10 +7,10 @@
 source dep_omw_globals.sh
 
 platform=$(uname -m)
-builtDir="./built"
+packedDir="./packed"
 outDirName="omw_linux_$platform"
-outDir="$builtDir/$outDirName"
-archive="$builtDir/omw_linux_${platform}_v$versionstr.tar.gz"
+outDir="$packedDir/$outDirName"
+archive="$packedDir/omw_linux_${platform}_v$versionstr.tar.gz"
 
 rm -rf $outDir
 
@@ -22,7 +22,7 @@ cp -r ../include/* $outDir/omw/include
 cp ../lib/libomw.a $outDir/omw/lib
 cp ../lib/libomw.so* $outDir/omw/lib
 
-cp release_readme.txt $outDir/omw/readme.txt
+cp dep_readme.txt $outDir/omw/readme.txt
 cp ../license.txt $outDir/omw
 
 rm -f $archive
