@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          20.12.2021
+# date          21.12.2021
 # copyright     MIT - Copyright (c) 2021 Oliver Blaser
 
 source dep_omw_globals.sh
@@ -13,7 +13,7 @@ archive="$packedDir/omw_doc_v$versionstr.tar.gz"
 
 rm -rf $outDir
 
-mkdir $outDir
+mkdir -p $outDir
 
 cp -r ../doc/out/* $outDir
 
