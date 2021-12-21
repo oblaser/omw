@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
+date            21.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -91,20 +91,26 @@ void omw::Color::invalidate()
     validate(false);
 }
 
+//! 
 //! Sets R, G and B to 0, alpha to 0xFF and invalidates the object.
+//! 
 void omw::Color::clear()
 {
     set(0, 0, 0, 0xFF);
     invalidate();
 }
 
+//! 
 //! Sets the alpha value to 0xFF. Does not change the validity.
+//! 
 void omw::Color::opaque()
 {
     aValue = 0xFF;
 }
 
+//! 
 //! Sets the alpha value to 0. Does not change the validity.
+//! 
 void omw::Color::transparent()
 {
     aValue = 0;
@@ -409,35 +415,6 @@ uint32_t omw::Color::to_wxW_RGBA() const
 
 //! @param lhs B
 //! @param rhs A
-//! @return Alpha composit of A over B
-//! 
-//! If one of the colors is invalid, the result is also invalid. However all color values are computed anyway.
-//! 
-omw::Color omw::operator+(const omw::Color& lhs, const omw::Color& rhs)
-{
-    omw::Color r(lhs);
-    r += rhs;
-    return r;
-}
-
-//! 
-//! Checks for equality of the validity and the color values.
-//!  
-bool omw::operator==(const omw::Color& lhs, const omw::Color& rhs)
-{
-    return ((lhs.isValid() == rhs.isValid()) && (lhs.toARGB() == rhs.toARGB()));
-}
-
-//! 
-//! See `omw::operator==(const omw::Color&, const omw::Color&)`.
-//! 
-bool omw::operator!=(const omw::Color& lhs, const omw::Color& rhs)
-{
-    return !(lhs == rhs);
-}
-
-
-
 //! @return Alpha composit of A over B
 //! 
 //! If one of the colors is invalid, the result is also invalid. However all color values are computed anyway.
