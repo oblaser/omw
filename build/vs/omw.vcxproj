@@ -65,19 +65,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../build/built/win_$(Platform)_$(Configuration)/</OutDir>
-    <TargetName>$(ProjectName)-d</TargetName>
+    <OutDir>$(SolutionDir)../../lib/</OutDir>
+    <TargetName>omw-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>../../build/built/win_$(Platform)_$(Configuration)/</OutDir>
+    <OutDir>$(SolutionDir)../../lib/</OutDir>
+    <TargetName>omw</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>../../build/built/win_$(Platform)_$(Configuration)/</OutDir>
-    <TargetName>$(ProjectName)-d</TargetName>
+    <OutDir>$(SolutionDir)../../lib64/</OutDir>
+    <TargetName>omw-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>../../build/built/win_$(Platform)_$(Configuration)/</OutDir>
+    <OutDir>$(SolutionDir)../../lib64/</OutDir>
+    <TargetName>omw</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

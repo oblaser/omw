@@ -1,8 +1,8 @@
 @rem    author          Oliver Blaser
-@rem    date            10.12.2021
+@rem    date            21.12.2021
 @rem    copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
-rmdir /s /q built\omw_win
+
 
 @rem Result:
 @rem 
@@ -10,24 +10,24 @@ rmdir /s /q built\omw_win
 @rem %SDK%\omw\include\omw\string.h
 @rem %SDK%\omw\include\omw\ etc.
 @rem 
-@rem %SDK%\omw\lib_x86\omw.lib
-@rem %SDK%\omw\lib_x86\omw-d.lib
+@rem %SDK%\omw\lib\omw.lib
+@rem %SDK%\omw\lib\omw-d.lib
+@rem %SDK%\omw\dll\omw.dll
+@rem %SDK%\omw\dll\omw-d.dll
 @rem 
-@rem %SDK%\omw\lib_x64\omw.lib
-@rem %SDK%\omw\lib_x64\omw-d.lib
-@rem 
-@rem %SDK%\omw\dll_x86\omw.dll
-@rem %SDK%\omw\dll_x86\omw-d.dll
-@rem 
-@rem %SDK%\omw\dll_x64\omw.dll
-@rem %SDK%\omw\dll_x64\omw-d.dll
+@rem %SDK%\omw\lib64\omw.lib
+@rem %SDK%\omw\lib64\omw-d.lib
+@rem %SDK%\omw\dll64\omw.dll
+@rem %SDK%\omw\dll64\omw-d.dll
 
 
+
+rmdir /s /q built\omw_win
 
 xcopy /i /s /e ..\include built\omw_win\omw\include\
 
-xcopy /i built\win_Win32_Debug\omw-d.lib built\omw_win\omw\lib_x86\
-xcopy /i built\win_Win32_Release\omw.lib built\omw_win\omw\lib_x86\
+xcopy /i ..\lib\omw-d.lib built\omw_win\omw\lib\
+xcopy /i ..\lib\omw.lib built\omw_win\omw\lib\
 
 copy release_readme.txt built\omw_win\omw\readme.txt
 xcopy ..\license.txt built\omw_win\omw

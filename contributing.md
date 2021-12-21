@@ -22,9 +22,14 @@ in future edits, wich may support multiple languages.
 
 
 ## Versioning
-### Phase 0 or General Pre-Release
-Releases with the major version `0` are actually pre-releases with the scheme `0.<major>.<minpat>`.
-Where `<minpat>` is incremented every time `<minor>` or `<patch>` would be incremented.
+### Scheme
+Since `v0.2.0-alpha`: [semver 2.0.0](https://semver.org/)
+`1.0.0-alpha < 1.0.0-alpha.1 < 1.0.0-alpha.beta < 1.0.0-beta < 1.0.0-beta.2 < 1.0.0-beta.11 < 1.0.0-rc.1 < 1.0.0`
+
+Before: Something else. Revision (patch) > 999 have been pre-releases.
+
+### Major Version 0
+In development. May not be backwards compatible.
 
 ### Files
 Edit the version in the following files before releasing:
@@ -33,15 +38,6 @@ Edit the version in the following files before releasing:
 - `doc/Doxyfile`
 - `src/omw.cpp`
 - `tests/unit/main.cpp`
-
-### Scheme
-#### Since `v0.2.0-a`
-https://semver.org/
-
-`1.0.0-alpha < 1.0.0-alpha.1 < 1.0.0-alpha.beta < 1.0.0-beta < 1.0.0-beta.2 < 1.0.0-beta.11 < 1.0.0-rc.1 < 1.0.0`
-
-#### Until `v0.2.0-a`
-Something else. Revision (patch) > 999 have been pre-releases.
 
 
 

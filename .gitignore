@@ -3,6 +3,12 @@
 /doc/out/
 /web_deploy/
 
+/dll/
+/dll64/
+/lib32/
+/lib/
+/lib64/
+
 
 
 #

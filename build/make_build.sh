@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          17.12.2021
+# date          21.12.2021
 # copyright     MIT - Copyright (c) 2021 Oliver Blaser
 
 cd ./cmake
@@ -25,4 +25,6 @@ else
     fi
 fi
 
-exit 0
+cd ..
+./dep_omw_cp_bin.sh
+exit $?
