@@ -1,15 +1,15 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
+date            21.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_VERSION_H
 #define IG_OMW_VERSION_H
 
-#include <iostream>
-#include <string>
-#include <vector>
+#include <cstdint>
+
+#include "../omw/string.h"
 
 namespace omw
 {
@@ -21,33 +21,35 @@ namespace omw
     {
     public:
         Version();
-        Version(int major, int minor, int patch, const char* preRelease = nullptr, const char* build = nullptr);
-        Version(int major, int minor, int patch, const std::string& preRelease = "", const std::string& build = "");
-        explicit Version(const char* versionStr);
-        explicit Version(const std::string& versionStr);
+        Version(uint32_t major, uint32_t minor, uint32_t patch, const char* preRelease, const char* build = nullptr);
+        Version(uint32_t major, uint32_t minor, uint32_t patch, const omw::string& preRelease = "", const omw::string& build = "");
+        explicit Version(const char* str);
+        explicit Version(const omw::string& str);
+        virtual ~Version() {}
 
-        int major() const;
-        int minor() const;
-        int patch() const;
+        uint32_t major() const;
+        uint32_t minor() const;
+        uint32_t patch() const;
+        omw::string preRelease() const;
+        const omw::stringVector_t& preReleaseIdentifiers() const;
+        omw::string build() const;
+        const omw::stringVector_t& buildIdentifiers() const;
 
-        const int* data() const;
-        size_t size() const;
+        omw::string toString() const;
 
-        std::vector<int> toVector() const;
-        std::string toString() const;
+        bool isPreRelease() const;
 
-        template<class CharT, class Traits = std::char_traits<CharT>>
-        friend std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, const omw::Version& v)
-        {
-            // since the version string consists only out of ASCII chars, here is no std::basic_ostream<c,t>::widen() needed.
-            return (os << v.toString().c_str());
-        }
+    protected:
+        uint32_t m_maj;
+        uint32_t m_min;
+        uint32_t m_pat;
+        omw::stringVector_t m_build;
+        omw::stringVector_t m_preRelease;
 
-    private:
-        static constexpr size_t dataSize = 3;
-        int version[dataSize];
-
-        void setData(const std::string& versionStr);
+        void parse(const omw::string& str);
+        void parseBuild(const omw::string& identifiers);
+        void parsePreRelease(const omw::string& identifiers);
+        void parseVersion(const omw::string& identifiers);
     };
 
     //! \name Operators

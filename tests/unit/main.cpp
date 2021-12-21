@@ -19,7 +19,7 @@ TEST_CASE("omw lib")
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 
-    REQUIRE(omw::info::version() == omw::Version(0, 2, 0));
+    REQUIRE(omw::info::version() == omw::Version(0, 2, 0, "alpha"));
 }
 
 
@@ -51,15 +51,15 @@ TEST_CASE("windows.h beep() & some perfCntr..()")
     uint32_t freq1, freq2;
     const uint32_t dur = 200;
 
-    if (omw::info::version().rev() < 1000)
+    if (!omw::info::version().isPreRelease())
     {
         freq1 = 700;
         freq2 = 900;
     }
     else
     {
-        freq1 = 20000;
-        freq2 = 20000;
+        freq1 = 22000;
+        freq2 = 22000;
     }
 
     CHECK(omw::windows::beep(freq1, dur));

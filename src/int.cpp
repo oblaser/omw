@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
+date            21.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -29,6 +29,7 @@ namespace
 
     int64_t to_i64(uint64_t value) noexcept { return *(reinterpret_cast<int64_t*>(&value)); }
     uint64_t to_ui64(int64_t value) noexcept { return *(reinterpret_cast<uint64_t*>(&value)); }
+    uint32_t to_ui32(int32_t value) noexcept { return *(reinterpret_cast<uint32_t*>(&value)); }
 
     void quad_ui32_to_128(uint64_t& h, uint64_t& l, uint32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
     {
@@ -42,7 +43,7 @@ namespace
     }
     void quad_i32_to_128(uint64_t& h, uint64_t& l, int32_t valueHH, uint32_t valueLH, uint32_t valueHL, uint32_t valueLL)
     {
-        quad_ui32_to_128(h, l, to_ui64(valueHH), valueLH, valueHL, valueLL);
+        quad_ui32_to_128(h, l, to_ui32(valueHH), valueLH, valueHL, valueLL);
     }
 }
 

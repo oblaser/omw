@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
+date            21.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -84,7 +84,7 @@ namespace
 
     omw::string separateHexStr(const omw::string& hexstr, char sepChar)
     {
-        return omw::join(hexstr.split(2), sepChar);
+        return omw::join(hexstr.split((omw::string::size_type)2), sepChar);
     }
 
     //// out_t and in_t have to be std::vector<omw::string> and std::vector<std::string> or vice versa.
@@ -192,6 +192,10 @@ omw::string::string(const char* str)
 
 omw::string::string(const char* str, std::string::size_type count)
     : std::string(str ? str : "", str ? count : 0)
+{}
+
+omw::string::string(const std::string& other)
+    : std::string(other)
 {}
 
 omw::string::string(const std::string& other, std::string::size_type pos, std::string::size_type count)
@@ -356,14 +360,14 @@ omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairs, size_t
     return replaceAll(std::vector<omw::StringReplacePair>(pairs, pairs + count), startPos, nReplacementsTotal, nReplacements);
 }
 
-omw::stringVector_t omw::string::split(omw::string::size_type tokenLength, omw::stringVector_size_type maxTokenCount) const
+omw::stringVector_t omw::string::split(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount) const
 {
     omw::stringVector_t r;
 
     const omw::string::size_type len = this->length();
     omw::string::size_type pos = 0;
 
-    for (omw::stringVector_size_type iToken = 0; (iToken < maxTokenCount) && (pos < len); ++iToken)
+    for (omw::stringVector_t::size_type iToken = 0; (iToken < maxTokenCount) && (pos < len); ++iToken)
     {
         r.push_back(this->substr(pos, tokenLength));
         pos += tokenLength;
@@ -372,6 +376,32 @@ omw::stringVector_t omw::string::split(omw::string::size_type tokenLength, omw::
     if (pos < len)
     {
         r[r.size() - 1] += this->substr(pos);
+    }
+
+    return r;
+}
+
+omw::stringVector_t omw::string::split(char separator, omw::stringVector_t::size_type maxTokenCount) const
+{
+    std::vector<omw::string> r;
+    omw::string::size_type pos = 0;
+
+    const omw::stringVector_t::size_type n = maxTokenCount - 1;
+
+    while (pos < omw::string::npos)
+    {
+        if (r.size() < n)
+        {
+            const omw::string::size_type end = this->find('.', pos);
+            r.push_back(this->substr(pos, end - pos));
+            pos = end;
+            if (pos < omw::string::npos) ++pos;
+        }
+        else
+        {
+            r.push_back(this->substr(pos));
+            pos = omw::string::npos;
+        }
     }
 
     return r;
@@ -911,7 +941,7 @@ omw::string omw::join(const omw::stringVector_t& strings)
 {
     omw::string r = "";
 
-    for (omw::stringVector_size_type i = 0; i < strings.size(); ++i)
+    for (omw::stringVector_t::size_type i = 0; i < strings.size(); ++i)
     {
         r += strings[i];
     }
@@ -923,7 +953,7 @@ omw::string omw::join(const omw::stringVector_t& strings, char sepChar)
 {
     omw::string r = "";
 
-    for (omw::stringVector_size_type i = 0; i < strings.size(); ++i)
+    for (omw::stringVector_t::size_type i = 0; i < strings.size(); ++i)
     {
         if (i > 0) r += omw::string(1, sepChar);
         r += strings[i];
@@ -1004,6 +1034,9 @@ omw::stdStringVector_t omw::stdStringVector(const omw::stringVector_t& strvec)
 
 
 
+//! 
+//! See `omw::isUInteger()`.
+//! 
 bool omw::isInteger(const std::string& str)
 {
     std::string::size_type startPos = 0;
@@ -1016,6 +1049,11 @@ bool omw::isInteger(const std::string& str)
     return omw::isUInteger(std::string(str, startPos));
 }
 
+//! 
+//! Ignores leading zeros.
+//! 
+//! An empty string returns `false`.
+//! 
 bool omw::isUInteger(const std::string& str)
 {
     bool r;
@@ -1023,13 +1061,9 @@ bool omw::isUInteger(const std::string& str)
     if (str.length() > 0)
     {
         r = true;
-        for (std::string::size_type i = 0; i < str.length(); ++i)
+        for (std::string::size_type i = 0; (i < str.length()) && r; ++i)
         {
-            if ((str[i] < '0') || (str[i] > '9'))
-            {
-                r = false;
-                break;
-            }
+            if ((str[i] < '0') || (str[i] > '9')) r = false;
         }
     }
     else r = false;
@@ -1037,6 +1071,9 @@ bool omw::isUInteger(const std::string& str)
     return r;
 }
 
+//! 
+//! An empty string returns `false`.
+//! 
 bool omw::isHex(const std::string& str)
 {
     bool r;

@@ -12,13 +12,12 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 
 
-//! @brief Returns the version of the this library.
+//! @return The version of the library
 omw::Version omw::info::version()
 {
-    return omw::Version(0, 2, 0, "a");
+    return omw::Version(0, 2, 0, "alpha");
 }
 
-//! @brief Returns an info text.
 //! 
 //! The info text contains version, copyright and a link to the project webpage.
 //! 
@@ -26,13 +25,12 @@ omw::string omw::info::infoTxt()
 {
     std::stringstream s;
 
-    s << OMWi_DISPSTR("OMW v") << omw::info::version();
-    if (omw::info::version().rev() > 999) s << " - pre-release " << __DATE__ << " " << __TIME__;
+    s << OMWi_DISPSTR("OMW v") << omw::info::version().toString();
 #ifdef OMW_DEBUG
-    s << " - DEBUG";
+    s << OMWi_DISPSTR(" - DEBUG");
 #endif
     s << std::endl;
-    
+
     s << OMWi_DISPSTR("Copyright (c) 2021 Oliver Blaser.") << std::endl;
     s << OMWi_DISPSTR("License: MIT <https://opensource.org/licenses/MIT>.") << std::endl;
     s << OMWi_DISPSTR("This is free software. There is NO WARRANTY.") << std::endl;

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
+date            21.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -68,13 +68,11 @@ namespace omw
 
 
     using stdStringVector_t = std::vector<std::string>;
-    using stdStringVector_size_type = omw::stdStringVector_t::size_type;
-    constexpr stdStringVector_size_type stdStringVector_npos = (omw::stdStringVector_size_type)-1;
+    constexpr omw::stdStringVector_t::size_type stdStringVector_npos = (omw::stdStringVector_t::size_type)-1;
 
     class string;
     using stringVector_t = std::vector<omw::string>;
-    using stringVector_size_type = omw::stringVector_t::size_type;
-    constexpr stringVector_size_type stringVector_npos = (omw::stringVector_size_type)-1;
+    constexpr omw::stringVector_t::size_type stringVector_npos = (omw::stringVector_t::size_type)-1;
 
 
 
@@ -103,7 +101,8 @@ namespace omw
         string(std::string::size_type count, char c);
         string(const char* str);
         string(const char* str, std::string::size_type count);
-        string(const std::string& other, std::string::size_type pos = 0, std::string::size_type count = std::string::npos);
+        string(const std::string& other);
+        string(const std::string& other, std::string::size_type pos, std::string::size_type count = std::string::npos);
         string(const char* first, const char* last);
         virtual ~string() {}
 
@@ -124,10 +123,10 @@ namespace omw
         omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
 
-        omw::stringVector_t split(omw::string::size_type tokenLength, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
-        //omw::stringVector_t split(char sepChar, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
-        //omw::stringVector_t split(const char* sepString, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
-        //omw::stringVector_t split(const std::string& sepString, omw::stringVector_size_type maxTokenCount = omw::stringVector_npos) const;
+        omw::stringVector_t split(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
+        omw::stringVector_t split(char separator, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
+        //omw::stringVector_t split(const char* sepString, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
+        //omw::stringVector_t split(const std::string& sepString, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
 
         //! \name Case Conversion
         //! Methods named `.._ascii` convert only A-Z and a-z. Those named `.._asciiExt` additionally convert some UTF-8 code points.
@@ -296,7 +295,7 @@ namespace omw
     constexpr bool isAlnum(char ch) { return (isAlpha(ch) || isDigit(ch)); }
 
     // same for UTF-8:
-    //bool is...(const char* utf8cp); // utf8cp = UTF-8 code point (e.g. "\xC3\xA4")
+    //bool is...(const char* utf8); // utf8 = UTF-8 byte string (e.g. "\xC3\xA4")
     /// @}
 
     //! \name String Classification

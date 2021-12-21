@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           14.06.2021
+date           21.12.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -13,25 +13,22 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 #include "catch2/catch.hpp"
 
-#include <omw/omw.h>
+#include <omw/version.h>
 
 
 
 TEST_CASE("omw::Version ctor")
 {
     omw::Version v;
-    std::vector<int> version;
-    std::vector<int> vec;
 
-    v = omw::Version("1.2.3");
-    version = std::vector<int>(v.data(), v.data() + v.size());
-    vec = std::vector<int>({ 1, 2, 3 });
-    CHECK(version == vec);
+    v = omw::Version("12.34.56");
+    CHECK(v.major() == 12);
+    CHECK(v.minor() == 34);
+    CHECK(v.patch() == 56);
 
-    v = omw::Version("1.-2.-3");
-    version = std::vector<int>(v.data(), v.data() + v.size());
-    vec = std::vector<int>({ 1, -2, -3 });
-    CHECK(version == vec);
+
+    TESTUTIL_TRYCATCH_DECLARE_VAL(omw::Version, omw::Version("1.2.3"));
+    TESTUTIL_TRYCATCH_CHECK(omw::Version("1.2.-3"), std::invalid_argument);
 
     try {
         v = omw::Version("1.2-.3");
@@ -69,21 +66,8 @@ TEST_CASE("omw::Version ctor")
 TEST_CASE("omw::Version coversion functions")
 {
     CHECK(omw::Version(0, 0, 0).toString() == std::string("0.0.0"));
-    CHECK(omw::Version(UINT32_MAX, INT32_MAX, INT32_MIN).toString() == std::string("-1.2147483647.-2147483648"));
-
-
-
-    const std::vector<int> v = omw::Version(123, 456, 789).toVector();
-    const std::vector<int> vec = { 123, 456, 789 };
-
-    bool eq = true;
-    for (size_t i = 0; i < v.size(); ++i)
-    {
-        if (v[i] != vec[i]) eq = false;
-    }
-
-    CHECK(v.capacity() == 3);
-    CHECK(eq);
+    CHECK(omw::Version(0, 12, 34).toString() == std::string("0.12.34"));
+    CHECK(omw::Version(UINT32_MAX, INT32_MAX, INT32_MIN).toString() == std::string("4294967295.2147483647.2147483648"));
 }
 
 TEST_CASE("omw::Version compare operators")

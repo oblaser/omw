@@ -1,13 +1,13 @@
 /*
 author          Oliver Blaser
-date            19.12.2021
+date            20.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #ifndef IG_OMW_UTILITY_H
 #define IG_OMW_UTILITY_H
 
-#include <cstdint>
+#include <cstddef>
 #include <vector>
 
 namespace omw
@@ -24,7 +24,7 @@ namespace omw
     {
         bool r = false;
 
-        for (std::size_t i = 0; (i < v.size()) && !r; ++i)
+        for (size_t i = 0; (i < v.size()) && !r; ++i)
         {
             if (v[i] == item) r = true;
         }

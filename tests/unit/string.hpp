@@ -351,9 +351,11 @@ TEST_CASE("string.h omw::string::split(n)")
     const omw::string s("The quick brown fox jumps over the lazy dog");
     std::vector<omw::string> t;
     size_t n;
+    size_t tokenLen;
 
     n = 43;
-    t = s.split(1);
+    tokenLen = 1;
+    t = s.split(tokenLen);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < n; ++i)
     {
@@ -362,7 +364,8 @@ TEST_CASE("string.h omw::string::split(n)")
     }
 
     n = 43;
-    t = s.split(1, n);
+    tokenLen = 1;
+    t = s.split(tokenLen, n);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < (n - 1); ++i)
     {
@@ -372,7 +375,8 @@ TEST_CASE("string.h omw::string::split(n)")
     CHECK(t[(n - 1)] == "g");
 
     n = 38;
-    t = s.split(1, n);
+    tokenLen = 1;
+    t = s.split(tokenLen, n);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < (n - 1); ++i)
     {
@@ -382,7 +386,8 @@ TEST_CASE("string.h omw::string::split(n)")
     CHECK(t[(n - 1)] == "zy dog");
 
     n = 5;
-    t = s.split(2, n);
+    tokenLen = 2;
+    t = s.split(tokenLen, n);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < (n - 1); ++i)
     {

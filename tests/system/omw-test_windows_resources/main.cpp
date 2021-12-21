@@ -12,6 +12,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <omw/windows/resources.h>
 #include <omw/windows/string.h>
+#include <Windows.h>
 
 
 using std::cout;
@@ -35,7 +36,7 @@ int main()
         try
         {
             const auto resData = omw::windows::getTextResource(IDR_MYTEXTFILE);
-            const std::string resStr(resData.begin()+3, resData.end());
+            const std::string resStr(resData.begin() + 3, resData.end());
 
             constexpr size_t tmpStrLen = 255;
             WCHAR wStr[tmpStrLen];
@@ -54,23 +55,23 @@ int main()
 
     {
         cout << "  --===# begin myBinaryFile #===--" << endl;
-        
+
         const auto data = omw::windows::getBinaryResource(IDR_MYBINARYFILE);
-        
+
         for (size_t i = 0; i < data.size(); ++i)
         {
             if (i > 0) cout << " ";
             cout << std::to_string(data[i]);
         }
-        cout << endl; 
-        
-        for (size_t i = 0; i < (data.size()-1); ++i)
+        cout << endl;
+
+        for (size_t i = 0; i < (data.size() - 1); ++i)
         {
             if (i > 0) cout << " ";
             cout << std::to_string((double)data[i + 1] / data[i]);
         }
         cout << endl;
-        
+
         cout << "  --===# end myBinaryFile #===--" << endl;
     }
 

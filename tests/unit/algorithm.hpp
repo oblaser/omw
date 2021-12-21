@@ -13,7 +13,6 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <vector>
 
 #include "catch2/catch.hpp"
-#include "testUtil.h"
 
 #include <omw/algorithm.h>
 #include <omw/cli.h>
