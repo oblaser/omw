@@ -39,4 +39,4 @@ Required software: `Visual Studio`
 
 
 ### Versioning
-See [contributing.md / Versioning](https://github.com/oblaser/omw/blob/master/contributing.md#versioning)
+Semantic Versioning (see [contributing.md / Versioning](https://github.com/oblaser/omw/blob/master/contributing.md#versioning))
