@@ -440,6 +440,35 @@ bool omw::operator!=(const omw::Color& lhs, const omw::Color& rhs)
 
 //! @return Alpha composit of A over B
 //! 
+//! If one of the colors is invalid, the result is also invalid. However all color values are computed anyway.
+//! 
+omw::Color omw::operator+(const omw::Color& lhs, const omw::Color& rhs)
+{
+    omw::Color r(lhs);
+    r += rhs;
+    return r;
+}
+
+//! 
+//! Checks for equality of the validity and the color values.
+//!  
+bool omw::operator==(const omw::Color& lhs, const omw::Color& rhs)
+{
+    return ((lhs.isValid() == rhs.isValid()) && (lhs.toARGB() == rhs.toARGB()));
+}
+
+//! 
+//! See `omw::operator==(const omw::Color&, const omw::Color&)`.
+//! 
+bool omw::operator!=(const omw::Color& lhs, const omw::Color& rhs)
+{
+    return !(lhs == rhs);
+}
+
+
+
+//! @return Alpha composit of A over B
+//! 
 //! Format: `0xAACCCCCC` where CCCCCC is any combination of RR, GG and BB, and has to be consistent for input and return values.
 //! 
 int32_t omw::alphaComposit(int32_t a_ACCC, int32_t b_ACCC)
