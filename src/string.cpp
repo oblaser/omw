@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            21.12.2021
+date            22.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -84,7 +84,7 @@ namespace
 
     omw::string separateHexStr(const omw::string& hexstr, char sepChar)
     {
-        return omw::join(hexstr.split((omw::string::size_type)2), sepChar);
+        return omw::join(hexstr.splitLen(2), sepChar);
     }
 
     //// out_t and in_t have to be std::vector<omw::string> and std::vector<std::string> or vice versa.
@@ -360,47 +360,53 @@ omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairs, size_t
     return replaceAll(std::vector<omw::StringReplacePair>(pairs, pairs + count), startPos, nReplacementsTotal, nReplacements);
 }
 
-omw::stringVector_t omw::string::split(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount) const
+omw::stringVector_t omw::string::split(char separator, omw::stringVector_t::size_type maxTokenCount) const
 {
-    omw::stringVector_t r;
+    omw::stringVector_t r(0);
 
-    const omw::string::size_type len = this->length();
-    omw::string::size_type pos = 0;
-
-    for (omw::stringVector_t::size_type iToken = 0; (iToken < maxTokenCount) && (pos < len); ++iToken)
+    if (maxTokenCount > 0)
     {
-        r.push_back(this->substr(pos, tokenLength));
-        pos += tokenLength;
-    }
+        const omw::stringVector_t::size_type n = maxTokenCount - 1;
+        omw::string::size_type pos = 0;
 
-    if (pos < len)
-    {
-        r[r.size() - 1] += this->substr(pos);
+        while (pos < omw::string::npos)
+        {
+            if (r.size() < n)
+            {
+                const omw::string::size_type end = this->find(separator, pos);
+                r.push_back(this->substr(pos, end - pos));
+                pos = end;
+                if (pos < omw::string::npos) ++pos;
+            }
+            else
+            {
+                r.push_back(this->substr(pos));
+                pos = omw::string::npos;
+            }
+        }
     }
 
     return r;
 }
 
-omw::stringVector_t omw::string::split(char separator, omw::stringVector_t::size_type maxTokenCount) const
+omw::stringVector_t omw::string::splitLen(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount) const
 {
-    std::vector<omw::string> r;
-    omw::string::size_type pos = 0;
+    omw::stringVector_t r(0);
 
-    const omw::stringVector_t::size_type n = maxTokenCount - 1;
-
-    while (pos < omw::string::npos)
+    if (maxTokenCount > 0)
     {
-        if (r.size() < n)
+        const omw::string::size_type len = this->length();
+        omw::string::size_type pos = 0;
+
+        for (omw::stringVector_t::size_type iToken = 0; (iToken < maxTokenCount) && (pos < len); ++iToken)
         {
-            const omw::string::size_type end = this->find('.', pos);
-            r.push_back(this->substr(pos, end - pos));
-            pos = end;
-            if (pos < omw::string::npos) ++pos;
+            r.push_back(this->substr(pos, tokenLength));
+            pos += tokenLength;
         }
-        else
+
+        if (pos < len)
         {
-            r.push_back(this->substr(pos));
-            pos = omw::string::npos;
+            r[r.size() - 1] += this->substr(pos);
         }
     }
 

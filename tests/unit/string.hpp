@@ -346,16 +346,69 @@ TEST_CASE("string.h omw::string::replaceAll()")
     CHECK(nrv == std::vector<size_t>({ omw::string::npos, omw::string::npos, omw::string::npos }));
 }
 
-TEST_CASE("string.h omw::string::split(n)")
+TEST_CASE("string.h omw::string::split()")
+{
+    const omw::string s("The quick brown fox jumps over the lazy dog");
+    omw::stringVector_t t;
+    size_t n;
+
+    t = s.split(' ');
+    n = 9;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "The");
+    CHECK(t[1] == "quick");
+    CHECK(t[2] == "brown");
+    CHECK(t[3] == "fox");
+    CHECK(t[4] == "jumps");
+    CHECK(t[5] == "over");
+    CHECK(t[6] == "the");
+    CHECK(t[7] == "lazy");
+    CHECK(t[8] == "dog");
+
+    t = s.split(' ', 0);
+    n = 0;
+    REQUIRE(t.size() == n);
+
+    t = s.split(' ', 5);
+    n = 5;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "The");
+    CHECK(t[1] == "quick");
+    CHECK(t[2] == "brown");
+    CHECK(t[3] == "fox");
+    CHECK(t[4] == "jumps over the lazy dog");
+
+    t = s.split('o');
+    n = 5;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "The quick br");
+    CHECK(t[1] == "wn f");
+    CHECK(t[2] == "x jumps ");
+    CHECK(t[3] == "ver the lazy d");
+    CHECK(t[4] == "g");
+
+    t = s.split('T');
+    n = 2;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "");
+    CHECK(t[1] == "he quick brown fox jumps over the lazy dog");
+}
+
+TEST_CASE("string.h omw::string::splitLen()")
 {
     const omw::string s("The quick brown fox jumps over the lazy dog");
     std::vector<omw::string> t;
     size_t n;
     size_t tokenLen;
 
+    n = 0;
+    tokenLen = 3;
+    t = s.splitLen(tokenLen, 0);
+    CHECK(t.size() == n);
+
     n = 43;
     tokenLen = 1;
-    t = s.split(tokenLen);
+    t = s.splitLen(tokenLen);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < n; ++i)
     {
@@ -365,7 +418,7 @@ TEST_CASE("string.h omw::string::split(n)")
 
     n = 43;
     tokenLen = 1;
-    t = s.split(tokenLen, n);
+    t = s.splitLen(tokenLen, n);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < (n - 1); ++i)
     {
@@ -376,7 +429,7 @@ TEST_CASE("string.h omw::string::split(n)")
 
     n = 38;
     tokenLen = 1;
-    t = s.split(tokenLen, n);
+    t = s.splitLen(tokenLen, n);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < (n - 1); ++i)
     {
@@ -387,7 +440,7 @@ TEST_CASE("string.h omw::string::split(n)")
 
     n = 5;
     tokenLen = 2;
-    t = s.split(tokenLen, n);
+    t = s.splitLen(tokenLen, n);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < (n - 1); ++i)
     {
@@ -467,11 +520,11 @@ TEST_CASE("string.h to_string()")
     CHECK(omw::to_string(omw::uint128_t(ui32)) == std::to_string(ui32));
     CHECK(omw::to_string(omw::int128_t(i64)) == std::to_string(i64));
     CHECK(omw::to_string(omw::uint128_t(ui64)) == std::to_string(ui64));
-    CHECK(omw::to_string(omw::int128_t(0xFFFFFFFFFFFFFFFF)) ==     "-1");
-    CHECK(omw::to_string(omw::uint128_t(0xFFFFFFFFFFFFFFFF)) ==    "340282366920938463463374607431768211455");
+    CHECK(omw::to_string(omw::int128_t(0xFFFFFFFFFFFFFFFF)) == "-1");
+    CHECK(omw::to_string(omw::uint128_t(0xFFFFFFFFFFFFFFFF)) == "340282366920938463463374607431768211455");
 
     CHECK(omw::to_string(omw::int128_t(1, 0)) == "18446744073709551616");
-    CHECK(omw::to_string(omw::int128_t(0, 0xFFFFFFFFFFFFFFFF)) ==  "18446744073709551615");
+    CHECK(omw::to_string(omw::int128_t(0, 0xFFFFFFFFFFFFFFFF)) == "18446744073709551615");
     CHECK(omw::to_string(omw::int128_t(0x7FFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "170141183460469231731687303715884105727");
     CHECK(omw::to_string(omw::int128_t(0x8000000000000000, 0)) == "-170141183460469231731687303715884105728");
     CHECK(omw::to_string(omw::int128_t(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "-1");

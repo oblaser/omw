@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            21.12.2021
+date            22.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -123,10 +123,10 @@ namespace omw
         omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
 
-        omw::stringVector_t split(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         omw::stringVector_t split(char separator, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         //omw::stringVector_t split(const char* sepString, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         //omw::stringVector_t split(const std::string& sepString, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
+        omw::stringVector_t splitLen(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
 
         //! \name Case Conversion
         //! Methods named `.._ascii` convert only A-Z and a-z. Those named `.._asciiExt` additionally convert some UTF-8 code points.

@@ -74,8 +74,7 @@ const releaseData =
         binaries:
         [
             { type: "link", text: "Windows (zip)", href: "./files/omw_win_v0.2.0-alpha.zip", download: true },
-            { type: "link", text: "Linux x86_64 (tar.gz)", href: "./files/omw_linux_x86_64_v0.2.0-alpha.tar.gz", download: true },
-            { type: "text", text: "Linux binaries are in experimantal state." }
+            { type: "link", text: "Linux x86_64 (tar.gz)", href: "./files/omw_linux_x86_64_v0.2.0-alpha.tar.gz", download: true }
         ],
         source:
         [
@@ -85,8 +84,7 @@ const releaseData =
         doc:
         [
             { type: "link", text: "HTML (tar.gz)", href: "./files/omw_doc_v0.2.0-alpha.tar.gz", download: true },
-            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.2.0-alpha.zip", download: true },
-            { type: "text", text: "Online: GitHub master" }
+            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.2.0-alpha.zip", download: true }
         ]
     },
     {
