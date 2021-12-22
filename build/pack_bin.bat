@@ -1,5 +1,5 @@
 @rem    author          Oliver Blaser
-@rem    date            21.12.2021
+@rem    date            22.12.2021
 @rem    copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 
@@ -28,6 +28,8 @@ xcopy /i /s /e ..\include packed\omw_win\omw\include\
 
 xcopy /i ..\lib\omw-d.lib packed\omw_win\omw\lib\
 xcopy /i ..\lib\omw.lib packed\omw_win\omw\lib\
+@rem xcopy /i ..\lib64\omw-d.lib packed\omw_win\omw\lib64\
+@rem xcopy /i ..\lib64\omw.lib packed\omw_win\omw\lib64\
 
 copy dep_readme.txt packed\omw_win\omw\readme.txt
 xcopy ..\license.txt packed\omw_win\omw
