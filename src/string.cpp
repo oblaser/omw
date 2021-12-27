@@ -799,6 +799,14 @@ uint64_t omw::hexstoui64(const std::string& str)
     return hexstointeger<uint64_t>(str, "omw::hexstoui64");
 }
 
+//! @param str Hex string
+//! @param delimiter Delimiter character
+//! @return Byte vector
+//! 
+//! \b Exceptions
+//! - `std::out_of_range` if the value of a hex substring is greater than `0xFF`
+//! - `omw::hexstoui()` is called and may throw `std::invalid_argument` or `std::out_of_range`
+//! 
 std::vector<uint8_t> omw::hexstovector(const std::string& str, char sepChar)
 {
     const std::string fnName = "omw::hexstovector";

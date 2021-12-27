@@ -1,10 +1,11 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
+date            27.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 /*! \file omw.h */
+/*! \file windows/windows.h */
 
 /*!
 \namespace omw
@@ -66,8 +67,8 @@ See the corresponding doc of the Windows API functions
 <a href="https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp" target="_blank">SetConsoleOutputCP()</a>.
 <br/>See also: <a href="https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers" target="_blank">List of code page identifier</a>.
 
-The setting of <b><tt>consoleSet..CodePage()</tt></b> functions is set for the current console window, and stays the same
-after termination. Therefore the setting should be set back to the previous code page then leaving the application.
+The setting of <tt>consoleSet..CodePage()</tt> functions is set for the current console window, and stays the same
+after termination of the application. Therefore the setting should be set back to the previous code page before returning from the main function.
 
 <b>Example main.cpp</b>
 ```
