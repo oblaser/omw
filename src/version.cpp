@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            21.12.2021
+date            27.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -212,6 +212,14 @@ omw::string omw::Version::toString() const
 bool omw::Version::isPreRelease() const
 {
     return (m_preRelease.size() > 0);
+}
+
+//! 
+//! Checks if all pre-release and build identifiers are valid.
+//! 
+bool omw::Version::isValid() const
+{
+    return false;
 }
 
 // trowing std::invalid_argument

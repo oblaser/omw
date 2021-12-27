@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            21.12.2021
+date            27.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -38,6 +38,7 @@ namespace omw
         omw::string toString() const;
 
         bool isPreRelease() const;
+        bool isValid() const;
 
     protected:
         uint32_t m_maj;

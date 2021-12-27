@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            22.12.2021
+date            27.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -799,34 +799,21 @@ uint64_t omw::hexstoui64(const std::string& str)
     return hexstointeger<uint64_t>(str, "omw::hexstoui64");
 }
 
-std::vector<uint8_t> omw::hexstovector(const std::string& str, char sepChar)
+std::vector<uint8_t> omw::hexstovector(const omw::string& str, char delimiter)
 {
     const std::string fnName = "omw::hexstovector";
 
-    std::vector<std::string> hexStrings;
-    for (std::string::size_type pos = 0; pos != std::string::npos;)
-    {
-        const std::string::size_type sepCharPos = str.find(sepChar, pos);
-        std::string::size_type count;
+    const std::vector<omw::string> hexStrings = str.split(delimiter);
 
-        if (sepCharPos != std::string::npos) count = sepCharPos - pos;
-        else count = std::string::npos;
-
-        hexStrings.push_back(std::string(str, pos, count));
-
-        if (sepCharPos != std::string::npos) pos = sepCharPos + 1;
-        else pos = std::string::npos;
-    }
-
-    std::vector<uint8_t> values;
+    std::vector<uint8_t> r(0);
     for (size_t i = 0; i < hexStrings.size(); ++i)
     {
         uint32_t value = omw::hexstoui(hexStrings[i]);
         if (value > 0xFF) throw std::out_of_range(fnName);
-        values.push_back(value);
+        r.push_back(value);
     }
 
-    return values;
+    return r;
 }
 
 //! 

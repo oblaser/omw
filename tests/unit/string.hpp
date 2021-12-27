@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
+date            27.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -694,8 +694,10 @@ TEST_CASE("string.h hexstovector()")
 
     const std::vector<uint8_t> initialVector = { 0 };
     TESTUTIL_TRYCATCH_DECLARE_VAL(std::vector<uint8_t>, initialVector);
-    TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00 05 a5 63-42"), std::invalid_argument);
-    TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00 05 a5 100 42"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00.05.a5.63-42", '.'), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00.05.a5.63+42", '.'), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00.05.a5$63.42", '.'), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstovector("00.05.a5.100.42", '.'), std::out_of_range);
 }
 
 TEST_CASE("string.h sepHexStr()")

@@ -213,7 +213,7 @@ namespace omw
     int64_t hexstoi64(const std::string& str);
     uint32_t hexstoui(const std::string& str);
     uint64_t hexstoui64(const std::string& str);
-    std::vector<uint8_t> hexstovector(const std::string& str, char sepChar = toHexStr_defaultSepChar);
+    std::vector<uint8_t> hexstovector(const omw::string& str, char delimiter = toHexStr_defaultSepChar);
 
     omw::string sepHexStr(const std::string& str);
     omw::string sepHexStr(const std::string& str, char sepChar);
