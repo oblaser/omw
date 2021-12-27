@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
+date            27.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -8,7 +8,11 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #define IG_OMW_UTILITY_H
 
 #include <cstddef>
+#include <cstdint>
+#include <string>
 #include <vector>
+
+#include "../omw/int.h"
 
 namespace omw
 {
@@ -31,6 +35,12 @@ namespace omw
 
         return r;
     }
+
+    std::vector<char> convertVector_i8(const std::vector<uint8_t>& v);
+    std::vector<uint8_t> convertVector_ui8(const std::vector<char>& v);
+
+    std::vector<uint8_t> toVector(const std::string& str);
+    std::vector<uint8_t> toVector(const omw::Base_Int128& val);
 
     // grp_utility
     /*! @} */

@@ -15,7 +15,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 //! @return The version of the library
 omw::Version omw::info::version()
 {
-    return omw::Version(0, 2, 0, "alpha.2");
+    return omw::Version(0, 2, 0, "alpha.3");
 }
 
 //! 
