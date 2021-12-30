@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            27.12.2021
+date            30.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -73,6 +73,25 @@ TEST_CASE("string.h omw::string ctor")
     CHECK(std::strcmp(omwstr.c_str(), "aaa") == 0);
     CHECK(std::strcmp(stdfromomw.c_str(), "aaa") == 0);
     CHECK(std::strcmp((omw::string(1, 'b')).c_str(), "b") == 0);
+}
+
+class String_ToStdTestClass
+{
+public:
+    String_ToStdTestClass() : m_str() {}
+    String_ToStdTestClass(const std::string& str) : m_str(str) {}
+    std::string m_str;
+};
+std::string String_ToStdTestFunc(const String_ToStdTestClass& data) { return data.m_str; }
+TEST_CASE("string.h omw::string std()")
+{
+    const char* const ps = "qwertz123456";
+
+    omw::string s(ps);
+    CHECK(String_ToStdTestFunc(s.std()) == ps);
+
+    const omw::string cs(ps);
+    CHECK(String_ToStdTestFunc(cs.std()) == ps);
 }
 
 TEST_CASE("string.h omw::string::contains()")
@@ -689,6 +708,7 @@ TEST_CASE("string.h hexstovector()")
 {
     const std::vector<uint8_t> vector = { 0x00, 0x05, 0xA5, 'c', 'B' };
     CHECK(omw::hexstovector("00 05 a5 63 42") == vector);
+    CHECK(omw::hexstovector("0005a56342", 0) == vector);
     CHECK(omw::hexstovector("00-05-a5-63-42", '-') == vector);
     CHECK(omw::hexstovector("0 5 a5 63 042") == vector);
 
@@ -710,6 +730,16 @@ TEST_CASE("string.h sepHexStr()")
     omw::string h_omw;
 
     h_p = "0123ab45cd67ef89";
+    h_std = h_p;
+    h_omw = h_p;
+    CHECK(omw::sepHexStr(h_p) == r_sp);
+    CHECK(omw::sepHexStr(h_std) == r_sp);
+    CHECK(omw::sepHexStr(h_omw) == r_sp);
+    CHECK(omw::sepHexStr(h_p, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_std, '-') == r_hy);
+    CHECK(omw::sepHexStr(h_omw, '-') == r_hy);
+
+    h_p = "123ab45cd67ef89";
     h_std = h_p;
     h_omw = h_p;
     CHECK(omw::sepHexStr(h_p) == r_sp);

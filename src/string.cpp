@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            27.12.2021
+date            30.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -82,9 +82,11 @@ namespace
         return r;
     }
 
-    omw::string separateHexStr(const omw::string& hexstr, char sepChar)
+    omw::string separateHexStr(const omw::string& hexstr, char delimiter)
     {
-        return omw::join(hexstr.splitLen(2), sepChar);
+        omw::string tmp = hexstr;
+        if (tmp.length() & 0x01) tmp = '0' + tmp;
+        return omw::join(tmp.splitLen(2), delimiter);
     }
 
     //// out_t and in_t have to be std::vector<omw::string> and std::vector<std::string> or vice versa.
@@ -205,6 +207,16 @@ omw::string::string(const std::string& other, std::string::size_type pos, std::s
 omw::string::string(const char* first, const char* last)
     : std::string(first, last)
 {}
+
+std::string& omw::string::std()
+{
+    return *this;
+}
+
+const std::string& omw::string::std() const
+{
+    return *this;
+}
 
 #ifdef OMWi_STRING_IMPLEMENT_CONTAINS
 bool omw::string::contains(char ch) const
@@ -360,7 +372,7 @@ omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairs, size_t
     return replaceAll(std::vector<omw::StringReplacePair>(pairs, pairs + count), startPos, nReplacementsTotal, nReplacements);
 }
 
-omw::stringVector_t omw::string::split(char separator, omw::stringVector_t::size_type maxTokenCount) const
+omw::stringVector_t omw::string::split(char delimiter, omw::stringVector_t::size_type maxTokenCount) const
 {
     omw::stringVector_t r(0);
 
@@ -373,7 +385,7 @@ omw::stringVector_t omw::string::split(char separator, omw::stringVector_t::size
         {
             if (r.size() < n)
             {
-                const omw::string::size_type end = this->find(separator, pos);
+                const omw::string::size_type end = this->find(delimiter, pos);
                 r.push_back(this->substr(pos, end - pos));
                 pos = end;
                 if (pos < omw::string::npos) ++pos;
@@ -799,11 +811,22 @@ uint64_t omw::hexstoui64(const std::string& str)
     return hexstointeger<uint64_t>(str, "omw::hexstoui64");
 }
 
-std::vector<uint8_t> omw::hexstovector(const omw::string& str, char delimiter)
+// to be added to doc: delimiter = 0
+// calls `omw::sepHexStr()`
+std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
 {
     const std::string fnName = "omw::hexstovector";
 
-    const std::vector<omw::string> hexStrings = str.split(delimiter);
+    omw::string tmpStr;
+    
+    if (delimiter == 0)
+    {
+        delimiter = toHexStr_defaultSepChar;
+        tmpStr = omw::sepHexStr(str, toHexStr_defaultSepChar);
+    }
+    else tmpStr = str;
+
+    const std::vector<omw::string> hexStrings = tmpStr.split(delimiter);
 
     std::vector<uint8_t> r(0);
     for (size_t i = 0; i < hexStrings.size(); ++i)
@@ -826,6 +849,8 @@ omw::string omw::sepHexStr(const std::string& str)
 
 //! 
 //! Separates a concatonated hex string with the separation character (e.g. `sepChar = '-' | 00112233 ==> 00-11-22-33`).
+//! 
+//! Prepends a `0` if length is odd.
 //! 
 omw::string omw::sepHexStr(const std::string& str, char sepChar)
 {

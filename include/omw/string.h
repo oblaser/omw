@@ -106,6 +106,9 @@ namespace omw
         string(const char* first, const char* last);
         virtual ~string() {}
 
+        std::string& std();
+        const std::string& std() const;
+
 #ifdef OMWi_STRING_IMPLEMENT_CONTAINS
         bool contains(char ch) const;
         bool contains(const char* str) const;
@@ -123,7 +126,7 @@ namespace omw
         omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
 
-        omw::stringVector_t split(char separator, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
+        omw::stringVector_t split(char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         //omw::stringVector_t split(const char* sepString, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         //omw::stringVector_t split(const std::string& sepString, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         omw::stringVector_t splitLen(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
@@ -213,7 +216,7 @@ namespace omw
     int64_t hexstoi64(const std::string& str);
     uint32_t hexstoui(const std::string& str);
     uint64_t hexstoui64(const std::string& str);
-    std::vector<uint8_t> hexstovector(const omw::string& str, char delimiter = toHexStr_defaultSepChar);
+    std::vector<uint8_t> hexstovector(const std::string& str, char delimiter = toHexStr_defaultSepChar);
 
     omw::string sepHexStr(const std::string& str);
     omw::string sepHexStr(const std::string& str, char sepChar);
