@@ -180,6 +180,7 @@ namespace omw
     //! \name Convert From String
     /// @{
     bool stob(const std::string& boolStr);
+    
     std::pair<int32_t, int32_t> stoipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<int64_t, int64_t> stoi64pair(const std::string& str, char sepChar = pairtos_defaultSepChar);
@@ -187,6 +188,9 @@ namespace omw
     //std::pair<float, float> stofpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<double, double> stodpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
     //std::pair<long double, long double> stoldpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    
+    //omw::int128_t stoi128(const std::string& str);
+    //omw::uint128_t stoui128(const std::string& str);
     /// @}
 
 
@@ -201,12 +205,16 @@ namespace omw
     omw::string toHexStr(uint32_t value);
     omw::string toHexStr(int64_t value);
     omw::string toHexStr(uint64_t value);
-    omw::string toHexStr(int16_t value, char sepChar);
-    omw::string toHexStr(uint16_t value, char sepChar);
-    omw::string toHexStr(int32_t value, char sepChar);
-    omw::string toHexStr(uint32_t value, char sepChar);
-    omw::string toHexStr(int64_t value, char sepChar);
-    omw::string toHexStr(uint64_t value, char sepChar);
+    omw::string toHexStr(const omw::int128_t& value);
+    omw::string toHexStr(const omw::uint128_t& value);
+    omw::string toHexStr(int16_t value,  char delimiter);
+    omw::string toHexStr(uint16_t value, char delimiter);
+    omw::string toHexStr(int32_t value,  char delimiter);
+    omw::string toHexStr(uint32_t value, char delimiter);
+    omw::string toHexStr(int64_t value,  char delimiter);
+    omw::string toHexStr(uint64_t value, char delimiter);
+    omw::string toHexStr(const omw::int128_t& value, char delimiter);
+    omw::string toHexStr(const omw::uint128_t& value, char delimiter);
     omw::string toHexStr(const std::vector<char>& data, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const std::vector<uint8_t>& data, char sepChar = toHexStr_defaultSepChar);
     omw::string toHexStr(const char* data, size_t count, char sepChar = toHexStr_defaultSepChar);
@@ -214,8 +222,10 @@ namespace omw
 
     int32_t hexstoi(const std::string& str);
     int64_t hexstoi64(const std::string& str);
+    omw::int128_t hexstoi128(const std::string& str);
     uint32_t hexstoui(const std::string& str);
     uint64_t hexstoui64(const std::string& str);
+    omw::uint128_t hexstoui128(const std::string& str);
     std::vector<uint8_t> hexstovector(const std::string& str, char delimiter = toHexStr_defaultSepChar);
 
     omw::string sepHexStr(const std::string& str);

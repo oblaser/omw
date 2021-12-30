@@ -15,6 +15,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "catch2/catch.hpp"
 #include "testUtil.h"
 
+#include <omw/int.h>
 #include <omw/string.h>
 
 
@@ -615,6 +616,8 @@ TEST_CASE("string.h toHexStr()")
     CHECK(omw::toHexStr((uint32_t)0x89ABCDEF) == "89ABCDEF");
     CHECK(omw::toHexStr((int64_t)0x0123456789ABCDEF) == "0123456789ABCDEF");
     CHECK(omw::toHexStr((uint64_t)0x0123456789ABCDEF) == "0123456789ABCDEF");
+    CHECK(omw::toHexStr(omw::int128_t(0x987654321015157A, 0x0123456789ABCDEF)) == "987654321015157A0123456789ABCDEF");
+    CHECK(omw::toHexStr(omw::uint128_t(0x987654321015157A, 0x0123456789ABCDEF)) == "987654321015157A0123456789ABCDEF");
 
     CHECK(omw::toHexStr((int16_t)0x5678, '-') == "56-78");
     CHECK(omw::toHexStr((uint16_t)0x5678, ' ') == "56 78");
@@ -622,6 +625,8 @@ TEST_CASE("string.h toHexStr()")
     CHECK(omw::toHexStr((uint32_t)0x89ABCDEF, '+') == "89+AB+CD+EF");
     CHECK(omw::toHexStr((int64_t)0x0123456789ABCDEF, 't') == "01t23t45t67t89tABtCDtEF");
     CHECK(omw::toHexStr((uint64_t)0x0123456789ABCDEF, '-') == "01-23-45-67-89-AB-CD-EF");
+    CHECK(omw::toHexStr(omw::int128_t(0x987654321015157A, 0x0123456789ABCDEF), '-') == "98-76-54-32-10-15-15-7A-01-23-45-67-89-AB-CD-EF");
+    CHECK(omw::toHexStr(omw::uint128_t(0x987654321015157A, 0x0123456789ABCDEF), '-') == "98-76-54-32-10-15-15-7A-01-23-45-67-89-AB-CD-EF");
 
     std::vector<char> vecC = { 0x30, 0x35, 'A', 'b' };
     CHECK(omw::toHexStr(vecC) == "30 35 41 62");
@@ -643,13 +648,14 @@ TEST_CASE("string.h hexstoi()")
     CHECK(omw::hexstoi("ff") == 255);
     CHECK(omw::hexstoi("FFffFFff") == -1);
     CHECK(omw::hexstoi("FFffFFfe") == -2);
-    CHECK(omw::hexstoi("0FFffFFff") == -1);
 
     TESTUTIL_TRYCATCH_DECLARE_VAL(int32_t, 0x11112);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoi(""), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoi("0xF0"), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoi(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi("0FFffFFff"), std::out_of_range);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoi("100000000"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi("0x100000000"), std::invalid_argument);
 }
 
 TEST_CASE("string.h hexstoui()")
@@ -659,13 +665,14 @@ TEST_CASE("string.h hexstoui()")
     CHECK(omw::hexstoui("ff") == 255);
     CHECK(omw::hexstoui("FFffFFff") == 4294967295);
     CHECK(omw::hexstoui("FFffFFfe") == 4294967294);
-    CHECK(omw::hexstoui("0FFffFFff") == 4294967295);
 
     TESTUTIL_TRYCATCH_DECLARE_VAL(uint32_t, 0x11112);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui(""), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui("0xF0"), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui("0FFffFFff"), std::out_of_range);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui("100000000"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui("0x100000000"), std::invalid_argument);
 }
 
 TEST_CASE("string.h hexstoi64()")
@@ -677,13 +684,14 @@ TEST_CASE("string.h hexstoi64()")
     CHECK(omw::hexstoi64("FFffFFfe") == 4294967294);
     CHECK(omw::hexstoi64("ffffFFFFffffFFFF") == -1);
     CHECK(omw::hexstoi64("ffffFFFFffffFFFe") == -2);
-    CHECK(omw::hexstoi64("0ffffFFFFffffFFFF") == -1);
 
     TESTUTIL_TRYCATCH_DECLARE_VAL(int64_t, 0x11112);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64(""), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64("0xF0"), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64("0ffffFFFFffffFFFF"), std::out_of_range);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64("10000000000000000"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi64("0x10000000000000000"), std::invalid_argument);
 }
 
 TEST_CASE("string.h hexstoui64()")
@@ -695,13 +703,58 @@ TEST_CASE("string.h hexstoui64()")
     CHECK(omw::hexstoui64("FFffFFfe") == 4294967294);
     CHECK(omw::hexstoui64("ffffFFFFffffFFFF") == 18446744073709551615u);
     CHECK(omw::hexstoui64("ffffFFFFffffFFFe") == 18446744073709551614u);
-    CHECK(omw::hexstoui64("0ffffFFFFffffFFFF") == 18446744073709551615u);
 
     TESTUTIL_TRYCATCH_DECLARE_VAL(uint64_t, 0x11112);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64(""), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64("0xF0"), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64("0ffffFFFFffffFFFF"), std::out_of_range);
     TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64("10000000000000000"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui64("0x10000000000000000"), std::invalid_argument);
+}
+
+TEST_CASE("string.h hexstoi128()")
+{
+    CHECK(omw::hexstoi128("0") == omw::int128_t(0, 0));
+    CHECK(omw::hexstoi128("000") == omw::int128_t(0, 0));
+    CHECK(omw::hexstoi128("ff") == omw::int128_t(0, 255));
+    CHECK(omw::hexstoi128("FFffFFff") == omw::int128_t(0, 4294967295));
+    CHECK(omw::hexstoi128("FFffFFfe") == omw::int128_t(0, 4294967294));
+    CHECK(omw::hexstoi128("ffffFFFFffffFFFF") == omw::int128_t(0, -1));
+    CHECK(omw::hexstoi128("ffffFFFFffffFFFe") == omw::int128_t(0, -2));
+    CHECK(omw::hexstoi128("000ffffFFFFffffFFFF") == omw::int128_t(0, -1));
+    CHECK(omw::hexstoi128("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF") == omw::int128_t(-1, -1));
+    CHECK(omw::hexstoi128("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFe") == omw::int128_t(-1, -2));
+
+    TESTUTIL_TRYCATCH_DECLARE_VAL(omw::int128_t, 0x11112);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi128(""), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi128("0xF0"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi128(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi128("0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi128("100000000000000000000000000000000"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoi128("0x100000000000000000000000000000000"), std::invalid_argument);
+}
+
+TEST_CASE("string.h hexstoui128()")
+{
+    CHECK(omw::hexstoui128("0") == omw::uint128_t(0, 0));
+    CHECK(omw::hexstoui128("000") == omw::uint128_t(0, 0));
+    CHECK(omw::hexstoui128("ff") == omw::uint128_t(0, 255));
+    CHECK(omw::hexstoui128("FFffFFff") == omw::uint128_t(0, 4294967295));
+    CHECK(omw::hexstoui128("FFffFFfe") == omw::uint128_t(0, 4294967294));
+    CHECK(omw::hexstoui128("ffffFFFFffffFFFF") == omw::uint128_t(0, -1));
+    CHECK(omw::hexstoui128("ffffFFFFffffFFFe") == omw::uint128_t(0, -2));
+    CHECK(omw::hexstoui128("000ffffFFFFffffFFFF") == omw::uint128_t(0, -1));
+    CHECK(omw::hexstoui128("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF") == omw::uint128_t(-1, -1));
+    CHECK(omw::hexstoui128("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFe") == omw::uint128_t(-1, -2));
+
+    TESTUTIL_TRYCATCH_DECLARE_VAL(omw::uint128_t, 0x11112);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui128(""), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui128("0xF0"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui128(" ff"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui128("0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui128("100000000000000000000000000000000"), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::hexstoui128("0x100000000000000000000000000000000"), std::invalid_argument);
 }
 
 TEST_CASE("string.h hexstovector()")

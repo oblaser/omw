@@ -51,10 +51,7 @@ namespace
         const std::string exMsg_notHex(OMWi_DISPSTR(fnName + ": not a hex string"));
         const omw::string hexDigits(omw::hexStrDigitsLower);
 
-        omw::string::size_type pos = 0;
-        while ((str[pos] == '0') && (pos < (str.length() - 1))) ++pos;
-
-        const omw::string hexStr((omw::string(str, pos)).toLower_ascii());
+        const omw::string hexStr = str.toLower_ascii();
         const omw::string::size_type hexStrLen = hexStr.length();
         const omw::string::size_type maxLen = 2 * sizeof(T);
 
@@ -71,6 +68,41 @@ namespace
                 T digitValue = (T)digitIdx;
                 digitValue <<= (4 * (T)i);
                 r |= digitValue;
+            }
+        }
+        else
+        {
+            if (!omw::isHex(hexStr)) throw std::invalid_argument(exMsg_notHex);
+            throw std::out_of_range(fnName);
+        }
+
+        return r;
+    }
+    omw::Base_Int128 hexstointeger128(const omw::string& str, const std::string& fnName)
+    {
+        const std::string exMsg_notHex(OMWi_DISPSTR(fnName + ": not a hex string"));
+        
+        const omw::string& hexStr = str;
+        const omw::string::size_type hexStrLen = hexStr.length();
+        const omw::string::size_type maxLen = 32;
+
+        omw::Base_Int128 r = 0;
+
+        if ((hexStrLen <= maxLen) && (hexStrLen > 0))
+        {
+            if (hexStrLen <= 16)
+            {
+                const uint64_t hi = 0;
+                const uint64_t lo = ::hexstointeger<uint64_t>(hexStr, fnName);
+                r = omw::Base_Int128(hi, lo);
+            }
+            else
+            {
+                const omw::string hiStr = hexStr.substr(0, hexStrLen - 16);
+                const omw::string loStr = hexStr.substr(hexStrLen - 16);
+                const uint64_t hi = ::hexstointeger<uint64_t>(hiStr, fnName);
+                const uint64_t lo = ::hexstointeger<uint64_t>(loStr, fnName);
+                r = omw::Base_Int128(hi, lo);
             }
         }
         else
@@ -659,6 +691,16 @@ std::pair<int32_t, int32_t> omw::stoipair(const std::string& str, char sepChar)
     return std::pair<int32_t, int32_t>(std::stoi(first), std::stoi(second));
 }
 
+//omw::int128_t omw::stoi128(const std::string& str)
+//{
+//    reversed double dabble needed, wich is not implemented yet
+//}
+//
+//omw::uint128_t omw::stoui128(const std::string& str)
+//{
+//    reversed double dabble needed, wich is not implemented yet
+//}
+
 
 
 omw::string omw::toHexStr(int8_t value)
@@ -703,59 +745,79 @@ omw::string omw::toHexStr(uint64_t value)
         toHexStr((uint8_t)(value >> 24)) + toHexStr((uint8_t)(value >> 16)) + toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value);
 }
 
-omw::string omw::toHexStr(int16_t value, char sepChar)
+omw::string omw::toHexStr(const omw::int128_t& value)
 {
-    return toHexStr((uint16_t)value, sepChar);
+    return omw::toHexStr(value.hi()) + omw::toHexStr(value.lo());
 }
 
-omw::string omw::toHexStr(uint16_t value, char sepChar)
+omw::string omw::toHexStr(const omw::uint128_t& value)
 {
-    return toHexStr((uint8_t)(value >> 8)) + sepChar + toHexStr((uint8_t)value);
+    return omw::toHexStr(value.hi()) + omw::toHexStr(value.lo());
 }
 
-omw::string omw::toHexStr(int32_t value, char sepChar)
+omw::string omw::toHexStr(int16_t value, char delimiter)
 {
-    return toHexStr((uint32_t)value, sepChar);
+    return toHexStr((uint16_t)value, delimiter);
 }
 
-omw::string omw::toHexStr(uint32_t value, char sepChar)
+omw::string omw::toHexStr(uint16_t value, char delimiter)
 {
-    return toHexStr((uint8_t)(value >> 24)) + sepChar + toHexStr((uint8_t)(value >> 16)) + sepChar + toHexStr((uint8_t)(value >> 8)) + sepChar + toHexStr((uint8_t)value);
+    return toHexStr((uint8_t)(value >> 8)) + delimiter + toHexStr((uint8_t)value);
 }
 
-omw::string omw::toHexStr(int64_t value, char sepChar)
+omw::string omw::toHexStr(int32_t value, char delimiter)
 {
-    return toHexStr((uint64_t)value, sepChar);
+    return toHexStr((uint32_t)value, delimiter);
 }
 
-omw::string omw::toHexStr(uint64_t value, char sepChar)
+omw::string omw::toHexStr(uint32_t value, char delimiter)
 {
-    return toHexStr((uint8_t)(value >> 56)) + sepChar + toHexStr((uint8_t)(value >> 48)) + sepChar + toHexStr((uint8_t)(value >> 40)) + sepChar + toHexStr((uint8_t)(value >> 32)) + sepChar +
-        toHexStr((uint8_t)(value >> 24)) + sepChar + toHexStr((uint8_t)(value >> 16)) + sepChar + toHexStr((uint8_t)(value >> 8)) + sepChar + toHexStr((uint8_t)value);
+    return toHexStr((uint8_t)(value >> 24)) + delimiter + toHexStr((uint8_t)(value >> 16)) + delimiter + toHexStr((uint8_t)(value >> 8)) + delimiter + toHexStr((uint8_t)value);
 }
 
-omw::string omw::toHexStr(const std::vector<char>& data, char sepChar)
+omw::string omw::toHexStr(int64_t value, char delimiter)
 {
-    return toHexStr(data.data(), data.size(), sepChar);
+    return toHexStr((uint64_t)value, delimiter);
 }
 
-omw::string omw::toHexStr(const std::vector<uint8_t>& data, char sepChar)
+omw::string omw::toHexStr(uint64_t value, char delimiter)
 {
-    return toHexStr(data.data(), data.size(), sepChar);
+    return toHexStr((uint8_t)(value >> 56)) + delimiter + toHexStr((uint8_t)(value >> 48)) + delimiter + toHexStr((uint8_t)(value >> 40)) + delimiter + toHexStr((uint8_t)(value >> 32)) + delimiter +
+        toHexStr((uint8_t)(value >> 24)) + delimiter + toHexStr((uint8_t)(value >> 16)) + delimiter + toHexStr((uint8_t)(value >> 8)) + delimiter + toHexStr((uint8_t)value);
 }
 
-omw::string omw::toHexStr(const char* data, size_t count, char sepChar)
+omw::string omw::toHexStr(const omw::int128_t& value, char delimiter)
 {
-    return toHexStr((const uint8_t*)data, count, sepChar);
+    return omw::toHexStr(value.hi(), delimiter) + delimiter + omw::toHexStr(value.lo(), delimiter);
 }
 
-omw::string omw::toHexStr(const uint8_t* data, size_t count, char sepChar)
+omw::string omw::toHexStr(const omw::uint128_t& value, char delimiter)
+{
+    return omw::toHexStr(value.hi(), delimiter) + delimiter + omw::toHexStr(value.lo(), delimiter);
+}
+
+omw::string omw::toHexStr(const std::vector<char>& data, char delimiter)
+{
+    return toHexStr(data.data(), data.size(), delimiter);
+}
+
+omw::string omw::toHexStr(const std::vector<uint8_t>& data, char delimiter)
+{
+    return toHexStr(data.data(), data.size(), delimiter);
+}
+
+omw::string omw::toHexStr(const char* data, size_t count, char delimiter)
+{
+    return toHexStr((const uint8_t*)data, count, delimiter);
+}
+
+omw::string omw::toHexStr(const uint8_t* data, size_t count, char delimiter)
 {
     omw::string str;
 
     for (size_t i = 0; i < count; ++i)
     {
-        if ((i > 0) && (sepChar != 0)) str += sepChar;
+        if ((i > 0) && (delimiter != 0)) str += delimiter;
 
         str += toHexStr(data[i]);
     }
@@ -794,6 +856,18 @@ int64_t omw::hexstoi64(const std::string& str)
 //! - `std::invalid_argument` if the string contains invalid characters
 //! - `std::out_of_range` if the value would fall out of range
 //! 
+omw::int128_t omw::hexstoi128(const std::string& str)
+{
+    return hexstointeger128(str, "omw::hexstoi128");
+}
+
+//! @param str Hexadecimal string representation
+//! @return The corresponding value
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the string contains invalid characters
+//! - `std::out_of_range` if the value would fall out of range
+//! 
 uint32_t omw::hexstoui(const std::string& str)
 {
     return hexstointeger<uint32_t>(str, "omw::hexstoui");
@@ -811,6 +885,18 @@ uint64_t omw::hexstoui64(const std::string& str)
     return hexstointeger<uint64_t>(str, "omw::hexstoui64");
 }
 
+//! @param str Hexadecimal string representation
+//! @return The corresponding value
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the string contains invalid characters
+//! - `std::out_of_range` if the value would fall out of range
+//! 
+omw::uint128_t omw::hexstoui128(const std::string& str)
+{
+    return hexstointeger128(str, "omw::hexstoui128");
+}
+
 // to be added to doc: delimiter = 0
 // calls `omw::sepHexStr()`
 std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
@@ -818,7 +904,7 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
     const std::string fnName = "omw::hexstovector";
 
     omw::string tmpStr;
-    
+
     if (delimiter == 0)
     {
         delimiter = toHexStr_defaultSepChar;
