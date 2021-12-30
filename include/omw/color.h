@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
+date            30.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -68,6 +68,7 @@ namespace omw
         /// @{
         void from_wxW_RGB(uint32_t wxWCol);
         void from_wxW_RGBA(uint32_t wxWCol);
+        uint32_t to_wxW() const;
         uint32_t to_wxW_RGB() const;
         uint32_t to_wxW_RGBA() const;
         /// @}

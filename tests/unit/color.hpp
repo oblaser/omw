@@ -1,6 +1,6 @@
 /*
 author         Oliver Blaser
-date           17.09.2021
+date           30.12.2021
 copyright      MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -400,10 +400,12 @@ TEST_CASE("color.h omw::Color wxWidgets support")
 
     col = omw::Color(1, 2, 3);
     CHECK(col.to_wxW_RGB() == 0x00030201);
+    CHECK(col.to_wxW_RGB() == col.to_wxW());
     CHECK(col.to_wxW_RGBA() == 0xFF030201);
 
     col = omw::Color(1, 2, 3, 4);
     CHECK(col.to_wxW_RGB() == 0x00030201);
+    CHECK(col.to_wxW_RGB() == col.to_wxW());
     CHECK(col.to_wxW_RGBA() == 0x04030201);
 
     col.from_wxW_RGB(0xABCDEF);

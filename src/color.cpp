@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            21.12.2021
+date            30.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -389,8 +389,19 @@ void omw::Color::from_wxW_RGBA(uint32_t wxWCol)
     set(r, g, b, a);
 }
 
+//! 
+//! Used to implicitly construct a `wxColour` object.
+//! 
+//! See also to_wxW_RGB().
+//! 
+uint32_t omw::Color::to_wxW() const
+{
+    return to_wxW_RGB();
+}
+
+//!
 //! Format: `0xBBGGRR`
-//! See <a href="https://docs.wxwidgets.org/3.0/classwx_colour.html" target="_blank">wxColour Class Reference</a>
+//! 
 uint32_t omw::Color::to_wxW_RGB() const
 {
     return (to_wxW_RGBA() & 0x00FFFFFF);
