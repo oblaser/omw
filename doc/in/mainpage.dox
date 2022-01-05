@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            22.12.2021
+date            27.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -14,6 +14,9 @@ The Following objects are in a pre-release state.
 
 \b Alpha
 - `omw::Version`
+    - pre-release and build identifier related methods
+    - `isValid()`
+- `toVector()` and `convertVector()` functions in the \ref grp_utility module
 
 
 

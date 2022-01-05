@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            21.12.2021
+date            22.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
@@ -70,21 +70,21 @@ const releaseData =
     },
 //#p endrm
     {
-        title: "Release v0.2.0-alpha",
+        title: "Release v0.2.0-alpha.2",
         binaries:
         [
-            { type: "link", text: "Windows (zip)", href: "./files/omw_win_v0.2.0-alpha.zip", download: true },
-            { type: "link", text: "Linux x86_64 (tar.gz)", href: "./files/omw_linux_x86_64_v0.2.0-alpha.tar.gz", download: true }
+            { type: "link", text: "Windows (zip)", href: "./files/omw_win_v0.2.0-alpha.2.zip", download: true },
+            { type: "link", text: "Linux x86_64 (tar.gz)", href: "./files/omw_linux_x86_64_v0.2.0-alpha.2.tar.gz", download: true }
         ],
         source:
         [
-            { type: "link", text: "Source (tar.gz)", href: "./files/omw_src_v0.2.0-alpha.tar.gz", download: true },
-            { type: "link", text: "Source (zip)", href: "./files/omw_src_v0.2.0-alpha.zip", download: true }
+            { type: "link", text: "Source (tar.gz)", href: "./files/omw_src_v0.2.0-alpha.2.tar.gz", download: true },
+            { type: "link", text: "Source (zip)", href: "./files/omw_src_v0.2.0-alpha.2.zip", download: true }
         ],
         doc:
         [
-            { type: "link", text: "HTML (tar.gz)", href: "./files/omw_doc_v0.2.0-alpha.tar.gz", download: true },
-            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.2.0-alpha.zip", download: true }
+            { type: "link", text: "HTML (tar.gz)", href: "./files/omw_doc_v0.2.0-alpha.2.tar.gz", download: true },
+            { type: "link", text: "HTML (zip)", href: "./files/omw_doc_v0.2.0-alpha.2.zip", download: true }
         ]
     },
     {
