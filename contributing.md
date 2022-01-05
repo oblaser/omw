@@ -31,7 +31,7 @@ Before: Something else. Revision (patch) > 999 have been pre-releases.
 In development. May not be backwards compatible.
 
 ### Files
-Edit the version in the following files before releasing:
+The version must be consistent in the following files:
 - `build/dep_omw_globals.sh`
 - `build/dep_readme.txt`
 - `doc/Doxyfile`
