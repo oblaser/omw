@@ -6,7 +6,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 /*!
 
-\mainpage omw - A C++ Middleware Library
+\mainpage C++ Middleware Library
 
 
 \section mainpage_preReleaseNotes Pre-Release Notes
@@ -16,7 +16,6 @@ The Following objects are in a pre-release state.
 - `omw::Version`
     - pre-release and build identifier related methods
     - `isValid()`
-- `toVector()` and `convertVector()` functions in the \ref grp_utility module
 
 
 
