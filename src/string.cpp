@@ -240,6 +240,9 @@ omw::string::string(const char* first, const char* last)
     : std::string(first, last)
 {}
 
+//! 
+//! Used if an implicit conversion to `std::string` is not possible.
+//! 
 std::string& omw::string::std()
 {
     return *this;
