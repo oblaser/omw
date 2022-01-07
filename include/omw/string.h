@@ -147,9 +147,6 @@ namespace omw
         omw::string toUpper_ascii() const;
         omw::string toUpper_asciiExt() const;
         /// @}
-
-        omw::string& encodeUrl();
-        omw::string toUrlEncoded() const;
     };
 
 

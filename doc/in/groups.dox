@@ -1,15 +1,10 @@
 /*
 author          Oliver Blaser
-date            14.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 
-
-/*!
-\defgroup grp_macro Macros
-`#include <omw/defs.h>`
-*/
 
 /*!
 \defgroup grp_algorithm Algorithms Library
@@ -69,12 +64,37 @@ See also \ref ns_omw_ansiesc_section_ansiEscMode and `omw::windows::consoleEnVir
 
 // https://en.cppreference.com/w/cpp/utility
 /*!
-\defgroup grp_utility Utilies Library
+\defgroup grp_utility Utility Library
+*/
+
+/*!
+\defgroup grp_macro Macros
+\ingroup grp_utility
+`#include <omw/defs.h>`
+*/
+
+/*!
+\defgroup grp_utility_langSupport Language Support
+\ingroup grp_utility
+*/
+
+/*!
+\defgroup grp_utility_langSupport_typeSupport Type Support
+\ingroup grp_utility_langSupport
+`#include <omw/int.h>`
+*/
+
+/*!
+\defgroup grp_utility_gpUtil General Purpose Utilities
+\ingroup grp_utility
 `#include <omw/utility.h>`
 */
 
 /*!
-\defgroup grp_utility_typeSupport Type Support
-\ingroup grp_utility
-`#include <omw/omwint.h>`
+\defgroup grp_utility_gpUtil_encoding Encoding
+\ingroup grp_utility_gpUtil
+
+`#include <omw/encoding.h>`
+
+Decode and encode byte buffers from/to several formats
 */

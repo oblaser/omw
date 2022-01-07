@@ -498,21 +498,6 @@ TEST_CASE("string.h omw::string case conversion")
     CHECK(s == upperExt);
 }
 
-TEST_CASE("string.h omw::string URL encoded")
-{
-    const std::string str = "+\"*%&/()=asdf(fdsf)";
-    const std::string enc = "%2B%22%2A%25%26%2F%28%29%3Dasdf%28fdsf%29";
-
-    omw::string s1(str);
-    s1.encodeUrl();
-
-    const omw::string s2(str);
-
-    CHECK(s1 == enc);
-    CHECK(s2.toUrlEncoded() == enc);
-    CHECK(s1.toUrlEncoded() == "%252B%2522%252A%2525%2526%252F%2528%2529%253Dasdf%2528fdsf%2529");
-}
-
 TEST_CASE("string.h to_string()")
 {
     const int32_t i32 = -1234567890;

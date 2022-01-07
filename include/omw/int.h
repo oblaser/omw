@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            18.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_OMWINT_H
@@ -12,7 +12,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 
 
-/*! \addtogroup grp_utility_typeSupport
+/*! \addtogroup grp_utility_langSupport_typeSupport
 * @{
 */
 
@@ -36,7 +36,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace omw
 {
-    /*! \addtogroup grp_utility_typeSupport
+    /*! \addtogroup grp_utility_langSupport_typeSupport
     * @{
     */
 
@@ -212,7 +212,7 @@ namespace omw
     //std::bitset<N> to_bitset(const omw::Base_Int128& value);
 }
 
-/*! \addtogroup grp_utility_typeSupport
+/*! \addtogroup grp_utility_langSupport_typeSupport
 * @{
 */
 

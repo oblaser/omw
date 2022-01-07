@@ -1,7 +1,7 @@
 /*
 author         Oliver Blaser
-date           21.12.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+date           07.01.2022
+copyright      MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef TEST_OMW_VERSION_H
@@ -25,6 +25,11 @@ TEST_CASE("omw::Version ctor")
     CHECK(v.major() == 12);
     CHECK(v.minor() == 34);
     CHECK(v.patch() == 56);
+
+    v = "9.8.7";
+    CHECK(v.major() == 9);
+    CHECK(v.minor() == 8);
+    CHECK(v.patch() == 7);
 
 
     TESTUTIL_TRYCATCH_DECLARE_VAL(omw::Version, omw::Version("1.2.3"));

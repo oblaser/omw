@@ -28,6 +28,7 @@ TEST_CASE("omw lib")
 
 #include "algorithm.hpp"
 #include "color.hpp"
+#include "encoding.hpp"
 #include "int.hpp"
 #include "io_serialPort.hpp"
 #include "math.hpp"

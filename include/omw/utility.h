@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            27.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_UTILITY_H
@@ -16,7 +16,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace omw
 {
-    /*! \addtogroup grp_utility
+    /*! \addtogroup grp_utility_gpUtil
     * @{
     */
 
@@ -27,20 +27,13 @@ namespace omw
     bool vectorContains(const std::vector<Type>& v, const Type& item)
     {
         bool r = false;
-
         for (size_t i = 0; (i < v.size()) && !r; ++i)
-        {
             if (v[i] == item) r = true;
-        }
-
         return r;
     }
 
-    std::vector<char> convertVector_i8(const std::vector<uint8_t>& v);
-    std::vector<uint8_t> convertVector_ui8(const std::vector<char>& v);
-
-    std::vector<uint8_t> toVector(const std::string& str);
-    std::vector<uint8_t> toVector(const omw::Base_Int128& val);
+    std::vector<char> convertByteVector(const std::vector<uint8_t>& v);
+    std::vector<uint8_t> convertByteVector(const std::vector<char>& v);
 
     // grp_utility
     /*! @} */

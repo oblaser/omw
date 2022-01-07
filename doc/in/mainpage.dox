@@ -1,14 +1,16 @@
 /*
 author          Oliver Blaser
-date            27.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 /*!
 
-\mainpage omw - A C++ Middleware Library
+\mainpage C++ Middleware Library
 
 
+\internal
+\endinternal
 \section mainpage_preReleaseNotes Pre-Release Notes
 The Following objects are in a pre-release state.
 
@@ -16,8 +18,11 @@ The Following objects are in a pre-release state.
 - `omw::Version`
     - pre-release and build identifier related methods
     - `isValid()`
-- `toVector()` and `convertVector()` functions in the \ref grp_utility module
-
+- `convertByteVector()` functions in the \ref grp_utility
+- `omw::bcd`
+- `omw::bigEndian`
+\internal
+\endinternal
 
 
 \section mainpage_guidelines Guidelines

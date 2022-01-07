@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            27.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_VERSION_H
@@ -13,7 +13,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 namespace omw
 {
-    /*! \addtogroup grp_utility
+    /*! \addtogroup grp_utility_gpUtil
     * @{
     */
 
@@ -23,8 +23,8 @@ namespace omw
         Version();
         Version(uint32_t major, uint32_t minor, uint32_t patch, const char* preRelease, const char* build = nullptr);
         Version(uint32_t major, uint32_t minor, uint32_t patch, const omw::string& preRelease = "", const omw::string& build = "");
-        explicit Version(const char* str);
-        explicit Version(const omw::string& str);
+        Version(const char* str);
+        Version(const omw::string& str);
         virtual ~Version() {}
 
         uint32_t major() const;
