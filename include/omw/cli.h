@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            14.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_CLI_H
@@ -87,7 +87,7 @@ namespace omw
     //! 
     namespace ansiesc
     {
-        constexpr char argSepChar = ';';
+        constexpr char argDelimiter = ';';
 
         constexpr char escChar = '\x1B';
 

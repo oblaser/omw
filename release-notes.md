@@ -9,7 +9,7 @@
 ### v0.2.0-alpha.3
 
 Behaviour changed
- - `omw::sepHexStr(const std::string&, char)` may prepend a "0"
+ - `omw::sepHexStr(const std::string&, char)` may prepend a "0", check doc
 
 New
  - `omw::Color::to_wxW()`

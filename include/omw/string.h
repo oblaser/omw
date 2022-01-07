@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            22.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_STRING_H
@@ -59,11 +59,11 @@ namespace omw
     const char* const UTF8CP_uuml = omw::UTF8CP_00FC;
     /// @}
 
-    constexpr char pairtos_defaultSepChar = ';';
+    constexpr char pairtos_defaultDelimiter = ';';
     const char* const hexStrDigitsUpper = "0123456789ABCDEF";
     const char* const hexStrDigitsLower = "0123456789abcdef";
     const char* const hexStrDigits = hexStrDigitsUpper;
-    constexpr char toHexStr_defaultSepChar = 0x20;
+    constexpr char toHexStr_defaultDelimiter = 0x20;
 
 
 
@@ -127,8 +127,8 @@ namespace omw
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
 
         omw::stringVector_t split(char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
-        //omw::stringVector_t split(const char* sepString, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
-        //omw::stringVector_t split(const std::string& sepString, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
+        //omw::stringVector_t split(const char* delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
+        //omw::stringVector_t split(const std::string& delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         omw::stringVector_t splitLen(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
 
         //! \name Case Conversion
@@ -167,13 +167,13 @@ namespace omw
     omw::string to_string(bool value, bool asText = true);
     omw::string to_string(const omw::int128_t& value);
     omw::string to_string(const omw::uint128_t& value);
-    omw::string to_string(const std::pair<int32_t, int32_t>& value, char sepChar = pairtos_defaultSepChar);
-    omw::string to_string(const std::pair<uint32_t, uint32_t>& value, char sepChar = pairtos_defaultSepChar);
-    omw::string to_string(const std::pair<int64_t, int64_t>& value, char sepChar = pairtos_defaultSepChar);
-    omw::string to_string(const std::pair<uint64_t, uint64_t>& value, char sepChar = pairtos_defaultSepChar);
-    omw::string to_string(const std::pair<float, float>& value, char sepChar = pairtos_defaultSepChar);
-    omw::string to_string(const std::pair<double, double>& value, char sepChar = pairtos_defaultSepChar);
-    omw::string to_string(const std::pair<long double, long double>& value, char sepChar = pairtos_defaultSepChar);
+    omw::string to_string(const std::pair<int32_t, int32_t>& value, char delimiter = pairtos_defaultDelimiter);
+    omw::string to_string(const std::pair<uint32_t, uint32_t>& value, char delimiter = pairtos_defaultDelimiter);
+    omw::string to_string(const std::pair<int64_t, int64_t>& value, char delimiter = pairtos_defaultDelimiter);
+    omw::string to_string(const std::pair<uint64_t, uint64_t>& value, char delimiter = pairtos_defaultDelimiter);
+    omw::string to_string(const std::pair<float, float>& value, char delimiter = pairtos_defaultDelimiter);
+    omw::string to_string(const std::pair<double, double>& value, char delimiter = pairtos_defaultDelimiter);
+    omw::string to_string(const std::pair<long double, long double>& value, char delimiter = pairtos_defaultDelimiter);
     /// @}
 
 
@@ -181,13 +181,13 @@ namespace omw
     /// @{
     bool stob(const std::string& boolStr);
     
-    std::pair<int32_t, int32_t> stoipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<int64_t, int64_t> stoi64pair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<uint64_t, uint64_t> stoui64pair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<float, float> stofpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<double, double> stodpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
-    //std::pair<long double, long double> stoldpair(const std::string& str, char sepChar = pairtos_defaultSepChar);
+    std::pair<int32_t, int32_t> stoipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
+    //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
+    //std::pair<int64_t, int64_t> stoi64pair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
+    //std::pair<uint64_t, uint64_t> stoui64pair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
+    //std::pair<float, float> stofpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
+    //std::pair<double, double> stodpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
+    //std::pair<long double, long double> stoldpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     
     //omw::int128_t stoi128(const std::string& str);
     //omw::uint128_t stoui128(const std::string& str);
@@ -215,10 +215,10 @@ namespace omw
     omw::string toHexStr(uint64_t value, char delimiter);
     omw::string toHexStr(const omw::int128_t& value, char delimiter);
     omw::string toHexStr(const omw::uint128_t& value, char delimiter);
-    omw::string toHexStr(const std::vector<char>& data, char sepChar = toHexStr_defaultSepChar);
-    omw::string toHexStr(const std::vector<uint8_t>& data, char sepChar = toHexStr_defaultSepChar);
-    omw::string toHexStr(const char* data, size_t count, char sepChar = toHexStr_defaultSepChar);
-    omw::string toHexStr(const uint8_t* data, size_t count, char sepChar = toHexStr_defaultSepChar);
+    omw::string toHexStr(const std::vector<char>& data, char delimiter = toHexStr_defaultDelimiter);
+    omw::string toHexStr(const std::vector<uint8_t>& data, char delimiter = toHexStr_defaultDelimiter);
+    omw::string toHexStr(const char* data, size_t count, char delimiter = toHexStr_defaultDelimiter);
+    omw::string toHexStr(const uint8_t* data, size_t count, char delimiter = toHexStr_defaultDelimiter);
 
     int32_t hexstoi(const std::string& str);
     int64_t hexstoi64(const std::string& str);
@@ -226,19 +226,19 @@ namespace omw
     uint32_t hexstoui(const std::string& str);
     uint64_t hexstoui64(const std::string& str);
     omw::uint128_t hexstoui128(const std::string& str);
-    std::vector<uint8_t> hexstovector(const std::string& str, char delimiter = toHexStr_defaultSepChar);
+    std::vector<uint8_t> hexstovector(const std::string& str, char delimiter = toHexStr_defaultDelimiter);
 
     omw::string sepHexStr(const std::string& str);
-    omw::string sepHexStr(const std::string& str, char sepChar);
-    omw::string sepHexStr(const std::string& str, char rmChar, char sepChar);
-    omw::string sepHexStr(const std::string& str, const char* rmChars, size_t count, char sepChar = toHexStr_defaultSepChar);
-    omw::string sepHexStr(const std::string& str, const std::vector<char>& rmChars, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const std::string& str, const char* rmString, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const std::string& str, const std::string& rmString, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const std::string& str, const std::string* rmStrings, size_t count, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const std::string& str, const omw::string* rmStrings, size_t count, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const std::string& str, const omw::stdStringVector_t& rmStrings, char sepChar = toHexStr_defaultSepChar);
-    //omw::string sepHexStr(const std::string& str, const omw::stringVector_t& rmStrings, char sepChar = toHexStr_defaultSepChar);
+    omw::string sepHexStr(const std::string& str, char delimiter);
+    omw::string sepHexStr(const std::string& str, char rmChar, char delimiter);
+    omw::string sepHexStr(const std::string& str, const char* rmChars, size_t count, char delimiter = toHexStr_defaultDelimiter);
+    omw::string sepHexStr(const std::string& str, const std::vector<char>& rmChars, char delimiter = toHexStr_defaultDelimiter);
+    //omw::string sepHexStr(const std::string& str, const char* rmString, char delimiter = toHexStr_defaultDelimiter);
+    //omw::string sepHexStr(const std::string& str, const std::string& rmString, char delimiter = toHexStr_defaultDelimiter);
+    //omw::string sepHexStr(const std::string& str, const std::string* rmStrings, size_t count, char delimiter = toHexStr_defaultDelimiter);
+    //omw::string sepHexStr(const std::string& str, const omw::string* rmStrings, size_t count, char delimiter = toHexStr_defaultDelimiter);
+    //omw::string sepHexStr(const std::string& str, const omw::stdStringVector_t& rmStrings, char delimiter = toHexStr_defaultDelimiter);
+    //omw::string sepHexStr(const std::string& str, const omw::stringVector_t& rmStrings, char delimiter = toHexStr_defaultDelimiter);
 
     omw::string rmNonHex(const std::string& str);
     void rmNonHex(char* str);
@@ -248,18 +248,18 @@ namespace omw
 
 
     // TODO check overloads
-    //omw::string join(const std::string* strings, size_t count, char sepChar = '\0');
-    //omw::string join(const std::string* strings, size_t count, const char* sepString);
-    //omw::string join(const std::string* strings, size_t count, const std::string& sepString);
+    //omw::string join(const std::string* strings, size_t count, char delimiter = '\0');
+    //omw::string join(const std::string* strings, size_t count, const char* delimiter);
+    //omw::string join(const std::string* strings, size_t count, const std::string& delimiter);
     //omw::string join(const omw::stdStringVector_t& strings);
-    //omw::string join(const omw::stdStringVector_t& strings, char sepChar);
-    //omw::string join(const omw::stdStringVector_t& strings, const char* sepString);
-    //omw::string join(const omw::stdStringVector_t& strings, const std::string& sepString);
+    //omw::string join(const omw::stdStringVector_t& strings, char delimiter);
+    //omw::string join(const omw::stdStringVector_t& strings, const char* delimiter);
+    //omw::string join(const omw::stdStringVector_t& strings, const std::string& delimiter);
     //omw::string join(const omw::stringVector_t& strings);
     omw::string join(const omw::stringVector_t& strings);
-    omw::string join(const omw::stringVector_t& strings, char sepChar);
-    //omw::string join(const omw::stringVector_t& strings, const char* sepString);
-    //omw::string join(const omw::stringVector_t& strings, const std::string& sepString);
+    omw::string join(const omw::stringVector_t& strings, char delimiter);
+    //omw::string join(const omw::stringVector_t& strings, const char* delimiter);
+    //omw::string join(const omw::stringVector_t& strings, const std::string& delimiter);
 
 
 

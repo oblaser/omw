@@ -1,12 +1,18 @@
 
-/doc/out/
-/web_deploy/
+/build/cmake/*
+!/build/cmake/CMakeLists.txt
+/build/packed/
 
+/doc/out/
+
+/dll32/
 /dll/
 /dll64/
 /lib32/
 /lib/
 /lib64/
+
+/web_deploy/
 
 
 

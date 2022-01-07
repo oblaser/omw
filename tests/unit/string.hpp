@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            30.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef TEST_OMW_STRING_H
@@ -805,9 +805,9 @@ TEST_CASE("string.h sepHexStr()")
     h_p = "012*3ab45cd67ef*8*9";
     h_std = h_p;
     h_omw = h_p;
-    CHECK(omw::sepHexStr(h_p, '*', omw::toHexStr_defaultSepChar) == r_sp);
-    CHECK(omw::sepHexStr(h_std, '*', omw::toHexStr_defaultSepChar) == r_sp);
-    CHECK(omw::sepHexStr(h_omw, '*', omw::toHexStr_defaultSepChar) == r_sp);
+    CHECK(omw::sepHexStr(h_p, '*', omw::toHexStr_defaultDelimiter) == r_sp);
+    CHECK(omw::sepHexStr(h_std, '*', omw::toHexStr_defaultDelimiter) == r_sp);
+    CHECK(omw::sepHexStr(h_omw, '*', omw::toHexStr_defaultDelimiter) == r_sp);
     CHECK(omw::sepHexStr(h_p, '*', '-') == r_hy);
     CHECK(omw::sepHexStr(h_std, '*', '-') == r_hy);
     CHECK(omw::sepHexStr(h_omw, '*', '-') == r_hy);

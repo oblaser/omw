@@ -1,5 +1,0 @@
-
-/packed/
-
-cmake/*
-!cmake/CMakeLists.txt

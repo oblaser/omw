@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            17.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef TEST_OMW_CLI_H
@@ -19,7 +19,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 TEST_CASE("cli.h ANSI ESC")
 {
-    CHECK(omw::ansiesc::argSepChar == ';');
+    CHECK(omw::ansiesc::argDelimiter == ';');
     CHECK(omw::ansiesc::escChar == '\033');
 
     CHECK(omw::ansiesc::singleShiftTwo == 'N');

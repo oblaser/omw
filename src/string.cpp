@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            30.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #include <stdexcept>
@@ -39,9 +39,9 @@ return r                                                    \
 namespace
 {
     template<typename T1, typename T2>
-    omw::string pair_to_string(const std::pair<T1, T2>& value, char sepChar)
+    omw::string pair_to_string(const std::pair<T1, T2>& value, char delimiter)
     {
-        return (std::to_string(value.first) + sepChar + std::to_string(value.second));
+        return (std::to_string(value.first) + delimiter + std::to_string(value.second));
     }
 
     // T has to be an integer type
@@ -112,13 +112,6 @@ namespace
         }
 
         return r;
-    }
-
-    omw::string separateHexStr(const omw::string& hexstr, char delimiter)
-    {
-        omw::string tmp = hexstr;
-        if (tmp.length() & 0x01) tmp = '0' + tmp;
-        return omw::join(tmp.splitLen(2), delimiter);
     }
 
     //// out_t and in_t have to be std::vector<omw::string> and std::vector<std::string> or vice versa.
@@ -609,39 +602,39 @@ omw::string omw::to_string(const omw::uint128_t& value)
     return omw::string(str, startPos);
 }
 
-omw::string omw::to_string(const std::pair<int32_t, int32_t>& value, char sepChar)
+omw::string omw::to_string(const std::pair<int32_t, int32_t>& value, char delimiter)
 {
-    return ::pair_to_string(value, sepChar);
+    return ::pair_to_string(value, delimiter);
 }
 
-omw::string omw::to_string(const std::pair<uint32_t, uint32_t>& value, char sepChar)
+omw::string omw::to_string(const std::pair<uint32_t, uint32_t>& value, char delimiter)
 {
-    return ::pair_to_string(value, sepChar);
+    return ::pair_to_string(value, delimiter);
 }
 
-omw::string omw::to_string(const std::pair<int64_t, int64_t>& value, char sepChar)
+omw::string omw::to_string(const std::pair<int64_t, int64_t>& value, char delimiter)
 {
-    return ::pair_to_string(value, sepChar);
+    return ::pair_to_string(value, delimiter);
 }
 
-omw::string omw::to_string(const std::pair<uint64_t, uint64_t>& value, char sepChar)
+omw::string omw::to_string(const std::pair<uint64_t, uint64_t>& value, char delimiter)
 {
-    return ::pair_to_string(value, sepChar);
+    return ::pair_to_string(value, delimiter);
 }
 
-omw::string omw::to_string(const std::pair<float, float>& value, char sepChar)
+omw::string omw::to_string(const std::pair<float, float>& value, char delimiter)
 {
-    return ::pair_to_string(value, sepChar);
+    return ::pair_to_string(value, delimiter);
 }
 
-omw::string omw::to_string(const std::pair<double, double>& value, char sepChar)
+omw::string omw::to_string(const std::pair<double, double>& value, char delimiter)
 {
-    return ::pair_to_string(value, sepChar);
+    return ::pair_to_string(value, delimiter);
 }
 
-omw::string omw::to_string(const std::pair<long double, long double>& value, char sepChar)
+omw::string omw::to_string(const std::pair<long double, long double>& value, char delimiter)
 {
-    return ::pair_to_string(value, sepChar);
+    return ::pair_to_string(value, delimiter);
 }
 
 
@@ -670,18 +663,18 @@ bool omw::stob(const std::string& boolStr)
 }
 
 //! @param str Pair string representation
-//! @param sepChar Character between the two values
+//! @param delimiter Character between the two values
 //! @return <tt><a href="https://en.cppreference.com/w/cpp/utility/pair" target="_blank">std::pair</a></tt> with the two values
 //! 
 //! \b Exceptions
 //! - `std::invalid_argument` if the separator character was not found or it is at the first or at the last position in the string
 //! - <tt><a href="https://en.cppreference.com/w/cpp/string/basic_string/stol" target="_blank">std::stoi()</a></tt> is called and may throw `std::out_of_range` or `std::invalid_argument`
 //! 
-std::pair<int32_t, int32_t> omw::stoipair(const std::string& str, char sepChar)
+std::pair<int32_t, int32_t> omw::stoipair(const std::string& str, char delimiter)
 {
     const std::string fnName = "omw::stoipair";
 
-    std::string::size_type sp = str.find(sepChar);
+    std::string::size_type sp = str.find(delimiter);
 
     if ((sp == 0) || (sp >= (str.length() - 1)) || (sp == std::string::npos)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": invalid separator char pos"));
 
@@ -910,8 +903,8 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
 
     if (delimiter == 0)
     {
-        delimiter = toHexStr_defaultSepChar;
-        tmpStr = omw::sepHexStr(str, toHexStr_defaultSepChar);
+        delimiter = toHexStr_defaultDelimiter;
+        tmpStr = omw::sepHexStr(str, toHexStr_defaultDelimiter);
     }
     else tmpStr = str;
 
@@ -929,32 +922,46 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
 }
 
 //! 
-//! Same as `omw::sepHexStr(const std::string&, char)` with `omw::toHexStr_defaultSepChar`.
+//! Same as `omw::sepHexStr(const std::string&, char)` with `omw::toHexStr_defaultdelimiter`.
 //! 
 omw::string omw::sepHexStr(const std::string& str)
 {
-    return omw::sepHexStr(str, omw::toHexStr_defaultSepChar);
+    return omw::sepHexStr(str, omw::toHexStr_defaultDelimiter);
 }
 
 //! 
-//! Separates a concatonated hex string with the separation character (e.g. `sepChar = '-' | 00112233 ==> 00-11-22-33`).
+//! Separates a concatonated hex string by adding a delimiter between the bytes.
 //! 
 //! Prepends a `0` if length is odd.
 //! 
-omw::string omw::sepHexStr(const std::string& str, char sepChar)
+//! Example:
+//! ```
+//! delimiter = '-'
+//! 1223344 => 01-22-33-44
+//! ```
+//! 
+omw::string omw::sepHexStr(const std::string& str, char delimiter)
 {
-    return ::separateHexStr(omw::string(str), sepChar);
+    omw::string tmp(str);
+    if (tmp.length() & 0x01) tmp = '0' + tmp;
+    return omw::join(tmp.splitLen(2), delimiter);
 }
 
-omw::string omw::sepHexStr(const std::string& str, char rmChar, char sepChar)
+//! 
+//! Removes all `rmChar` from the string and returns `omw::sepHexStr(const std::string&, char)`.
+//! 
+omw::string omw::sepHexStr(const std::string& str, char rmChar, char delimiter)
 {
     omw::string hexstr = str;
     hexstr.replaceAll(omw::StringReplacePair(rmChar, ""));
 
-    return ::separateHexStr(hexstr, sepChar);
+    return omw::sepHexStr(hexstr, delimiter);
 }
 
-omw::string omw::sepHexStr(const std::string& str, const char* rmChars, size_t count, char sepChar)
+//! 
+//! Removes all characters pointed to by `rmChars` from the string and returns `omw::sepHexStr(const std::string&, char)`.
+//! 
+omw::string omw::sepHexStr(const std::string& str, const char* rmChars, size_t count, char delimiter)
 {
     std::vector<omw::StringReplacePair> replPairs;
     replPairs.reserve(count);
@@ -967,35 +974,38 @@ omw::string omw::sepHexStr(const std::string& str, const char* rmChars, size_t c
     omw::string hexstr = str;
     hexstr.replaceAll(replPairs);
 
-    return ::separateHexStr(hexstr, sepChar);
+    return omw::sepHexStr(hexstr, delimiter);
 }
 
-omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmChars, char sepChar)
+//! 
+//! Removes all characters in `rmChars` from the string and returns `omw::sepHexStr(const std::string&, char)`.
+//! 
+omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmChars, char delimiter)
 {
-    return omw::sepHexStr(str, rmChars.data(), rmChars.size(), sepChar);
+    return omw::sepHexStr(str, rmChars.data(), rmChars.size(), delimiter);
 }
 
 // ready, but not tested:
 // 
-//omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmChars, char sepChar)
+//omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmChars, char delimiter)
 //{
-//    return omw::sepHexStr(str, rmChars.data(), rmChars.size(), sepChar);
+//    return omw::sepHexStr(str, rmChars.data(), rmChars.size(), delimiter);
 //}
 //
-//omw::string omw::sepHexStr(const std::string& str, const char* rmString, char sepChar)
+//omw::string omw::sepHexStr(const std::string& str, const char* rmString, char delimiter)
 //{
 //    omw::string hexstr = str;
 //    hexstr.replaceAll(rmString, "");
 //
-//    return ::separateHexStr(hexstr, sepChar);
+//    return ::separateHexStr(hexstr, delimiter);
 //}
 //
-//omw::string omw::sepHexStr(const std::string& str, const std::string& rmString, char sepChar)
+//omw::string omw::sepHexStr(const std::string& str, const std::string& rmString, char delimiter)
 //{
-//    return omw::sepHexStr(str, rmString.c_str(), sepChar);
+//    return omw::sepHexStr(str, rmString.c_str(), delimiter);
 //}
 //
-//omw::string omw::sepHexStr(const std::string& str, const std::string* rmStrings, size_t count, char sepChar)
+//omw::string omw::sepHexStr(const std::string& str, const std::string* rmStrings, size_t count, char delimiter)
 //{
 //    std::vector<omw::StringReplacePair> replPairs;
 //    replPairs.reserve(count);
@@ -1008,12 +1018,12 @@ omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmCh
 //    omw::string hexstr = str;
 //    hexstr.replaceAll(replPairs);
 //
-//    return ::separateHexStr(hexstr, sepChar);
+//    return ::separateHexStr(hexstr, delimiter);
 //}
 //
-//omw::string omw::sepHexStr(const std::string& str, const omw::stringVector_t& rmStrings, char sepChar)
+//omw::string omw::sepHexStr(const std::string& str, const omw::stringVector_t& rmStrings, char delimiter)
 //{
-//    return omw::sepHexStr(str, rmStrings.data(), rmStrings.size(), sepChar);
+//    return omw::sepHexStr(str, rmStrings.data(), rmStrings.size(), delimiter);
 //}
 
 omw::string omw::rmNonHex(const std::string& str)
@@ -1056,13 +1066,13 @@ omw::string omw::join(const omw::stringVector_t& strings)
     return r;
 }
 
-omw::string omw::join(const omw::stringVector_t& strings, char sepChar)
+omw::string omw::join(const omw::stringVector_t& strings, char delimiter)
 {
     omw::string r = "";
 
     for (omw::stringVector_t::size_type i = 0; i < strings.size(); ++i)
     {
-        if (i > 0) r += omw::string(1, sepChar);
+        if (i > 0) r += omw::string(1, delimiter);
         r += strings[i];
     }
 

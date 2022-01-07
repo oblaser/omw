@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            14.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            07.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #include <cmath>
@@ -148,7 +148,7 @@ omw::string omw::ansiesc::csi::seq(char ctrlSeqType, int arg0, int arg1)
 {
     return omw::ansiesc::csi::seq(ctrlSeqType,
         omw::to_string(arg0) +
-        omw::ansiesc::argSepChar +
+        omw::ansiesc::argDelimiter +
         omw::to_string(arg1));
 }
 
@@ -183,8 +183,8 @@ omw::string omw::ansiesc::csi::sgr::seq(int param)
 omw::string omw::ansiesc::csi::sgr::seq(int param, int arg0, int arg1)
 {
     return omw::ansiesc::csi::sgr::seq(
-        omw::to_string(param) + omw::ansiesc::argSepChar +
-        omw::to_string(arg0) + omw::ansiesc::argSepChar +
+        omw::to_string(param) + omw::ansiesc::argDelimiter +
+        omw::to_string(arg0) + omw::ansiesc::argDelimiter +
         omw::to_string(arg1));
 }
 
@@ -199,10 +199,10 @@ omw::string omw::ansiesc::csi::sgr::seq(int param, int arg0, int arg1)
 omw::string omw::ansiesc::csi::sgr::seq(int param, int arg0, int arg1, int arg2, int arg3)
 {
     return omw::ansiesc::csi::sgr::seq(
-        omw::to_string(param) + omw::ansiesc::argSepChar +
-        omw::to_string(arg0) + omw::ansiesc::argSepChar +
-        omw::to_string(arg1) + omw::ansiesc::argSepChar +
-        omw::to_string(arg2) + omw::ansiesc::argSepChar +
+        omw::to_string(param) + omw::ansiesc::argDelimiter +
+        omw::to_string(arg0) + omw::ansiesc::argDelimiter +
+        omw::to_string(arg1) + omw::ansiesc::argDelimiter +
+        omw::to_string(arg2) + omw::ansiesc::argDelimiter +
         omw::to_string(arg3));
 }
 
@@ -228,7 +228,7 @@ omw::string omw::ansiesc::csi::sgr::seq(const int* argv, size_t argc)
     {
         for (size_t i = 0; i < argc; ++i)
         {
-            if (i > 0) args += omw::ansiesc::argSepChar;
+            if (i > 0) args += omw::ansiesc::argDelimiter;
             args += omw::to_string(argv[i]);
         }
     }
