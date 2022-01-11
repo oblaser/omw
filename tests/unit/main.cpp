@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            11.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #include <iostream>
@@ -74,8 +74,13 @@ TEST_CASE("windows.h beep() & some perfCntr..()")
     const double measDur = omw::windows::perfCntrCalcDuration(start, stop);
     const double absError = std::abs(measDur - dDur);
     const double relError = absError / dDur;
+#ifdef OMW_DEBUG
     const double absErrorTh = 0.01; // 10ms
-    const double relErrorTh = 0.01; // 1%
+    const double relErrorTh = 0.05; // 5%
+#else
+    const double absErrorTh = 0.005; // 5ms
+    const double relErrorTh = 0.02; // 2%
+#endif
 
     std::cout << "\n" << omw::fgBrightBlack << "Beep Test" << std::endl;
     std::cout << "duration:\n";
