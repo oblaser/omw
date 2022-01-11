@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.01.2022
+date            10.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -24,6 +24,14 @@ namespace omw
 
     namespace bcd
     {
+        //uint8_t decode8(const uint8_t* data, size_t count);
+        //uint16_t decode16(const uint8_t* data, size_t count);
+        //uint32_t decode32(const uint8_t* data, size_t count);
+        //uint64_t decode64(const uint8_t* data, size_t count);
+        //omw::uint128_t decode128(const uint8_t* data, size_t count);
+        //
+        //void encode(uint8_t* buffer, size_t bufferSize, uint64_t value);
+        //void encode(uint8_t* buffer, size_t bufferSize, const omw::uint128_t& value);
     }
 
     namespace bigEndian
@@ -37,13 +45,13 @@ namespace omw
         omw::int128_t decode_i128(const uint8_t* data, size_t count = 16);
         omw::uint128_t decode_ui128(const uint8_t* data, size_t count = 16);
 
-        void encode_16(uint8_t* buffer, int16_t value);
-        void encode_16(uint8_t* buffer, uint16_t value);
-        void encode_32(uint8_t* buffer, int32_t value);
-        void encode_32(uint8_t* buffer, uint32_t value);
-        void encode_64(uint8_t* buffer, int64_t value);
-        void encode_64(uint8_t* buffer, uint64_t value);
-        void encode_128(uint8_t* buffer, const omw::Base_Int128& value);
+        void encode_16(uint8_t* buffer, const uint8_t* end, int16_t value);
+        void encode_16(uint8_t* buffer, const uint8_t* end, uint16_t value);
+        void encode_32(uint8_t* buffer, const uint8_t* end, int32_t value);
+        void encode_32(uint8_t* buffer, const uint8_t* end, uint32_t value);
+        void encode_64(uint8_t* buffer, const uint8_t* end, int64_t value);
+        void encode_64(uint8_t* buffer, const uint8_t* end, uint64_t value);
+        void encode_128(uint8_t* buffer, const uint8_t* end, const omw::Base_Int128& value);
     }
 
     namespace url

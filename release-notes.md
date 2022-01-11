@@ -21,7 +21,8 @@ New
  - `omw::bcd` (encoding.h)
  - `omw::bigEndian` (encoding.h)
  - `omw::convertByteVector()` (utility.h)
- - `omw::toVector()` (utility.h)
+ - `omw::shiftLeftAssign()` (utility.h)
+ - `omw::shiftRightAssign()` (utility.h)
 
 
 

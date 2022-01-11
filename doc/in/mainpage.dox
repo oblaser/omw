@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.01.2022
+date            10.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -21,6 +21,8 @@ The Following objects are in a pre-release state.
 - `convertByteVector()` functions in the \ref grp_utility
 - `omw::bcd`
 - `omw::bigEndian`
+- `omw::shiftLeftAssign()`
+- `omw::shiftRightAssign()`
 \internal
 \endinternal
 

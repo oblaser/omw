@@ -1,7 +1,7 @@
 #
 # author        Oliver Blaser
-# date          10.12.2021
-# copyright     MIT - Copyright (c) 2021 Oliver Blaser
+# date          09.01.2022
+# copyright     MIT - Copyright (c) 2022 Oliver Blaser
 #
 
 
@@ -11,7 +11,7 @@
 
 -if ./index.html                        -od ../web_deploy/                          -t custom:<!--#p    -Wsup 107
 -if ./license.html                      -od ../web_deploy/                          -t custom:<!--#p    -Wsup 107
--if ./style.css                         -od ../web_deploy/                          --copy
+-if ./style.css                         -od ../web_deploy/                          -t custom:/*#p      -Wsup 107
 -if ./doc/index.html                    -od ../web_deploy/doc/                      -t custom:<!--#p    -Wsup 107
 -if ./downloads/index.html              -od ../web_deploy/downloads/                -t custom:<!--#p    -Wsup 107
 -if ./downloads/index.js                -od ../web_deploy/downloads/

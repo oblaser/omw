@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            21.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            10.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 /*
@@ -123,17 +123,14 @@ void omw::Base_Int128::sets(int32_t valueHH, uint32_t valueLH, uint32_t valueHL,
 //! 
 void omw::Base_Int128::sets(const uint8_t* data, size_t count)
 {
-    if (data)
+    if (data && count > 0)
     {
-        if (count > 0)
-        {
-            if (count > nBytes128) throw std::overflow_error("omw::Base_Int128::sets");
+        if (count > nBytes128) throw std::overflow_error("omw::Base_Int128::sets");
 
-            if (data[0] & 0x80) set(OMW_64BIT_ALL, OMW_64BIT_ALL);
-            else setu(0);
+        if (data[0] & 0x80) set(OMW_64BIT_ALL, OMW_64BIT_ALL);
+        else setu(0);
 
-            readBuffer(data, count);
-        }
+        readBuffer(data, count);
     }
 }
 
@@ -158,15 +155,11 @@ void omw::Base_Int128::setu(uint64_t value)
 //! 
 void omw::Base_Int128::setu(const uint8_t* data, size_t count)
 {
-    if (data)
+    if (data && count > 0)
     {
-        if (count > 0)
-        {
-            if (count > nBytes128) throw std::overflow_error("omw::Base_Int128::setu");
-
-            setu(0);
-            readBuffer(data, count);
-        }
+        if (count > nBytes128) throw std::overflow_error("omw::Base_Int128::setu");
+        setu(0);
+        readBuffer(data, count);
     }
 }
 
@@ -483,10 +476,10 @@ omw::SignedInt128 omw::operator~(const omw::SignedInt128& a) { OMWi_IMPLEMENT_OP
 omw::UnsignedInt128 omw::operator~(const omw::UnsignedInt128& a) { OMWi_IMPLEMENT_OPERATOR_BIT_NOT(a); }
 
 OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(&)
-OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(| )
+OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(|)
 OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(^)
-OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(<< )
-OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(>> )
+OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(<<)
+OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(>>)
 
 
 
@@ -533,9 +526,9 @@ bool omw::operator<(const omw::UnsignedInt128& a, const omw::SignedInt128& b)
         !(a.hi() & OMW_64BIT_MSB) &&
         !(b.hi() & OMW_64BIT_MSB) &&
         (
-            (a.hi() < b.hi()) || 
+            (a.hi() < b.hi()) ||
             ((a.hi() == b.hi()) && (a.lo() < b.lo()))
-        )
+            )
         );
 }
 
