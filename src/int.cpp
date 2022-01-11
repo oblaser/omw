@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            10.01.2022
+date            11.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -24,6 +24,8 @@ namespace
     typedef uint64_t base_type;
     static constexpr unsigned int baseTypeWith = 64;
     static constexpr base_type baseTypeAllBits = OMW_64BIT_ALL;
+    static constexpr base_type baseTypeMSB = OMW_64BIT_MSB;
+    static constexpr unsigned int bitWidth = 128;
 
     static constexpr size_t nBytes128 = 16; // 16 * 8 bit = 128 bit
 
@@ -96,7 +98,7 @@ void omw::Base_Int128::sets(int64_t value)
 {
     m_l = ::to_ui64(value);
 
-    if (m_l & OMW_64BIT_MSB) m_h = OMW_64BIT_ALL;
+    if (m_l & baseTypeMSB) m_h = baseTypeAllBits;
     else m_h = 0;
 }
 
@@ -127,7 +129,7 @@ void omw::Base_Int128::sets(const uint8_t* data, size_t count)
     {
         if (count > nBytes128) throw std::overflow_error("omw::Base_Int128::sets");
 
-        if (data[0] & 0x80) set(OMW_64BIT_ALL, OMW_64BIT_ALL);
+        if (data[0] & 0x80) set(baseTypeAllBits, baseTypeAllBits);
         else setu(0);
 
         readBuffer(data, count);
@@ -235,7 +237,7 @@ omw::Base_Int128& omw::Base_Int128::operator<<=(unsigned int count)
         m_h = m_l;
         m_l = 0;
     }
-    else if (count < 128)
+    else if (count < bitWidth)
     {
         m_h = m_l;
         m_h <<= (count - baseTypeWith);
@@ -245,35 +247,6 @@ omw::Base_Int128& omw::Base_Int128::operator<<=(unsigned int count)
     {
         m_h = 0;
         m_l = 0;
-    }
-
-    return *this;
-}
-
-omw::Base_Int128& omw::Base_Int128::operator>>=(unsigned int count)
-{
-    if (count < baseTypeWith)
-    {
-        base_type carry = m_h << (baseTypeWith - count);
-        m_l >>= count;
-        m_l |= carry;
-        m_h >>= count;
-    }
-    else if (count == baseTypeWith)
-    {
-        m_l = m_h;
-        m_h = 0;
-    }
-    else if (count < 128)
-    {
-        m_l = m_h;
-        m_l >>= (count - baseTypeWith);
-        m_h = 0;
-    }
-    else // count >= 128
-    {
-        m_l = 0;
-        m_h = 0;
     }
 
     return *this;
@@ -360,6 +333,59 @@ omw::SignedInt128& omw::SignedInt128::operator=(const omw::SignedInt128& b)
     return *this;
 }
 
+omw::SignedInt128& omw::SignedInt128::operator>>=(unsigned int count)
+{
+    base_type mask_h;
+    base_type mask_l;
+
+    if (m_h & baseTypeMSB)
+    {
+        mask_h = baseTypeAllBits;
+        mask_l = baseTypeAllBits;
+    }
+    else
+    {
+        mask_h = 0;
+        mask_l = 0;
+    }
+
+    if (count < baseTypeWith)
+    {
+        base_type carry = m_h << (baseTypeWith - count);
+        m_l >>= count;
+        m_l |= carry;
+        m_h >>= count;
+
+        mask_h <<= (baseTypeWith - count);
+        mask_l = 0;
+    }
+    else if (count == baseTypeWith)
+    {
+        m_l = m_h;
+        m_h = 0;
+
+        mask_l = 0;
+    }
+    else if (count < bitWidth)
+    {
+        m_l = m_h;
+        m_l >>= (count - baseTypeWith);
+        m_h = 0;
+
+        mask_l <<= (bitWidth - count);
+    }
+    else // count >= 128
+    {
+        m_l = 0;
+        m_h = 0;
+    }
+
+    m_h |= mask_h;
+    m_l |= mask_l;
+
+    return *this;
+}
+
 
 
 omw::UnsignedInt128::UnsignedInt128()
@@ -397,6 +423,35 @@ omw::UnsignedInt128& omw::UnsignedInt128::operator=(const omw::UnsignedInt128& b
     return *this;
 }
 
+omw::UnsignedInt128& omw::UnsignedInt128::operator>>=(unsigned int count)
+{
+    if (count < baseTypeWith)
+    {
+        base_type carry = m_h << (baseTypeWith - count);
+        m_l >>= count;
+        m_l |= carry;
+        m_h >>= count;
+    }
+    else if (count == baseTypeWith)
+    {
+        m_l = m_h;
+        m_h = 0;
+    }
+    else if (count < bitWidth)
+    {
+        m_l = m_h;
+        m_l >>= (count - baseTypeWith);
+        m_h = 0;
+    }
+    else // count >= 128
+    {
+        m_l = 0;
+        m_h = 0;
+    }
+
+    return *this;
+}
+
 
 
 #pragma region operators
@@ -426,19 +481,10 @@ return omw::Base_Int128(~a.hi(), ~a.lo())   \
 T omw::operator op (const T& a, const omw::Base_Int128& b) { OMWi_IMPLEMENT_SIA_ASSIGN_ALIAS_OPERATOR(op, a, b); } \
 // end OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR
 
-#define OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(T, op)  \
-T omw::operator op (const T& a, unsigned int count) { OMWi_IMPLEMENT_SIA_ASSIGN_ALIAS_OPERATOR(op, a, count); } \
-// end OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR
-
 #define OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(op)    \
 OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(omw::SignedInt128, op)    \
 OMWi_DEFINE_SIA_ASSIGN_ALIAS_OPERATOR(omw::UnsignedInt128, op)  \
 // end OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS
-
-#define OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(op)      \
-OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::SignedInt128, op)      \
-OMWi_DEFINE_SIA_SHIFT_ASSIGN_ALIAS_OPERATOR(omw::UnsignedInt128, op)    \
-// end OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS
 
 #define OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(Ta, Tb)              \
 bool omw::operator!=(const Ta& a, const Tb& b) { return !(a == b); }    \
@@ -478,9 +524,34 @@ omw::UnsignedInt128 omw::operator~(const omw::UnsignedInt128& a) { OMWi_IMPLEMEN
 OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(&)
 OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(|)
 OMWi_DEFINE_ALL_TYPES_SIA_ASSIGN_ALIAS_OPERATORS(^)
-OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(<<)
-OMWi_DEFINE_ALL_TYPES_SIA_SHIFT_ASSIGN_ALIAS_OPERATORS(>>)
 
+omw::SignedInt128 omw::operator<<(const omw::SignedInt128& a, unsigned int count)
+{
+    omw::SignedInt128 r(a);
+    r <<= count;
+    return r;
+}
+
+omw::UnsignedInt128 omw::operator<<(const omw::UnsignedInt128& a, unsigned int count)
+{
+    omw::UnsignedInt128 r(a);
+    r <<= count;
+    return r;
+}
+
+omw::SignedInt128 omw::operator>>(const omw::SignedInt128& a, unsigned int count)
+{
+    omw::SignedInt128 r(a);
+    r >>= count;
+    return r;
+}
+
+omw::UnsignedInt128 omw::operator>>(const omw::UnsignedInt128& a, unsigned int count)
+{
+    omw::UnsignedInt128 r(a);
+    r >>= count;
+    return r;
+}
 
 
 

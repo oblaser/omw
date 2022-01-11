@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.01.2022
+date            11.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -85,8 +85,7 @@ namespace omw
         omw::Base_Int128& operator&=(const omw::Base_Int128& b);
         omw::Base_Int128& operator|=(const omw::Base_Int128& b);
         omw::Base_Int128& operator^=(const omw::Base_Int128& b);
-        omw::Base_Int128& operator<<=(unsigned int count);
-        omw::Base_Int128& operator>>=(unsigned int count);
+        omw::Base_Int128& operator<<=(unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
 
         omw::Base_Int128& operator++();
         omw::Base_Int128& operator--();
@@ -113,6 +112,7 @@ namespace omw
         //! \name Operators
         /// @{
         omw::SignedInt128& operator=(const omw::SignedInt128& b);
+        omw::SignedInt128& operator>>=(unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
         /// @}
     };
 
@@ -131,6 +131,7 @@ namespace omw
         //! \name Operators
         /// @{
         omw::UnsignedInt128& operator=(const omw::UnsignedInt128& b);
+        omw::UnsignedInt128& operator>>=(unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
         /// @}
     };
 
@@ -160,11 +161,11 @@ namespace omw
     omw::SignedInt128 operator^(const omw::SignedInt128& a, const omw::Base_Int128& b);
     omw::UnsignedInt128 operator^(const omw::UnsignedInt128& a, const omw::Base_Int128& b);
 
-    omw::SignedInt128 operator<<(const omw::SignedInt128& a, unsigned int count);
-    omw::UnsignedInt128 operator<<(const omw::UnsignedInt128& a, unsigned int count);
+    omw::SignedInt128 operator<<(const omw::SignedInt128& a, unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
+    omw::UnsignedInt128 operator<<(const omw::UnsignedInt128& a, unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
 
-    omw::SignedInt128 operator>>(const omw::SignedInt128& a, unsigned int count);
-    omw::UnsignedInt128 operator>>(const omw::UnsignedInt128& a, unsigned int count);
+    omw::SignedInt128 operator>>(const omw::SignedInt128& a, unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
+    omw::UnsignedInt128 operator>>(const omw::UnsignedInt128& a, unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
 
     // All combinations of the comparison operators are needed to achieve sign awareness.
     bool operator==(const omw::SignedInt128& a, const omw::SignedInt128& b);
@@ -196,8 +197,8 @@ namespace omw
     bool operator>=(const omw::UnsignedInt128& a, const omw::UnsignedInt128& b);
     /// @}
 
-    using int128_t = omw::SignedInt128;
-    using uint128_t = omw::UnsignedInt128;
+    using int128_t = omw::SignedInt128; /*!< Signed 128-bit integer type (`omw::SignedInt128`) */
+    using uint128_t = omw::UnsignedInt128; /*!< Unsigned 128-bit integer type (`omw::UnsignedInt128`) */
 
     /*! @} */
 
