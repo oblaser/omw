@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.01.2022
+date            11.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -723,12 +723,7 @@ omw::string omw::toHexStr(uint64_t value)
         toHexStr((uint8_t)(value >> 24)) + toHexStr((uint8_t)(value >> 16)) + toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value);
 }
 
-omw::string omw::toHexStr(const omw::int128_t& value)
-{
-    return omw::toHexStr(value.hi()) + omw::toHexStr(value.lo());
-}
-
-omw::string omw::toHexStr(const omw::uint128_t& value)
+omw::string omw::toHexStr(const omw::Base_Int128& value)
 {
     return omw::toHexStr(value.hi()) + omw::toHexStr(value.lo());
 }
@@ -764,12 +759,7 @@ omw::string omw::toHexStr(uint64_t value, char delimiter)
         toHexStr((uint8_t)(value >> 24)) + delimiter + toHexStr((uint8_t)(value >> 16)) + delimiter + toHexStr((uint8_t)(value >> 8)) + delimiter + toHexStr((uint8_t)value);
 }
 
-omw::string omw::toHexStr(const omw::int128_t& value, char delimiter)
-{
-    return omw::toHexStr(value.hi(), delimiter) + delimiter + omw::toHexStr(value.lo(), delimiter);
-}
-
-omw::string omw::toHexStr(const omw::uint128_t& value, char delimiter)
+omw::string omw::toHexStr(const omw::Base_Int128& value, char delimiter)
 {
     return omw::toHexStr(value.hi(), delimiter) + delimiter + omw::toHexStr(value.lo(), delimiter);
 }

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.01.2022
+date            11.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -202,16 +202,14 @@ namespace omw
     omw::string toHexStr(uint32_t value);
     omw::string toHexStr(int64_t value);
     omw::string toHexStr(uint64_t value);
-    omw::string toHexStr(const omw::int128_t& value);
-    omw::string toHexStr(const omw::uint128_t& value);
+    omw::string toHexStr(const omw::Base_Int128& value);
     omw::string toHexStr(int16_t value,  char delimiter);
     omw::string toHexStr(uint16_t value, char delimiter);
     omw::string toHexStr(int32_t value,  char delimiter);
     omw::string toHexStr(uint32_t value, char delimiter);
     omw::string toHexStr(int64_t value,  char delimiter);
     omw::string toHexStr(uint64_t value, char delimiter);
-    omw::string toHexStr(const omw::int128_t& value, char delimiter);
-    omw::string toHexStr(const omw::uint128_t& value, char delimiter);
+    omw::string toHexStr(const omw::Base_Int128& value, char delimiter);
     omw::string toHexStr(const std::vector<char>& data, char delimiter = toHexStr_defaultDelimiter);
     omw::string toHexStr(const std::vector<uint8_t>& data, char delimiter = toHexStr_defaultDelimiter);
     omw::string toHexStr(const char* data, size_t count, char delimiter = toHexStr_defaultDelimiter);
