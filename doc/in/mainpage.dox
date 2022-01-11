@@ -21,10 +21,6 @@ The Following objects are in a pre-release state.
 - `convertByteVector()` functions in the \ref grp_utility_gpUtil
 - `omw::bcd`
 - `omw::bigEndian`
-- `omw::shiftLeft()`
-- `omw::shiftRight()`
-- `omw::shiftLeftAssign()`
-- `omw::shiftRightAssign()`
 \internal
 \endinternal
 
