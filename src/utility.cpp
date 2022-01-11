@@ -56,11 +56,14 @@ namespace
     {
         if (n < nBits)
         {
-            constexpr Tu ff = static_cast<Tu>(-1);
-            Tu tmp = static_cast<Tu>(value);
-            tmp = tmp >> n;
-            tmp |= (ff << (nBits - n));
-            value = static_cast<Ts>(tmp);
+            if (n)
+            {
+                constexpr Tu mask = static_cast<Tu>(-1);
+                Tu tmp = static_cast<Tu>(value);
+                tmp = tmp >> n;
+                tmp |= (mask << (nBits - n));
+                value = static_cast<Ts>(tmp);
+            }
         }
         else value = -1;
     }
