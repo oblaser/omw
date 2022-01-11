@@ -403,36 +403,6 @@ TEST_CASE("int.h omw::Base_Int128 operators")
     CHECK(base_int128_eq(x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF));
 
 
-    // <<=
-    x.set(0, 1);
-    x <<= 3;
-    CHECK(base_int128_eq(x, 0, 8));
-    x.set(1, 0);
-    x <<= 3;
-    CHECK(base_int128_eq(x, 8, 0));
-    x.set(0, 0xA5);
-    x <<= 32;
-    CHECK(base_int128_eq(x, 0, 0xA500000000));
-    x.set(0, 1);
-    x <<= 65;
-    CHECK(base_int128_eq(x, 2, 0));
-    x.set(UINT64_MAX, UINT64_MAX);
-    x <<= 127;
-    CHECK(base_int128_eq(x, 0x8000000000000000, 0));
-    x.set(0, 1);
-    x <<= 128;
-    CHECK(base_int128_eq(x, 0, 0));
-    x.set(UINT64_MAX, UINT64_MAX);
-    x <<= 128;
-    CHECK(base_int128_eq(x, 0, 0));
-    x.set(0, 0x12345678);
-    x <<= 32;
-    CHECK(base_int128_eq(x, 0, 0x1234567800000000));
-    x.set(0x1234567800000000, 0x12345678);
-    x <<= 48;
-    CHECK(base_int128_eq(x, 0x1234, 0x5678000000000000));
-
-
     // a++
     x.set(0, 0xFFFFFFFFFFFFFFFD);
     CHECK(base_int128_eq(x++, 0, 0xFFFFFFFFFFFFFFFD));
@@ -496,6 +466,52 @@ TEST_CASE("int.h omw::Base_Int128 operators")
     CHECK(base_int128_eq(--x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFE));
     CHECK(base_int128_eq(--x, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFD));
 }
+
+TEST_CASE("int.h omw::Base_Int128 left shift operator")
+{
+    omw::Base_Int128 x;
+
+    x.set(0x1234567800000000, 0x12345678);
+    x <<= 0;
+    CHECK(base_int128_eq(x, 0x1234567800000000, 0x12345678));
+
+    x.set(0, 1);
+    x <<= 3;
+    CHECK(base_int128_eq(x, 0, 8));
+
+    x.set(1, 0);
+    x <<= 3;
+    CHECK(base_int128_eq(x, 8, 0));
+    
+    x.set(0, 0xA5);
+    x <<= 32;
+    CHECK(base_int128_eq(x, 0, 0xA500000000));
+    
+    x.set(0, 1);
+    x <<= 65;
+    CHECK(base_int128_eq(x, 2, 0));
+    
+    x.set(UINT64_MAX, UINT64_MAX);
+    x <<= 127;
+    CHECK(base_int128_eq(x, 0x8000000000000000, 0));
+    
+    x.set(0, 1);
+    x <<= 128;
+    CHECK(base_int128_eq(x, 0, 0));
+    
+    x.set(UINT64_MAX, UINT64_MAX);
+    x <<= 128;
+    CHECK(base_int128_eq(x, 0, 0));
+    
+    x.set(0, 0x12345678);
+    x <<= 32;
+    CHECK(base_int128_eq(x, 0, 0x1234567800000000));
+    
+    x.set(0x1234567800000000, 0x12345678);
+    x <<= 48;
+    CHECK(base_int128_eq(x, 0x1234, 0x5678000000000000));
+}
+
 
 
 
@@ -659,18 +675,10 @@ TEST_CASE("int.h omw::SignedInt128")
     CHECK(x.sign() == -1);
 }
 
-TEST_CASE("int.h omw::SignedInt128 operators")
+TEST_CASE("int.h omw::SignedInt128 assign operator")
 {
     omw::SignedInt128 x;
 
-    //omw::SignedInt128& r =x;
-    //CHECK(r.hi() == 0xF000000000000000);
-    //CHECK(r.lo() == 0);
-    //std::cout << "\033[96m" << omw::toHexStr(omw::Base_Int128(r.oldValue_h, r.oldValue_l), '-') << "\033[39m" << std::endl;
-    //std::cout << "\033[95m" << omw::toHexStr(omw::Base_Int128(r.lastMask_h, r.lastMask_l), '-') << "\033[39m\n\n" << std::endl;
-
-
-    // =
     x.set(123, 456);
     x = 54;
     CHECK(base_int128_eq(x, 0, 54));
@@ -680,9 +688,24 @@ TEST_CASE("int.h omw::SignedInt128 operators")
     CHECK(base_int128_eq(x, 0, 123));
     x = -67;
     CHECK(base_int128_eq(x, OMW_64BIT_ALL, 0xFFFFFFFFFFFFFFBD));
+}
 
+TEST_CASE("int.h omw::SignedInt128 right shift operator")
+{
+    omw::SignedInt128 x;
 
-    // >>=
+#ifdef OMWi_INT_RIGHTSHIFT_DEBUG
+    omw::SignedInt128& r = x;
+    
+    //CHECK(r.hi() == 0xabcd);
+    //CHECK(r.lo() == 0xabcd);
+    //std::cout << "\033[99m" << omw::toHexStr(r.oldValue_h, '-') + "  " + omw::toHexStr(r.oldValue_l, '-') << "\033[39m" << std::endl;
+    //std::cout << "\033[95m" << omw::toHexStr(r.lastMask_h, '-') + "  " + omw::toHexStr(r.lastMask_l, '-') << "\033[39m\n\n" << std::endl;
+
+    std::cout << "\n\n\033[99m" << "oldValue" << "\033[39m" << std::endl;
+    std::cout << "\033[95m" << "lastMask" << "\033[39m\n\n" << std::endl;
+#endif
+
     x.set(0x8000000000000000, 0x8003);
     x >>= 0;
     CHECK(base_int128_eq(x, 0x8000000000000000, 0x8003));
@@ -854,12 +877,10 @@ TEST_CASE("int.h omw::UnsignedInt128")
     CHECK(base_int128_eq(x, UINT64_MAX, -123));
 }
 
-TEST_CASE("int.h omw::UnsignedInt128 operators")
+TEST_CASE("int.h omw::UnsignedInt128 assign operator")
 {
     omw::UnsignedInt128 x;
 
-
-    // =
     x.set(123, 456);
     x = 54;
     CHECK(base_int128_eq(x, 0, 54));
@@ -869,9 +890,12 @@ TEST_CASE("int.h omw::UnsignedInt128 operators")
     CHECK(base_int128_eq(x, 0, 123));
     x = -67;
     CHECK(base_int128_eq(x, OMW_64BIT_ALL, 0xFFFFFFFFFFFFFFBD));
+}
 
+TEST_CASE("int.h omw::UnsignedInt128 right shift operator")
+{
+    omw::UnsignedInt128 x;
 
-    // >>=
     x.set(0x8000000000000000, 0x8003);
     x >>= 0;
     CHECK(base_int128_eq(x, 0x8000000000000000, 0x8003));
@@ -1012,6 +1036,9 @@ TEST_CASE("int.h signed arithmetic operators")
 
 
     // <<
+    x.set(0x1234567800000000, 0x12345678);
+    CHECK(base_int128_eq(x << 0, 0x1234567800000000, 0x12345678));
+
     x.set(0, 1);
     CHECK(base_int128_eq(x << 3, 0, 8));
 
@@ -1041,6 +1068,9 @@ TEST_CASE("int.h signed arithmetic operators")
 
 
     // >>
+    x.set(0x1234567800000000, 0x12345678);
+    CHECK(base_int128_eq(x >> 0, 0x1234567800000000, 0x12345678));
+
     x.set(0x8000000000000000, 0);
     CHECK(base_int128_eq(x >> 3, 0xF000000000000000, 0));
 
@@ -1142,6 +1172,9 @@ TEST_CASE("int.h unsigned arithmetic operators")
 
 
     // <<
+    x.set(0x1234567800000000, 0x12345678);
+    CHECK(base_int128_eq(x << 0, 0x1234567800000000, 0x12345678));
+
     x.set(0, 1);
     CHECK(base_int128_eq(x << 3, 0, 8));
 
@@ -1171,6 +1204,9 @@ TEST_CASE("int.h unsigned arithmetic operators")
 
 
     // >>
+    x.set(0x1234567800000000, 0x12345678);
+    CHECK(base_int128_eq(x >> 0, 0x1234567800000000, 0x12345678));
+
     x.set(0x8000000000000000, 0);
     CHECK(base_int128_eq(x >> 3, 0x1000000000000000, 0));
 

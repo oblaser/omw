@@ -225,28 +225,31 @@ omw::Base_Int128& omw::Base_Int128::operator^=(const omw::Base_Int128& b)
 
 omw::Base_Int128& omw::Base_Int128::operator<<=(unsigned int count)
 {
-    if (count < baseTypeWith)
+    if (count)
     {
-        base_type carry = m_l >> (baseTypeWith - count);
-        m_h <<= count;
-        m_h |= carry;
-        m_l <<= count;
-    }
-    else if (count == baseTypeWith)
-    {
-        m_h = m_l;
-        m_l = 0;
-    }
-    else if (count < bitWidth)
-    {
-        m_h = m_l;
-        m_h <<= (count - baseTypeWith);
-        m_l = 0;
-    }
-    else // count >= 128
-    {
-        m_h = 0;
-        m_l = 0;
+        if (count < baseTypeWith)
+        {
+            base_type carry = m_l >> (baseTypeWith - count);
+            m_h <<= count;
+            m_h |= carry;
+            m_l <<= count;
+        }
+        else if (count == baseTypeWith)
+        {
+            m_h = m_l;
+            m_l = 0;
+        }
+        else if (count < bitWidth)
+        {
+            m_h = m_l;
+            m_h <<= (count - baseTypeWith);
+            m_l = 0;
+        }
+        else // count >= 128
+        {
+            m_h = 0;
+            m_l = 0;
+        }
     }
 
     return *this;
@@ -335,53 +338,66 @@ omw::SignedInt128& omw::SignedInt128::operator=(const omw::SignedInt128& b)
 
 omw::SignedInt128& omw::SignedInt128::operator>>=(unsigned int count)
 {
-    base_type mask_h;
-    base_type mask_l;
-
-    if (m_h & baseTypeMSB)
+    if (count)
     {
-        mask_h = baseTypeAllBits;
-        mask_l = baseTypeAllBits;
-    }
-    else
-    {
-        mask_h = 0;
-        mask_l = 0;
-    }
+        base_type mask_h;
+        base_type mask_l;
 
-    if (count < baseTypeWith)
-    {
-        base_type carry = m_h << (baseTypeWith - count);
-        m_l >>= count;
-        m_l |= carry;
-        m_h >>= count;
+#ifdef OMWi_INT_RIGHTSHIFT_DEBUG
+        oldValue_h = m_h;
+        oldValue_l = m_l;
+#endif
 
-        mask_h <<= (baseTypeWith - count);
-        mask_l = 0;
-    }
-    else if (count == baseTypeWith)
-    {
-        m_l = m_h;
-        m_h = 0;
+        if (m_h & baseTypeMSB)
+        {
+            mask_h = baseTypeAllBits;
+            mask_l = baseTypeAllBits;
+        }
+        else
+        {
+            mask_h = 0;
+            mask_l = 0;
+        }
 
-        mask_l = 0;
-    }
-    else if (count < bitWidth)
-    {
-        m_l = m_h;
-        m_l >>= (count - baseTypeWith);
-        m_h = 0;
+        if (count < baseTypeWith)
+        {
+            base_type carry = m_h << (baseTypeWith - count);
+            m_l >>= count;
+            m_l |= carry;
+            m_h >>= count;
 
-        mask_l <<= (bitWidth - count);
-    }
-    else // count >= 128
-    {
-        m_l = 0;
-        m_h = 0;
-    }
+            mask_h <<= (baseTypeWith - count);
+            mask_l = 0;
+        }
+        else if (count == baseTypeWith)
+        {
+            m_l = m_h;
+            m_h = 0;
 
-    m_h |= mask_h;
-    m_l |= mask_l;
+            mask_l = 0;
+        }
+        else if (count < bitWidth)
+        {
+            m_l = m_h;
+            m_l >>= (count - baseTypeWith);
+            m_h = 0;
+
+            mask_l <<= (bitWidth - count);
+        }
+        else // count >= 128
+        {
+            m_l = 0;
+            m_h = 0;
+        }
+
+#ifdef OMWi_INT_RIGHTSHIFT_DEBUG
+        lastMask_h = mask_h;
+        lastMask_l = mask_l;
+#endif
+
+        m_h |= mask_h;
+        m_l |= mask_l;
+    }
 
     return *this;
 }
@@ -425,28 +441,31 @@ omw::UnsignedInt128& omw::UnsignedInt128::operator=(const omw::UnsignedInt128& b
 
 omw::UnsignedInt128& omw::UnsignedInt128::operator>>=(unsigned int count)
 {
-    if (count < baseTypeWith)
+    if (count)
     {
-        base_type carry = m_h << (baseTypeWith - count);
-        m_l >>= count;
-        m_l |= carry;
-        m_h >>= count;
-    }
-    else if (count == baseTypeWith)
-    {
-        m_l = m_h;
-        m_h = 0;
-    }
-    else if (count < bitWidth)
-    {
-        m_l = m_h;
-        m_l >>= (count - baseTypeWith);
-        m_h = 0;
-    }
-    else // count >= 128
-    {
-        m_l = 0;
-        m_h = 0;
+        if (count < baseTypeWith)
+        {
+            base_type carry = m_h << (baseTypeWith - count);
+            m_l >>= count;
+            m_l |= carry;
+            m_h >>= count;
+        }
+        else if (count == baseTypeWith)
+        {
+            m_l = m_h;
+            m_h = 0;
+        }
+        else if (count < bitWidth)
+        {
+            m_l = m_h;
+            m_l >>= (count - baseTypeWith);
+            m_h = 0;
+        }
+        else // count >= 128
+        {
+            m_l = 0;
+            m_h = 0;
+        }
     }
 
     return *this;

@@ -10,6 +10,8 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include <cstddef>
 #include <cstdint>
 
+//#define OMWi_INT_RIGHTSHIFT_DEBUG (1) // def/undef
+
 
 
 /*! \addtogroup grp_utility_langSupport_typeSupport
@@ -114,6 +116,11 @@ namespace omw
         omw::SignedInt128& operator=(const omw::SignedInt128& b);
         omw::SignedInt128& operator>>=(unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
         /// @}
+
+#ifdef OMWi_INT_RIGHTSHIFT_DEBUG
+        uint64_t oldValue_h, oldValue_l;
+        uint64_t lastMask_h, lastMask_l;
+#endif
     };
 
     class UnsignedInt128 : public omw::Base_Int128

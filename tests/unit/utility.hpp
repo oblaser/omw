@@ -57,6 +57,16 @@ CHECK(omw::shiftRight(uiv, n) == uir)   \
 
 
 #pragma region shift_functions
+
+#define UTILITY_SHIFTFUNCTIONS_SUPPRESS_TRUNC_WARNING (1)
+
+#if UTILITY_SHIFTFUNCTIONS_SUPPRESS_TRUNC_WARNING
+#ifdef _MSC_VER 
+#pragma warning(push)
+#pragma warning(disable: 4309)
+#endif
+#endif
+
 TEST_CASE("utility.h shiftLeftAssign() 8-bit")
 {
     size_t n;
@@ -1436,6 +1446,13 @@ TEST_CASE("utility.h shiftRight() 64-bit")
     uiv = 0x4000000000000001; uir = 0x0000000000000000;
     UTILITY_CHECK_SHIFTRIGHT_U();
 }
+
+#if UTILITY_SHIFTFUNCTIONS_SUPPRESS_TRUNC_WARNING
+#ifdef _MSC_VER 
+#pragma warning(pop)
+#endif
+#endif
+
 #pragma endregion
 
 

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            10.01.2022
+date            11.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -29,7 +29,7 @@ return r                                \
 
 namespace
 {
-    template <typename Ts, typename Tu, size_t nBits>
+    template <typename Ts, typename Tu, unsigned int nBits>
     void shiftLeftAssign(Ts& value, unsigned int n)
     {
         if (n < nBits)
@@ -40,7 +40,7 @@ namespace
         else value = 0;
     }
 
-    template <typename Ts, typename Tu, size_t nBits>
+    template <typename Ts, typename Tu, unsigned int nBits>
     void shiftRightAssign_pos(Ts& value, unsigned int n)
     {
         if (n < nBits)
@@ -51,7 +51,7 @@ namespace
         else value = 0;
     }
 
-    template <typename Ts, typename Tu, size_t nBits>
+    template <typename Ts, typename Tu, unsigned int nBits>
     void shiftRightAssign_neg(Ts& value, unsigned int n)
     {
         if (n < nBits)
@@ -68,21 +68,13 @@ namespace
         else value = -1;
     }
 
-    template <typename Ts, typename Tu, size_t nBits>
+    template <typename Ts, typename Tu, unsigned int nBits>
     void shiftRightAssign(Ts& value, unsigned int n)
     {
         Tu msb = 0x01;
         msb = msb << (nBits - 1);
         if (static_cast<Tu>(value) & msb) shiftRightAssign_neg<Ts, Tu, nBits>(value, n);
         else shiftRightAssign_pos<Ts, Tu, nBits>(value, n);
-    }
-
-    template <typename Tout, typename Tin>
-    std::vector<Tout> convertByteVector(const std::vector<Tin>& v)
-    {
-        std::vector<Tout> r(0);
-        for (std::vector<Tin>::size_type i = 0; i < v.size(); ++i) r.push_back(static_cast<Tout>(v[i]));
-        return r;
     }
 }
 
@@ -144,7 +136,16 @@ void omw::shiftRightAssign(int16_t& value, unsigned int n)
 
 void omw::shiftRightAssign(int32_t& value, unsigned int n)
 {
-    ::shiftRightAssign<int32_t, uint32_t, 32>(value, n);
+    //::shiftRightAssign<int32_t, uint32_t, 32>(value, n);
+
+    using Ts = int32_t;
+    using Tu = uint32_t;
+    constexpr size_t nBits = 32;
+
+    Tu msb = 0x01;
+    msb = msb << (nBits - 1);
+    if (static_cast<Tu>(value) & msb) shiftRightAssign_neg<Ts, Tu, nBits>(value, n);
+    else shiftRightAssign_pos<Ts, Tu, nBits>(value, n);
 }
 
 void omw::shiftRightAssign(int64_t& value, unsigned int n)
@@ -207,10 +208,13 @@ uint64_t omw::shiftRight(uint64_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTR
 
 std::vector<char> omw::convertByteVector(const std::vector<uint8_t>& v)
 {
-    return ::convertByteVector<char, uint8_t>(v);
+    std::vector<char> r(v.size());
+    for (std::vector<uint8_t>::size_type i = 0; i < v.size(); ++i) r[i] = static_cast<char>(v[i]);
+    return r;
 }
-
 std::vector<uint8_t> omw::convertByteVector(const std::vector<char>& v)
 {
-    return ::convertByteVector<uint8_t, char>(v);
+    std::vector<uint8_t> r(v.size());
+    for (std::vector<char>::size_type i = 0; i < v.size(); ++i) r[i] = static_cast<uint8_t>(v[i]);
+    return r;
 }
