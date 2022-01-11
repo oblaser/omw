@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          17.12.2021
-# copyright     MIT - Copyright (c) 2021 Oliver Blaser
+# date          11.01.2022
+# copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
 result=0
 
 function handleFailure()
 {
     ((++result))
-    echo -e "\033[31m  --=====#   failed  #=====--\033[39m"
+    echo -e "\033[31m  --=====#   \033[91mfailed\033[31m  #=====--\033[39m"
 }
 
 echo -e "\033[96mmake rebuild\033[39m"

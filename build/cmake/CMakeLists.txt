@@ -1,9 +1,11 @@
 # author        Oliver Blaser
-# date          17.12.2021
-# copyright     MIT - Copyright (c) 2021 Oliver Blaser
+# date          11.01.2022
+# copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
 cmake_minimum_required(VERSION 3.13)
+
 project(omw)
+
 include_directories(../../include/)
 link_directories(./)
 
@@ -28,7 +30,7 @@ set(SOURCES
 ../../src/algorithm.cpp
 ../../src/cli.cpp
 ../../src/color.cpp
-../../src/config.h
+../../src/encoding.cpp
 ../../src/int.cpp
 ../../src/math.cpp
 ../../src/omw.cpp
