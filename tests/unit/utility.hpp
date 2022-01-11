@@ -49,51 +49,41 @@ TEST_CASE("utility.h shiftLeftAssign() 8-bit")
 
     n = 0;
     iv = 0x81; ir = 0x81;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41; ir = 0x41;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 2;
     iv = 0x81; ir = 0x04;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41; ir = 0x04;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 6;
     iv = 0x81; ir = 0x40;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41; ir = 0x40;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 7;
     iv = 0x81; ir = 0x80;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41; ir = 0x80;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 8;
     iv = 0x81; ir = 0x00;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41; ir = 0x00;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 9;
     iv = 0x81; ir = 0x00;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41; ir = 0x00;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
+
+    iv = 1; ir = 2;
 
 
 
@@ -102,51 +92,39 @@ TEST_CASE("utility.h shiftLeftAssign() 8-bit")
 
     n = 0;
     uiv = 0x81; uir = 0x81;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x41; uir = 0x41;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 2;
     uiv = 0x81; uir = 0x04;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x41; uir = 0x04;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 6;
     uiv = 0x81; uir = 0x40;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x41; uir = 0x40;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 7;
     uiv = 0x81; uir = 0x80;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x41; uir = 0x80;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 8;
     uiv = 0x81; uir = 0x00;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x41; uir = 0x00;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 9;
     uiv = 0x81; uir = 0x00;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x41; uir = 0x00;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 }
 TEST_CASE("utility.h shiftLeftAssign() 16-bit")
 {
@@ -157,51 +135,41 @@ TEST_CASE("utility.h shiftLeftAssign() 16-bit")
 
     n = 0;
     iv = 0x8001; ir = 0x8001;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001; ir = 0x4001;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 2;
     iv = 0x8001; ir = 0x0004;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001; ir = 0x0004;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 14;
     iv = 0x8001; ir = 0x4000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001; ir = 0x4000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 15;
     iv = 0x8001; ir = 0x8000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001; ir = 0x8000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 16;
     iv = 0x8001; ir = 0x0000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001; ir = 0x0000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 17;
     iv = 0x8001; ir = 0x0000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001; ir = 0x0000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
+
+    iv = 1; ir = 2;
 
 
 
@@ -210,51 +178,39 @@ TEST_CASE("utility.h shiftLeftAssign() 16-bit")
 
     n = 0;
     uiv = 0x8001; uir = 0x8001;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4001; uir = 0x4001;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 2;
     uiv = 0x8001; uir = 0x0004;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4001; uir = 0x0004;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 14;
     uiv = 0x8001; uir = 0x4000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4001; uir = 0x4000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 15;
     uiv = 0x8001; uir = 0x8000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4001; uir = 0x8000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 16;
     uiv = 0x8001; uir = 0x0000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4001; uir = 0x0000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 17;
     uiv = 0x8001; uir = 0x0000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4001; uir = 0x0000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 }
 TEST_CASE("utility.h shiftLeftAssign() 32-bit")
 {
@@ -265,51 +221,41 @@ TEST_CASE("utility.h shiftLeftAssign() 32-bit")
 
     n = 0;
     iv = 0x80000001; ir = 0x80000001;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x40000001; ir = 0x40000001;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 2;
     iv = 0x80000001; ir = 0x00000004;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x40000001; ir = 0x00000004;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 30;
     iv = 0x80000001; ir = 0x40000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x40000001; ir = 0x40000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 31;
     iv = 0x80000001; ir = 0x80000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x40000001; ir = 0x80000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 32;
     iv = 0x80000001; ir = 0x00000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x40000001; ir = 0x00000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 33;
     iv = 0x80000001; ir = 0x00000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x40000001; ir = 0x00000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
+
+    iv = 1; ir = 2;
 
 
 
@@ -318,51 +264,39 @@ TEST_CASE("utility.h shiftLeftAssign() 32-bit")
 
     n = 0;
     uiv = 0x80000001; uir = 0x80000001;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x40000001; uir = 0x40000001;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 2;
     uiv = 0x80000001; uir = 0x00000004;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x40000001; uir = 0x00000004;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 30;
     uiv = 0x80000001; uir = 0x40000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x40000001; uir = 0x40000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 31;
     uiv = 0x80000001; uir = 0x80000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x40000001; uir = 0x80000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 32;
     uiv = 0x80000001; uir = 0x00000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x40000001; uir = 0x00000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 33;
     uiv = 0x80000001; uir = 0x00000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x40000001; uir = 0x00000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 }
 TEST_CASE("utility.h shiftLeftAssign() 64-bit")
 {
@@ -373,51 +307,41 @@ TEST_CASE("utility.h shiftLeftAssign() 64-bit")
 
     n = 0;
     iv = 0x8000000000000001; ir = 0x8000000000000001;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4000000000000001; ir = 0x4000000000000001;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 2;
     iv = 0x8000000000000001; ir = 0x0000000000000004;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4000000000000001; ir = 0x0000000000000004;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 62;
     iv = 0x8000000000000001; ir = 0x4000000000000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4000000000000001; ir = 0x4000000000000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 63;
     iv = 0x8000000000000001; ir = 0x8000000000000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4000000000000001; ir = 0x8000000000000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 64;
     iv = 0x8000000000000001; ir = 0x0000000000000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4000000000000001; ir = 0x0000000000000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 65;
     iv = 0x8000000000000001; ir = 0x0000000000000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4000000000000001; ir = 0x0000000000000000;
-    omw::shiftLeftAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_S();
+
+    iv = 1; ir = 2;
 
 
 
@@ -426,51 +350,39 @@ TEST_CASE("utility.h shiftLeftAssign() 64-bit")
 
     n = 0;
     uiv = 0x8000000000000001; uir = 0x8000000000000001;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4000000000000001; uir = 0x4000000000000001;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 2;
     uiv = 0x8000000000000001; uir = 0x0000000000000004;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4000000000000001; uir = 0x0000000000000004;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 62;
     uiv = 0x8000000000000001; uir = 0x4000000000000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4000000000000001; uir = 0x4000000000000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 63;
     uiv = 0x8000000000000001; uir = 0x8000000000000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4000000000000001; uir = 0x8000000000000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 64;
     uiv = 0x8000000000000001; uir = 0x0000000000000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4000000000000001; uir = 0x0000000000000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 
     n = 65;
     uiv = 0x8000000000000001; uir = 0x0000000000000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
     uiv = 0x4000000000000001; uir = 0x0000000000000000;
-    omw::shiftLeftAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTLEFTASSIGN_U();
 }
 
 TEST_CASE("utility.h shiftRightAssign() 8-bit")
@@ -482,51 +394,41 @@ TEST_CASE("utility.h shiftRightAssign() 8-bit")
 
     n = 0;
     iv = 0x81; ir = 0x81;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41; ir = 0x41;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 2;
     iv = 0x81; ir = 0xE0;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41; ir = 0x10;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 6;
     iv = 0x81; ir = 0xFE;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41; ir = 0x01;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 7;
     iv = 0x81; ir = 0xFF;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41; ir = 0x00;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 8;
     iv = 0x81; ir = 0xFF;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41; ir = 0x00;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 9;
     iv = 0x81; ir = 0xFF;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41; ir = 0x00;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
+
+    iv = 1; ir = 2;
 
 
 
@@ -535,51 +437,39 @@ TEST_CASE("utility.h shiftRightAssign() 8-bit")
 
     n = 0;
     uiv = 0x81; uir = 0x81;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x41; uir = 0x41;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 2;
     uiv = 0x81; uir = 0x20;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x41; uir = 0x10;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 6;
     uiv = 0x81; uir = 0x02;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x41; uir = 0x01;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 7;
     uiv = 0x81; uir = 0x01;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x41; uir = 0x00;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 8;
     uiv = 0x81; uir = 0x00;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x41; uir = 0x00;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 9;
     uiv = 0x81; uir = 0x00;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x41; uir = 0x00;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 }
 TEST_CASE("utility.h shiftRightAssign() 16-bit")
 {
@@ -590,51 +480,41 @@ TEST_CASE("utility.h shiftRightAssign() 16-bit")
 
     n = 0;
     iv = 0x8001; ir = 0x8001;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001; ir = 0x4001;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 2;
     iv = 0x8001; ir = 0xE000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001; ir = 0x1000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 14;
     iv = 0x8001; ir = 0xFFFE;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001; ir = 0x0001;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 15;
     iv = 0x8001; ir = 0xFFFF;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001; ir = 0x0000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 16;
     iv = 0x8001; ir = 0xFFFF;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001; ir = 0x0000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 17;
     iv = 0x8001; ir = 0xFFFF;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001; ir = 0x0000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
+
+    iv = 1; ir = 2;
 
 
 
@@ -643,51 +523,39 @@ TEST_CASE("utility.h shiftRightAssign() 16-bit")
 
     n = 0;
     uiv = 0x8001; uir = 0x8001;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x4001; uir = 0x4001;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 2;
     uiv = 0x8001; uir = 0x2000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
-    uiv = 0x41; uir = 0x10;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
+    uiv = 0x4001; uir = 0x1000;
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 14;
     uiv = 0x8001; uir = 0x0002;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x4001; uir = 0x0001;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 15;
     uiv = 0x8001; uir = 0x0001;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x4001; uir = 0x0000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 16;
     uiv = 0x8001; uir = 0x0000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x4001; uir = 0x0000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 17;
     uiv = 0x8001; uir = 0x0000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x4001; uir = 0x0000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 }
 TEST_CASE("utility.h shiftRightAssign() 32-bit")
 {
@@ -698,51 +566,41 @@ TEST_CASE("utility.h shiftRightAssign() 32-bit")
 
     n = 0;
     iv = 0x80000001; ir = 0x80000001;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x40000001; ir = 0x40000001;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 2;
     iv = 0x80000001; ir = 0xE0000000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x40000001; ir = 0x10000000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 30;
     iv = 0x80000001; ir = 0xFFFFFFFE;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x40000001; ir = 0x00000001;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 31;
     iv = 0x80000001; ir = 0xFFFFFFFF;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x40000001; ir = 0x00000000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 32;
     iv = 0x80000001; ir = 0xFFFFFFFF;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x40000001; ir = 0x00000000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 33;
     iv = 0x80000001; ir = 0xFFFFFFFF;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x40000001; ir = 0x00000000;
-    omw::shiftRightAssign(iv, n);
-    CHECK(iv == ir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
+
+    iv = 1; ir = 2;
 
 
 
@@ -751,51 +609,39 @@ TEST_CASE("utility.h shiftRightAssign() 32-bit")
 
     n = 0;
     uiv = 0x80000001; uir = 0x80000001;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x40000001; uir = 0x40000001;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 2;
     uiv = 0x80000001; uir = 0x20000000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
-    uiv = 0x41; uir = 0x10;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
+    uiv = 0x40000001; uir = 0x10000000;
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 30;
     uiv = 0x80000001; uir = 0x00000002;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x40000001; uir = 0x00000001;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 31;
     uiv = 0x80000001; uir = 0x00000001;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x40000001; uir = 0x00000000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 32;
     uiv = 0x80000001; uir = 0x00000000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x40000001; uir = 0x00000000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 
     n = 33;
     uiv = 0x80000001; uir = 0x00000000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
     uiv = 0x40000001; uir = 0x00000000;
-    omw::shiftRightAssign(uiv, n);
-    CHECK(uiv == uir);
+    UTILITY_CHECK_SHIFTRIGHTASSIGN_U();
 }
 TEST_CASE("utility.h shiftRightAssign() 64-bit")
 {
