@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
 date            08.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #include "omw/windows/windows.h"
@@ -316,7 +316,7 @@ bool omw::windows::beep(uint32_t frequency, uint32_t duration_ms, bool blocking)
 
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
-//! See <a href="https://docs.microsoft.com/en-us/windows/console/setconsolemode" target="_blank">SetConsoleMode()</a> and <b><tt>ENABLE_VIRTUAL_TERMINAL_PROCESSING</tt></b>
+//! See also <a href="https://docs.microsoft.com/en-us/windows/console/setconsolemode" target="_blank">SetConsoleMode()</a> and <b><tt>ENABLE_VIRTUAL_TERMINAL_PROCESSING</tt></b>
 //! 
 bool omw::windows::consoleEnVirtualTermProc()
 {

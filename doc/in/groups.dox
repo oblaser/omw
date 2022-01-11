@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            07.01.2022
+date            11.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -76,6 +76,22 @@ See also \ref ns_omw_ansiesc_section_ansiEscMode and `omw::windows::consoleEnVir
 /*!
 \defgroup grp_utility_langSupport Language Support
 \ingroup grp_utility
+
+`#include <omw/utility.h>`
+
+Classes and functions that interact closely with the language.
+
+\section grp_utility_langSupport_section_bitShiftOp Bitwise Shift Operators
+
+Until C++20 the left shift of negative signed values is undefined and the right shift of negative signed values is implementation-defined.
+The functions `omw::shiftLeft()`, `omw::shiftRight()`, `omw::shiftLeftAssign()`, `omw::shiftRightAssign()` and the shift operators
+of `omw::int128_t` and `omw::uint128_t` implement C++20 compliant shift operations.
+
+If the number of shifts to be performed is greater than or equal to the number of bits of the values type, the result is `0`
+(or `-1` if the operation was right shift of a signed type and the value was negative before the operation).
+
+See also <a href="https://en.cppreference.com/w/cpp/language/operator_arithmetic#Bitwise_shift_operators" target="_blank">Bitwise shift operators</a> at cppreference.com.
+
 */
 
 /*!

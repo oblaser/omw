@@ -75,6 +75,8 @@ namespace
 
 /*!
 * \namespace omw::bcd
+* 
+* `#include <omw/encoding.h>`
 *
 * Converts between BCD formated byte buffers and their integral values.
 */
@@ -83,6 +85,8 @@ namespace
 
 /*!
 * \namespace omw::bigEndian
+* 
+* `#include <omw/encoding.h>`
 *
 * \section ns_omw_bigEndian_section_decodeFn Decode Functions
 *

@@ -10,6 +10,7 @@
 
 Implementation changed
  - `omw::sepHexStr(const std::string&, char)` may prepend a "0", check doc
+ - Shift right operators of 128-bit types (see  _Utility Library_ > _Language Support_ > _Bitwise Shift Operators_)
 
 Refactor
 - moved `omw::string::toUrlEncoded()` to encoding.h
@@ -21,6 +22,8 @@ New
  - `omw::bcd` (encoding.h)
  - `omw::bigEndian` (encoding.h)
  - `omw::convertByteVector()` (utility.h)
+ - `omw::shiftLeft()` (utility.h)
+ - `omw::shiftRight()` (utility.h)
  - `omw::shiftLeftAssign()` (utility.h)
  - `omw::shiftRightAssign()` (utility.h)
 

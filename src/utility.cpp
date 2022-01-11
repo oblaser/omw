@@ -13,10 +13,24 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include "omw/int.h"
 #include "omw/utility.h"
 
+
+#define OMWi_IMPLEMENT_SHIFTLEFT(T) \
+T r = value;                        \
+shiftLeftAssign(r, n);              \
+return r                            \
+// end OMWi_IMPLEMENT_SHIFTLEFT
+
+#define OMWi_IMPLEMENT_SHIFTRIGHT(T)    \
+T r = value;                            \
+shiftRightAssign(r, n);                 \
+return r                                \
+// end OMWi_IMPLEMENT_SHIFTRIGHT
+
+
 namespace
 {
-    template <class Ts, class Tu, size_t nBits>
-    void shiftLeftAssign(Ts& value, size_t n)
+    template <typename Ts, typename Tu, size_t nBits>
+    void shiftLeftAssign(Ts& value, unsigned int n)
     {
         if (n < nBits)
         {
@@ -26,8 +40,8 @@ namespace
         else value = 0;
     }
 
-    template <class Ts, class Tu, size_t nBits>
-    void shiftRightAssign_pos(Ts& value, size_t n)
+    template <typename Ts, typename Tu, size_t nBits>
+    void shiftRightAssign_pos(Ts& value, unsigned int n)
     {
         if (n < nBits)
         {
@@ -37,8 +51,8 @@ namespace
         else value = 0;
     }
 
-    template <class Ts, class Tu, size_t nBits>
-    void shiftRightAssign_neg(Ts& value, size_t n)
+    template <typename Ts, typename Tu, size_t nBits>
+    void shiftRightAssign_neg(Ts& value, unsigned int n)
     {
         if (n < nBits)
         {
@@ -51,161 +65,130 @@ namespace
         else value = -1;
     }
 
-    template <class Ts, class Tu, size_t nBits>
-    void shiftRightAssign(Ts& value, size_t n)
+    template <typename Ts, typename Tu, size_t nBits>
+    void shiftRightAssign(Ts& value, unsigned int n)
     {
-        Tu msb = 1;
+        Tu msb = 0x01;
         msb = msb << (nBits - 1);
         if (static_cast<Tu>(value) & msb) shiftRightAssign_neg<Ts, Tu, nBits>(value, n);
         else shiftRightAssign_pos<Ts, Tu, nBits>(value, n);
+    }
+
+    template <typename Tout, typename Tin>
+    std::vector<Tout> convertByteVector(const std::vector<Tin>& v)
+    {
+        std::vector<Tout> r(0);
+        for (std::vector<Tin>::size_type i = 0; i < v.size(); ++i) r.push_back(static_cast<Tout>(v[i]));
+        return r;
     }
 }
 
 
 
-//! 
-//! Until C++20 the left shift of negative signed values is undefined. These functions implement a C++20 compliant left shift.
-//! In addition, if `n` is greater than or equal to the number of bits of the values type, `value` is set to `0`.
-//! 
-//! See also <a href="https://en.cppreference.com/w/cpp/language/operator_arithmetic#Bitwise_shift_operators" target="_blank">Bitwise shift operators</a> at cppreference.com.
-//! 
-void omw::shiftLeftAssign(int8_t& value, size_t n)
+void omw::shiftLeftAssign(int8_t& value, unsigned int n)
 {
     ::shiftLeftAssign<int8_t, uint8_t, 8>(value, n);
 }
 
-//! 
-//! See `omw::shiftLeftAssign(int8_t&, size_t)`.
-//! 
-void omw::shiftLeftAssign(int16_t& value, size_t n)
+void omw::shiftLeftAssign(int16_t& value, unsigned int n)
 {
     ::shiftLeftAssign<int16_t, uint16_t, 16>(value, n);
 }
 
-//! 
-//! See `omw::shiftLeftAssign(int8_t&, size_t)`.
-//! 
-void omw::shiftLeftAssign(int32_t& value, size_t n)
+void omw::shiftLeftAssign(int32_t& value, unsigned int n)
 {
-    ::shiftLeftAssign<int32_t, uint32_t, 32 >(value, n);
+    ::shiftLeftAssign<int32_t, uint32_t, 32>(value, n);
 }
 
-//! 
-//! See `omw::shiftLeftAssign(int8_t&, size_t)`.
-//! 
-void omw::shiftLeftAssign(int64_t& value, size_t n)
+void omw::shiftLeftAssign(int64_t& value, unsigned int n)
 {
     ::shiftLeftAssign<int64_t, uint64_t, 64>(value, n);
 }
 
-//! 
-//! The unsigned overloads are needed if these shift functions are used in templates.
-//! 
-//! If `n` is greater than or equal to the number of bits of the values type, `value` is set to `0`.
-//! 
-void omw::shiftLeftAssign(uint8_t& value, size_t n)
+void omw::shiftLeftAssign(uint8_t& value, unsigned int n)
 {
     if (n < 8) value = value << n;
     else value = 0;
 }
 
-//! 
-//! See `omw::shiftLeftAssign(uint8_t&, size_t)`.
-//! 
-void omw::shiftLeftAssign(uint16_t& value, size_t n)
+void omw::shiftLeftAssign(uint16_t& value, unsigned int n)
 {
     if (n < 16) value = value << n;
     else value = 0;
 }
 
-//! 
-//! See `omw::shiftLeftAssign(uint8_t&, size_t)`.
-//! 
-void omw::shiftLeftAssign(uint32_t& value, size_t n)
+void omw::shiftLeftAssign(uint32_t& value, unsigned int n)
 {
     if (n < 32) value = value << n;
     else value = 0;
 }
 
-//! 
-//! See `omw::shiftLeftAssign(uint8_t&, size_t)`.
-//! 
-void omw::shiftLeftAssign(uint64_t& value, size_t n)
+void omw::shiftLeftAssign(uint64_t& value, unsigned int n)
 {
     if (n < 64) value = value << n;
     else value = 0;
 }
 
-//! 
-//! Until C++20 the right shift of negative signed values is implementation-undefined. These functions implement a C++20 compliant right shift.
-//! In addition, if `n` is greater than or equal to the number of bits of the values type, `value` is set to `0` (or to `-1` if the value was negative before the operation).
-//! 
-//! See also <a href="https://en.cppreference.com/w/cpp/language/operator_arithmetic#Bitwise_shift_operators" target="_blank">Bitwise shift operators</a> at cppreference.com.
-//! 
-void omw::shiftRightAssign(int8_t& value, size_t n)
+void omw::shiftRightAssign(int8_t& value, unsigned int n)
 {
     ::shiftRightAssign<int8_t, uint8_t, 8>(value, n);
 }
 
-//! 
-//! See `omw::shiftRightAssign(int8_t&, size_t)`.
-//! 
-void omw::shiftRightAssign(int16_t& value, size_t n)
+void omw::shiftRightAssign(int16_t& value, unsigned int n)
 {
     ::shiftRightAssign<int16_t, uint16_t, 16>(value, n);
 }
 
-//! 
-//! See `omw::shiftRightAssign(int8_t&, size_t)`.
-//! 
-void omw::shiftRightAssign(int32_t& value, size_t n)
+void omw::shiftRightAssign(int32_t& value, unsigned int n)
 {
-    ::shiftRightAssign<int32_t, uint32_t, 32 >(value, n);
+    ::shiftRightAssign<int32_t, uint32_t, 32>(value, n);
 }
 
-//! 
-//! See `omw::shiftRightAssign(int8_t&, size_t)`.
-//! 
-void omw::shiftRightAssign(int64_t& value, size_t n)
+void omw::shiftRightAssign(int64_t& value, unsigned int n)
 {
-    ::shiftRightAssign<int64_t, uint64_t, 64 >(value, n);
+    ::shiftRightAssign<int64_t, uint64_t, 64>(value, n);
 }
 
-//! 
-//! See `omw::shiftLeftAssign(uint8_t&, size_t)`.
-//! 
-void omw::shiftRightAssign(uint8_t& value, size_t n)
+void omw::shiftRightAssign(uint8_t& value, unsigned int n)
 {
     if (n < 8) value = value >> n;
     else value = 0;
 }
 
-//! 
-//! See `omw::shiftLeftAssign(uint8_t&, size_t)`.
-//! 
-void omw::shiftRightAssign(uint16_t& value, size_t n)
+void omw::shiftRightAssign(uint16_t& value, unsigned int n)
 {
     if (n < 16) value = value >> n;
     else value = 0;
 }
 
-//! 
-//! See `omw::shiftLeftAssign(uint8_t&, size_t)`.
-//! 
-void omw::shiftRightAssign(uint32_t& value, size_t n)
+void omw::shiftRightAssign(uint32_t& value, unsigned int n)
 {
     if (n < 32) value = value >> n;
     else value = 0;
 }
 
-//! 
-//! See `omw::shiftLeftAssign(uint8_t&, size_t)`.
-//! 
-void omw::shiftRightAssign(uint64_t& value, size_t n)
+void omw::shiftRightAssign(uint64_t& value, unsigned int n)
 {
     if (n < 64) value = value >> n;
     else value = 0;
 }
+
+int8_t omw::shiftLeft(int8_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTLEFT(int8_t); }
+int16_t omw::shiftLeft(int16_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTLEFT(int16_t); }
+int32_t omw::shiftLeft(int32_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTLEFT(int32_t); }
+int64_t omw::shiftLeft(int64_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTLEFT(int64_t); }
+uint8_t omw::shiftLeft(uint8_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTLEFT(uint8_t); }
+uint16_t omw::shiftLeft(uint16_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTLEFT(uint16_t); }
+uint32_t omw::shiftLeft(uint32_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTLEFT(uint32_t); }
+uint64_t omw::shiftLeft(uint64_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTLEFT(uint64_t); }
+int8_t omw::shiftRight(int8_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTRIGHT(int8_t); }
+int16_t omw::shiftRight(int16_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTRIGHT(int16_t); }
+int32_t omw::shiftRight(int32_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTRIGHT(int32_t); }
+int64_t omw::shiftRight(int64_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTRIGHT(int64_t); }
+uint8_t omw::shiftRight(uint8_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTRIGHT(uint8_t); }
+uint16_t omw::shiftRight(uint16_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTRIGHT(uint16_t); }
+uint32_t omw::shiftRight(uint32_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTRIGHT(uint32_t); }
+uint64_t omw::shiftRight(uint64_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTRIGHT(uint64_t); }
 
 
 
@@ -216,3 +199,15 @@ void omw::shiftRightAssign(uint64_t& value, size_t n)
 *
 * Toggles a boolean value.
 */
+
+
+
+std::vector<char> omw::convertByteVector(const std::vector<uint8_t>& v)
+{
+    return ::convertByteVector<char, uint8_t>(v);
+}
+
+std::vector<uint8_t> omw::convertByteVector(const std::vector<char>& v)
+{
+    return ::convertByteVector<uint8_t, char>(v);
+}
