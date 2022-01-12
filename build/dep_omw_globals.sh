@@ -1,5 +1,5 @@
 # author        Oliver Blaser
-# date          21.12.2021
-# copyright     MIT - Copyright (c) 2021 Oliver Blaser
+# date          12.01.2022
+# copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
-versionstr="0.2.0-alpha.3"
+versionstr="0.2.0-alpha.4"
