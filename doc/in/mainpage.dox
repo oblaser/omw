@@ -18,9 +18,8 @@ The Following objects are in a pre-release state.
 - `omw::Version`
     - pre-release and build identifier related methods
     - `isValid()`
-- `convertByteVector()` functions in the \ref grp_utility_gpUtil
 - `omw::bcd`
-- `omw::bigEndian`
+- `omw::bigEndian::decode_...` functions
 \internal
 \endinternal
 

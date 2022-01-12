@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            10.01.2022
+date            11.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -99,7 +99,7 @@ namespace
 * Writes the encoded value to `[buffer, buffer + sizeof(value)`.
 *
 * \b Exceptions
-* - `std::invalid_argument` if the destination pointer is `NULL` or count equals zero
+* - `std::invalid_argument` if the destination or end pointer is `NULL`
 * - `std::out_of_range` if the destination can not hold the encoded data
 */
 
@@ -217,7 +217,7 @@ void omw::bigEndian::encode_16(uint8_t* buffer, const uint8_t* end, int16_t valu
 //! 
 void omw::bigEndian::encode_16(uint8_t* buffer, const uint8_t* end, uint16_t value)
 {
-    if (buffer)
+    if (buffer && end)
     {
         if ((end - buffer) >= 2 && buffer < end)
         {
@@ -242,7 +242,7 @@ void omw::bigEndian::encode_32(uint8_t* buffer, const uint8_t* end, int32_t valu
 //! 
 void omw::bigEndian::encode_32(uint8_t* buffer, const uint8_t* end, uint32_t value)
 {
-    if (buffer)
+    if (buffer && end)
     {
         if ((end - buffer) >= 4 && buffer < end)
         {
@@ -269,7 +269,7 @@ void omw::bigEndian::encode_64(uint8_t* buffer, const uint8_t* end, int64_t valu
 //! 
 void omw::bigEndian::encode_64(uint8_t* buffer, const uint8_t* end, uint64_t value)
 {
-    if (buffer)
+    if (buffer && end)
     {
         if ((end - buffer) >= 8 && buffer < end)
         {
@@ -292,7 +292,7 @@ void omw::bigEndian::encode_64(uint8_t* buffer, const uint8_t* end, uint64_t val
 //! 
 void omw::bigEndian::encode_128(uint8_t* buffer, const uint8_t* end, const omw::Base_Int128& value)
 {
-    if (buffer)
+    if (buffer && end)
     {
         if ((end - buffer) >= 16 && buffer < end)
         {

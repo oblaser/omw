@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            07.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            11.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_TESTUTIL_H
@@ -18,16 +18,33 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 bool tu_trycatch_correctCatch;                                  \
 const valueType tu_trycatch_initVal = initialValue;             \
 valueType tu_trycatch_val = tu_trycatch_initVal                 \
-// end TESTUTIL_TRYCATCH_DECLARE_VAL
+// end TESTUTIL_TRYCATCH_DECLARE_VAL()
 
 #define TESTUTIL_TRYCATCH_CHECK(call, exType)                                               \
 try { tu_trycatch_val = call; tu_trycatch_correctCatch = false; }                           \
 catch (exType& ex) { const char* const msg = ex.what(); tu_trycatch_correctCatch = true; }  \
-catch (std::exception& ex) { std::cout << "testUtil catch: " << ex.what() <<std::endl; tu_trycatch_correctCatch = false; } \
+catch (std::exception& ex) { std::cout << "testUtil catch: " << ex.what() << std::endl; tu_trycatch_correctCatch = false; } \
 catch (...) { tu_trycatch_correctCatch = false; }                                           \
-CHECK(tu_trycatch_correctCatch);                                                            \
-CHECK(tu_trycatch_val == tu_trycatch_initVal)                                               \
+REQUIRE(tu_trycatch_correctCatch);                                                          \
+REQUIRE(tu_trycatch_val == tu_trycatch_initVal)                                             \
 // end TESTUTIL_TRYCATCH_CHECK()
+
+
+#define TESTUTIL_TRYCATCH_SE_DECLARE_VAL(valueType, pValue, initialValue)   \
+bool tu_trycatch_correctCatch;                                              \
+const valueType tu_trycatch_initVal = initialValue;                         \
+valueType tu_trycatch_val = tu_trycatch_initVal;                            \
+pValue = &tu_trycatch_val                                                   \
+// end TESTUTIL_TRYCATCH_SE_DECLARE_VAL()
+
+#define TESTUTIL_TRYCATCH_SE_CHECK(call, exType)                                            \
+try { call; tu_trycatch_correctCatch = false; }                                             \
+catch (exType& ex) { const char* const msg = ex.what(); tu_trycatch_correctCatch = true; }  \
+catch (std::exception& ex) { std::cout << "testUtil catch: " << ex.what() << std::endl; tu_trycatch_correctCatch = false; } \
+catch (...) { tu_trycatch_correctCatch = false; }                                           \
+REQUIRE(tu_trycatch_correctCatch);                                                          \
+REQUIRE(tu_trycatch_val == tu_trycatch_initVal)                                             \
+// end TESTUTIL_TRYCATCH_SE_CHECK()
 
 
 namespace tu
