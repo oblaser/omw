@@ -73,7 +73,7 @@ namespace
 
 
 
-/*!
+/* !
 * \namespace omw::bcd
 * 
 * `#include <omw/encoding.h>`

@@ -136,16 +136,7 @@ void omw::shiftRightAssign(int16_t& value, unsigned int n)
 
 void omw::shiftRightAssign(int32_t& value, unsigned int n)
 {
-    //::shiftRightAssign<int32_t, uint32_t, 32>(value, n);
-
-    using Ts = int32_t;
-    using Tu = uint32_t;
-    constexpr size_t nBits = 32;
-
-    Tu msb = 0x01;
-    msb = msb << (nBits - 1);
-    if (static_cast<Tu>(value) & msb) shiftRightAssign_neg<Ts, Tu, nBits>(value, n);
-    else shiftRightAssign_pos<Ts, Tu, nBits>(value, n);
+    ::shiftRightAssign<int32_t, uint32_t, 32>(value, n);
 }
 
 void omw::shiftRightAssign(int64_t& value, unsigned int n)
