@@ -867,27 +867,35 @@ omw::uint128_t omw::hexstoui128(const std::string& str)
 
 // to be added to doc: delimiter = 0
 // calls `omw::sepHexStr()`
+// 
+// if string is empty an empty vector is returned
+// 
 std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
 {
-    const std::string fnName = "omw::hexstovector";
-
-    omw::string tmpStr;
-
-    if (delimiter == 0)
-    {
-        delimiter = toHexStr_defaultDelimiter;
-        tmpStr = omw::sepHexStr(str, toHexStr_defaultDelimiter);
-    }
-    else tmpStr = str;
-
-    const std::vector<omw::string> hexStrings = tmpStr.split(delimiter);
-
     std::vector<uint8_t> r(0);
-    for (size_t i = 0; i < hexStrings.size(); ++i)
+
+    if (str.length() > 0)
     {
-        uint32_t value = omw::hexstoui(hexStrings[i]);
-        if (value > 0xFF) throw std::out_of_range(fnName);
-        r.push_back(value);
+        const std::string fnName = "omw::hexstovector";
+
+        omw::string tmpStr;
+
+        if (delimiter == 0)
+        {
+            delimiter = toHexStr_defaultDelimiter;
+            tmpStr = omw::sepHexStr(str, toHexStr_defaultDelimiter);
+        }
+        else tmpStr = str;
+
+        const std::vector<omw::string> hexStrings = tmpStr.split(delimiter);
+
+        r.resize(hexStrings.size(), 0);
+        for (size_t i = 0; i < hexStrings.size(); ++i)
+        {
+            uint32_t value = omw::hexstoui(hexStrings[i]);
+            if (value > 0xFF) throw std::out_of_range(fnName);
+            r[i] = (uint8_t)value;
+        }
     }
 
     return r;

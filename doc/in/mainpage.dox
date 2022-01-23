@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            23.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -15,9 +15,6 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 The Following objects are in a pre-release state.
 
 \b Alpha
-- `omw::Version`
-    - pre-release and build identifier related methods
-    - `isValid()`
 - `omw::bcd`
 - `omw::bigEndian::decode_...` functions
 \internal

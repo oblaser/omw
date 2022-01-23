@@ -1,12 +1,13 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            19.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef TEST_OMW_UTIL_H
 #define TEST_OMW_UTIL_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -1492,6 +1493,61 @@ TEST_CASE("utility.h vectorContains()")
     CHECK(omw::vectorContains(vString, omw::string("five")));
     CHECK_FALSE(omw::vectorContains(vString, omw::string("boat")));
 }
+
+
+
+//#if (defined(OMW_DEBUG) && 1) // || 1
+//#define UTILITY_TEST_VECRESERVEMORE_COUTEN 1
+//#endif
+//
+//TEST_CASE("utility.h vectorReserveMore()")
+//{
+//    std::vector<int> v;
+//
+//#ifdef UTILITY_TEST_VECRESERVEMORE_COUTEN
+//    std::cout << v.capacity() << std::endl;
+//#endif
+//    omw::vectorReserveMore(v, 5);
+//#ifdef UTILITY_TEST_VECRESERVEMORE_COUTEN
+//    std::cout << v.capacity() << std::endl;
+//#endif
+//    CHECK(v.capacity() >= (v.size() + 5));
+//
+//
+//    v.assign(50, -1);
+//#ifdef UTILITY_TEST_VECRESERVEMORE_COUTEN
+//    std::cout << v.capacity() << std::endl;
+//#endif
+//    omw::vectorReserveMore(v, 20);
+//#ifdef UTILITY_TEST_VECRESERVEMORE_COUTEN
+//    std::cout << v.capacity() << std::endl;
+//#endif
+//    CHECK(v.capacity() >= (v.size() + 20));
+//
+//
+//    v.shrink_to_fit();
+//#ifdef UTILITY_TEST_VECRESERVEMORE_COUTEN
+//    std::cout << v.capacity() << std::endl;
+//#endif
+//    omw::vectorReserveMore(v, 3);
+//#ifdef UTILITY_TEST_VECRESERVEMORE_COUTEN
+//    std::cout << v.capacity() << std::endl;
+//#endif
+//    CHECK(v.capacity() >= (v.size() + 3));
+//
+//
+//    for (size_t i = 0; i < 100; ++i) v.push_back(3);
+//#ifdef UTILITY_TEST_VECRESERVEMORE_COUTEN
+//    std::cout << v.capacity() << std::endl;
+//#endif
+//    omw::vectorReserveMore(v, 3);
+//#ifdef UTILITY_TEST_VECRESERVEMORE_COUTEN
+//    std::cout << v.capacity() << std::endl;
+//#endif
+//    CHECK(v.capacity() >= (v.size() + 3));
+//}
+
+
 
 TEST_CASE("utility.h convertByteVector()")
 {

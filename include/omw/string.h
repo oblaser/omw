@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            22.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -68,11 +68,11 @@ namespace omw
 
 
     using stdStringVector_t = std::vector<std::string>;
-    constexpr omw::stdStringVector_t::size_type stdStringVector_npos = (omw::stdStringVector_t::size_type)-1;
+    constexpr omw::stdStringVector_t::size_type stdStringVector_npos = static_cast<omw::stdStringVector_t::size_type>(-1);
 
     class string;
     using stringVector_t = std::vector<omw::string>;
-    constexpr omw::stringVector_t::size_type stringVector_npos = (omw::stringVector_t::size_type)-1;
+    constexpr omw::stringVector_t::size_type stringVector_npos = static_cast<omw::stringVector_t::size_type>(-1);
 
 
 

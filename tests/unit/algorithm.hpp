@@ -27,10 +27,10 @@ public:
     DoubleDabbleTestRecord(const omw::string& expectedResult, uint64_t valueH, uint64_t valueL)
         : value128(valueH, valueL), value64H(valueH), value64L(valueL), expResult(expectedResult)
     {
-        value32H = (uint32_t)(valueH >> 32);
-        value32HM = (uint32_t)valueH;
-        value32LM = (uint32_t)(valueL >> 32);
-        value32L = (uint32_t)valueL;
+        value32H = (uint32_t)((valueH >> 32) & (uint64_t)0xFFFFFFFF);
+        value32HM = (uint32_t)(valueH & (uint64_t)0xFFFFFFFF);
+        value32LM = (uint32_t)((valueL >> 32) & (uint64_t)0xFFFFFFFF);
+        value32L = (uint32_t)(valueL & (uint64_t)0xFFFFFFFF);
     }
     virtual ~DoubleDabbleTestRecord() {}
 
@@ -45,7 +45,7 @@ public:
     omw::string expResult;
 };
 
-TEST_CASE("algorithm.h doubleDabble128()")
+TEST_CASE("algorithm.h doubleDabble() 128 bit")
 {
     // https://www.convzone.com/hex-to-decimal/
 

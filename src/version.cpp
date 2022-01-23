@@ -1,9 +1,10 @@
 /*
 author          Oliver Blaser
-date            27.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            22.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
+#include <algorithm>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -13,79 +14,75 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "omw/version.h"
 
 
-#define OMWi_THROW_INVALID_FORMAT() \
-throw std::invalid_argument(OMWi_DISPSTR("omw::Version: invalid format"))
-
-
 namespace
 {
-    namespace semver
+    // positive integer without leading zeros
+    bool isNumericIdentifier(const std::string& identifier)
     {
-        // positive integer without leading zeros
-        bool isNumeric(const omw::string& identifier)
-        {
-            bool r;
+        bool r;
 
-            if (omw::isUInteger(identifier))
+        if (omw::isUInteger(identifier))
+        {
+            r = true;
+
+            if ((identifier.length() > 1) && (identifier[0] == '0'))
             {
-                r = true;
-
-                if (identifier.length() > 1)
-                {
-                    if (identifier[0] == '0') r = false;
-                }
+                r = false;
             }
-            else r = false;
-
-            return r;
         }
+        else r = false;
 
-        // alpha numeric and hyphen
-        bool isAlphaNumeric(const omw::string& identifier)
+        return r;
+    }
+    bool isNumericIdentifier(int32_t identifier)
+    {
+        return (identifier >= 0);
+    }
+
+    // alpha numeric and hyphen
+    bool isAlphanumericIdentifier(const std::string& identifier)
+    {
+        bool r = false;
+
+        if (identifier.length() > 0)
         {
-            bool r = true;
+            r = true;
 
-            for (omw::string::size_type i = 0; (i < identifier.length()) && r; ++i)
+            for (std::string::size_type i = 0; (i < identifier.length()) && r; ++i)
             {
                 if (!(omw::isAlnum(identifier[i]) || (identifier[i] == '-'))) r = false;
             }
-
-            return r;
         }
-
-        // positive integer with or without leading zeros
-        bool isDigits(const omw::string& identifier)
-        {
-            return omw::isUInteger(identifier);
-        }
-    }
-
-    // a < b   =>  -1
-    // a = b   =>   0
-    // a > b   =>   1
-    int cmp(const omw::Version& a, const omw::Version& b)
-    {
-        int r = 0;
-
-        if (a.major() < b.major()) r = -1;
-        else if (a.major() == b.major())
-        {
-            if (a.minor() < b.minor()) r = -1;
-            else if (a.minor() == b.minor())
-            {
-                if (a.patch() < b.patch()) r = -1;
-                else if (a.patch() == b.patch())
-                {
-                    r = 0;
-                    // TODO implement pre-release identifier compare
-                }
-                else r = 1;
-            }
-            else r = 1;
-        }
-        else r = 1;
 
         return r;
+    }
+
+    // positive integer with or without leading zeros
+    bool isDigits(const std::string& identifier)
+    {
+        return omw::isUInteger(identifier);
+    }
+
+    bool isPreReleaseIdentifier(const std::string& identifier)
+    {
+        bool r;
+
+        if (omw::isUInteger(identifier)) r = isNumericIdentifier(identifier);
+        else r = isAlphanumericIdentifier(identifier);
+
+        return r;
+    }
+
+    bool isBuildIdentifier(const std::string& identifier)
+    {
+        return (isAlphanumericIdentifier(identifier) || isDigits(identifier));
+    }
+
+
+
+    bool check(int32_t maj, int32_t min, int32_t pat)
+    {
+        return (isNumericIdentifier(maj) && isNumericIdentifier(min) && isNumericIdentifier(pat));
     }
 }
 
@@ -93,11 +90,11 @@ namespace
 
 /*!
 * \class omw::Version
-* \brief Compilant to _semver_.
+* \brief Compliant to _semver_.
 *
 * `#include <omw/version.h>`
 *
-* Compliant to <a href="https://semver.org/" target="_blank">Semantic Versioning 2.0.0</a>.
+* Compliant to <a href="https://semver.org/spec/v2.0.0.html" target="_blank">Semantic Versioning 2.0.0</a>.
 */
 
 //! 
@@ -108,59 +105,71 @@ omw::Version::Version()
 {
 }
 
-//! 
-//! \b Exceptions
-//! - `std::invalid_argument` if the pre-release or build string is not formatted correctly
-//! 
-omw::Version::Version(uint32_t major, uint32_t minor, uint32_t patch, const char* preRelease, const char* build)
-    : m_maj(major), m_min(minor), m_pat(patch), m_preRelease(), m_build()
+omw::Version::Version(int32_t major, int32_t minor, int32_t patch, const char* preRelease, const char* build)
+    : m_maj(0), m_min(0), m_pat(0), m_preRelease(), m_build()
 {
-    if (preRelease) parsePreRelease(preRelease);
-    if (build) parsePreRelease(build);
+    set(major, minor, patch, preRelease, build);
 }
 
-//! 
-//! \b Exceptions
-//! - `std::invalid_argument` if the pre-release or build string is not formatted correctly
-//! 
-omw::Version::Version(uint32_t major, uint32_t minor, uint32_t patch, const omw::string& preRelease, const omw::string& build)
-    : m_maj(major), m_min(minor), m_pat(patch), m_preRelease(), m_build()
+omw::Version::Version(int32_t major, int32_t minor, int32_t patch, const std::string& preRelease, const std::string& build)
+    : m_maj(0), m_min(0), m_pat(0), m_preRelease(), m_build()
 {
-    parsePreRelease(preRelease);
-    parsePreRelease(build);
+    set(major, minor, patch, preRelease, build);
 }
 
-//! 
-//! \b Exceptions
-//! - `std::invalid_argument` if the semver string is not formatted correctly
-//! 
 omw::Version::Version(const char* str)
     : m_maj(0), m_min(0), m_pat(0), m_preRelease(), m_build()
 {
-    parse(str);
+    set(str);
 }
 
-//! 
-//! \b Exceptions
-//! - `std::invalid_argument` if the semver string is not formatted correctly
-//! 
-omw::Version::Version(const omw::string& str)
+omw::Version::Version(const std::string& str)
     : m_maj(0), m_min(0), m_pat(0), m_preRelease(), m_build()
+{
+    set(str);
+}
+
+void omw::Version::set(int32_t major, int32_t minor, int32_t patch, const char* preRelease, const char* build)
+{
+    m_maj = major;
+    m_min = minor;
+    m_pat = patch;
+
+    parsePreRelease(preRelease ? preRelease : "");
+    parseBuild(build ? build : "");
+}
+
+void omw::Version::set(int32_t major, int32_t minor, int32_t patch, const std::string& preRelease, const std::string& build)
+{
+    m_maj = major;
+    m_min = minor;
+    m_pat = patch;
+
+    parsePreRelease(preRelease);
+    parseBuild(build);
+}
+
+void omw::Version::set(const char* str)
+{
+    parse(str ? str : "");
+}
+
+void omw::Version::set(const std::string& str)
 {
     parse(str);
 }
 
-uint32_t omw::Version::major() const
+int32_t omw::Version::major() const
 {
     return m_maj;
 }
 
-uint32_t omw::Version::minor() const
+int32_t omw::Version::minor() const
 {
     return m_min;
 }
 
-uint32_t omw::Version::patch() const
+int32_t omw::Version::patch() const
 {
     return m_pat;
 }
@@ -201,28 +210,121 @@ const omw::stringVector_t& omw::Version::buildIdentifiers() const
     return m_build;
 }
 
+//! 
+//! Compares according to the _semver_ rules.
+//! 
+//! | Result | Return Value |
+//! |:---:|:---:|
+//! | `*this` < `b` | <0 |
+//! | `*this` == `b` | 0 |
+//! | `*this` > `b` | >0 |
+//!  
+int omw::Version::compare(const omw::Version& b) const
+{
+    int r;
+
+    if (this->major() < b.major()) r = -1;
+    else if (this->major() == b.major())
+    {
+        if (this->minor() < b.minor()) r = -1;
+        else if (this->minor() == b.minor())
+        {
+            if (this->patch() < b.patch()) r = -1;
+            else if (this->patch() == b.patch())
+            {
+                const omw::stringVector_t& pra = this->preReleaseIdentifiers();
+                const omw::stringVector_t& prb = b.preReleaseIdentifiers();
+                const omw::stringVector_t::size_type n = std::min(pra.size(), prb.size());
+
+                r = 0;
+
+                if (n == 0)
+                {
+                    if (pra.size() > prb.size()) r = -1;
+                    else if (pra.size() < prb.size()) r = 1;
+                }
+
+                for (omw::stringVector_t::size_type i = 0; (i < n) && (r == 0); ++i)
+                {
+                    const omw::string& tmpIdentifier_a = pra[i];
+                    const omw::string& tmpIdentifier_b = prb[i];
+
+                    const bool isnuma = isNumericIdentifier(tmpIdentifier_a);
+                    const bool isnumb = isNumericIdentifier(tmpIdentifier_b);
+
+                    if (isnuma && isnumb)
+                    {
+                        const uint64_t vala = std::stoull(tmpIdentifier_a);
+                        const uint64_t valb = std::stoull(tmpIdentifier_b);
+
+                        if (vala < valb) r = -1;
+                        else if (vala > valb) r = 1;
+                    }
+                    else if (isnuma && !isnumb) r = -1;
+                    else if (!isnuma && isnumb) r = 1;
+                    else
+                    {
+                        if (tmpIdentifier_a < tmpIdentifier_b) r = -1;
+                        else if (tmpIdentifier_a > tmpIdentifier_b) r = 1;
+                    }
+                }
+
+                if (r == 0)
+                {
+                    if (pra.size() < prb.size()) r = -1;
+                    else if (pra.size() > prb.size()) r = 1;
+                }
+            }
+            else r = 1;
+        }
+        else r = 1;
+    }
+    else r = 1;
+
+    return r;
+}
+
 omw::string omw::Version::toString() const
 {
-    omw::string r = omw::to_string(m_maj) + '.' + omw::to_string(m_min) + '.' + omw::to_string(m_pat);
+    omw::string r = std::to_string(m_maj) + '.' + std::to_string(m_min) + '.' + std::to_string(m_pat);
     if (m_preRelease.size() > 0) r += '-' + preRelease();
     if (m_build.size() > 0) r += '+' + build();
     return r;
 }
 
+//! 
+//! Returns `true` if the version has build identifiers, otherwise `false`.
+//!  
+bool omw::Version::hasBuild() const
+{
+    return (m_build.size() > 0);
+}
+
+//! 
+//! Returns `true` if the version has pre-release identifiers, otherwise `false`.
+//!  
 bool omw::Version::isPreRelease() const
 {
     return (m_preRelease.size() > 0);
 }
 
-//! 
-//! Checks if all pre-release and build identifiers are valid.
-//! 
 bool omw::Version::isValid() const
 {
-    return false;
+    bool r = ::check(m_maj, m_min, m_pat);
+
+    for (omw::stringVector_t::size_type i = 0; (i < m_preRelease.size()) && r; ++i)
+    {
+        r = ::isPreReleaseIdentifier(m_preRelease[i]);
+    }
+
+    for (omw::stringVector_t::size_type i = 0; (i < m_build.size()) && r; ++i)
+    {
+        r = ::isBuildIdentifier(m_build[i]);
+    }
+
+    return r;
 }
 
-// trowing std::invalid_argument
 void omw::Version::parse(const omw::string& str)
 {
     const omw::string::size_type posHyphen = str.find('-');
@@ -247,111 +349,92 @@ void omw::Version::parse(const omw::string& str)
     parseVersion(str.substr(0, endVersion));
 }
 
-// trowing std::invalid_argument
 void omw::Version::parseBuild(const omw::string& identifiers)
 {
-    m_build.clear();
-
     if (identifiers.length() > 0)
     {
-        const omw::stringVector_t data = identifiers.split('.');
-
-        for (omw::stringVector_t::size_type i = 0; i < data.size(); ++i)
-        {
-            const omw::stringVector_t::value_type& tmpData = data[i];
-            if (::semver::isAlphaNumeric(tmpData) || ::semver::isDigits(tmpData)) m_build.push_back(tmpData);
-            else OMWi_THROW_INVALID_FORMAT();
-        }
-
-        m_build.shrink_to_fit();
+        m_build = identifiers.split('.');
     }
+    else m_build.clear();
+
+    m_build.shrink_to_fit();
 }
 
-// trowing std::invalid_argument
 void omw::Version::parsePreRelease(const omw::string& identifiers)
 {
-    m_preRelease.clear();
-
     if (identifiers.length() > 0)
     {
-        const omw::stringVector_t data = identifiers.split('.');
-
-        for (omw::stringVector_t::size_type i = 0; i < data.size(); ++i)
-        {
-            const omw::stringVector_t::value_type& tmpData = data[i];
-            if (::semver::isAlphaNumeric(tmpData) || ::semver::isNumeric(tmpData)) m_preRelease.push_back(tmpData);
-            else OMWi_THROW_INVALID_FORMAT();
-        }
-
-        m_preRelease.shrink_to_fit();
+        m_preRelease = identifiers.split('.');
     }
+    else m_preRelease.clear();
+
+    m_preRelease.shrink_to_fit();
 }
 
-// trowing std::invalid_argument
 void omw::Version::parseVersion(const omw::string& identifiers)
 {
     try
     {
-        const omw::stringVector_t data = identifiers.split('.', 3);
+        const omw::stringVector_t data = identifiers.split('.');
 
         if (data.size() == 3)
         {
-            if (::semver::isNumeric(data[0]) && ::semver::isNumeric(data[1]) && ::semver::isNumeric(data[2]))
-            {
-                m_maj = (uint32_t)std::stoull(data[0]);
-                m_min = (uint32_t)std::stoull(data[1]);
-                m_pat = (uint32_t)std::stoull(data[2]);
-            }
-            else throw - 1;
+            if (!(omw::isInteger(data[0]) && omw::isInteger(data[1]) && omw::isInteger(data[2])))
+                throw - 1;
+
+            try { m_maj = std::stol(data[0]); }
+            catch (...) { m_maj = -1; }
+
+            try { m_min = std::stol(data[1]); }
+            catch (...) { m_min = -1; }
+
+            try { m_pat = std::stol(data[2]); }
+            catch (...) { m_pat = -1; }
         }
         else throw - 1;
     }
     catch (...)
     {
-        OMWi_THROW_INVALID_FORMAT();
+        m_maj = -1;
+        m_min = -1;
+        m_pat = -1;
     }
 }
 
 
 
-//! @return `true` if major, minor, patch and all pre-release identifiers are the same for `a` and `b`, otherwise `false`.
 //! 
-//! Build identifiers are ignored.
+//! All comparisons are using `omw::Version::compare()`.
 //! 
 bool omw::operator==(const omw::Version& a, const omw::Version& b)
 {
-    return (
-        (a.major() == b.major()) &&
-        (a.minor() == b.minor()) &&
-        (a.patch() == b.patch()) &&
-        (a.preRelease() == b.preRelease())
-        );
+    return (a.compare(b) == 0);
 }
 
 //! 
-//! Build identifiers are ignored.
+//! All comparisons are using `omw::Version::compare()`.
 //! 
 bool omw::operator!=(const omw::Version& a, const omw::Version& b) { return !(a == b); }
 
 //! 
-//! Build identifiers are ignored.
+//! All comparisons are using `omw::Version::compare()`.
 //! 
 bool omw::operator<(const omw::Version& a, const omw::Version& b)
 {
-    return (::cmp(a, b) < 0);
+    return (a.compare(b) < 0);
 }
 
 //! 
-//! Build identifiers are ignored.
+//! All comparisons are using `omw::Version::compare()`.
 //! 
 bool omw::operator>(const omw::Version& a, const omw::Version& b) { return (b < a); }
 
 //! 
-//! Build identifiers are ignored.
+//! All comparisons are using `omw::Version::compare()`.
 //! 
 bool omw::operator<=(const omw::Version& a, const omw::Version& b) { return !(a > b); }
 
 //! 
-//! Build identifiers are ignored.
+//! All comparisons are using `omw::Version::compare()`.
 //! 
 bool omw::operator>=(const omw::Version& a, const omw::Version& b) { return !(a < b); }

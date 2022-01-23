@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            22.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_H
@@ -10,6 +10,28 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "../omw/defs.h"
 #include "../omw/string.h"
 #include "../omw/version.h"
+
+
+/*! \addtogroup grp_macro
+* @{
+*/
+
+//! 
+//! Uniqe version ID, always greater than the ID of the last version.
+//! 
+//! | Version | Version ID |
+//! |:---:|:---:|
+//! | v0.2.0-alpha.4 | 1 |
+//! 
+#define OMW_VERSION_ID (1)
+
+#define OMW_VERSION_MAJ (0)
+#define OMW_VERSION_MIN (2)
+#define OMW_VERSION_PAT (0)
+#define OMW_VERSION_PRSTR ("alpha.4")
+
+/*! @} */
+
 
 namespace omw
 {

@@ -22,7 +22,7 @@ namespace
                 if (h >= 5) h += 3;
                 if (l >= 5) l += 3;
 
-#if 0 // proof that add 3 operation never overflows a BCD digit
+#if 0 // proof that add3 operation never overflows a BCD digit
                 static bool overflow = false;
                 static bool cntOverflow = false;
                 static uint64_t cntH = 0;

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            12.01.2022
+date            22.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -12,10 +12,12 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 
-//! @return The version of the library
+//! 
+//! Returns the version of the library
+//! 
 omw::Version omw::info::version()
 {
-    return omw::Version(0, 2, 0, "alpha.4");
+    return omw::Version(OMW_VERSION_MAJ, OMW_VERSION_MIN, OMW_VERSION_PAT, OMW_VERSION_PRSTR);
 }
 
 //! 

@@ -9,8 +9,9 @@
 ### v0.2.0-alpha.4
 
 Implementation changed
- - `omw::sepHexStr(const std::string&, char)` may prepend a "0", check doc
+ - `omw::sepHexStr(const std::string&, char)` may prepend a "0"
  - Shift right operators of 128-bit types (see  _Utility Library_ > _Language Support_ > _Bitwise Shift Operators_)
+ - `omw::Version` member type changed to `int32_t`
 
 Refactor
 - moved `omw::string::toUrlEncoded()` to encoding.h
@@ -26,6 +27,7 @@ New
  - `omw::shiftRight()` (utility.h)
  - `omw::shiftLeftAssign()` (utility.h)
  - `omw::shiftRightAssign()` (utility.h)
+ - Version macros (omw.h)
 
 
 
