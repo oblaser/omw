@@ -150,7 +150,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #if defined(_M_IX86)
 #define OMW_PARCH_x86_32 (1)
-#elif defined(_M_AMD64)
+#elif (defined(_M_AMD64) || defined(_M_X64))
 #define OMW_PARCH_x86_64 (1)
 #elif defined(_M_ARM64)
 #define OMW_PARCH_ARM64 (1)
@@ -202,6 +202,11 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define OMW_CPPSTD_14 (201402L)
 #define OMW_CPPSTD_17 (201703L)
 #define OMW_CPPSTD_20 (202002L)
+
+//! 
+//! C++23 isn't released yet! Thus the value may change in the future.
+//! 
+#define OMW_CPPSTD_23 (202100L)
 
 #ifndef OMWi_DOXYGEN_PREDEFINE
 

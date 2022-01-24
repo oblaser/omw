@@ -1,12 +1,13 @@
 /*
 author          Oliver Blaser
-date            22.01.2022
+date            24.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_STRING_H
 #define IG_OMW_STRING_H
 
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <utility>
@@ -14,21 +15,6 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include "../omw/defs.h"
 #include "../omw/int.h"
-
-
-#ifndef OMWi_DOXYGEN_EXCLUDE_FROM_DOC
-#define OMWi_STRING_IMPLEMENT_CONTAINS (1)
-#if defined(_MSVC_LANG)
-#if (_MSVC_LANG > 202002L)
-#undef OMWi_STRING_IMPLEMENT_CONTAINS
-#endif
-#elif defined(__cplusplus)
-#if (__cplusplus > 202100L)
-#undef OMWi_STRING_IMPLEMENT_CONTAINS
-#endif
-#endif
-#endif // OMWi_DOXYGEN_EXCLUDE_FROM_DOC
-
 
 namespace omw
 {
@@ -109,11 +95,14 @@ namespace omw
         std::string& std();
         const std::string& std() const;
 
-#ifdef OMWi_STRING_IMPLEMENT_CONTAINS
+#if (OMW_CPPSTD < OMW_CPPSTD_23)
+#define OMWi_STRING_DEFDECL_CONTAINS (1)
         bool contains(char ch) const;
         bool contains(const char* str) const;
-        bool contains(const std::string& str) const;
+#else
+        using std::string::contains;
 #endif
+        bool contains(const std::string& str) const;
 
         omw::string& replaceFirst(const std::string& search, const std::string& replace, size_type startPos = 0);
         omw::string& replaceFirst(const omw::StringReplacePair& pair, size_type startPos = 0);
@@ -177,7 +166,7 @@ namespace omw
     //! \name Convert From String
     /// @{
     bool stob(const std::string& boolStr);
-    
+
     std::pair<int32_t, int32_t> stoipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<int64_t, int64_t> stoi64pair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
@@ -185,7 +174,7 @@ namespace omw
     //std::pair<float, float> stofpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<double, double> stodpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<long double, long double> stoldpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
-    
+
     //omw::int128_t stoi128(const std::string& str);
     //omw::uint128_t stoui128(const std::string& str);
     /// @}
@@ -203,11 +192,11 @@ namespace omw
     omw::string toHexStr(int64_t value);
     omw::string toHexStr(uint64_t value);
     omw::string toHexStr(const omw::Base_Int128& value);
-    omw::string toHexStr(int16_t value,  char delimiter);
+    omw::string toHexStr(int16_t value, char delimiter);
     omw::string toHexStr(uint16_t value, char delimiter);
-    omw::string toHexStr(int32_t value,  char delimiter);
+    omw::string toHexStr(int32_t value, char delimiter);
     omw::string toHexStr(uint32_t value, char delimiter);
-    omw::string toHexStr(int64_t value,  char delimiter);
+    omw::string toHexStr(int64_t value, char delimiter);
     omw::string toHexStr(uint64_t value, char delimiter);
     omw::string toHexStr(const omw::Base_Int128& value, char delimiter);
     omw::string toHexStr(const std::vector<char>& data, char delimiter = toHexStr_defaultDelimiter);
@@ -315,6 +304,11 @@ namespace omw
 
     size_t peekNewLine(const char* p);
     size_t peekNewLine(const char* p, const char* end);
+
+    omw::string readString(const uint8_t* data, size_t count);
+    omw::string readString(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos, std::vector<uint8_t>::size_type count);
+    void writeString(uint8_t* buffer, const uint8_t* end, const std::string& str);
+    void writeString(std::vector<uint8_t>& buffer, std::vector<uint8_t>::size_type pos, const std::string& str);
 
 
 

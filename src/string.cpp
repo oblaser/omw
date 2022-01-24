@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            24.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -81,7 +81,7 @@ namespace
     omw::Base_Int128 hexstointeger128(const omw::string& str, const std::string& fnName)
     {
         const std::string exMsg_notHex(OMWi_DISPSTR(fnName + ": not a hex string"));
-        
+
         const omw::string& hexStr = str;
         const omw::string::size_type hexStrLen = hexStr.length();
         const omw::string::size_type maxLen = 32;
@@ -246,20 +246,24 @@ const std::string& omw::string::std() const
     return *this;
 }
 
-#ifdef OMWi_STRING_IMPLEMENT_CONTAINS
+#ifdef OMWi_STRING_DEFDECL_CONTAINS
+
 bool omw::string::contains(char ch) const
 {
     return (this->find(ch) != omw::string::npos);
 }
+
 bool omw::string::contains(const char* str) const
 {
     return (this->find(str) != omw::string::npos);
 }
+
+#endif // OMWi_STRING_DEFDECL_CONTAINS
+
 bool omw::string::contains(const std::string& str) const
 {
     return (this->find(str) != omw::string::npos);;
 }
-#endif
 
 //! @param search Substring to be replaced
 //! @param replace String for replacement
@@ -1197,7 +1201,7 @@ bool omw::isHex(const std::string& str)
 //! @param p Pointer to the position in the string
 //! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
 //! 
-//! It's recommended to use <tt>omw::peekNewLine(const char*, const char*)</tt> to prevent access violations.
+//! It's recommended to use `omw::peekNewLine(const char*, const char*)` to prevent access violations.
 //! 
 size_t omw::peekNewLine(const char* p)
 {
@@ -1227,21 +1231,17 @@ size_t omw::peekNewLine(const char* p, const char* end)
 
     if (end)
     {
-        if (p)
+        if (p && ((end - p) > 0))
         {
-            if ((end - p) > 0)
+            if (*p == 0x0A) r = 1; // LF
+            else if (*p == 0x0D)
             {
-                if (*p == 0x0A) r = 1; // LF
-                else if (*p == 0x0D)
+                if ((end - p) > 1)
                 {
-                    if ((end - p) > 1)
-                    {
-                        if (*(p + 1) == 0x0A) r = 2; // CR+LF
-                        else r = 1; // CR
-                    }
+                    if (*(p + 1) == 0x0A) r = 2; // CR+LF
                     else r = 1; // CR
                 }
-                else r = 0;
+                else r = 1; // CR
             }
             else r = 0;
         }
@@ -1250,4 +1250,43 @@ size_t omw::peekNewLine(const char* p, const char* end)
     else r = peekNewLine(p);
 
     return r;
+}
+
+
+
+omw::string omw::readString(const uint8_t* data, size_t count)
+{
+    omw::string str(count, '#');
+
+    if (data)
+    {
+        for (size_t i = 0; i < count; ++i) str[i] = static_cast<char>(data[i]);
+    }
+    else throw std::invalid_argument("omw::readString");
+
+    return str;
+}
+
+omw::string omw::readString(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos, std::vector<uint8_t>::size_type count)
+{
+    if ((data.size() - pos) < count) throw std::out_of_range("omw::readString");
+    return omw::readString(data.data() + pos, count);
+}
+
+void omw::writeString(uint8_t* buffer, const uint8_t* end, const std::string& str)
+{
+    if (buffer && end && (buffer <= end))
+    {
+        if ((end - buffer) >= str.length())
+        {
+            for (std::string::size_type i = 0; i < str.length(); ++i) buffer[i] = static_cast<uint8_t>(str[i]);
+        }
+        else throw std::out_of_range("omw::writeString");
+    }
+    else throw std::invalid_argument("omw::writeString");
+}
+
+void omw::writeString(std::vector<uint8_t>& buffer, std::vector<uint8_t>::size_type pos, const std::string& str)
+{
+    return omw::writeString(buffer.data() + pos, buffer.data() + buffer.size(), str);
 }
