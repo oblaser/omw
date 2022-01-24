@@ -8,7 +8,7 @@
 
 ### v0.2.0-alpha.4
 
-Implementation changed
+Functionality changed
  - `omw::sepHexStr(const std::string&, char)` may prepend a "0"
  - Shift right operators of 128-bit types (see  _Utility Library_ > _Language Support_ > _Bitwise Shift Operators_)
  - `omw::Version` member type changed to `int32_t`
@@ -20,14 +20,18 @@ New
  - `omw::Color::to_wxW()`
  - `omw::string::std()`
  - `omw::toHexStr()` with 128-bit
- - `omw::bcd` (encoding.h)
  - `omw::bigEndian` (encoding.h)
+ - `omw::readString()` (string.h)
+ - `omw::writeString()` (string.h)
  - `omw::convertByteVector()` (utility.h)
  - `omw::shiftLeft()` (utility.h)
  - `omw::shiftRight()` (utility.h)
  - `omw::shiftLeftAssign()` (utility.h)
  - `omw::shiftRightAssign()` (utility.h)
  - Version macros (omw.h)
+ - Checksum Library
+ - Containers Library
+ - `OMW_CXX_...` `OMW_PLAT_...` `OMW_PARCH_...` `OMW_CPPSTD_...` (defs.h)
 
 
 
