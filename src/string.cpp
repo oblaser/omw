@@ -246,24 +246,35 @@ const std::string& omw::string::std() const
     return *this;
 }
 
-#ifdef OMWi_STRING_DEFDECL_CONTAINS
+#ifdef OMWi_DOXYGEN_PREDEFINE
+/*!
+* \fn omw::string::contains(char ch) const
+* _until C++23_<br/>_since C++23_ Defined in std::string
+* 
+* Declared in the header.
+*/
 
-bool omw::string::contains(char ch) const
-{
-    return (this->find(ch) != omw::string::npos);
-}
+/*!
+* \fn omw::string::contains(const char* str) const
+* _until C++23_<br/>_since C++23_ Defined in std::string
+* 
+* Declared in the header.
+*/
 
-bool omw::string::contains(const char* str) const
-{
-    return (this->find(str) != omw::string::npos);
-}
+/*!
+* \fn omw::string::contains(const std::string& str) const
+* _until C++17_
+* 
+* Declared in the header.
+*/
 
-#endif // OMWi_STRING_DEFDECL_CONTAINS
-
-bool omw::string::contains(const std::string& str) const
-{
-    return (this->find(str) != omw::string::npos);;
-}
+/*!
+* \fn omw::string::contains(std::string_view sv) const
+* _since C++17_<br/>_until C++23_<br/>_since C++23_ Defined in std::string
+* 
+* Declared in the header.
+*/
+#endif // OMWi_DOXYGEN_PREDEFINE
 
 //! @param search Substring to be replaced
 //! @param replace String for replacement

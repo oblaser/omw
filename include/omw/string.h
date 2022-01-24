@@ -95,14 +95,22 @@ namespace omw
         std::string& std();
         const std::string& std() const;
 
+#ifndef OMWi_DOXYGEN_PREDEFINE
 #if (OMW_CPPSTD < OMW_CPPSTD_23)
-#define OMWi_STRING_DEFDECL_CONTAINS (1)
+        bool contains(char ch) const { return (this->find(ch) != omw::string::npos); }
+        bool contains(const char* str) const { return (this->find(str) != omw::string::npos); }
+#if (OMW_CPPSTD < OMW_CPPSTD_17)
+        bool contains(const std::string& str) const { return (this->find(str) != omw::string::npos); }
+#else // < C++17
+        bool contains(std::string_view sv) const { return (this->find(sv) != omw::string::npos); }
+#endif // < C++17
+#endif // < C++23
+#else // OMWi_DOXYGEN_PREDEFINE
         bool contains(char ch) const;
         bool contains(const char* str) const;
-#else
-        using std::string::contains;
-#endif
         bool contains(const std::string& str) const;
+        bool contains(std::string_view sv) const;
+#endif // OMWi_DOXYGEN_PREDEFINE
 
         omw::string& replaceFirst(const std::string& search, const std::string& replace, size_type startPos = 0);
         omw::string& replaceFirst(const omw::StringReplacePair& pair, size_type startPos = 0);
