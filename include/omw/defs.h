@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            24.01.2022
+date            25.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -17,23 +17,6 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 /*! \addtogroup grp_macro
 * @{
 */
-
-
-//! \name Misc
-//! `#include <omw/defs.h>`
-/// @{
-
-#ifdef _DEBUG
-#define OMW_DEBUG (1)
-#endif // _DEBUG
-
-#define OMW__FILENAME__     (OMWi_file_to_filename(__FILE__))
-
-#ifdef OMWi_DOXYGEN_PREDEFINE
-#define OMW_DEBUG (1)
-#endif // OMWi_DOXYGEN_PREDEFINE
-
-/// @}
 
 
 
@@ -222,6 +205,25 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 /// @}
 
+
+//! \name Misc
+//! `#include <omw/defs.h>`
+/// @{
+
+#ifdef _DEBUG
+#define OMW_DEBUG (1)
+#endif // _DEBUG
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_14)
+#define OMW__FILENAME__     (OMWi_file_to_filename(__FILE__))
+#endif
+
+#ifdef OMWi_DOXYGEN_PREDEFINE
+#define OMW_DEBUG (1)
+#endif // OMWi_DOXYGEN_PREDEFINE
+
+/// @}
+
 /*! @} */
 
 
@@ -245,6 +247,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #define OMWi_DISPSTR(x) (x)
 
+#ifdef OMW__FILENAME__
 constexpr const char* OMWi_file_to_filename(const char* p)
 {
     const char* fn = p;
@@ -258,6 +261,7 @@ constexpr const char* OMWi_file_to_filename(const char* p)
     }
     return fn;
 }
+#endif // OMW__FILENAME__
 
 #endif // OMWi_DOXYGEN_PREDEFINE
 
@@ -267,17 +271,6 @@ constexpr const char* OMWi_file_to_filename(const char* p)
 //
 // doc
 //
-
-
-/*!
-* \def OMW_DEBUG
-* Defined as `1` if `_DEBUG` is defined, otherwise undefined.
-*/
-/*!
-* \def OMW__FILENAME__
-* Returns the filename of the current file as `const char*`.
-* Similar to `__FILE__`, but does not contain the full path.
-*/
 
 
 /*!
@@ -300,6 +293,19 @@ constexpr const char* OMWi_file_to_filename(const char* p)
 * Used to compare against `OMW_CPPSTD_xx`.
 * 
 * If MSVC is used it's defined as an alias for the MSVC specific macro `_MSVC_LANG`, otherwise it's an alias for `__cplusplus`.
+*/
+
+
+/*!
+* \def OMW_DEBUG
+* Defined as `1` if `_DEBUG` is defined, otherwise undefined.
+*/
+/*!
+* \def OMW__FILENAME__
+* _since C++14_
+* 
+* Returns the filename of the current file as `const char*`.
+* Similar to `__FILE__`, but does not contain the full path.
 */
 
 

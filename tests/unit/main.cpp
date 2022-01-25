@@ -75,7 +75,7 @@ TEST_CASE("windows.h beep() & some perfCntr..()")
     CHECK(omw::windows::beep(freq2, dur, true));
     const auto stop = omw::windows::perfCntrGetTick();
 
-    const double dDur = (double)dur / 1'000.0;
+    const double dDur = (double)dur / 1000.0;
     const double measDur = omw::windows::perfCntrCalcDuration(start, stop);
     const double absError = std::abs(measDur - dDur);
     const double relError = absError / dDur;
