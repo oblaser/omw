@@ -25,7 +25,6 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 //! `#include <omw/defs.h>`
 //! 
 //! Only one is defined, depending which compiler is used.
-//! To check if any compiler is detected check if `OMW_CXX_UNKNOWN` is not defined.
 //! 
 /// @{
 
@@ -62,7 +61,12 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 //! \name Platform
+//! 
 //! `#include <omw/defs.h>`
+//! 
+//! Defined as `1` or undefined, depending on the target platform.
+//! Multiple definitions possible.
+//! 
 /// @{
 
 #ifndef OMWi_DOXYGEN_PREDEFINE
@@ -124,7 +128,11 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 //! \name Processor Architecture
+//! 
 //! `#include <omw/defs.h>`
+//! 
+//! Only one is defined, depending on the targeted processor architecture.
+//! 
 /// @{
 
 #ifndef OMWi_DOXYGEN_PREDEFINE
@@ -180,17 +188,6 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 //! `#include <omw/defs.h>`
 /// @{
 
-#define OMW_CPPSTD_98 (199711L)
-#define OMW_CPPSTD_11 (201103L)
-#define OMW_CPPSTD_14 (201402L)
-#define OMW_CPPSTD_17 (201703L)
-#define OMW_CPPSTD_20 (202002L)
-
-//! 
-//! C++23 isn't released yet! Thus the value may change in the future.
-//! 
-#define OMW_CPPSTD_23 (202100L)
-
 #ifndef OMWi_DOXYGEN_PREDEFINE
 
 #ifdef OMW_CXX_MSVC
@@ -202,6 +199,19 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #else // OMWi_DOXYGEN_PREDEFINE
 #define OMW_CPPSTD
 #endif // OMWi_DOXYGEN_PREDEFINE
+
+
+
+#define OMW_CPPSTD_98 (199711L)
+#define OMW_CPPSTD_11 (201103L)
+#define OMW_CPPSTD_14 (201402L)
+#define OMW_CPPSTD_17 (201703L)
+#define OMW_CPPSTD_20 (202002L)
+
+//! 
+//! C++23 isn't released yet. Thus the value may change in the future!
+//! 
+#define OMW_CPPSTD_23 (202100L)
 
 /// @}
 
@@ -220,6 +230,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #ifdef OMWi_DOXYGEN_PREDEFINE
 #define OMW_DEBUG (1)
+#define OMW__FILENAME__
 #endif // OMWi_DOXYGEN_PREDEFINE
 
 /// @}
@@ -285,12 +296,16 @@ constexpr const char* OMWi_file_to_filename(const char* p)
 * \def OMW_PLAT_WIN
 * Defined as `1` if `OMW_PLAT_WIN32` or `OMW_PLAT_WIN64` is defined, otherwise undefined.
 */
+/*!
+* \def OMW_PLAT_POSIX
+* Defined as `1` if the Unix is POSIX compliant, otherwise undefined.
+*/
 
 
 /*!
 * \def OMW_CPPSTD
 * 
-* Used to compare against `OMW_CPPSTD_xx`.
+* Used to compare to `OMW_CPPSTD_xx`.
 * 
 * If MSVC is used it's defined as an alias for the MSVC specific macro `_MSVC_LANG`, otherwise it's an alias for `__cplusplus`.
 */

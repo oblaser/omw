@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            24.01.2022
+date            25.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -209,7 +209,7 @@ omw::string::string()
     : std::string()
 {}
 
-omw::string::string(std::string::size_type count, char c)
+omw::string::string(omw::string::size_type count, char c)
     : std::string(count, c)
 {}
 
@@ -217,7 +217,7 @@ omw::string::string(const char* str)
     : std::string(str ? str : "")
 {}
 
-omw::string::string(const char* str, std::string::size_type count)
+omw::string::string(const char* str, omw::string::size_type count)
     : std::string(str ? str : "", str ? count : 0)
 {}
 

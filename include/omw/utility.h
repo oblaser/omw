@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            19.01.2022
+date            25.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -71,15 +71,6 @@ namespace omw
             if (v[i] == item) r = true;
         return r;
     }
-
-    //template <class Type, class sizeType = Type::size_type>
-    //void vectorReserveMore(std::vector<Type>& v, sizeType additionalCapacity)
-    //{
-    //    v.reserve(v.size() + additionalCapacity);
-    //}
-
-    std::vector<char> convertByteVector(const std::vector<uint8_t>& v);
-    std::vector<uint8_t> convertByteVector(const std::vector<char>& v);
 
     // grp_utility_gpUtil
     /*! @} */

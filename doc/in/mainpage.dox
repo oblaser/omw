@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            23.01.2022
+date            25.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -16,7 +16,6 @@ The Following objects are in a pre-release state.
 
 \b Alpha
 - \ref grp_checksumLib
-- \ref grp_containersLib
 \internal
 \endinternal
 

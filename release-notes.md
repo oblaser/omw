@@ -23,7 +23,7 @@ New
  - `omw::bigEndian` (encoding.h)
  - `omw::readString()` (string.h)
  - `omw::writeString()` (string.h)
- - `omw::convertByteVector()` (utility.h)
+ - `omw::convertByteVector()` (vector.h)
  - `omw::shiftLeft()` (utility.h)
  - `omw::shiftRight()` (utility.h)
  - `omw::shiftLeftAssign()` (utility.h)

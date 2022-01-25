@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            25.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -194,18 +194,3 @@ uint64_t omw::shiftRight(uint64_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTR
 *
 * Toggles a boolean value.
 */
-
-
-
-std::vector<char> omw::convertByteVector(const std::vector<uint8_t>& v)
-{
-    std::vector<char> r(v.size());
-    for (std::vector<uint8_t>::size_type i = 0; i < v.size(); ++i) r[i] = static_cast<char>(v[i]);
-    return r;
-}
-std::vector<uint8_t> omw::convertByteVector(const std::vector<char>& v)
-{
-    std::vector<uint8_t> r(v.size());
-    for (std::vector<char>::size_type i = 0; i < v.size(); ++i) r[i] = static_cast<uint8_t>(v[i]);
-    return r;
-}

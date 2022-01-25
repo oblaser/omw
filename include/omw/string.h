@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            24.01.2022
+date            25.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -15,6 +15,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include "../omw/defs.h"
 #include "../omw/int.h"
+#include "../omw/vector.h"
 
 namespace omw
 {
@@ -53,12 +54,16 @@ namespace omw
 
 
 
-    using stdStringVector_t = std::vector<std::string>;
-    constexpr omw::stdStringVector_t::size_type stdStringVector_npos = static_cast<omw::stdStringVector_t::size_type>(-1);
+    using stdStringVector_t = std::vector<std::string>; // deprecated
+    constexpr omw::stdStringVector_t::size_type stdStringVector_npos = static_cast<omw::stdStringVector_t::size_type>(-1); // deprecated
 
     class string;
-    using stringVector_t = std::vector<omw::string>;
-    constexpr omw::stringVector_t::size_type stringVector_npos = static_cast<omw::stringVector_t::size_type>(-1);
+    using stringVector_t = std::vector<omw::string>; // deprecated
+    constexpr omw::stringVector_t::size_type stringVector_npos = static_cast<omw::stringVector_t::size_type>(-1); // deprecated
+
+
+
+    using StringVector = typename omw::vector<omw::string>; /*!< `omw::vector` of type `omw::string`. */
 
 
 
@@ -84,12 +89,13 @@ namespace omw
     {
     public:
         string();
-        string(std::string::size_type count, char c);
+        string(omw::string::size_type count, char c);
         string(const char* str);
-        string(const char* str, std::string::size_type count);
+        string(const char* str, omw::string::size_type count);
         string(const std::string& other);
         string(const std::string& other, std::string::size_type pos, std::string::size_type count = std::string::npos);
         string(const char* first, const char* last);
+        ~string() {}
 
         std::string& std();
         const std::string& std() const;

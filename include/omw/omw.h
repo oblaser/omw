@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            24.01.2022
+date            25.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -29,11 +29,14 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 //! 
 //! Uniqe version ID, always greater than the ID of the last version.
 //! 
+//! Can be compared to `OMW_VERSION_ID_..`
+//! 
 //! | Version | Version ID |
 //! |:---:|:---:|
 //! | v0.2.0-alpha.4 | 1 |
 //! 
 #define OMW_VERSION_ID (1)
+#define OMW_VERSION_ID_0_2_0_ALPHA_4 (1)
 
 #define OMW_VERSION_MAJ (0)
 #define OMW_VERSION_MIN (2)
