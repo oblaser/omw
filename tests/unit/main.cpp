@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            23.01.2022
+date            24.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -22,7 +22,7 @@ TEST_CASE("omw lib")
     CHECK(omw::info::version() == omw::Version(0, 2, 0, "alpha.4"));
 
     CHECK(omw::info::version() == omw::Version(OMW_VERSION_MAJ, OMW_VERSION_MIN, OMW_VERSION_PAT, OMW_VERSION_PRSTR));
-    CHECK(1 == OMW_VERSION_ID);
+    CHECK(OMW_VERSION_ID == 1);
 }
 
 
@@ -30,6 +30,7 @@ TEST_CASE("omw lib")
 #include "cli.hpp"
 
 #include "algorithm.hpp"
+#include "checksum.hpp"
 #include "color.hpp"
 #include "encoding.hpp"
 #include "int.hpp"
@@ -37,6 +38,7 @@ TEST_CASE("omw lib")
 #include "math.hpp"
 #include "string.hpp"
 #include "utility.hpp"
+#include "vector.hpp"
 #include "version.hpp"
 #include "windows_envVar.hpp"
 #include "windows_string.hpp"

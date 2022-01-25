@@ -1,8 +1,8 @@
-# C++ macro `__cplusplus`
+ï»¿# C++ macro `__cplusplus`
 
-- [g++](#g++)
-    - [8.3.0](#8.3.0)
-    - [11.1.0](#11.1.0)
+- [g++](#g)
+    - [8.3.0](#830)
+    - [11.1.0](#1110)
 
 ## Links
 - https://stackoverflow.com/a/7132549
@@ -26,9 +26,9 @@ g++ (Debian 8.3.0-6) 8.3.0
 #define __cplusplus 201402L  C++14
 #define __cplusplus 201703L  C++17
 #define __cplusplus 201709L  C++2a
-g++: error: unrecognized command line option ‘-std=c++20’; did you mean ‘-std=c++2a’?
+g++: error: unrecognized command line option â€˜-std=c++20â€™; did you mean â€˜-std=c++2aâ€™?
   C++20
-g++: error: unrecognized command line option ‘-std=c++23’; did you mean ‘-std=c++03’?
+g++: error: unrecognized command line option â€˜-std=c++23â€™; did you mean â€˜-std=c++03â€™?
   C++23
 $ 
 ```

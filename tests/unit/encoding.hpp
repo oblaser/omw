@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            23.01.2022
+date            24.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -43,7 +43,7 @@ TEST_CASE("encoding.h omw::bigEndian decode")
     CHECK(omw::bigEndian::decode_i32(data) == -14535868);
     CHECK(omw::bigEndian::decode_ui32(data) == 4280431428);
     CHECK(omw::bigEndian::decode_i64(data) == -62431076246194296);
-    CHECK(omw::bigEndian::decode_ui64(data) == 18384312997463357320);
+    CHECK(omw::bigEndian::decode_ui64(data) == 18384312997463357320u);
     CHECK(omw::bigEndian::decode_i128(data) == omw::int128_t(0xFF22334455667788, 0x99AABBCCDDEE0011));
     CHECK(omw::bigEndian::decode_ui128(data) == omw::uint128_t(0xFF22334455667788, 0x99AABBCCDDEE0011));
 

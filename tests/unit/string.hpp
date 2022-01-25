@@ -1,12 +1,14 @@
 /*
 author          Oliver Blaser
-date            07.01.2022
+date            24.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef TEST_OMW_STRING_H
 #define TEST_OMW_STRING_H
 
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <stdexcept>
 #include <string>
@@ -1168,6 +1170,124 @@ TEST_CASE("string.h peekNewLine()")
     pos = 19;
     //CHECK(omw::peekNewLine(str + pos) == 1); // access violation
     CHECK(omw::peekNewLine(str + pos, end) == 1);
+}
+
+
+
+TEST_CASE("string.h readString()")
+{
+    // "The quick brown fox jumps over the lazy dog."
+    constexpr size_t size = 44;
+    const uint8_t data[size] =
+    {
+        0x54, 0x68, 0x65, 0x20, 0x71, 0x75, 0x69, 0x63,
+        0x6b, 0x20, 0x62, 0x72, 0x6f, 0x77, 0x6e, 0x20,
+        0x66, 0x6f, 0x78, 0x20, 0x6a, 0x75, 0x6d, 0x70,
+        0x73, 0x20, 0x6f, 0x76, 0x65, 0x72, 0x20, 0x74,
+        0x68, 0x65, 0x20, 0x6c, 0x61, 0x7a, 0x79, 0x20,
+        0x64, 0x6f, 0x67, 0x2e
+    };
+    const std::vector<uint8_t> vec(data, data + size);
+
+    CHECK(omw::readString(data, 5) == "The q");
+    CHECK(omw::readString(vec, 0, 5) == "The q");
+
+    CHECK(omw::readString(data + 7, 5) == "ck br");
+    CHECK(omw::readString(vec, 7, 5) == "ck br");
+
+    CHECK(omw::readString(data + 31, 13) == "the lazy dog.");
+    CHECK(omw::readString(vec, 31, 13) == "the lazy dog.");
+
+    CHECK(omw::readString(data + size, 0) == "");
+    CHECK(omw::readString(vec, size, 0) == "");
+
+    TESTUTIL_TRYCATCH_OPEN_DECLARE_VAL(omw::string, "abcd");
+    TESTUTIL_TRYCATCH_CHECK(omw::readString(nullptr, 3), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::readString(vec, size - 1, 2), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::readString(vec, size + 1, 0), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CLOSE();
+}
+
+
+
+TEST_CASE("string.h writeString() pointer")
+{
+    std::vector<uint8_t> b;
+    std::vector<uint8_t> r;
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    omw::writeString(b.data(), b.data() + b.size(), "");
+    CHECK(b == r);
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    omw::writeString(b.data() + b.size(), b.data() + b.size(), "");
+    CHECK(b == r);
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x41, 0x42, 0x43, 0x44, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    omw::writeString(b.data(), b.data() + b.size(), "ABCD");
+    CHECK(b == r);
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x00, 0x11, 0x22, 0x61, 0x62, 0x63, 0x64, 0x77, 0x88, 0x99 };
+    omw::writeString(b.data() + 3, b.data() + b.size(), "abcd");
+    CHECK(b == r);
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x31, 0x32, 0x33, 0x34 };
+    omw::writeString(b.data() + 6, b.data() + b.size(), "1234");
+    CHECK(b == r);
+
+    std::vector<uint8_t>* p_tcv; // TryCatchValue
+    const std::vector<uint8_t> initial = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    TESTUTIL_TRYCATCH_SE_DECLARE_VAL(std::vector<uint8_t>, p_tcv, initial);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(nullptr, p_tcv->data() + p_tcv->size(), "")), std::invalid_argument);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(p_tcv->data() + p_tcv->size(), nullptr, "")), std::invalid_argument);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(p_tcv->data() + p_tcv->size() + 1, p_tcv->data() + p_tcv->size(), "")), std::invalid_argument);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(p_tcv->data() + p_tcv->size(), p_tcv->data() + p_tcv->size(), "a")), std::out_of_range);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(p_tcv->data() + p_tcv->size() - 1, p_tcv->data() + p_tcv->size(), "ab")), std::out_of_range);
+}
+
+
+
+TEST_CASE("string.h writeString() vector")
+{
+    std::vector<uint8_t> b;
+    std::vector<uint8_t> r;
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    omw::writeString(b, 0, "");
+    CHECK(b == r);
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    omw::writeString(b, b.size(), "");
+    CHECK(b == r);
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x41, 0x42, 0x43, 0x44, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    omw::writeString(b, 0, "ABCD");
+    CHECK(b == r);
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x00, 0x11, 0x22, 0x61, 0x62, 0x63, 0x64, 0x77, 0x88, 0x99 };
+    omw::writeString(b, 3, "abcd");
+    CHECK(b == r);
+
+    b = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+    r = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x31, 0x32, 0x33, 0x34 };
+    omw::writeString(b, 6, "1234");
+    CHECK(b == r);
+
+    std::vector<uint8_t>* p_tcv; // TryCatchValue
+    const std::vector<uint8_t> initial = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    TESTUTIL_TRYCATCH_SE_DECLARE_VAL(std::vector<uint8_t>, p_tcv, initial);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(*p_tcv, p_tcv->size() + 1, "")), std::invalid_argument);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(*p_tcv, p_tcv->size(), "a")), std::out_of_range);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(*p_tcv, p_tcv->size() - 1, "ab")), std::out_of_range);
 }
 
 

@@ -197,7 +197,7 @@ const std::string& omw::StringReplacePair::replace() const
 *
 * A with `std::string` interchangeable class to add more functionalities.
 * This class does not override/implement any (virtual) methods of the base class and has no attributes. It's basically a `std::string` with some more methods.
-* However the two constructors which take the other string as a `char` pointer behave defined if a NULL pointer is passed.
+* However the two constructors which take the other string as a `char` pointer behave defined if a _null_ pointer is passed.
 */
 
 //bool omw::string::isValidUTF8(const omw::string& str)
@@ -234,7 +234,7 @@ omw::string::string(const char* first, const char* last)
 {}
 
 //! 
-//! Used if an implicit conversion to `std::string` is not possible.
+//! Used if an implicit conversion to `std::string` is not possible (e.g. passing an `omw::string` to a function parameter of type `std::filesystem::path`).
 //! 
 std::string& omw::string::std()
 {
@@ -250,28 +250,28 @@ const std::string& omw::string::std() const
 /*!
 * \fn omw::string::contains(char ch) const
 * _until C++23_<br/>_since C++23_ Defined in std::string
-* 
+*
 * Declared in the header.
 */
 
 /*!
 * \fn omw::string::contains(const char* str) const
 * _until C++23_<br/>_since C++23_ Defined in std::string
-* 
+*
 * Declared in the header.
 */
 
 /*!
 * \fn omw::string::contains(const std::string& str) const
 * _until C++17_
-* 
+*
 * Declared in the header.
 */
 
 /*!
 * \fn omw::string::contains(std::string_view sv) const
 * _since C++17_<br/>_until C++23_<br/>_since C++23_ Defined in std::string
-* 
+*
 * Declared in the header.
 */
 #endif // OMWi_DOXYGEN_PREDEFINE
@@ -1236,6 +1236,8 @@ size_t omw::peekNewLine(const char* p)
 //! 
 //! If <b><tt>end</tt></b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used, hence access violations may occure.
 //! 
+//! Does not throw an exception, but return 0 if the pointers are invalid.
+//! 
 size_t omw::peekNewLine(const char* p, const char* end)
 {
     size_t r;
@@ -1265,6 +1267,12 @@ size_t omw::peekNewLine(const char* p, const char* end)
 
 
 
+//! 
+//! Reads the data to construct a string from a byte buffer.
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the data pointer is _null_
+//! 
 omw::string omw::readString(const uint8_t* data, size_t count)
 {
     omw::string str(count, '#');
@@ -1278,17 +1286,30 @@ omw::string omw::readString(const uint8_t* data, size_t count)
     return str;
 }
 
+//! 
+//! Reads the data to construct a string from a byte buffer.
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if count is greater than `data.size() - pos`
+//! 
 omw::string omw::readString(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos, std::vector<uint8_t>::size_type count)
 {
-    if ((data.size() - pos) < count) throw std::out_of_range("omw::readString");
+    if (((data.size() - pos) < count) || (pos > data.size())) throw std::invalid_argument("omw::readString");
     return omw::readString(data.data() + pos, count);
 }
 
+//! 
+//! Writes a string to a byte buffer (without a _null_ terminator).
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the data or end pointer is invalid
+//! - `std::out_of_range` if the string length is greater than `end - buffer`
+//! 
 void omw::writeString(uint8_t* buffer, const uint8_t* end, const std::string& str)
 {
     if (buffer && end && (buffer <= end))
     {
-        if ((end - buffer) >= str.length())
+        if (static_cast<std::string::size_type>(end - buffer) >= str.length())
         {
             for (std::string::size_type i = 0; i < str.length(); ++i) buffer[i] = static_cast<uint8_t>(str[i]);
         }
@@ -1297,6 +1318,13 @@ void omw::writeString(uint8_t* buffer, const uint8_t* end, const std::string& st
     else throw std::invalid_argument("omw::writeString");
 }
 
+//! 
+//! Writes a string to a byte buffer (without a _null_ terminator).
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if `pos` is greater than the buffers size
+//! - `std::out_of_range` if the buffer can not hold the string
+//! 
 void omw::writeString(std::vector<uint8_t>& buffer, std::vector<uint8_t>::size_type pos, const std::string& str)
 {
     return omw::writeString(buffer.data() + pos, buffer.data() + buffer.size(), str);

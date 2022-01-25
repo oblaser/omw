@@ -90,7 +90,6 @@ namespace omw
         string(const std::string& other);
         string(const std::string& other, std::string::size_type pos, std::string::size_type count = std::string::npos);
         string(const char* first, const char* last);
-        virtual ~string() {}
 
         std::string& std();
         const std::string& std() const;

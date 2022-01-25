@@ -1,7 +1,13 @@
 /*
 author          Oliver Blaser
-date            22.01.2022
+date            24.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
+*/
+
+/*!
+* \file
+*
+* See also \ref grp_macro.
 */
 
 #ifndef IG_OMW_H
@@ -16,6 +22,10 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 * @{
 */
 
+//! \name OMW Info
+//! `#include <omw/omw.h>`
+/// @{
+
 //! 
 //! Uniqe version ID, always greater than the ID of the last version.
 //! 
@@ -29,6 +39,8 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define OMW_VERSION_MIN (2)
 #define OMW_VERSION_PAT (0)
 #define OMW_VERSION_PRSTR ("alpha.4")
+
+/// @}
 
 /*! @} */
 

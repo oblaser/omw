@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\algorithm.cpp" />
+    <ClCompile Include="..\..\src\checksum.cpp" />
     <ClCompile Include="..\..\src\cli.cpp" />
     <ClCompile Include="..\..\src\color.cpp" />
     <ClCompile Include="..\..\src\encoding.cpp" />
@@ -139,6 +140,7 @@
     <ClCompile Include="..\..\src\int.cpp" />
     <ClCompile Include="..\..\src\string.cpp" />
     <ClCompile Include="..\..\src\utility.cpp" />
+    <ClCompile Include="..\..\src\vector.cpp" />
     <ClCompile Include="..\..\src\version.cpp" />
     <ClCompile Include="..\..\src\windows\envVar.cpp" />
     <ClCompile Include="..\..\src\windows\error.cpp" />
@@ -149,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\omw\algorithm.h" />
+    <ClInclude Include="..\..\include\omw\checksum.h" />
     <ClInclude Include="..\..\include\omw\cli.h" />
     <ClInclude Include="..\..\include\omw\color.h" />
     <ClInclude Include="..\..\include\omw\defs.h" />
@@ -159,6 +162,7 @@
     <ClInclude Include="..\..\include\omw\int.h" />
     <ClInclude Include="..\..\include\omw\string.h" />
     <ClInclude Include="..\..\include\omw\utility.h" />
+    <ClInclude Include="..\..\include\omw\vector.h" />
     <ClInclude Include="..\..\include\omw\version.h" />
     <ClInclude Include="..\..\include\omw\windows\envVar.h" />
     <ClInclude Include="..\..\include\omw\windows\error.h" />

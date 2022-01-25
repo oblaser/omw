@@ -1,5 +1,5 @@
 # author        Oliver Blaser
-# date          11.01.2022
+# date          24.01.2022
 # copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
 cmake_minimum_required(VERSION 3.13)
@@ -28,6 +28,7 @@ set(SOURCES
 ../../src/windows/string.cpp
 ../../src/windows/windows.cpp
 ../../src/algorithm.cpp
+../../src/checksum.cpp
 ../../src/cli.cpp
 ../../src/color.cpp
 ../../src/encoding.cpp
@@ -36,6 +37,7 @@ set(SOURCES
 ../../src/omw.cpp
 ../../src/string.cpp
 ../../src/utility.cpp
+../../src/vector.cpp
 ../../src/version.cpp
 )
 
