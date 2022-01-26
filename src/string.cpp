@@ -1290,7 +1290,7 @@ omw::string omw::readString(const uint8_t* data, size_t count)
 //! Reads the data to construct a string from a byte buffer.
 //! 
 //! \b Exceptions
-//! - `std::invalid_argument` if count is greater than `data.size() - pos`
+//! - `std::invalid_argument` if count is greater than `data.size() - pos` or if `pos` is greater than `data.size()`
 //! 
 omw::string omw::readString(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos, std::vector<uint8_t>::size_type count)
 {
