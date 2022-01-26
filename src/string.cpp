@@ -251,28 +251,28 @@ const std::string& omw::string::std() const
 * \fn omw::string::contains(char ch) const
 * _until C++23_<br/>_since C++23_ Defined in std::string
 *
-* Declared in the header.
+* Defined in the header.
 */
 
 /*!
 * \fn omw::string::contains(const char* str) const
 * _until C++23_<br/>_since C++23_ Defined in std::string
 *
-* Declared in the header.
+* Defined in the header.
 */
 
 /*!
 * \fn omw::string::contains(const std::string& str) const
 * _until C++17_
 *
-* Declared in the header.
+* Defined in the header.
 */
 
 /*!
 * \fn omw::string::contains(std::string_view sv) const
 * _since C++17_<br/>_until C++23_<br/>_since C++23_ Defined in std::string
 *
-* Declared in the header.
+* Defined in the header.
 */
 #endif // OMWi_DOXYGEN_PREDEFINE
 

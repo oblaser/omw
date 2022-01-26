@@ -19,18 +19,21 @@ namespace omw
     * @{
     */
 
-    template<class T, class Allocator = std::allocator<T>>
+    template <class T, class Allocator = std::allocator<T>>
     class vector : public std::vector<T, Allocator>
     {
+#ifndef OMWi_DOXYGEN_PREDEFINE
     public:
         using value_type = typename std::vector<T, Allocator>::value_type; /*!< \brief \b `T` */
         using size_type = typename std::vector<T, Allocator>::size_type; /*!< \brief Usually `std::size_t` */
+#endif // OMWi_DOXYGEN_PREDEFINE
 
-        static constexpr size_type maxSize = static_cast<size_type>(-1);
+    public:
+        static constexpr size_type maxsz = static_cast<size_type>(-1);
 
     public:
         vector() : std::vector<T, Allocator>() {}
-        vector(size_type count) : std::vector<T, Allocator>(count) {}
+        explicit vector(size_type count) : std::vector<T, Allocator>(count) {}
         vector(size_type count, const T& value) : std::vector<T, Allocator>(count, value) {}
         vector(const T* first, const T* last) : std::vector<T, Allocator>(first, last) {}
         vector(std::initializer_list<T> init) : std::vector<T, Allocator>(init) {}
@@ -47,12 +50,6 @@ namespace omw
 
         void reserveAdd(size_type addCap) { this->reserve(this->size() + addCap); }
     };
-
-    using ByteVector = typename omw::vector<uint8_t>; /*!< `omw::vector` of type `uint8_t`. */
-    using CharVector = typename omw::vector<char>; /*!< `omw::vector` of type `char`. */
-
-    omw::ByteVector toByteVector(const std::vector<char>& v);
-    omw::CharVector toCharVector(const std::vector<uint8_t>& v);
 
     /*! @} */
 }

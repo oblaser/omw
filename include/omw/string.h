@@ -54,16 +54,12 @@ namespace omw
 
 
 
-    using stdStringVector_t = std::vector<std::string>; // deprecated
-    constexpr omw::stdStringVector_t::size_type stdStringVector_npos = static_cast<omw::stdStringVector_t::size_type>(-1); // deprecated
+    using stdStringVector_t = std::vector<std::string>;
+    constexpr omw::stdStringVector_t::size_type stdStringVector_npos = static_cast<omw::stdStringVector_t::size_type>(-1);
 
     class string;
-    using stringVector_t = std::vector<omw::string>; // deprecated
-    constexpr omw::stringVector_t::size_type stringVector_npos = static_cast<omw::stringVector_t::size_type>(-1); // deprecated
-
-
-
-    using StringVector = typename omw::vector<omw::string>; /*!< `omw::vector` of type `omw::string`. */
+    using stringVector_t = std::vector<omw::string>;
+    constexpr omw::stringVector_t::size_type stringVector_npos = static_cast<omw::stringVector_t::size_type>(-1);
 
 
 

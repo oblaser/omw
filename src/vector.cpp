@@ -33,21 +33,3 @@ namespace
 * See <tt><a href="https://en.cppreference.com/w/cpp/container/vector/reserve" target="_blank">std::vector<T,Allocator>::reserve</a></tt>
 * and <tt><a href="https://en.cppreference.com/w/cpp/container/vector/size" target="_blank">std::vector<T,Allocator>::size</a></tt>.
 */
-
-
-
-
-
-omw::ByteVector omw::toByteVector(const std::vector<char>& v)
-{
-    omw::ByteVector r(v.size());
-    for (std::vector<char>::size_type i = 0; i < v.size(); ++i) r[i] = static_cast<uint8_t>(v[i]);
-    return r;
-}
-
-omw::CharVector omw::toCharVector(const std::vector<uint8_t>& v)
-{
-    omw::CharVector r(v.size());
-    for (std::vector<uint8_t>::size_type i = 0; i < v.size(); ++i) r[i] = static_cast<char>(v[i]);
-    return r;
-}
