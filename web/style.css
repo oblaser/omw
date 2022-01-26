@@ -40,16 +40,38 @@ a:hover { color: inherit; }
 {
     font-size: larger;
     font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 7px;
 }
 
 .pageTitle2
 {
     font-size: large;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+/*#p rm
+~
+    https://stackoverflow.com/questions/2717480/css-selector-for-first-element-with-class/8539107#8539107
+    https://stackoverflow.com/questions/3615518/css-selector-to-select-first-element-of-a-given-class/3615559#3615559
+
++
+    https://stackoverflow.com/questions/59344276/css-selector-first-element-with-class-in-a-group-of-same-class
+/*#p endrm */
+.pageTitle2 ~ .pageTitle2 /* selecting all but the first */
+{
+    margin-top: 30px;
 }
 
 .pageTitle3
 {
     font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 3px;
+}
+.pageTitle3 ~ .pageTitle3 /* selecting all but the first */
+{
+    margin-top: 10px;
 }
 
 .headerlink

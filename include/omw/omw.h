@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
+date            26.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -33,15 +33,15 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 //! 
 //! | Version | Version ID |
 //! |:---:|:---:|
-//! | v0.2.0-alpha.4 | 1 |
+//! | v0.2.0 | 1 |
 //! 
 #define OMW_VERSION_ID (1)
-#define OMW_VERSION_ID_0_2_0_ALPHA_4 (1)
+#define OMW_VERSION_ID_0_2_0 (1)
 
 #define OMW_VERSION_MAJ (0)
 #define OMW_VERSION_MIN (2)
 #define OMW_VERSION_PAT (0)
-#define OMW_VERSION_PRSTR ("alpha.4")
+#define OMW_VERSION_PRSTR ("")
 
 /// @}
 

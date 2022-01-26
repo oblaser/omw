@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          17.12.2021
-# copyright     MIT - Copyright (c) 2021 Oliver Blaser
+# date          26.01.2022
+# copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
 cd ./cmake
 if [ $? -ne 0 ]
@@ -13,7 +13,7 @@ fi
 make clean
 if [ $? -ne 0 ]
 then
-    exit 2
+    exit 1
 fi
 
 exit 0

@@ -6,7 +6,7 @@
 
 
 
-### v0.2.0-alpha.4
+### v0.2.0
 
 Functionality changed
  - `omw::sepHexStr(const std::string&, char)` may prepend a "0"

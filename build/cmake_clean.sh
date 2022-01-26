@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          17.12.2021
-# copyright     MIT - Copyright (c) 2021 Oliver Blaser
+# date          26.01.2022
+# copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
 errCnt=0
 function procErrorCode()
@@ -44,4 +44,7 @@ procErrorCode $?
 
 
 
-exit $errCnt
+exitCode=0
+if [ $errCnt -ne 0 ]; then exitCode=1; fi;
+
+exit $exitCode
