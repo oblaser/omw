@@ -5,10 +5,14 @@
 
 
 ## Naming
+> It's a mix between the C++ standard and the conventions I was tought.
+> Classes and functions more related to the standard have a more std like naming.
+
 Names are in lower camel case and normally don't use the underscore `_`.
 
 Classes however are in upper camel case. Exception classes are in lowercase and use the underscore.
-> For basse classes I don't have a clear idea. It may differ from case to case.
+> For base classes I don't have a clear idea. Maybe something like a `_Base` suffix.
+> It may differ from case to case.
 
 Macros are in uppercase and start with `OMW_`.
 
