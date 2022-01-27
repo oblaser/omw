@@ -27,9 +27,9 @@ namespace omw
         class FileInterface_Base
         {
         public:
-            using fstream = typename std::fstream;
-            using iostate = typename fstream::iostate; /*!< Stream state type */
-            using openmode = typename fstream::openmode; /*!< Open mode type */
+            using fstream = std::fstream;
+            using iostate = fstream::iostate; /*!< Stream state type */
+            using openmode = fstream::openmode; /*!< Open mode type */
 
             static constexpr iostate good = fstream::goodbit;
             static constexpr iostate badbit = fstream::badbit;
