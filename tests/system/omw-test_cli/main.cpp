@@ -270,7 +270,7 @@ int main(int argc, char** argv)
 
 #if defined(OMW_DEBUG) && 1
     cout << "===============\nreturn " << r << endl << "press enter..." << endl;
-    int ___dbg_getc = getc(stdin);
+    int dbg___getc = getc(stdin);
 #endif
 
     return r;

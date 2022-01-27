@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
+date            27.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -10,6 +10,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include "omw/algorithm.h"
 #include "omw/defs.h"
+#include "omw/intdef.h"
 #include "omw/string.h"
 
 
@@ -357,7 +358,7 @@ omw::string& omw::string::replaceAll(const std::string& search, const std::strin
             pos = find(search, pos + replace.length());
         }
     }
-    else cnt = SIZE_MAX;
+    else cnt = OMW_SIZE_MAX;
 
     if (nReplacements) *nReplacements = cnt;
 
@@ -384,20 +385,20 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
     size_t cnt = 0;
     size_t tmpCnt;
 
-    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), SIZE_MAX);
+    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), OMW_SIZE_MAX);
 
     for (size_t i = 0; i < pairs.size(); ++i)
     {
         replaceAll(pairs[i], startPos, &tmpCnt);
         if (nReplacements) nReplacements->at(i) = tmpCnt;
-        if (tmpCnt != SIZE_MAX)
+        if (tmpCnt != OMW_SIZE_MAX)
         {
             cnt += tmpCnt;
             allInvalid = false;
         }
     }
 
-    if (allInvalid) cnt = SIZE_MAX;
+    if (allInvalid) cnt = OMW_SIZE_MAX;
 
     if (nReplacementsTotal) *nReplacementsTotal = cnt;
 

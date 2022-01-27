@@ -20,28 +20,27 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{D29E88ED-9AB0-470C-A9B9-8DD1A3C55A8A}</ProjectGuid>
+    <ProjectGuid>{2B242FF8-7160-44C8-BF4F-61D45E361CA7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
@@ -65,118 +64,55 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)../../lib/</OutDir>
-    <TargetName>omw-d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)../../lib/</OutDir>
-    <TargetName>omw</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)../../lib64/</OutDir>
-    <TargetName>omw-d</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)../../lib64/</OutDir>
-    <TargetName>omw</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;OMW_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../../src;../../include</AdditionalIncludeDirectories>
-      <ObjectFileName>$(IntDir)obj/a/b/%(RelativeDir)</ObjectFileName>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)../../../../include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>$(ProjectDir)../../../../lib/omw-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;OMW_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>../../src;../../include</AdditionalIncludeDirectories>
-      <ObjectFileName>$(IntDir)obj/a/b/%(RelativeDir)</ObjectFileName>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)../../../../include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(ProjectDir)../../../../lib/omw.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../src;../../include</AdditionalIncludeDirectories>
-      <ObjectFileName>$(IntDir)obj/a/b/%(RelativeDir)</ObjectFileName>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)../../../../include</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../src;../../include</AdditionalIncludeDirectories>
-      <ObjectFileName>$(IntDir)obj/a/b/%(RelativeDir)</ObjectFileName>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)../../../../include</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\algorithm.cpp" />
-    <ClCompile Include="..\..\src\checksum.cpp" />
-    <ClCompile Include="..\..\src\cli.cpp" />
-    <ClCompile Include="..\..\src\color.cpp" />
-    <ClCompile Include="..\..\src\encoding.cpp" />
-    <ClCompile Include="..\..\src\io\configFile.cpp" />
-    <ClCompile Include="..\..\src\io\file.cpp" />
-    <ClCompile Include="..\..\src\io\serialPort.cpp" />
-    <ClCompile Include="..\..\src\math.cpp" />
-    <ClCompile Include="..\..\src\omw.cpp" />
-    <ClCompile Include="..\..\src\int.cpp" />
-    <ClCompile Include="..\..\src\string.cpp" />
-    <ClCompile Include="..\..\src\utility.cpp" />
-    <ClCompile Include="..\..\src\vector.cpp" />
-    <ClCompile Include="..\..\src\version.cpp" />
-    <ClCompile Include="..\..\src\windows\envVar.cpp" />
-    <ClCompile Include="..\..\src\windows\error.cpp" />
-    <ClCompile Include="..\..\src\windows\exception.cpp" />
-    <ClCompile Include="..\..\src\windows\resources.cpp" />
-    <ClCompile Include="..\..\src\windows\string.cpp" />
-    <ClCompile Include="..\..\src\windows\windows.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\include\omw\algorithm.h" />
-    <ClInclude Include="..\..\include\omw\checksum.h" />
-    <ClInclude Include="..\..\include\omw\cli.h" />
-    <ClInclude Include="..\..\include\omw\color.h" />
-    <ClInclude Include="..\..\include\omw\defs.h" />
-    <ClInclude Include="..\..\include\omw\encoding.h" />
-    <ClInclude Include="..\..\include\omw\intdef.h" />
-    <ClInclude Include="..\..\include\omw\io\configFile.h" />
-    <ClInclude Include="..\..\include\omw\io\file.h" />
-    <ClInclude Include="..\..\include\omw\io\serialPort.h" />
-    <ClInclude Include="..\..\include\omw\math.h" />
-    <ClInclude Include="..\..\include\omw\omw.h" />
-    <ClInclude Include="..\..\include\omw\int.h" />
-    <ClInclude Include="..\..\include\omw\string.h" />
-    <ClInclude Include="..\..\include\omw\utility.h" />
-    <ClInclude Include="..\..\include\omw\vector.h" />
-    <ClInclude Include="..\..\include\omw\version.h" />
-    <ClInclude Include="..\..\include\omw\windows\envVar.h" />
-    <ClInclude Include="..\..\include\omw\windows\error.h" />
-    <ClInclude Include="..\..\include\omw\windows\exception.h" />
-    <ClInclude Include="..\..\include\omw\windows\resources.h" />
-    <ClInclude Include="..\..\include\omw\windows\resourceTypes.h" />
-    <ClInclude Include="..\..\include\omw\windows\string.h" />
-    <ClInclude Include="..\..\include\omw\windows\windows.h" />
-    <ClInclude Include="..\..\src\config.h" />
+    <ClCompile Include="..\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

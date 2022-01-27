@@ -154,7 +154,7 @@ uint8_t omw::parityWord(const std::vector<uint8_t>& data, std::vector<uint8_t>::
 
 
 //! 
-//! Tested. Is in _preview_ namespace because of the not complete CRC library concept/interface.
+//! Tested, OK. Is in _preview_ namespace because of the not complete CRC library concept/interface.
 //! 
 uint16_t omw::preview::crc16_kermit(const uint8_t* data, size_t count)
 {

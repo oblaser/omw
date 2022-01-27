@@ -27,6 +27,11 @@ namespace omw
             virtual ~IniFileM2M();
         };
 
+        class ConfigFile
+        {
+        public:
+        };
+
         /*! @} */
     }
 }
