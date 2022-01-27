@@ -205,7 +205,7 @@ void omw::io::FileInterface_Base::write(const char* data, size_t count)
     else if (streamSize == sizeSize)
     {
         constexpr size_t sizeMsb = (sizeSize == 8 ? OMW_64BIT_MSB : (sizeSize == 4 ? OMW_32BIT_MSB : (sizeSize == 2 ? OMW_16BIT_MSB : OMW_8BIT_MSB)));
-        if (count && sizeMsb) throw std::out_of_range(fnName);
+        if (count & sizeMsb) throw std::out_of_range(fnName);
         sz = static_cast<std::streamsize>(count);
     }
     // should never happen by definition

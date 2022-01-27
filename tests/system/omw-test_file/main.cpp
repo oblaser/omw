@@ -22,9 +22,15 @@ using omw::io::TxtFileInterface;
 
 namespace
 {
+    const char* const binFilename = "bin-if.omwsystestfile-bin";
+    const char* const txtFilename = "txt-if.omwsystestfile-txt";
+    
+    //const char* const binFilename = "bin.omw";
+    //const char* const txtFilename = "txt.omw";
+    
     int readBin(std::vector<uint8_t>& buffer)
     {
-        const BinFileInterface file("bin-interface.omwsystestfile-bin");
+        const BinFileInterface file(binFilename);
         int r;
 
         try
@@ -49,7 +55,7 @@ namespace
     }
     int writeBin(const std::vector<uint8_t>& data)
     {
-        BinFileInterface file("bin-interface.omwsystestfile-bin");
+        BinFileInterface file(binFilename);
         int r;
 
         try
@@ -72,7 +78,7 @@ namespace
 
     int readTxt(std::string& buffer)
     {
-        TxtFileInterface file("txt-interface.omwsystestfile-txt");
+        const TxtFileInterface file(txtFilename);
         int r;
 
         char* p = nullptr;
@@ -103,7 +109,7 @@ namespace
     }
     int writeTxt(const std::string& str)
     {
-        TxtFileInterface file("txt-interface.omwsystestfile-txt");
+        TxtFileInterface file(txtFilename);
         int r;
 
         try
