@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            17.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            26.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_IO_SERIALPORT_H
@@ -12,72 +12,89 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <vector>
 
 #include "../../omw/string.h"
+#include "../../omw/vector.h"
 
-#define OMWi_SERIAL_PORT_PREVIEW (1) // def/undef
+//#define OMWi_SERIAL_PORT_PREVIEW (1) // def/undef
 
 namespace omw
 {
-#ifndef OMWi_SERIAL_PORT_PREVIEW
-    enum NDATABITS
+    namespace io
     {
-        NDATABITS_5 = 5,
-        NDATABITS_6 = 6,
-        NDATABITS_7 = 7,
-        NDATABITS_8 = 8
-    };
+        /*! \addtogroup grp_ioLib
+        * @{
+        */
 
-    enum NSTOPBITS
-    {
-        NSTOPBITS_1 = 1,     // 1
-        NSTOPBITS_15 = 100,  // 1.5
-        NSTOPBITS_2 = 2      // 2
-    };
+#ifdef OMWi_SERIAL_PORT_PREVIEW
+        enum NDATABITS
+        {
+            NDATABITS_5 = 5,
+            NDATABITS_6 = 6,
+            NDATABITS_7 = 7,
+            NDATABITS_8 = 8
+        };
 
-    //enum PARITY
-    //{
-    //    PARITY_NONE = 0,
-    //    PARITY_ODD,
-    //    PARITY_EVEN
-    //};
+        enum NSTOPBITS
+        {
+            NSTOPBITS_1 = 1,     // 1
+            NSTOPBITS_15 = 100,  // 1.5
+            NSTOPBITS_2 = 2      // 2
+        };
 
-    class SerialPort
-    {
-    public:
-        SerialPort();
-        //            SerialPort(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
-        virtual ~SerialPort() {}
+        //enum PARITY
+        //{
+        //    PARITY_NONE = 0,
+        //    PARITY_ODD,
+        //    PARITY_EVEN
+        //};
 
-        //            int32_t config(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
+        class SerialPort
+        {
+        public:
+            SerialPort();
+            //            SerialPort(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
+            virtual ~SerialPort() {}
 
-        int32_t getBaudRate() const;
-        int32_t getDataBits() const;
-        int32_t getParity() const;
-        std::string getPort() const;
-        int32_t getStopBits() const;
+            //            int32_t config(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
 
-        int32_t setBaudRate(int32_t baudRate);
-        int32_t setDataBits(int32_t dataBits);
-        int32_t setParity(int32_t parity);
-        int32_t setPort(const std::string& port);
-        int32_t setStopBits(int32_t stopBits);
+            int32_t getBaudRate() const;
+            int32_t getDataBits() const;
+            int32_t getParity() const;
+            std::string getPort() const;
+            int32_t getStopBits() const;
 
-        int32_t open();
-        int32_t close();
+            int32_t setBaudRate(int32_t baudRate);
+            int32_t setDataBits(int32_t dataBits);
+            int32_t setParity(int32_t parity);
+            int32_t setPort(const std::string& port);
+            int32_t setStopBits(int32_t stopBits);
 
-        bool isOpen() const;
+            int32_t open();
+            int32_t close();
 
-    private:
-        int32_t baudRate;
-        int32_t dataBits;
-        int32_t parity;
-        std::string port;
-        int32_t stopBits;
-    };
+            bool isOpen() const;
+
+        private:
+            int32_t baudRate;
+            int32_t dataBits;
+            int32_t parity;
+            std::string port;
+            int32_t stopBits;
+        };
 #endif
 
-    std::vector<omw::string> getSerialPortList(bool onlyCOMx = true);
-    void sortSerialPortList(std::vector<omw::string>& ports);
-    void sortSerialPortList(std::vector<std::string>& ports);
+        /*! @} */
+    }
+
+    namespace preview
+    {
+        /*! \addtogroup grp_ioLib
+        * @{
+        */
+        omw::vector<omw::string> getSerialPortList(bool onlyCOMx = true);
+        void sortSerialPortList(std::vector<omw::string>& ports);
+        void sortSerialPortList(std::vector<std::string>& ports);
+        /*! @} */
+    }
 }
 
 #endif // IG_OMW_IO_SERIALPORT_H

@@ -10,11 +10,13 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 \internal
+\endinternal
 \section mainpage_preReleaseNotes Pre-Release Notes
 The Following objects are in a pre-release state.
 
 \b Alpha
-- CRC in \ref grp_checksumLib
+- 
+\internal
 \endinternal
 
 

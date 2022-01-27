@@ -6,6 +6,18 @@
 
 
 
+### v0.2.1-alpha
+
+Refactor
+ - moved `omw::getSerialPortList()` and `omw::sortSerialPortList()` to `omw::preview`
+
+New
+ - `omw::preview::crc16_kermit()` (checksum.h)
+ - File interface classes (file.h)
+ - `omw::io::IniFileM2M` (configFile.h)
+
+
+
 ### v0.2.0
 
 Functionality changed
