@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          26.01.2022
+# date          27.01.2022
 # copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
 errCnt=0
@@ -28,12 +28,6 @@ rm -f cmake/*.a
 procErrorCode $?
 
 rm -f cmake/Makefile
-procErrorCode $?
-
-rm -f cmake/omw-system-test-cli-shared
-procErrorCode $?
-
-rm -f cmake/omw-system-test-cli-static
 procErrorCode $?
 
 rm -f cmake/omw-unit-test-shared
