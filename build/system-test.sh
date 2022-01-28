@@ -1,13 +1,15 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          27.01.2022
+# date          28.01.2022
 # copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
 # Usage:
 # ./system-test.sh --help
 
 
+
+source dep_omw_globals.sh
 
 errCnt=0
 function procErrorCode()
@@ -24,7 +26,7 @@ function printHelp()
     echo ""
     echo "args:"
     echo "  -h help     print help"
-    echo "  reset       kind onf \"cmake clean\""
+    echo "  cleanAll    delete all but CMakeLists.txt"
     echo "  cmake       cmake ."
     echo "  make        make"
     echo "  clean       make clean"
@@ -96,7 +98,9 @@ function cmd_clean()
 
 function procArg()
 {
-    if [ "$1" == "reset" ]; then cmd_cmake_clean
+    ptintTitle "system-test - $1" 4
+    
+    if [ "$1" == "cleanAll" ]; then cmd_cmake_clean
     elif [ "$1" == "cmake" ]; then cmd_cmake
     elif [ "$1" == "make" ]; then cmd_make
     elif [ "$1" == "clean" ]; then cmd_clean
@@ -156,6 +160,12 @@ fi
 
 
 exitCode=0
-if [ $errCnt -ne 0 ]; then exitCode=1; fi
+if [ $errCnt -ne 0 ]
+then
+    exitCode=1
+    ptintTitle "system-test - failed" 1
+else
+    ptintTitle "system-test - OK" 2
+fi
 
 exit $exitCode
