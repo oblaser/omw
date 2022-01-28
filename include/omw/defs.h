@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
+date            28.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -210,6 +210,8 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 //! 
 //! C++23 isn't released yet. Thus the value may change in the future!
+//! 
+//! The current value is from GCC 11.1.0
 //! 
 #define OMW_CPPSTD_23 (202100L)
 
