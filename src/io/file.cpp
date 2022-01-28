@@ -233,11 +233,17 @@ omw::io::BinFileInterface::BinFileInterface(const std::string& filename)
 omw::io::BinFileInterface::~BinFileInterface()
 {}
 
+//! 
+//! See `omw::io::FileInterface_Base::read()`.
+//! 
 void omw::io::BinFileInterface::read(uint8_t* buffer, size_t count) const
 {
     FileInterface_Base::read(reinterpret_cast<char*>(buffer), count);
 }
 
+//! 
+//! See `omw::io::FileInterface_Base::write(const char*, size_t)`.
+//! 
 void omw::io::BinFileInterface::write(const uint8_t* data, size_t count)
 {
     FileInterface_Base::write(reinterpret_cast<const char*>(data), count);

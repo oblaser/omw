@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            27.01.2022
+date            28.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -20,18 +20,20 @@ namespace omw
         * @{
         */
 
-        //class IniFileM2M
-        //{
-        //public:
-        //    IniFileM2M();
-        //    virtual ~IniFileM2M();
-        //};
-        //
-        //class ConfigFile
-        //{
-        //public:
-        //};
+        class ConfigFile
+        {
+        public:
+            ConfigFile();
+            virtual ~ConfigFile();
+        };
 
+        class IniFileM2M
+        {
+        public:
+            IniFileM2M();
+            virtual ~IniFileM2M();
+        };
+        
         /*! @} */
     }
 }
