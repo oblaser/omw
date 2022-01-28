@@ -292,9 +292,15 @@ size_t omw::io::streampos_to_size(const std::streampos& val)
     const char* const fnName = "omw::io::streampos_to_size";
 
     const std::streamoff im = omw::io::streampos_to_streamoff(val); // intermediate value
-
+// rm
+std::cout << im << " 0x" << omw::toHexStr(im, '-') << std::endl;
+std::cout << static_cast<uint64_t>(im) << " 0x" << omw::toHexStr(static_cast<uint64_t>(im), '-') << std::endl;
+std::cout << static_cast<uint64_t>(omw::size_max) << " 0x" << omw::toHexStr(static_cast<uint64_t>(omw::size_max), '-') << std::endl;
+std::cout << (im < 0) << std::endl;
+std::cout << (static_cast<uint64_t>(im) > static_cast<uint64_t>(omw::size_max)) << std::endl;
+// endrm
     if (im < 0) throw std::invalid_argument(fnName);
-    if (im > static_cast<std::streamoff>(omw::size_max)) throw std::out_of_range(fnName);
+    if (static_cast<uint64_t>(im) > static_cast<uint64_t>(omw::size_max)) throw std::out_of_range(fnName);
 
     return static_cast<size_t>(im);
 }

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            27.01.2022
+date            28.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -157,13 +157,11 @@ namespace
         const TxtFileInterface file(txtFilename);
         int r;
 
-        char* p = nullptr;
-
         try
         {
             file.open(TxtFileInterface::rd);
-            const size_t sz = 0; // file.size();
-            p = new char[sz + 1];
+            const size_t sz = 0;
+            char p[10] = "abcd";
             file.read(p, sz);
             p[sz] = 0;
             buffer = std::string(p);
@@ -174,9 +172,6 @@ namespace
             r = 1;
             cout << "readTxt_null(): " << ex.what() << endl;
         }
-
-        delete[] p;
-        p = nullptr;
 
         try { file.close(); }
         catch (...) { if (!r) r = 2; }
