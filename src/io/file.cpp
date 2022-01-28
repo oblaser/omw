@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            27.01.2022
+date            28.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -28,9 +28,9 @@ namespace
 * `#include <omw/io/file.h>`
 *
 * Wrapper class for `std::fstream`.
-* 
+*
 * Alldought this method of reading and writing a file is not very efficient, it's convenient, easy to use and fine for small files.
-* 
+*
 * The constness of the member functions is to let the file act like a C++ object.
 */
 
@@ -61,7 +61,7 @@ const omw::string& omw::io::FileInterface_Base::filename() const
 //! 
 void omw::io::FileInterface_Base::open(openmode mode) const
 {
-    m_fs.open(m_filename,  mode | std::ios::binary);
+    m_fs.open(m_filename, mode | std::ios::binary);
     if (getState() != good) throw fstream::failure("omw::io::FileInterface_Base::open");
 }
 
@@ -77,8 +77,8 @@ void omw::io::FileInterface_Base::close() const
 
 //! 
 //! \b Exceptions
-//! - `std::out_of_range` if the file is too big
-//! - `std::runtime_error` if the scanned file size was negative
+//! - `std::out_of_range` if the file is too big (file size can't be represented by `size_t`)
+//! - `std::runtime_error` if the evaluated file size (`std::streampos`) was negative
 //! - `std::ios::failure` thrown by
 //!    - <tt><a href="https://en.cppreference.com/w/cpp/io/basic_istream/seekg" target="_blank">std::istream::seekg()</a></tt>
 //!    - <tt><a href="https://en.cppreference.com/w/cpp/io/basic_istream/tellg" target="_blank">std::istream::tellg()</a></tt>
@@ -88,8 +88,8 @@ size_t omw::io::FileInterface_Base::size() const
     const char* const fnName = "omw::io::FileInterface_Base::size";
 
     m_fs.seekg(0, std::ios::end);
-    const std::istream::pos_type ifsPosEnd = m_fs.tellg();
-    
+    const std::fstream::pos_type sposEnd = m_fs.tellg();
+
 
 
     // 
@@ -97,43 +97,42 @@ size_t omw::io::FileInterface_Base::size() const
     //      std::fpos<State> (which has an to std::streamoff conversion operator)
     // 
     // ==# MSW #==
-    // x86: int32
-    // x64: int64
     // https://docs.microsoft.com/en-us/cpp/standard-library/ios-typedefs
     // https://docs.microsoft.com/en-us/cpp/standard-library/fpos-class
+    // x86: int32 // well, in fact it is also int64
+    // x64: int64
     // 
 
 
 
-    if (ifsPosEnd < 0) throw std::runtime_error(fnName);
+    if (omw::io::streampos_to_streamoff(sposEnd) < 0) throw std::runtime_error(fnName);
 
-    // If the sizes would be the same, size_t could represent every positive value
-    // of std::istream::pos_type.
-    // 
-    // If std::istream::pos_type is grater than size_t, throw an exception if the
-    // value can not be represented by size_t.
-    // 
-    // If it's a negative value, an exception is thrown above.
-    // 
-    // 
-    // Can't use sizeof operator since std::streamsize is a class.
-    // 
-    // "if sizeof(std::streamsize) > sizeof(size_t)"
-    if (std::istream::pos_type(static_cast<size_t>(-1)) > 0)
-    {
-        // if ifsPosEnd > size_t_max
-        if (ifsPosEnd > std::istream::pos_type(static_cast<size_t>(-1)))
-        {
-            throw std::out_of_range(fnName);
-        }
-    }
+    // // If the sizes would be the same, size_t could represent every positive value
+    // // of std::istream::pos_type.
+    // // 
+    // // If std::istream::pos_type is grater than size_t, throw an exception if the
+    // // value can not be represented by size_t.
+    // // 
+    // // If it's a negative value, an exception is thrown above.
+    // // 
+    // // 
+    // // Can't use sizeof operator since std::streamsize is a class.
+    // // 
+    // // "if sizeof(std::streamsize) > sizeof(size_t)"
+    // if (std::istream::pos_type(static_cast<size_t>(-1)) > 0)
+    // {
+    //     // if ifsPosEnd > size_t_max
+    //     if (ifsPosEnd > std::istream::pos_type(static_cast<size_t>(-1)))
+    //     {
+    //         throw std::out_of_range(fnName);
+    //     }
+    // }
 
-    
+    size_t r;
+    try { r = omw::io::streampos_to_size(sposEnd); }
+    catch (...) { throw std::out_of_range(fnName); }
 
-    //const size_t dataSize = static_cast<size_t>(ifsPosEnd);
-    //const std::streamsize ifsSize = static_cast<std::streamsize>(ifsPosEnd);
-
-    return static_cast<size_t>(ifsPosEnd);
+    return r;
 }
 
 //! 
@@ -141,25 +140,24 @@ size_t omw::io::FileInterface_Base::size() const
 //! 
 //! \b Exceptions
 //! - `std::invalid_argument` if buffer is _null_
+//! - `std::out_of_range` see `omw::io::size_to_streamsize()`
 //! - `std::ios::failure` thrown by
 //!    - <tt><a href="https://en.cppreference.com/w/cpp/io/basic_istream/seekg" target="_blank">std::istream::seekg()</a></tt>
 //!    - <tt><a href="https://en.cppreference.com/w/cpp/io/basic_istream/read" target="_blank">std::istream::read()</a></tt>
 //! 
 void omw::io::FileInterface_Base::read(char* buffer, size_t count) const
 {
-    const char* const fnName = "omw::io::FileInterface_Base::read";
+    if (count)
+    {
+        const char* const fnName = "omw::io::FileInterface_Base::read";
 
-    if (!buffer) throw std::invalid_argument(fnName);
+        if (!buffer) throw std::invalid_argument(fnName);
 
-    m_fs.seekg(0, std::ios::beg);
+        m_fs.seekg(0, std::ios::beg);
 
-    //
-    // A size check like in size() could be done here, but because count is typically
-    // the value returned by size() (or less), the additional check is omitted.
-    //
-
-    const std::streamsize sz = static_cast<std::streamsize>(count);
-    m_fs.read(buffer, sz);
+        const std::streamsize sz = omw::io::size_to_streamsize(count);
+        m_fs.read(buffer, sz);
+    }
 }
 
 //! @param str Null terminated string
@@ -173,7 +171,7 @@ void omw::io::FileInterface_Base::write(const char* str)
     if (!str) throw std::invalid_argument(fnName);
 
     size_t len = 0;
-    while ((str[len] != 0) && (len < OMW_SIZE_MAX)) ++len;
+    while ((str[len] != 0) && (len < omw::size_max)) ++len;
 
     write(str, len);
 }
@@ -183,38 +181,24 @@ void omw::io::FileInterface_Base::write(const char* str)
 //! 
 //! \b Exceptions
 //! - `std::invalid_argument` if data is _null_
-//! - `std::out_of_range` if `count` is too big
+//! - `std::out_of_range` see `omw::io::size_to_streamsize()`
 //! - `std::ios::failure` thrown by
 //!    - <tt><a href="https://en.cppreference.com/w/cpp/io/basic_ostream/seekp" target="_blank">std::ostream::seekp()</a></tt>
 //!    - <tt><a href="https://en.cppreference.com/w/cpp/io/basic_ostream/write" target="_blank">std::ostream::write()</a></tt>
 //! 
 void omw::io::FileInterface_Base::write(const char* data, size_t count)
 {
-    const char* const fnName = "omw::io::FileInterface_Base::write";
-
-    if (!data) throw std::invalid_argument(fnName);
-
-    m_fs.seekp(0, std::ios::beg);
-
-    std::streamsize sz;
-
-    constexpr size_t streamSize = sizeof(std::streamsize);
-    constexpr size_t sizeSize = sizeof(size_t);
-
-    if (streamSize > sizeSize) sz = count;
-    else if (streamSize == sizeSize)
+    if (count)
     {
-        constexpr size_t sizeMsb = (sizeSize == 8 ? OMW_64BIT_MSB : (sizeSize == 4 ? OMW_32BIT_MSB : (sizeSize == 2 ? OMW_16BIT_MSB : OMW_8BIT_MSB)));
-        if (count & sizeMsb) throw std::out_of_range(fnName);
-        sz = static_cast<std::streamsize>(count);
-    }
-    // should never happen by definition
-    //else // streamSize < sizeSize
-    //{
-    //
-    //}
+        const char* const fnName = "omw::io::FileInterface_Base::write";
 
-    m_fs.write(data, sz);
+        if (!data) throw std::invalid_argument(fnName);
+
+        m_fs.seekp(0, std::ios::beg);
+
+        const std::streamsize sz = omw::io::size_to_streamsize(count);
+        m_fs.write(data, sz);
+    }
 }
 
 //! 
@@ -261,18 +245,65 @@ void omw::io::BinFileInterface::write(const uint8_t* data, size_t count)
 
 
 
+//! 
+//! \b Exceptions
+//! - `std::out_of_range` if the value is too big to be represented by `std::streamsize` (usually never occures, because `std::streamsize` is defined as `long long` in most implementations)
+//! 
+std::streamsize omw::io::size_to_streamsize(size_t val)
+{
+    const char* const fnName = "omw::io::size_to_streamsize";
 
+    std::streamsize r;
 
+    // constexpr size_t streamSize = sizeof(std::streamsize);
+    // constexpr size_t sizeSize = sizeof(size_t);
+    // 
+    // if (streamSize > sizeSize) r = static_cast<std::streamsize>(val);
+    // else if (streamSize == sizeSize)
+    // {
+    //     r = static_cast<std::streamsize>(val);
+    //     if (r < 0) throw std::out_of_range(fnName);
+    // }
+    // // should never happen by definition
+    // //else // streamSize < sizeSize
+    // //{
+    // //
+    // //}
+    // 
+    // since it never happens, we simply can do:
 
+    r = static_cast<std::streamsize>(val);
 
+    if (r < 0) // is only a problem if the sizes are equal
+    {
+        throw std::out_of_range(fnName);
+    }
 
+    return r;
+}
 
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the value is negative
+//! - `std::out_of_range` if the value is too big to be represented by `size_t`
+//! 
+size_t omw::io::streampos_to_size(const std::streampos& val)
+{
+    const char* const fnName = "omw::io::streampos_to_size";
 
+    const std::streamoff im = omw::io::streampos_to_streamoff(val); // intermediate value
 
-// something like omw::io::BinFile::read()
-// 
-// this->data; // of type omw::vector<uint8_t> 
-// const size_t sz = omw::io::BinFileInterface::size();
-// data.resize(sz, 0);
-// omw::io::BinFileInterface::read(data.data(), sz);
-// data.shrink_to_fit();
+    if (im < 0) throw std::invalid_argument(fnName);
+    if (im > static_cast<std::streamoff>(omw::size_max)) throw std::out_of_range(fnName);
+
+    return static_cast<size_t>(im);
+}
+
+//! 
+//! The "to `streamoff`" conversion operator of the `std::fpos<>` class man be explicit.
+//! This function is a wrapper for the static cast from `std::fpos<>` to `std::streamoff`.
+//! 
+std::streamoff omw::io::streampos_to_streamoff(const std::streampos& val)
+{
+    return static_cast<std::streamoff>(val);
+}

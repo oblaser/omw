@@ -14,7 +14,6 @@ Refactor
 New
  - `omw::preview::crc16_kermit()` (checksum.h)
  - File interface classes (file.h)
- - `omw::io::IniFileM2M` (configFile.h)
 
 
 

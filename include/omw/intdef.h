@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            27.01.2022
+date            28.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -39,10 +39,21 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define OMW_64BIT_MSB (0x8000000000000000)
 #define OMW_64BIT_ALL (0xFFFFFFFFFFFFFFFF)
 
-#define OMW_SIZE_MAX (static_cast<size_t>(-1))
+#define OMW_SIZE_MAX (omw::size_max)
 
 /*! @} */
 
+
+namespace omw
+{
+    /*! \addtogroup grp_utility_langSupport_typeSupport
+    * @{
+    */
+
+    constexpr size_t size_max = static_cast<size_t>(-1);
+
+    /*! @} */
+}
 
 
 #endif // IG_OMW_INTDEF_H

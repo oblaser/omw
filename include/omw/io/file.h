@@ -83,6 +83,15 @@ namespace omw
 
 
 
+        //std::streamoff size_to_streamoff(size_t val);
+        std::streamsize size_to_streamsize(size_t  val);
+        //size_t streamoff_to_size(std::streamoff val);
+        size_t streampos_to_size(const std::streampos& val);
+        std::streamoff streampos_to_streamoff(const std::streampos& val);
+        //size_t streamsize_to_size(std::streamsize val);
+
+
+
         //int readBytes(const std::string& filename, std::vector<uint8_t>& buffer);
         //int writeBytes(const std::string& filename, const std::vector<uint8_t>& data);
 

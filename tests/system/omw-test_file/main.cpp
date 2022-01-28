@@ -24,10 +24,7 @@ namespace
 {
     const char* const binFilename = "bin-if.omwsystestfile-bin";
     const char* const txtFilename = "txt-if.omwsystestfile-txt";
-    
-    //const char* const binFilename = "bin.omw";
-    //const char* const txtFilename = "txt.omw";
-    
+
     int readBin(std::vector<uint8_t>& buffer)
     {
         const BinFileInterface file(binFilename);
@@ -129,12 +126,70 @@ namespace
 
         return r;
     }
+
+    int readBin_null(std::vector<uint8_t>& buffer)
+    {
+        const BinFileInterface file(binFilename);
+        int r;
+
+        try
+        {
+            file.open(BinFileInterface::rd);
+            const size_t sz = 0; // file.size();
+            buffer.resize(sz);
+            file.read(buffer.data(), sz);
+            buffer.shrink_to_fit();
+            r = 0;
+        }
+        catch (const std::exception& ex)
+        {
+            r = 1;
+            cout << "readBin_null(): " << ex.what() << endl;
+        }
+
+        try { file.close(); }
+        catch (...) { if (!r) r = 2; }
+
+        return r;
+    }
+    int readTxt_null(std::string& buffer)
+    {
+        const TxtFileInterface file(txtFilename);
+        int r;
+
+        char* p = nullptr;
+
+        try
+        {
+            file.open(TxtFileInterface::rd);
+            const size_t sz = 0; // file.size();
+            p = new char[sz + 1];
+            file.read(p, sz);
+            p[sz] = 0;
+            buffer = std::string(p);
+            r = 0;
+        }
+        catch (const std::exception& ex)
+        {
+            r = 1;
+            cout << "readTxt_null(): " << ex.what() << endl;
+        }
+
+        delete[] p;
+        p = nullptr;
+
+        try { file.close(); }
+        catch (...) { if (!r) r = 2; }
+
+        return r;
+    }
 }
 
 
 
 int main()
 {
+    std::vector<bool> check(1, true);
     int r;
 
     std::srand((unsigned int)std::time(nullptr));
@@ -146,31 +201,80 @@ int main()
 
 
 
+    r = readBin_null(rdData);
+    if (r)
+    {
+        check.push_back(false);
+        cout << "read count null data error: " << r << endl;
+    }
+    if (rdData.size() != 0)
+    {
+        check.push_back(false);
+        cout << "read count null data error: data size != 0" << endl;
+    }
+
+    r = readTxt_null(rdStr);
+    if (r)
+    {
+        check.push_back(false);
+        cout << "read count null text error: " << r << endl;
+    }
+    if (rdStr.length() != 0)
+    {
+        check.push_back(false);
+        cout << "read count null text error: string len != 0" << endl;
+    }
+
+
+
     r = writeBin(wrData);
-    if (r) cout << "write data error: " << r << endl;
+    if (r)
+    {
+        check.push_back(false);
+        cout << "write data error: " << r << endl;
+    }
 
     r = writeTxt(wrStr);
-    if (r) cout << "write text error: " << r << endl;
+    if (r)
+    {
+        check.push_back(false);
+        cout << "write text error: " << r << endl;
+    }
 
 
 
     r = readBin(rdData);
-    if (r) cout << "read data error: " << r << endl;
+    if (r)
+    {
+        check.push_back(false);
+        cout << "read data error: " << r << endl;
+    }
 
     r = readTxt(rdStr);
-    if (r) cout << "read text error: " << r << endl;
+    if (r)
+    {
+        check.push_back(false);
+        cout << "read text error: " << r << endl;
+    }
 
 
 
     const bool dataResult = (wrData == rdData);
     const bool textResult = (wrStr == rdStr);
 
-    cout << "wrData == rdData  " << (dataResult ? "OK" : "failed") << endl;
-    cout << "wrStr == rdStr    " << (textResult ? "OK" : "failed") << endl;
+    if (!dataResult) cout << "wrData == rdData  failed" << endl;
+    if (!textResult) cout << "wrStr == rdStr    failed" << endl;
+
+    check.push_back(dataResult);
+    check.push_back(textResult);
 
 
 
-    r = (dataResult && textResult ? 0 : 1);
+    const std::vector<bool> checkCmp(check.size(), true);
+    r = (checkCmp == check ? 0 : 1);
+
+    cout << "================================\n";
+    cout << "File I/O System Test " << (r ? "FAILED" : "Passed") << endl;
 
 #if defined(OMW_DEBUG) && 1
     cout << "===============\nreturn " << r << endl << "press enter..." << endl;

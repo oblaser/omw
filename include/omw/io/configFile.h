@@ -20,17 +20,17 @@ namespace omw
         * @{
         */
 
-        class IniFileM2M
-        {
-        public:
-            IniFileM2M();
-            virtual ~IniFileM2M();
-        };
-
-        class ConfigFile
-        {
-        public:
-        };
+        //class IniFileM2M
+        //{
+        //public:
+        //    IniFileM2M();
+        //    virtual ~IniFileM2M();
+        //};
+        //
+        //class ConfigFile
+        //{
+        //public:
+        //};
 
         /*! @} */
     }
