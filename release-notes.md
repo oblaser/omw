@@ -9,7 +9,9 @@
 ### v0.2.1-alpha.1
 
 New
- - 
+ - `omw::string::reverse()` and `reversed()`
+ - `omw::io::FileInterface_Base::openRead()`
+ - `omw::io::FileInterface_Base::openWrite()`
 
 
 

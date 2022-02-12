@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            28.01.2022
+date            05.02.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -29,23 +29,4 @@ namespace
 */
 
 omw::io::ConfigFile::ConfigFile()
-{}
-
-omw::io::ConfigFile::~ConfigFile()
-{}
-
-
-
-/*!
-* \class omw::io::IniFileM2M
-* 
-* `#include <omw/io/configFile.h>`
-*
-* Does not store (in RAM) unnecessary information, therefore the saved file is kind of minimized.
-*/
-
-omw::io::IniFileM2M::IniFileM2M()
-{}
-
-omw::io::IniFileM2M::~IniFileM2M()
 {}

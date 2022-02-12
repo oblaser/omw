@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            24.01.2022
+date            12.02.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -366,6 +366,31 @@ TEST_CASE("string.h omw::string::replaceAll()")
     CHECK(s == str);
     CHECK(nReplacements == omw::string::npos);
     CHECK(nrv == std::vector<size_t>({ omw::string::npos, omw::string::npos, omw::string::npos }));
+}
+
+TEST_CASE("string.h omw::string::reverse()")
+{
+    omw::string s;
+
+    s = "abcd";
+    s.reverse();
+    CHECK(s == "dcba");
+
+    s = "QWERT";
+    s.reverse();
+    CHECK(s == "TREWQ");
+}
+
+TEST_CASE("string.h omw::string::reversed()")
+{
+    omw::string s;
+    const omw::string& cr = s;
+
+    s = "abcd";
+    CHECK(cr.reversed() == "dcba");
+
+    s = "QWERT";
+    CHECK(s.reversed() == "TREWQ");
 }
 
 TEST_CASE("string.h omw::string::split()")

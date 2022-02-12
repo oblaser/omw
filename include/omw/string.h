@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
+date            13.02.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -123,6 +123,9 @@ namespace omw
         omw::string& replaceAll(const omw::StringReplacePair& pair, size_type startPos = 0, size_t* nReplacements = nullptr);
         omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
+
+        omw::string& reverse();
+        omw::string reversed() const;
 
         omw::stringVector_t split(char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         //omw::stringVector_t split(const char* delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            27.01.2022
+date            13.02.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -414,6 +414,49 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
 omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos, size_t* nReplacementsTotal, std::vector<size_t>* nReplacements)
 {
     return replaceAll(std::vector<omw::StringReplacePair>(pairs, pairs + count), startPos, nReplacementsTotal, nReplacements);
+}
+
+//! 
+//! Reverses (swaps) the content of the string.
+//! 
+//! `abcd` will turn in to `dcba`, and `xyz` to `zyx`.
+//!  
+omw::string& omw::string::reverse()
+{
+#if 0
+    omw::string tmp(*this);
+
+    const omw::string::size_type n = tmp.size();
+    
+    for (omw::string::size_type i = 0; i < n; ++i)
+    {
+        this->at(i) = tmp.at(n - 1 - i);
+    }
+#else
+    const omw::string::size_type n = this->size();
+    omw::string::value_type tmp;
+
+    for (omw::string::size_type i = 0; i < (n / 2); ++i)
+    {
+        tmp = this->at(i);
+        this->at(i) = this->at(n - 1 - i);
+        this->at(n - 1 - i) = tmp;;
+    }
+#endif
+
+    return *this;
+}
+
+//! 
+//! Returns the reversed string.
+//! 
+//! See also `omw::string::reverse()`.
+//!  
+omw::string omw::string::reversed() const
+{
+    omw::string r(*this);
+    r.reverse();
+    return r;
 }
 
 omw::stringVector_t omw::string::split(char delimiter, omw::stringVector_t::size_type maxTokenCount) const
@@ -1213,6 +1256,8 @@ bool omw::isHex(const std::string& str)
 //! @param p Pointer to the position in the string
 //! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
 //! 
+//! If \b p is `NULL`, 0 is returned.
+//! 
 //! It's recommended to use `omw::peekNewLine(const char*, const char*)` to prevent access violations.
 //! 
 size_t omw::peekNewLine(const char* p)
@@ -1232,12 +1277,12 @@ size_t omw::peekNewLine(const char* p)
 }
 
 //! @param p Pointer to the position in the string
-//! @param end Pointer to the first position beyond the string
+//! @param end Pointer to the first element after the last element of the string
 //! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
 //! 
-//! If <b><tt>end</tt></b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used, hence access violations may occure.
+//! If <b>end</b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used, hence access violations may occure.
 //! 
-//! Does not throw an exception, but return 0 if the pointers are invalid.
+//! If \b p is `NULL` or \b p is greater than or equal to \b end, 0 is returned.
 //! 
 size_t omw::peekNewLine(const char* p, const char* end)
 {

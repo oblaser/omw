@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            28.01.2022
+date            05.02.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -12,6 +12,10 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "../../omw/io/file.h"
+#include "../../omw/string.h"
+
+
 namespace omw
 {
     namespace io
@@ -20,22 +24,18 @@ namespace omw
         * @{
         */
 
+
+
         class ConfigFile
         {
         public:
             ConfigFile();
-            virtual ~ConfigFile();
-        };
-
-        class IniFileM2M
-        {
-        public:
-            IniFileM2M();
-            virtual ~IniFileM2M();
+            virtual ~ConfigFile() {}
         };
         
         /*! @} */
     }
 }
+
 
 #endif // IG_OMW_IO_CONFIGFILE_H

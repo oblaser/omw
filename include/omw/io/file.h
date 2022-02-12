@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            27.01.2022
+date            09.02.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -48,6 +48,8 @@ namespace omw
             const omw::string& filename() const;
 
             void open(openmode mode) const;
+            void openRead() const { open(FileInterface_Base::rd); }
+            void openWrite() { open(FileInterface_Base::wr); }
             void close() const;
 
             size_t size() const;

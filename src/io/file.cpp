@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            28.01.2022
+date            12.02.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -31,7 +31,7 @@ namespace
 *
 * Alldought this method of reading and writing a file is not very efficient, it's convenient, easy to use and fine for small files.
 *
-* The constness of the member functions is to let the file act like a C++ object.
+* The constness of the member functions is to let the file (because of this interface class) act like a C++ object.
 */
 
 omw::io::FileInterface_Base::FileInterface_Base()
@@ -64,6 +64,24 @@ void omw::io::FileInterface_Base::open(openmode mode) const
     m_fs.open(m_filename, mode | std::ios::binary);
     if (getState() != good) throw fstream::failure("omw::io::FileInterface_Base::open");
 }
+
+/*
+* \fn omw::io::FileInterface_Base::openRead()
+* 
+* Opens the file in read mode.
+* 
+* \b Exceptions
+* - `fstream::failure` if an error occures
+*/
+
+/*
+* \fn omw::io::FileInterface_Base::openWrite()
+* 
+* Opens the file in write mode.
+* 
+* \b Exceptions
+* - `fstream::failure` if an error occures
+*/
 
 //! 
 //! \b Exceptions
