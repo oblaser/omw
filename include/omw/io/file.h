@@ -105,7 +105,7 @@ namespace omw
 
         std::streamsize size_to_streamsize(size_t  val);
         size_t streampos_to_size(const std::streampos& val);
-        std::streamoff streampos_to_streamoff(const std::streampos& val) { return static_cast<std::streamoff>(val); }
+        inline std::streamoff streampos_to_streamoff(const std::streampos& val) { return static_cast<std::streamoff>(val); }
 
 
 
