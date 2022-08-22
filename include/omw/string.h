@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            15.02.2022
+date            20.08.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -178,6 +178,8 @@ namespace omw
     //! \name Convert From String
     /// @{
     bool stob(const std::string& boolStr);
+
+    size_t stouz(const std::string& str, size_t* pos = nullptr, int base = 10);
 
     std::pair<int32_t, int32_t> stoipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
