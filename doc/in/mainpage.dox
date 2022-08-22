@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            28.01.2022
+date            22.08.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -16,6 +16,11 @@ The Following objects are in a pre-release state.
 
 \b Alpha
 - `omw::io::ConfigFile`
+- `omw::stouz()`
+- `omw::string::reverse()` and `reversed()`
+- `omw::io::FileInterface_Base::openRead()`
+- `omw::io::FileInterface_Base::openWrite()`
+- `omw::io::SerialPort`
 \internal
 \endinternal
 
