@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            24.01.2022
+date            27.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -12,8 +12,20 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 /*!
+\namespace omw::preview
+
+Not yet worked out "nice/proper" implementations/concepts/interfaces.
+
+*/
+
+/*!
 \namespace omw::info
 \brief Some information about the library
+*/
+
+/*!
+\namespace omw::io
+\brief \ref grp_ioLib
 */
 
 /*!

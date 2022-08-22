@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
+date            20.08.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -124,6 +124,9 @@ namespace omw
         omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
 
+        omw::string& reverse();
+        omw::string reversed() const;
+
         omw::stringVector_t split(char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         //omw::stringVector_t split(const char* delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         //omw::stringVector_t split(const std::string& delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
@@ -175,6 +178,8 @@ namespace omw
     //! \name Convert From String
     /// @{
     bool stob(const std::string& boolStr);
+
+    size_t stouz(const std::string& str, size_t* pos = nullptr, int base = 10);
 
     std::pair<int32_t, int32_t> stoipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
@@ -296,7 +301,6 @@ namespace omw
     }
     constexpr bool isSpace(char ch) { return (((ch >= 0x09) && (ch <= 0x0D)) || (ch == 0x20)); }
     constexpr bool isUpper(char ch) { return ((ch >= 0x41) && (ch <= 0x5A)); }
-    constexpr bool isWhitespace(char ch) { return isSpace(ch); }
     constexpr bool isAlpha(char ch) { return (isLower(ch) || isUpper(ch)); }
     constexpr bool isAlnum(char ch) { return (isAlpha(ch) || isDigit(ch)); }
 

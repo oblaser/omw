@@ -6,6 +6,32 @@
 
 
 
+### v0.2.1-alpha.1
+
+New
+ - `omw::stouz()`
+ - `omw::string::reverse()` and `reversed()`
+ - `omw::io::FileInterface_Base::openRead()`
+ - `omw::io::FileInterface_Base::openWrite()`
+ - `omw::io::SerialPort`
+
+Removed
+ - `omw::isWhitespace()`
+
+
+
+### v0.2.1-alpha
+
+Refactor
+ - moved `omw::getSerialPortList()` and `omw::sortSerialPortList()` to `omw::preview`
+
+New
+ - `omw::preview::crc16_kermit()` (checksum.h)
+ - File interface classes (file.h)
+ - `omw::io::ConfigFile` and `omw::io::IniFileM2M` (configFile.h)
+
+
+
 ### v0.2.0
 
 Functionality changed

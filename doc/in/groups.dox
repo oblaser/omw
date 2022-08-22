@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            23.01.2022
+date            26.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -60,6 +60,10 @@ See also \ref ns_omw_ansiesc_section_ansiEscMode and `omw::windows::consoleEnVir
 
 /*!
 \defgroup grp_containersLib Containers Library
+*/
+
+/*!
+\defgroup grp_ioLib I/O Library
 */
 
 /*!

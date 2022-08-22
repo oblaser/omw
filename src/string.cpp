@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
+date            20.08.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -10,6 +10,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include "omw/algorithm.h"
 #include "omw/defs.h"
+#include "omw/intdef.h"
 #include "omw/string.h"
 
 
@@ -357,7 +358,7 @@ omw::string& omw::string::replaceAll(const std::string& search, const std::strin
             pos = find(search, pos + replace.length());
         }
     }
-    else cnt = SIZE_MAX;
+    else cnt = OMW_SIZE_MAX;
 
     if (nReplacements) *nReplacements = cnt;
 
@@ -384,20 +385,20 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
     size_t cnt = 0;
     size_t tmpCnt;
 
-    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), SIZE_MAX);
+    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), OMW_SIZE_MAX);
 
     for (size_t i = 0; i < pairs.size(); ++i)
     {
         replaceAll(pairs[i], startPos, &tmpCnt);
         if (nReplacements) nReplacements->at(i) = tmpCnt;
-        if (tmpCnt != SIZE_MAX)
+        if (tmpCnt != OMW_SIZE_MAX)
         {
             cnt += tmpCnt;
             allInvalid = false;
         }
     }
 
-    if (allInvalid) cnt = SIZE_MAX;
+    if (allInvalid) cnt = OMW_SIZE_MAX;
 
     if (nReplacementsTotal) *nReplacementsTotal = cnt;
 
@@ -413,6 +414,50 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
 omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos, size_t* nReplacementsTotal, std::vector<size_t>* nReplacements)
 {
     return replaceAll(std::vector<omw::StringReplacePair>(pairs, pairs + count), startPos, nReplacementsTotal, nReplacements);
+}
+
+//! 
+//! Reverses (swaps) the content of the string.
+//! 
+//! `abcd` will turn in to `dcba`, and `xyz` to `zyx`.
+//!  
+omw::string& omw::string::reverse()
+{
+#if 0
+    omw::string tmp(*this);
+
+    const omw::string::size_type n = tmp.size();
+
+    for (omw::string::size_type i = 0; i < n; ++i)
+    {
+        this->at(i) = tmp.at(n - 1 - i);
+    }
+#else
+    const omw::string::size_type n = this->size();
+    const omw::string::size_type i_end = (n / 2);
+    omw::string::value_type tmp;
+
+    for (omw::string::size_type i = 0; i < i_end; ++i)
+    {
+        tmp = this->at(i);
+        this->at(i) = this->at(n - 1 - i);
+        this->at(n - 1 - i) = tmp;;
+    }
+#endif
+
+    return *this;
+}
+
+//! 
+//! Returns the reversed string.
+//! 
+//! See also `omw::string::reverse()`.
+//!  
+omw::string omw::string::reversed() const
+{
+    omw::string r(*this);
+    r.reverse();
+    return r;
 }
 
 omw::stringVector_t omw::string::split(char delimiter, omw::stringVector_t::size_type maxTokenCount) const
@@ -657,6 +702,34 @@ bool omw::stob(const std::string& boolStr)
     if (boolInt == 0) return false;
 
     throw std::out_of_range("omw::stob");
+}
+
+size_t omw::stouz(const std::string& str, size_t* pos, int base)
+{
+    size_t r;
+
+//#if (OMW_PBITW == 32u)
+//    using ull_t = unsigned long long;
+//    const ull_t value = std::stoull(str, pos, base);
+//    constexpr ull_t size_max = SIZE_MAX;
+//    if (value > size_max) throw std::out_of_range("omw::stouz");
+//    r = (size_t)value;
+//#elif (OMW_PBITW == 64u)
+//    r = std::stoull(str, pos, base);
+//#else
+    if (sizeof(size_t) == sizeof(unsigned long)) r = std::stoul(str, pos, base);
+    else if (sizeof(size_t) == sizeof(unsigned long long)) r = std::stoull(str, pos, base);
+    else
+    {
+        using ull_t = unsigned long long;
+        const ull_t value = std::stoull(str, pos, base);
+        constexpr ull_t size_max = SIZE_MAX;
+        if (value > size_max) throw std::out_of_range("omw::stouz");
+        r = (size_t)value;
+    }
+//#endif
+
+    return r;
 }
 
 //! @param str Pair string representation
@@ -1212,6 +1285,8 @@ bool omw::isHex(const std::string& str)
 //! @param p Pointer to the position in the string
 //! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
 //! 
+//! If \b p is `NULL`, 0 is returned.
+//! 
 //! It's recommended to use `omw::peekNewLine(const char*, const char*)` to prevent access violations.
 //! 
 size_t omw::peekNewLine(const char* p)
@@ -1231,12 +1306,12 @@ size_t omw::peekNewLine(const char* p)
 }
 
 //! @param p Pointer to the position in the string
-//! @param end Pointer to the first position beyond the string
+//! @param end Pointer to the first element after the last element of the string
 //! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
 //! 
-//! If <b><tt>end</tt></b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used, hence access violations may occure.
+//! If <b>end</b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used, hence access violations may occure.
 //! 
-//! Does not throw an exception, but return 0 if the pointers are invalid.
+//! If \b p is `NULL` or \b p is greater than or equal to \b end, 0 is returned.
 //! 
 size_t omw::peekNewLine(const char* p, const char* end)
 {

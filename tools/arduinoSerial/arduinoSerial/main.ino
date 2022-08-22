@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            09.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            16.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #include <Arduino.h>
@@ -10,21 +10,42 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #define LED 13
 
 
+#define PROTOCOL_RXPOS_LEN              1
+#define PROTOCOL_RXPOS_DATA             2
+
+#define PROTOCOL_TXPOS_STAT             1
+#define PROTOCOL_TXPOS_LEN              2
+#define PROTOCOL_TXPOS_DATA             3
+
+#define PROTOCOL_STAT_OK                0x00
+#define PROTOCOL_STAT_ERROR             0x01
+#define PROTOCOL_STAT_CS                0x02
+#define PROTOCOL_STAT_INVALID_PARAM     0x03
+
+
 unsigned long millis_old;
 uint32_t cnt = 0;
 uint32_t tmr_sendCounter = 0;
 uint32_t sendCounterInterval = 0;
 size_t nBytesReceived = 0;
-const size_t trxBufferSize = 10;
+constexpr size_t trxBufferSize = 10;
 uint8_t rxBuffer[trxBufferSize];
 uint8_t txBuffer[trxBufferSize];
 
+void bigEndianEncode32(uint8_t* buffer, uint32_t value);
 
-void ansGeneralError();
-void ansCntVal(uint8_t msgId);
 int getLed();
 void setLed(int state);
-void errorHandler();
+
+uint8_t checksum(const uint8_t* data, size_t count);
+void sendBuffer();
+void sendMsgCntr(uint32_t value);
+void handleCmd();
+void handleSetLed();
+void handleGetLed();
+void handleGetCntr();
+void handleSetCntrInterval();
+
 
 
 void setup()
@@ -33,69 +54,37 @@ void setup()
     setLed(0);
 
     Serial.begin(19200, SERIAL_8N2);
-    Serial.setTimeout(10);
+    Serial.setTimeout(10); // biggest cmd: 8 bytes => 19200^(-1) * 10 * 8 = 4.2ms < 10ms
 
     millis_old = millis();
 }
 
 void loop()
 {
-    ++cnt;
-
     // handle command
     if(nBytesReceived > 0)
     {
-        switch (rxBuffer[0])
-        {
-        case 0x01:
-            if(nBytesReceived == 2)
-            {
-                txBuffer[0] = 0x01;
-                txBuffer[1] = 0x00;
-                if(rxBuffer[1] == 0) setLed(0);
-                else if(rxBuffer[1] == 1) setLed(1);
-                else txBuffer[1] = 0x01;
-                Serial.write(txBuffer, 2);
-            }
-            else ansGeneralError();
-            break;
-        
-        case 0x02:
-            if(nBytesReceived == 1)
-            {
-                txBuffer[0] = 0x02;
-                txBuffer[1] = (getLed() > 0 ? 1 : 0);
-                Serial.write(txBuffer, 2);
-            }
-            else ansGeneralError();
-            break;
-        
-        case 0x03:
-            if(nBytesReceived == 1)
-            {
-                ansCntVal(0x03);
-            }
-            else ansGeneralError();
-            break;
-        
-        case 0x04:
-            if(nBytesReceived == 2)
-            {
-                sendCounterInterval = rxBuffer[1];
-                sendCounterInterval *= 1000;
-                tmr_sendCounter = sendCounterInterval;
+        txBuffer[0] = rxBuffer[0];
 
-                txBuffer[0] = 0x04;
-                txBuffer[1] = 0x00;
-                Serial.write(txBuffer, 2);
+        if(nBytesReceived == (rxBuffer[PROTOCOL_RXPOS_LEN] + 3))
+        {
+            if(checksum(rxBuffer, nBytesReceived) == 0)
+            {
+                handleCmd();
             }
-            else ansGeneralError();
-            break;
-        
-        default:
-            ansGeneralError();
-            break;
+            else
+            {
+                txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_CS;
+                txBuffer[PROTOCOL_TXPOS_LEN] = 0;
+            }
         }
+        else
+        {
+            txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_ERROR;
+            txBuffer[PROTOCOL_TXPOS_LEN] = 0;
+        }
+
+        sendBuffer();
         
         nBytesReceived = 0;
     }
@@ -104,7 +93,7 @@ void loop()
     if((tmr_sendCounter == 0) && (sendCounterInterval > 0))
     {
         tmr_sendCounter = sendCounterInterval;
-        ansCntVal(0x10);
+        sendMsgCntr(cnt);
     }
 
     // read serial
@@ -112,30 +101,24 @@ void loop()
 
     // time handler
     const unsigned long millis_now = millis();
-    if(millis_now != millis_old) // Caution! millis()'s return value overflows after 50 days!
+    if(millis_now != millis_old) // well, it doesn't matter in this app, but: Caution! millis()'s return value overflows after 50 days!
     {
         millis_old = millis_now;
 
         if(tmr_sendCounter > 0) --tmr_sendCounter;
+
+        ++cnt;
     }
 }
 
 
-void ansGeneralError()
-{
-    txBuffer[0] = 0xE0;
-    txBuffer[1] = 0x00;
-    Serial.write(txBuffer, 2);
-}
 
-void ansCntVal(uint8_t msgId)
+void bigEndianEncode32(uint8_t* buffer, uint32_t value)
 {
-    txBuffer[0] = msgId;
-    txBuffer[1] = (uint8_t)((cnt >> 24) & 0xFF);
-    txBuffer[2] = (uint8_t)((cnt >> 16) & 0xFF);
-    txBuffer[3] = (uint8_t)((cnt >> 8) & 0xFF);
-    txBuffer[4] = (uint8_t)(cnt & 0xFF);
-    Serial.write(txBuffer, 5);
+    buffer[0] = (uint8_t)((value >> 24) & 0xFF);
+    buffer[1] = (uint8_t)((value >> 16) & 0xFF);
+    buffer[2] = (uint8_t)((value >> 8) & 0xFF);
+    buffer[3] = (uint8_t)(value & 0xFF);
 }
 
 int getLed()
@@ -146,4 +129,111 @@ int getLed()
 void setLed(int state)
 {
     digitalWrite(LED, state);
+}
+
+uint8_t checksum(const uint8_t* data, size_t count)
+{
+    uint8_t r = 0;
+    if(data)
+    {
+        for(size_t i = 0; i < count; ++i) r ^= data[i];
+    }
+    return r;
+}
+
+void sendBuffer()
+{
+    size_t txLen = txBuffer[PROTOCOL_TXPOS_LEN] + 4;
+    txBuffer[txLen - 1] = checksum(txBuffer, txLen - 1);
+    Serial.write(txBuffer, txLen);
+}
+
+void sendMsgCntr(uint32_t value)
+{
+    txBuffer[0] = 0xD1;
+    txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_OK;
+    txBuffer[PROTOCOL_TXPOS_LEN] = 0x04;
+    bigEndianEncode32(txBuffer + PROTOCOL_TXPOS_DATA, value);
+    sendBuffer();
+}
+
+void handleCmd()
+{
+    switch (rxBuffer[0])
+    {
+    case 0x01:
+        handleSetLed();
+        break;
+
+    case 0x02:
+        handleGetLed();
+        break;
+
+    case 0x03:
+        handleGetCntr();
+        break;
+
+    case 0x04:
+        handleSetCntrInterval();
+        break;
+    
+    default:
+        txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_ERROR;
+        txBuffer[PROTOCOL_TXPOS_LEN] = 0;
+        break;
+    }
+}
+
+void handleSetLed()
+{
+    txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_OK;
+    txBuffer[PROTOCOL_TXPOS_LEN] = 0;
+
+    if(rxBuffer[PROTOCOL_RXPOS_LEN] == 1)
+    {
+        if(rxBuffer[PROTOCOL_RXPOS_DATA] == 0) setLed(0);
+        else if(rxBuffer[PROTOCOL_RXPOS_DATA] == 1) setLed(1);
+        else txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_INVALID_PARAM;
+    }
+    else txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_INVALID_PARAM;
+}
+
+void handleGetLed()
+{
+    txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_OK;
+    txBuffer[PROTOCOL_TXPOS_LEN] = 0;
+
+    if(rxBuffer[PROTOCOL_RXPOS_LEN] == 0)
+    {
+        txBuffer[PROTOCOL_TXPOS_LEN] = 1;
+        txBuffer[PROTOCOL_TXPOS_DATA] = (getLed() ? 0x01 : 0x00);
+    }
+    else txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_INVALID_PARAM;
+}
+
+void handleGetCntr()
+{
+    txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_OK;
+    txBuffer[PROTOCOL_TXPOS_LEN] = 0;
+
+    if(rxBuffer[PROTOCOL_RXPOS_LEN] == 0)
+    {
+        txBuffer[PROTOCOL_TXPOS_LEN] = 4;
+        bigEndianEncode32(txBuffer + PROTOCOL_TXPOS_DATA, cnt);
+    }
+    else txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_INVALID_PARAM;
+}
+
+void handleSetCntrInterval()
+{
+    txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_OK;
+    txBuffer[PROTOCOL_TXPOS_LEN] = 0;
+
+    if(rxBuffer[PROTOCOL_RXPOS_LEN] == 1)
+    {
+        sendCounterInterval = rxBuffer[PROTOCOL_RXPOS_DATA];
+        sendCounterInterval *= 100;
+        tmr_sendCounter = sendCounterInterval;
+    }
+    else txBuffer[PROTOCOL_TXPOS_STAT] = PROTOCOL_STAT_INVALID_PARAM;
 }

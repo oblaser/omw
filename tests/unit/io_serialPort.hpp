@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            27.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef TEST_OMW_IO_SERIALPORT_H
@@ -59,10 +59,10 @@ TEST_CASE("serialPort.h sortSerialPortList()")
 #endif // OMW_PLAT_WIN
     const std::vector<std::string> stdExpectedResult = omw::stdStringVector(expectedResult);
 
-    omw::sortSerialPortList(ports);
+    omw::preview::sortSerialPortList(ports);
     CHECK(ports == expectedResult);
 
-    omw::sortSerialPortList(stdPorts);
+    omw::preview::sortSerialPortList(stdPorts);
     CHECK(stdPorts == stdExpectedResult);
 }
 

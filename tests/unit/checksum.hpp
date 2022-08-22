@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            26.01.2022
+date            27.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -53,6 +53,31 @@ TEST_CASE("checksum.h parityWord(vector)")
     TESTUTIL_TRYCATCH_CHECK(omw::parityWord(vec, vec.size() - 1, 2), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::parityWord(vec, vec.size(), 1), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::parityWord(vec, vec.size() + 1, 0), std::invalid_argument);
+}
+
+
+
+TEST_CASE("checksum.h omw::preview::crc16_kermit()")
+{
+    const uint8_t* data;
+    omw::vector< uint8_t> v;
+
+    CHECK(omw::preview::crc16_kermit(nullptr, 0) == 0x0000); // init value
+
+    data = reinterpret_cast<const uint8_t*>("abcd");
+    CHECK(omw::preview::crc16_kermit(data, 0) == 0x0000); // init value
+
+    data = reinterpret_cast<const uint8_t*>("123456789");
+    CHECK(omw::preview::crc16_kermit(data, 9) == 0x2189);
+
+    data = reinterpret_cast<const uint8_t*>("MhGTD87x9MLw6JJo9DYb");
+    CHECK(omw::preview::crc16_kermit(data, 20) == 0xB383);
+
+    data = reinterpret_cast<const uint8_t*>("d1klmQLr8dYjDKfq7qawiMGmT07MViBUFCEUkMCG");
+    CHECK(omw::preview::crc16_kermit(data, 40) == 0x5454);
+
+    v = { 0x1B, 0x87, 0xD6, 0x55, 0x41, 0x9F, 0x97, 0x07, 0x06, 0x38, 0x0C, 0x9D, 0xAF, 0x38, 0xC9, 0x8F, 0x42, 0x5D, 0x0C, 0x66, 0xA8, 0x53, 0xE5, 0xFF, 0xF1, 0x89, 0x1A, 0x3A, 0xF4, 0x96, 0x33, 0x39 };
+    CHECK(omw::preview::crc16_kermit(v.data(), v.size()) == 0xA75E);
 }
 
 

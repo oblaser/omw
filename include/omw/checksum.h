@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
+date            26.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -65,6 +65,17 @@ namespace omw
     //uint8_t parityWord(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos = 0, std::vector<uint8_t>::size_type count = -1, uint8_t init);
 
     /*! @} */
+
+    namespace preview
+    {
+        /*! \addtogroup grp_checksumLib
+        * @{
+        */
+
+        uint16_t crc16_kermit(const uint8_t* data, size_t count);
+
+        /*! @} */
+    }
 }
 
 #endif // IG_OMW_CHECKSUM_H

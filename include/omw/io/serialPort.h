@@ -1,83 +1,81 @@
 /*
 author          Oliver Blaser
-date            17.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            22.08.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_IO_SERIALPORT_H
 #define IG_OMW_IO_SERIALPORT_H
 
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <vector>
 
+#include "../../omw/defs.h"
 #include "../../omw/string.h"
-
-#define OMWi_SERIAL_PORT_PREVIEW (1) // def/undef
+#include "../../omw/vector.h"
 
 namespace omw
 {
-#ifndef OMWi_SERIAL_PORT_PREVIEW
-    enum NDATABITS
+    namespace io
     {
-        NDATABITS_5 = 5,
-        NDATABITS_6 = 6,
-        NDATABITS_7 = 7,
-        NDATABITS_8 = 8
-    };
+        /*! \addtogroup grp_ioLib
+        * @{
+        */
 
-    enum NSTOPBITS
-    {
-        NSTOPBITS_1 = 1,     // 1
-        NSTOPBITS_15 = 100,  // 1.5
-        NSTOPBITS_2 = 2      // 2
-    };
+        class SerialPort
+        {
+        public:
+            using baud_t = uint32_t;
 
-    //enum PARITY
-    //{
-    //    PARITY_NONE = 0,
-    //    PARITY_ODD,
-    //    PARITY_EVEN
-    //};
+        public:
+            SerialPort();
+            virtual ~SerialPort() {}
 
-    class SerialPort
-    {
-    public:
-        SerialPort();
-        //            SerialPort(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
-        virtual ~SerialPort() {}
+            int open(const std::string& port, baud_t baud/*, nDataBits, parity, nStopBits*/);
+            int close();
 
-        //            int32_t config(const std::string& port, int32_t baudRate, int32_t dataBits = 8, int32_t stopBits = 1, int32_t parity = omw::io::PARITY_NONE);
+            int read(uint8_t* buffer, size_t bufferSize, size_t* nBytesRead);
+            int read(char* buffer, size_t bufferSize, size_t* nBytesRead) { return read(reinterpret_cast<uint8_t*>(buffer), bufferSize, nBytesRead); }
+            int readByte(uint8_t* byte, size_t* nBytesRead) { return read(byte, 1, nBytesRead); }
+            int write(const uint8_t* data, size_t count, size_t* nBytesWritten = nullptr);
+            int write(const char* data, size_t count, size_t* nBytesWritten = nullptr) { return write(reinterpret_cast<const uint8_t*>(data), count, nBytesWritten); }
 
-        int32_t getBaudRate() const;
-        int32_t getDataBits() const;
-        int32_t getParity() const;
-        std::string getPort() const;
-        int32_t getStopBits() const;
+            bool isOpen() const { return m_isOpen; }
+            bool good() const { return m_good; }
 
-        int32_t setBaudRate(int32_t baudRate);
-        int32_t setDataBits(int32_t dataBits);
-        int32_t setParity(int32_t parity);
-        int32_t setPort(const std::string& port);
-        int32_t setStopBits(int32_t stopBits);
+        private:
+            //std::string m_port;
+            //baud_t m_baud;
+            // m_nDataBits
+            // m_parity;
+            // m_nStopBits;
 
-        int32_t open();
-        int32_t close();
+            bool m_isOpen;
+            bool m_good;
 
-        bool isOpen() const;
-
-    private:
-        int32_t baudRate;
-        int32_t dataBits;
-        int32_t parity;
-        std::string port;
-        int32_t stopBits;
-    };
+        private: // platform specific
+#if defined(OMW_PLAT_WIN)
+            void* m_handle;
+#elif defined(OMW_PLAT_UNIX)
+            int m_fd;
 #endif
+        };
 
-    std::vector<omw::string> getSerialPortList(bool onlyCOMx = true);
-    void sortSerialPortList(std::vector<omw::string>& ports);
-    void sortSerialPortList(std::vector<std::string>& ports);
+        /*! @} */
+    }
+
+    namespace preview
+    {
+        /*! \addtogroup grp_ioLib
+        * @{
+        */
+        omw::vector<omw::string> getSerialPortList(bool onlyCOMx = true);
+        void sortSerialPortList(std::vector<omw::string>& ports);
+        void sortSerialPortList(std::vector<std::string>& ports);
+        /*! @} */
+    }
 }
 
 #endif // IG_OMW_IO_SERIALPORT_H

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
+date            20.08.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -171,6 +171,18 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 
+//#ifdef OMW_PARCH_UNKNOWN
+//#define OMW_PBITW (0u)
+//#else // OMW_PARCH_UNKNOWN
+//#if (defined(OMW_PARCH_x86_32) || defined(OMW_PARCH_ARM32))
+//#define OMW_PBITW (32u)
+//#else
+//#define OMW_PBITW (64u)
+//#endif
+//#endif // OMW_PARCH_UNKNOWN
+
+
+
 #else // OMWi_DOXYGEN_PREDEFINE
 #define OMW_PARCH_x86_32 (1)
 #define OMW_PARCH_x86_64 (1)
@@ -178,6 +190,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define OMW_PARCH_ARM64 (1)
 #define OMW_PARCH_POWERPC (1)
 #define OMW_PARCH_UNKNOWN (1)
+//#define OMW_PBITW
 #endif // OMWi_DOXYGEN_PREDEFINE
 
 /// @}
@@ -210,6 +223,8 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 //! 
 //! C++23 isn't released yet. Thus the value may change in the future!
+//! 
+//! The current value is from GCC 11.1.0
 //! 
 #define OMW_CPPSTD_23 (202100L)
 
