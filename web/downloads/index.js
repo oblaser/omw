@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            10.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            26.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 function htmlHeaderLink(idStr)
@@ -30,6 +30,13 @@ function htmlRelaseData(title, data = releaseData[0].binaries)
             if(data[i].download) html += ' download';
             if(data[i].newTab) html += ' target="_blank"';
             html += '>' + data[i].text + '</a>';
+        }
+        else if((data[i].type == 'sep') && ((typeof data[i].size == 'string') || (typeof data[i].size == 'number')))
+        {
+            let heightValStr;
+            if(typeof data[i].size == 'string') heightValStr = data[i].size;
+            else heightValStr = data[i].size + 'px';
+            html += '<div style="height:' + heightValStr + ';"></div>';
         }
         else
         {

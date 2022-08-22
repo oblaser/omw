@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            24.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -13,6 +13,13 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include <omw/string.h>
 
+
+
+#define TESTUTIL_TRYCATCH_OPEN_DECLARE_VAL(valueType, initialValue) \
+{bool tu_trycatch_correctCatch;                                 \
+const valueType tu_trycatch_initVal = initialValue;             \
+valueType tu_trycatch_val = tu_trycatch_initVal                 \
+// end TESTUTIL_TRYCATCH_OPEN_DECLARE_VAL()
 
 #define TESTUTIL_TRYCATCH_DECLARE_VAL(valueType, initialValue)  \
 bool tu_trycatch_correctCatch;                                  \
@@ -29,6 +36,16 @@ REQUIRE(tu_trycatch_correctCatch);                                              
 REQUIRE(tu_trycatch_val == tu_trycatch_initVal)                                             \
 // end TESTUTIL_TRYCATCH_CHECK()
 
+#define TESTUTIL_TRYCATCH_CLOSE() }
+
+
+
+#define TESTUTIL_TRYCATCH_SE_OPEN_DECLARE_VAL(valueType, pValue, initialValue) \
+{bool tu_trycatch_correctCatch;                                             \
+const valueType tu_trycatch_initVal = initialValue;                         \
+valueType tu_trycatch_val = tu_trycatch_initVal;                            \
+pValue = &tu_trycatch_val                                                   \
+// end TESTUTIL_TRYCATCH_SE_DECLARE_VAL()
 
 #define TESTUTIL_TRYCATCH_SE_DECLARE_VAL(valueType, pValue, initialValue)   \
 bool tu_trycatch_correctCatch;                                              \
@@ -45,6 +62,9 @@ catch (...) { tu_trycatch_correctCatch = false; }                               
 REQUIRE(tu_trycatch_correctCatch);                                                          \
 REQUIRE(tu_trycatch_val == tu_trycatch_initVal)                                             \
 // end TESTUTIL_TRYCATCH_SE_CHECK()
+
+#define TESTUTIL_TRYCATCH_SE_CLOSE() }
+
 
 
 namespace tu

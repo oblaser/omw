@@ -1,10 +1,9 @@
 /*
 author          Oliver Blaser
-date            27.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            27.01.2022
+copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
-/*! \file omw.h */
 /*! \file windows/windows.h */
 
 /*!
@@ -13,8 +12,20 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 /*!
+\namespace omw::preview
+
+Not yet worked out "nice/proper" implementations/concepts/interfaces.
+
+*/
+
+/*!
 \namespace omw::info
 \brief Some information about the library
+*/
+
+/*!
+\namespace omw::io
+\brief \ref grp_ioLib
 */
 
 /*!

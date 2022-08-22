@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            19.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -1491,26 +1491,6 @@ TEST_CASE("utility.h vectorContains()")
     const std::vector<omw::string> vString = { "pack", "my", "box", "with", "five", "dozen", "liquor", "jugs" };
     CHECK(omw::vectorContains(vString, omw::string("five")));
     CHECK_FALSE(omw::vectorContains(vString, omw::string("boat")));
-}
-
-TEST_CASE("utility.h convertByteVector()")
-{
-    const std::string initialString = "The quick brown fox jumps over the lazy dog.";
-    const std::vector<char> initial(initialString.c_str(), initialString.c_str() + initialString.length());
-    const std::vector<uint8_t> expectedResult =
-    {
-        0x54, 0x68, 0x65, 0x20, 0x71, 0x75, 0x69, 0x63, 0x6b, 0x20, 0x62, 0x72, 0x6f, 0x77, 0x6e, 0x20,
-        0x66, 0x6f, 0x78, 0x20, 0x6a, 0x75, 0x6d, 0x70, 0x73, 0x20, 0x6f, 0x76, 0x65, 0x72, 0x20, 0x74,
-        0x68, 0x65, 0x20, 0x6c, 0x61, 0x7a, 0x79, 0x20, 0x64, 0x6f, 0x67, 0x2e
-    };
-
-    const std::vector<uint8_t> r = omw::convertByteVector(initial);
-
-    CHECK(r == expectedResult);
-
-    const std::vector<char> r2 = omw::convertByteVector(r);
-
-    CHECK(r2 == initial);
 }
 
 

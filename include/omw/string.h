@@ -1,12 +1,13 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            15.02.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 #ifndef IG_OMW_STRING_H
 #define IG_OMW_STRING_H
 
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <utility>
@@ -14,21 +15,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include "../omw/defs.h"
 #include "../omw/int.h"
-
-
-#ifndef OMWi_DOXYGEN_EXCLUDE_FROM_DOC
-#define OMWi_STRING_IMPLEMENT_CONTAINS (1)
-#if defined(_MSVC_LANG)
-#if (_MSVC_LANG > 202002L)
-#undef OMWi_STRING_IMPLEMENT_CONTAINS
-#endif
-#elif defined(__cplusplus)
-#if (__cplusplus > 202100L)
-#undef OMWi_STRING_IMPLEMENT_CONTAINS
-#endif
-#endif
-#endif // OMWi_DOXYGEN_EXCLUDE_FROM_DOC
-
+#include "../omw/vector.h"
 
 namespace omw
 {
@@ -68,11 +55,11 @@ namespace omw
 
 
     using stdStringVector_t = std::vector<std::string>;
-    constexpr omw::stdStringVector_t::size_type stdStringVector_npos = (omw::stdStringVector_t::size_type)-1;
+    constexpr omw::stdStringVector_t::size_type stdStringVector_npos = static_cast<omw::stdStringVector_t::size_type>(-1);
 
     class string;
     using stringVector_t = std::vector<omw::string>;
-    constexpr omw::stringVector_t::size_type stringVector_npos = (omw::stringVector_t::size_type)-1;
+    constexpr omw::stringVector_t::size_type stringVector_npos = static_cast<omw::stringVector_t::size_type>(-1);
 
 
 
@@ -98,22 +85,33 @@ namespace omw
     {
     public:
         string();
-        string(std::string::size_type count, char c);
+        string(omw::string::size_type count, char c);
         string(const char* str);
-        string(const char* str, std::string::size_type count);
+        string(const char* str, omw::string::size_type count);
         string(const std::string& other);
         string(const std::string& other, std::string::size_type pos, std::string::size_type count = std::string::npos);
         string(const char* first, const char* last);
-        virtual ~string() {}
+        ~string() {}
 
         std::string& std();
         const std::string& std() const;
 
-#ifdef OMWi_STRING_IMPLEMENT_CONTAINS
+#ifndef OMWi_DOXYGEN_PREDEFINE
+#if (OMW_CPPSTD < OMW_CPPSTD_23)
+        bool contains(char ch) const { return (this->find(ch) != omw::string::npos); }
+        bool contains(const char* str) const { return (this->find(str) != omw::string::npos); }
+#if (OMW_CPPSTD < OMW_CPPSTD_17)
+        bool contains(const std::string& str) const { return (this->find(str) != omw::string::npos); }
+#else // < C++17
+        bool contains(std::string_view sv) const { return (this->find(sv) != omw::string::npos); }
+#endif // < C++17
+#endif // < C++23
+#else // OMWi_DOXYGEN_PREDEFINE
         bool contains(char ch) const;
         bool contains(const char* str) const;
         bool contains(const std::string& str) const;
-#endif
+        bool contains(std::string_view sv) const;
+#endif // OMWi_DOXYGEN_PREDEFINE
 
         omw::string& replaceFirst(const std::string& search, const std::string& replace, size_type startPos = 0);
         omw::string& replaceFirst(const omw::StringReplacePair& pair, size_type startPos = 0);
@@ -125,6 +123,9 @@ namespace omw
         omw::string& replaceAll(const omw::StringReplacePair& pair, size_type startPos = 0, size_t* nReplacements = nullptr);
         omw::string& replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
         omw::string& replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
+
+        omw::string& reverse();
+        omw::string reversed() const;
 
         omw::stringVector_t split(char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
         //omw::stringVector_t split(const char* delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) const;
@@ -177,7 +178,7 @@ namespace omw
     //! \name Convert From String
     /// @{
     bool stob(const std::string& boolStr);
-    
+
     std::pair<int32_t, int32_t> stoipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<int64_t, int64_t> stoi64pair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
@@ -185,7 +186,7 @@ namespace omw
     //std::pair<float, float> stofpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<double, double> stodpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<long double, long double> stoldpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
-    
+
     //omw::int128_t stoi128(const std::string& str);
     //omw::uint128_t stoui128(const std::string& str);
     /// @}
@@ -203,11 +204,11 @@ namespace omw
     omw::string toHexStr(int64_t value);
     omw::string toHexStr(uint64_t value);
     omw::string toHexStr(const omw::Base_Int128& value);
-    omw::string toHexStr(int16_t value,  char delimiter);
+    omw::string toHexStr(int16_t value, char delimiter);
     omw::string toHexStr(uint16_t value, char delimiter);
-    omw::string toHexStr(int32_t value,  char delimiter);
+    omw::string toHexStr(int32_t value, char delimiter);
     omw::string toHexStr(uint32_t value, char delimiter);
-    omw::string toHexStr(int64_t value,  char delimiter);
+    omw::string toHexStr(int64_t value, char delimiter);
     omw::string toHexStr(uint64_t value, char delimiter);
     omw::string toHexStr(const omw::Base_Int128& value, char delimiter);
     omw::string toHexStr(const std::vector<char>& data, char delimiter = toHexStr_defaultDelimiter);
@@ -298,7 +299,6 @@ namespace omw
     }
     constexpr bool isSpace(char ch) { return (((ch >= 0x09) && (ch <= 0x0D)) || (ch == 0x20)); }
     constexpr bool isUpper(char ch) { return ((ch >= 0x41) && (ch <= 0x5A)); }
-    constexpr bool isWhitespace(char ch) { return isSpace(ch); }
     constexpr bool isAlpha(char ch) { return (isLower(ch) || isUpper(ch)); }
     constexpr bool isAlnum(char ch) { return (isAlpha(ch) || isDigit(ch)); }
 
@@ -315,6 +315,11 @@ namespace omw
 
     size_t peekNewLine(const char* p);
     size_t peekNewLine(const char* p, const char* end);
+
+    omw::string readString(const uint8_t* data, size_t count);
+    omw::string readString(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos, std::vector<uint8_t>::size_type count);
+    void writeString(uint8_t* buffer, const uint8_t* end, const std::string& str);
+    void writeString(std::vector<uint8_t>& buffer, std::vector<uint8_t>::size_type pos, const std::string& str);
 
 
 

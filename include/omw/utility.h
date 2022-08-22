@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            10.01.2022
+date            25.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -71,9 +71,6 @@ namespace omw
             if (v[i] == item) r = true;
         return r;
     }
-
-    std::vector<char> convertByteVector(const std::vector<uint8_t>& v);
-    std::vector<uint8_t> convertByteVector(const std::vector<char>& v);
 
     // grp_utility_gpUtil
     /*! @} */

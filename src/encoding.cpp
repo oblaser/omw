@@ -73,9 +73,9 @@ namespace
 
 
 
-/*!
+/* !
 * \namespace omw::bcd
-* 
+*
 * `#include <omw/encoding.h>`
 *
 * Converts between BCD formated byte buffers and their integral values.
@@ -85,7 +85,7 @@ namespace
 
 /*!
 * \namespace omw::bigEndian
-* 
+*
 * `#include <omw/encoding.h>`
 *
 * \section ns_omw_bigEndian_section_decodeFn Decode Functions
@@ -217,9 +217,9 @@ void omw::bigEndian::encode_16(uint8_t* buffer, const uint8_t* end, int16_t valu
 //! 
 void omw::bigEndian::encode_16(uint8_t* buffer, const uint8_t* end, uint16_t value)
 {
-    if (buffer && end)
+    if (buffer && end && (buffer <= end))
     {
-        if ((end - buffer) >= 2 && buffer < end)
+        if ((end - buffer) >= 2)
         {
             buffer[0] = static_cast<uint8_t>((value >> 8) & 0xFF);
             buffer[1] = static_cast<uint8_t>(value & 0xFF);
@@ -242,9 +242,9 @@ void omw::bigEndian::encode_32(uint8_t* buffer, const uint8_t* end, int32_t valu
 //! 
 void omw::bigEndian::encode_32(uint8_t* buffer, const uint8_t* end, uint32_t value)
 {
-    if (buffer && end)
+    if (buffer && end && (buffer <= end))
     {
-        if ((end - buffer) >= 4 && buffer < end)
+        if ((end - buffer) >= 4)
         {
             buffer[0] = static_cast<uint8_t>((value >> 24) & 0xFF);
             buffer[1] = static_cast<uint8_t>((value >> 16) & 0xFF);
@@ -269,9 +269,9 @@ void omw::bigEndian::encode_64(uint8_t* buffer, const uint8_t* end, int64_t valu
 //! 
 void omw::bigEndian::encode_64(uint8_t* buffer, const uint8_t* end, uint64_t value)
 {
-    if (buffer && end)
+    if (buffer && end && (buffer <= end))
     {
-        if ((end - buffer) >= 8 && buffer < end)
+        if ((end - buffer) >= 8)
         {
             buffer[0] = static_cast<uint8_t>((value >> 56) & 0xFF);
             buffer[1] = static_cast<uint8_t>((value >> 48) & 0xFF);
@@ -292,9 +292,9 @@ void omw::bigEndian::encode_64(uint8_t* buffer, const uint8_t* end, uint64_t val
 //! 
 void omw::bigEndian::encode_128(uint8_t* buffer, const uint8_t* end, const omw::Base_Int128& value)
 {
-    if (buffer && end)
+    if (buffer && end && (buffer <= end))
     {
-        if ((end - buffer) >= 16 && buffer < end)
+        if ((end - buffer) >= 16)
         {
             const uint64_t h = value.hi();
             const uint64_t l = value.lo();

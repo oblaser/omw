@@ -22,17 +22,17 @@ namespace omw
     * @{
     */
 
-    namespace bcd
-    {
-        //uint8_t decode8(const uint8_t* data, size_t count);
-        //uint16_t decode16(const uint8_t* data, size_t count);
-        //uint32_t decode32(const uint8_t* data, size_t count);
-        //uint64_t decode64(const uint8_t* data, size_t count);
-        //omw::uint128_t decode128(const uint8_t* data, size_t count);
-        //
-        //void encode(uint8_t* buffer, size_t bufferSize, uint64_t value);
-        //void encode(uint8_t* buffer, size_t bufferSize, const omw::uint128_t& value);
-    }
+    //namespace bcd
+    //{
+    //    uint8_t decode8(const uint8_t* data, size_t count);
+    //    uint16_t decode16(const uint8_t* data, size_t count);
+    //    uint32_t decode32(const uint8_t* data, size_t count);
+    //    uint64_t decode64(const uint8_t* data, size_t count);
+    //    omw::uint128_t decode128(const uint8_t* data, size_t count);
+    //    
+    //    void encode(uint8_t* buffer, size_t bufferSize, uint64_t value);
+    //    void encode(uint8_t* buffer, size_t bufferSize, const omw::uint128_t& value);
+    //}
 
     namespace bigEndian
     {

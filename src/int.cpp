@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            27.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -16,6 +16,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include <stdexcept>
 
 #include "omw/int.h"
+#include "omw/intdef.h"
 
 
 

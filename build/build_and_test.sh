@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          19.12.2021
-# copyright     MIT - Copyright (c) 2021 Oliver Blaser
+# date          27.01.2022
+# copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
 # Options:
-# -s                    also run system test executables
 # --only-shared
 # --only-static
 
@@ -28,4 +27,4 @@ fi
 
 
 ./make_build.sh
-if [ $? -eq 0 ]; then ./run_test.sh $1; fi
+if [ $? -eq 0 ]; then ./run_test.sh; fi

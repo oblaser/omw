@@ -179,7 +179,7 @@ uint32_t omw::windows::perfCntrCalcDuration_ms(int64_t startTick)
 
 uint32_t omw::windows::perfCntrCalcDuration_ms(int64_t startTick, int64_t endTick)
 {
-    return std::lround(omw::windows::perfCntrCalcDuration(startTick, endTick) * 1'000.0);
+    return std::lround(omw::windows::perfCntrCalcDuration(startTick, endTick) * 1000.0);
 }
 
 uint32_t omw::windows::perfCntrCalcDuration_us(int64_t startTick)
@@ -190,7 +190,7 @@ uint32_t omw::windows::perfCntrCalcDuration_us(int64_t startTick)
 
 uint32_t omw::windows::perfCntrCalcDuration_us(int64_t startTick, int64_t endTick)
 {
-    return std::lround(omw::windows::perfCntrCalcDuration(startTick, endTick) * 1'000'000.0);
+    return std::lround(omw::windows::perfCntrCalcDuration(startTick, endTick) * 1000000.0);
 }
 
 //! @param t_s Duration in seconds
@@ -228,7 +228,7 @@ int64_t omw::windows::perfCntrCalcTickCount_s(uint32_t t_s)
 //! 
 int64_t omw::windows::perfCntrCalcTickCount_ms(uint32_t t_ms)
 {
-    return omw::windows::perfCntrCalcTickCount(t_ms / 1'000.0);
+    return omw::windows::perfCntrCalcTickCount(t_ms / 1000.0);
 }
 
 //! @param t_us Duration in microseconds
@@ -238,7 +238,7 @@ int64_t omw::windows::perfCntrCalcTickCount_ms(uint32_t t_ms)
 //! 
 int64_t omw::windows::perfCntrCalcTickCount_us(uint32_t t_us)
 {
-    return omw::windows::perfCntrCalcTickCount(t_us / 1'000'000.0);
+    return omw::windows::perfCntrCalcTickCount(t_us / 1000000.0);
 }
 
 void omw::windows::perfCntrSleep(double t_s)

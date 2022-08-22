@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            12.01.2022
+date            28.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -19,7 +19,10 @@ TEST_CASE("omw lib")
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 
-    REQUIRE(omw::info::version() == omw::Version(0, 2, 0, "alpha.4"));
+    CHECK(omw::info::version() == omw::Version(0, 2, 1, "alpha.1"));
+    CHECK(OMW_VERSION_ID == 3);
+
+    CHECK(omw::info::version() == omw::Version(OMW_VERSION_MAJ, OMW_VERSION_MIN, OMW_VERSION_PAT, OMW_VERSION_PRSTR));
 }
 
 
@@ -27,6 +30,7 @@ TEST_CASE("omw lib")
 #include "cli.hpp"
 
 #include "algorithm.hpp"
+#include "checksum.hpp"
 #include "color.hpp"
 #include "encoding.hpp"
 #include "int.hpp"
@@ -34,6 +38,7 @@ TEST_CASE("omw lib")
 #include "math.hpp"
 #include "string.hpp"
 #include "utility.hpp"
+#include "vector.hpp"
 #include "version.hpp"
 #include "windows_envVar.hpp"
 #include "windows_string.hpp"
@@ -70,7 +75,7 @@ TEST_CASE("windows.h beep() & some perfCntr..()")
     CHECK(omw::windows::beep(freq2, dur, true));
     const auto stop = omw::windows::perfCntrGetTick();
 
-    const double dDur = (double)dur / 1'000.0;
+    const double dDur = (double)dur / 1000.0;
     const double measDur = omw::windows::perfCntrCalcDuration(start, stop);
     const double absError = std::abs(measDur - dDur);
     const double relError = absError / dDur;

@@ -16,7 +16,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include "../omw/string.h"
 
 
-#ifndef OMWi_DOXYGEN_EXCLUDE_FROM_DOC
+#ifndef OMWi_DOXYGEN_PREDEFINE
 // TODO: move to stream.cpp/.h or similar, and document it properly
 namespace omw
 {
@@ -48,7 +48,7 @@ namespace omw
     //    return os;
     //}
 }
-#endif // OMWi_DOXYGEN_EXCLUDE_FROM_DOC
+#endif // OMWi_DOXYGEN_PREDEFINE
 
 
 namespace omw

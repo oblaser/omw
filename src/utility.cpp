@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            25.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -136,16 +136,7 @@ void omw::shiftRightAssign(int16_t& value, unsigned int n)
 
 void omw::shiftRightAssign(int32_t& value, unsigned int n)
 {
-    //::shiftRightAssign<int32_t, uint32_t, 32>(value, n);
-
-    using Ts = int32_t;
-    using Tu = uint32_t;
-    constexpr size_t nBits = 32;
-
-    Tu msb = 0x01;
-    msb = msb << (nBits - 1);
-    if (static_cast<Tu>(value) & msb) shiftRightAssign_neg<Ts, Tu, nBits>(value, n);
-    else shiftRightAssign_pos<Ts, Tu, nBits>(value, n);
+    ::shiftRightAssign<int32_t, uint32_t, 32>(value, n);
 }
 
 void omw::shiftRightAssign(int64_t& value, unsigned int n)
@@ -203,18 +194,3 @@ uint64_t omw::shiftRight(uint64_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTR
 *
 * Toggles a boolean value.
 */
-
-
-
-std::vector<char> omw::convertByteVector(const std::vector<uint8_t>& v)
-{
-    std::vector<char> r(v.size());
-    for (std::vector<uint8_t>::size_type i = 0; i < v.size(); ++i) r[i] = static_cast<char>(v[i]);
-    return r;
-}
-std::vector<uint8_t> omw::convertByteVector(const std::vector<char>& v)
-{
-    std::vector<uint8_t> r(v.size());
-    for (std::vector<char>::size_type i = 0; i < v.size(); ++i) r[i] = static_cast<uint8_t>(v[i]);
-    return r;
-}

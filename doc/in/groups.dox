@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            26.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -9,6 +9,12 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 /*!
 \defgroup grp_algorithm Algorithms Library
 `#include <omw/algorithm.h>`
+*/
+
+/*!
+\defgroup grp_checksumLib Checksum Library
+\ingroup grp_algorithm
+`#include <omw/checksum.h>`
 */
 
 /*!
@@ -53,24 +59,32 @@ See also \ref ns_omw_ansiesc_section_ansiEscMode and `omw::windows::consoleEnVir
 */
 
 /*!
+\defgroup grp_containersLib Containers Library
+*/
+
+/*!
+\defgroup grp_ioLib I/O Library
+*/
+
+/*!
 \defgroup grp_numerics Numerics Library
 `#include <omw/math.h>`
 */
 
 /*!
-\defgroup grp_stringLib String Library
+\defgroup grp_stringLib Strings Library
 `#include <omw/string.h>`
 */
 
 // https://en.cppreference.com/w/cpp/utility
 /*!
-\defgroup grp_utility Utility Library
+\defgroup grp_utility Utilities Library
 */
 
 /*!
 \defgroup grp_macro Macros
 \ingroup grp_utility
-`#include <omw/defs.h>`
+See also omw/defs.h and omw/omw.h.
 */
 
 /*!

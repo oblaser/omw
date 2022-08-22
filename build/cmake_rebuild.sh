@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          11.01.2022
+# date          26.01.2022
 # copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
 result=0
@@ -29,4 +29,9 @@ else
     fi
 fi
 
-exit $result
+
+
+exitCode=0
+if [ $result -ne 0 ]; then exitCode=1; fi;
+
+exit $exitCode

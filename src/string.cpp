@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            11.01.2022
+date            01.03.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -10,6 +10,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include "omw/algorithm.h"
 #include "omw/defs.h"
+#include "omw/intdef.h"
 #include "omw/string.h"
 
 
@@ -81,7 +82,7 @@ namespace
     omw::Base_Int128 hexstointeger128(const omw::string& str, const std::string& fnName)
     {
         const std::string exMsg_notHex(OMWi_DISPSTR(fnName + ": not a hex string"));
-        
+
         const omw::string& hexStr = str;
         const omw::string::size_type hexStrLen = hexStr.length();
         const omw::string::size_type maxLen = 32;
@@ -197,7 +198,7 @@ const std::string& omw::StringReplacePair::replace() const
 *
 * A with `std::string` interchangeable class to add more functionalities.
 * This class does not override/implement any (virtual) methods of the base class and has no attributes. It's basically a `std::string` with some more methods.
-* However the two constructors which take the other string as a `char` pointer behave defined if a NULL pointer is passed.
+* However the two constructors which take the other string as a `char` pointer behave defined if a _null_ pointer is passed.
 */
 
 //bool omw::string::isValidUTF8(const omw::string& str)
@@ -209,7 +210,7 @@ omw::string::string()
     : std::string()
 {}
 
-omw::string::string(std::string::size_type count, char c)
+omw::string::string(omw::string::size_type count, char c)
     : std::string(count, c)
 {}
 
@@ -217,7 +218,7 @@ omw::string::string(const char* str)
     : std::string(str ? str : "")
 {}
 
-omw::string::string(const char* str, std::string::size_type count)
+omw::string::string(const char* str, omw::string::size_type count)
     : std::string(str ? str : "", str ? count : 0)
 {}
 
@@ -234,7 +235,7 @@ omw::string::string(const char* first, const char* last)
 {}
 
 //! 
-//! Used if an implicit conversion to `std::string` is not possible.
+//! Used if an implicit conversion to `std::string` is not possible (e.g. passing an `omw::string` to a function parameter of type `std::filesystem::path`).
 //! 
 std::string& omw::string::std()
 {
@@ -246,20 +247,35 @@ const std::string& omw::string::std() const
     return *this;
 }
 
-#ifdef OMWi_STRING_IMPLEMENT_CONTAINS
-bool omw::string::contains(char ch) const
-{
-    return (this->find(ch) != omw::string::npos);
-}
-bool omw::string::contains(const char* str) const
-{
-    return (this->find(str) != omw::string::npos);
-}
-bool omw::string::contains(const std::string& str) const
-{
-    return (this->find(str) != omw::string::npos);;
-}
-#endif
+#ifdef OMWi_DOXYGEN_PREDEFINE
+/*!
+* \fn omw::string::contains(char ch) const
+* _until C++23_<br/>_since C++23_ Defined in std::string
+*
+* Defined in the header.
+*/
+
+/*!
+* \fn omw::string::contains(const char* str) const
+* _until C++23_<br/>_since C++23_ Defined in std::string
+*
+* Defined in the header.
+*/
+
+/*!
+* \fn omw::string::contains(const std::string& str) const
+* _until C++17_
+*
+* Defined in the header.
+*/
+
+/*!
+* \fn omw::string::contains(std::string_view sv) const
+* _since C++17_<br/>_until C++23_<br/>_since C++23_ Defined in std::string
+*
+* Defined in the header.
+*/
+#endif // OMWi_DOXYGEN_PREDEFINE
 
 //! @param search Substring to be replaced
 //! @param replace String for replacement
@@ -342,7 +358,7 @@ omw::string& omw::string::replaceAll(const std::string& search, const std::strin
             pos = find(search, pos + replace.length());
         }
     }
-    else cnt = SIZE_MAX;
+    else cnt = OMW_SIZE_MAX;
 
     if (nReplacements) *nReplacements = cnt;
 
@@ -369,20 +385,20 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
     size_t cnt = 0;
     size_t tmpCnt;
 
-    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), SIZE_MAX);
+    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), OMW_SIZE_MAX);
 
     for (size_t i = 0; i < pairs.size(); ++i)
     {
         replaceAll(pairs[i], startPos, &tmpCnt);
         if (nReplacements) nReplacements->at(i) = tmpCnt;
-        if (tmpCnt != SIZE_MAX)
+        if (tmpCnt != OMW_SIZE_MAX)
         {
             cnt += tmpCnt;
             allInvalid = false;
         }
     }
 
-    if (allInvalid) cnt = SIZE_MAX;
+    if (allInvalid) cnt = OMW_SIZE_MAX;
 
     if (nReplacementsTotal) *nReplacementsTotal = cnt;
 
@@ -398,6 +414,50 @@ omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& 
 omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos, size_t* nReplacementsTotal, std::vector<size_t>* nReplacements)
 {
     return replaceAll(std::vector<omw::StringReplacePair>(pairs, pairs + count), startPos, nReplacementsTotal, nReplacements);
+}
+
+//! 
+//! Reverses (swaps) the content of the string.
+//! 
+//! `abcd` will turn in to `dcba`, and `xyz` to `zyx`.
+//!  
+omw::string& omw::string::reverse()
+{
+#if 0
+    omw::string tmp(*this);
+
+    const omw::string::size_type n = tmp.size();
+
+    for (omw::string::size_type i = 0; i < n; ++i)
+    {
+        this->at(i) = tmp.at(n - 1 - i);
+    }
+#else
+    const omw::string::size_type n = this->size();
+    const omw::string::size_type i_end = (n / 2);
+    omw::string::value_type tmp;
+
+    for (omw::string::size_type i = 0; i < i_end; ++i)
+    {
+        tmp = this->at(i);
+        this->at(i) = this->at(n - 1 - i);
+        this->at(n - 1 - i) = tmp;;
+    }
+#endif
+
+    return *this;
+}
+
+//! 
+//! Returns the reversed string.
+//! 
+//! See also `omw::string::reverse()`.
+//!  
+omw::string omw::string::reversed() const
+{
+    omw::string r(*this);
+    r.reverse();
+    return r;
 }
 
 omw::stringVector_t omw::string::split(char delimiter, omw::stringVector_t::size_type maxTokenCount) const
@@ -867,27 +927,35 @@ omw::uint128_t omw::hexstoui128(const std::string& str)
 
 // to be added to doc: delimiter = 0
 // calls `omw::sepHexStr()`
+// 
+// if string is empty an empty vector is returned
+// 
 std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
 {
-    const std::string fnName = "omw::hexstovector";
-
-    omw::string tmpStr;
-
-    if (delimiter == 0)
-    {
-        delimiter = toHexStr_defaultDelimiter;
-        tmpStr = omw::sepHexStr(str, toHexStr_defaultDelimiter);
-    }
-    else tmpStr = str;
-
-    const std::vector<omw::string> hexStrings = tmpStr.split(delimiter);
-
     std::vector<uint8_t> r(0);
-    for (size_t i = 0; i < hexStrings.size(); ++i)
+
+    if (str.length() > 0)
     {
-        uint32_t value = omw::hexstoui(hexStrings[i]);
-        if (value > 0xFF) throw std::out_of_range(fnName);
-        r.push_back(value);
+        const std::string fnName = "omw::hexstovector";
+
+        omw::string tmpStr;
+
+        if (delimiter == 0)
+        {
+            delimiter = toHexStr_defaultDelimiter;
+            tmpStr = omw::sepHexStr(str, toHexStr_defaultDelimiter);
+        }
+        else tmpStr = str;
+
+        const std::vector<omw::string> hexStrings = tmpStr.split(delimiter);
+
+        r.resize(hexStrings.size(), 0);
+        for (size_t i = 0; i < hexStrings.size(); ++i)
+        {
+            uint32_t value = omw::hexstoui(hexStrings[i]);
+            if (value > 0xFF) throw std::out_of_range(fnName);
+            r[i] = (uint8_t)value;
+        }
     }
 
     return r;
@@ -1189,7 +1257,9 @@ bool omw::isHex(const std::string& str)
 //! @param p Pointer to the position in the string
 //! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
 //! 
-//! It's recommended to use <tt>omw::peekNewLine(const char*, const char*)</tt> to prevent access violations.
+//! If \b p is `NULL`, 0 is returned.
+//! 
+//! It's recommended to use `omw::peekNewLine(const char*, const char*)` to prevent access violations.
 //! 
 size_t omw::peekNewLine(const char* p)
 {
@@ -1208,10 +1278,12 @@ size_t omw::peekNewLine(const char* p)
 }
 
 //! @param p Pointer to the position in the string
-//! @param end Pointer to the first position beyond the string
+//! @param end Pointer to the first element after the last element of the string
 //! @return Number of new line characters at <tt>p</tt>, range: [0, 2]
 //! 
-//! If <b><tt>end</tt></b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used, hence access violations may occure.
+//! If <b>end</b> is <tt>NULL</tt>, <tt>omw::peekNewLine(const char*)</tt> will be used, hence access violations may occure.
+//! 
+//! If \b p is `NULL` or \b p is greater than or equal to \b end, 0 is returned.
 //! 
 size_t omw::peekNewLine(const char* p, const char* end)
 {
@@ -1219,21 +1291,17 @@ size_t omw::peekNewLine(const char* p, const char* end)
 
     if (end)
     {
-        if (p)
+        if (p && ((end - p) > 0))
         {
-            if ((end - p) > 0)
+            if (*p == 0x0A) r = 1; // LF
+            else if (*p == 0x0D)
             {
-                if (*p == 0x0A) r = 1; // LF
-                else if (*p == 0x0D)
+                if ((end - p) > 1)
                 {
-                    if ((end - p) > 1)
-                    {
-                        if (*(p + 1) == 0x0A) r = 2; // CR+LF
-                        else r = 1; // CR
-                    }
+                    if (*(p + 1) == 0x0A) r = 2; // CR+LF
                     else r = 1; // CR
                 }
-                else r = 0;
+                else r = 1; // CR
             }
             else r = 0;
         }
@@ -1242,4 +1310,69 @@ size_t omw::peekNewLine(const char* p, const char* end)
     else r = peekNewLine(p);
 
     return r;
+}
+
+
+
+//! 
+//! Reads the data to construct a string from a byte buffer.
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the data pointer is _null_
+//! 
+omw::string omw::readString(const uint8_t* data, size_t count)
+{
+    omw::string str(count, '#');
+
+    if (data)
+    {
+        for (size_t i = 0; i < count; ++i) str[i] = static_cast<char>(data[i]);
+    }
+    else throw std::invalid_argument("omw::readString");
+
+    return str;
+}
+
+//! 
+//! Reads the data to construct a string from a byte buffer.
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if count is greater than `data.size() - pos` or if `pos` is greater than `data.size()`
+//! 
+omw::string omw::readString(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos, std::vector<uint8_t>::size_type count)
+{
+    if (((data.size() - pos) < count) || (pos > data.size())) throw std::invalid_argument("omw::readString");
+    return omw::readString(data.data() + pos, count);
+}
+
+//! 
+//! Writes a string to a byte buffer (without a _null_ terminator).
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if the data or end pointer is invalid
+//! - `std::out_of_range` if the string length is greater than `end - buffer`
+//! 
+void omw::writeString(uint8_t* buffer, const uint8_t* end, const std::string& str)
+{
+    if (buffer && end && (buffer <= end))
+    {
+        if (static_cast<std::string::size_type>(end - buffer) >= str.length())
+        {
+            for (std::string::size_type i = 0; i < str.length(); ++i) buffer[i] = static_cast<uint8_t>(str[i]);
+        }
+        else throw std::out_of_range("omw::writeString");
+    }
+    else throw std::invalid_argument("omw::writeString");
+}
+
+//! 
+//! Writes a string to a byte buffer (without a _null_ terminator).
+//! 
+//! \b Exceptions
+//! - `std::invalid_argument` if `pos` is greater than the buffers size
+//! - `std::out_of_range` if the buffer can not hold the string
+//! 
+void omw::writeString(std::vector<uint8_t>& buffer, std::vector<uint8_t>::size_type pos, const std::string& str)
+{
+    return omw::writeString(buffer.data() + pos, buffer.data() + buffer.size(), str);
 }
