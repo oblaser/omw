@@ -13,6 +13,7 @@ New
  - `omw::string::reverse()` and `reversed()`
  - `omw::io::FileInterface_Base::openRead()`
  - `omw::io::FileInterface_Base::openWrite()`
+ - `omw::io::SerialPort`
 
 Removed
  - `omw::isWhitespace()`
