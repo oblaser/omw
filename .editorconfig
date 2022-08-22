@@ -3,6 +3,13 @@ root = true
 
 [*.{c++,cc,cpp,cppm,cxx,h,h++,hh,hpp,hxx,inl,ipp,ixx,tlh,tli}]
 
+# not from VS, by Oliver Blaser ################################################
+
+end_of_line = lf
+indent_style = space
+indent_size = 4
+################################################################################
+
 # Visual C++ Code Style settings
 
 cpp_generate_documentation_comments = doxygen_double_slash_exclamation
@@ -14,7 +21,7 @@ cpp_indent_multi_line_relative_to = innermost_parenthesis
 cpp_indent_within_parentheses = indent
 cpp_indent_preserve_within_parentheses = true
 cpp_indent_case_contents = true
-cpp_indent_case_labels = true
+cpp_indent_case_labels = false
 cpp_indent_case_contents_when_block = false
 cpp_indent_lambda_braces_when_parameter = true
 cpp_indent_goto_labels = leftmost_column

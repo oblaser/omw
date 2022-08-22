@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            13.02.2022
+date            01.03.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -427,16 +427,17 @@ omw::string& omw::string::reverse()
     omw::string tmp(*this);
 
     const omw::string::size_type n = tmp.size();
-    
+
     for (omw::string::size_type i = 0; i < n; ++i)
     {
         this->at(i) = tmp.at(n - 1 - i);
     }
 #else
     const omw::string::size_type n = this->size();
+    const omw::string::size_type i_end = (n / 2);
     omw::string::value_type tmp;
 
-    for (omw::string::size_type i = 0; i < (n / 2); ++i)
+    for (omw::string::size_type i = 0; i < i_end; ++i)
     {
         tmp = this->at(i);
         this->at(i) = this->at(n - 1 - i);

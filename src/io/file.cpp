@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            12.02.2022
+date            01.03.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -48,11 +48,6 @@ omw::io::FileInterface_Base::FileInterface_Base(const std::string& filename)
 
 omw::io::FileInterface_Base::~FileInterface_Base()
 {}
-
-const omw::string& omw::io::FileInterface_Base::filename() const
-{
-    return m_filename;
-}
 
 //! @param mode Either `FileInterface_Base::rd` or `FileInterface_Base::wr`
 //! 
@@ -323,11 +318,9 @@ size_t omw::io::streampos_to_size(const std::streampos& val)
     return static_cast<size_t>(im);
 }
 
-//! 
-//! The "to `streamoff`" conversion operator of the `std::fpos<>` class man be explicit.
-//! This function is a wrapper for the static cast from `std::fpos<>` to `std::streamoff`.
-//! 
-std::streamoff omw::io::streampos_to_streamoff(const std::streampos& val)
-{
-    return static_cast<std::streamoff>(val);
-}
+/*!
+* \fn omw::io::streampos_to_streamoff(const std::streampos& val)
+* 
+* The to `std::streamoff` conversion operator of the `std::streampos` class may be explicit.
+* This function is a wrapper for the static cast from `std::streampos` to `std::streamoff`.
+*/

@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            22.01.2022
+date            18.02.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -16,6 +16,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 namespace
 {
+#pragma region semver_classification_functions
     // positive integer without leading zeros
     bool isNumericIdentifier(const std::string& identifier)
     {
@@ -78,12 +79,11 @@ namespace
         return (isAlphanumericIdentifier(identifier) || isDigits(identifier));
     }
 
-
-
     bool check(int32_t maj, int32_t min, int32_t pat)
     {
         return (isNumericIdentifier(maj) && isNumericIdentifier(min) && isNumericIdentifier(pat));
     }
+#pragma endregion
 }
 
 

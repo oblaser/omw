@@ -15,7 +15,6 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 The Following objects are in a pre-release state.
 
 \b Alpha
-- `omw::io::IniFileM2M`
 - `omw::io::ConfigFile`
 \internal
 \endinternal

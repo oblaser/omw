@@ -13,6 +13,9 @@ New
  - `omw::io::FileInterface_Base::openRead()`
  - `omw::io::FileInterface_Base::openWrite()`
 
+Removed
+ - `omw::isWhitespace()`
+
 
 
 ### v0.2.1-alpha

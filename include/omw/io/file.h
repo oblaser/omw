@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            09.02.2022
+date            01.03.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
@@ -13,6 +13,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "../../omw/defs.h"
 #include "../../omw/string.h"
 #include "../../omw/vector.h"
 
@@ -23,6 +24,21 @@ namespace omw
         /*! \addtogroup grp_ioLib
         * @{
         */
+
+        enum LINE_END
+        {
+            LE_LF = 0,
+            LE_CR,
+            LE_CRLF,
+
+#if defined(OMW_PLAT_WIN)
+            LE_AUTO = LE_CRLF
+#elif defined(OMW_PLAT_APPLE)
+            LE_AUTO = LE_CR
+#else
+            LE_AUTO = LE_LF
+#endif
+        };
 
         class FileInterface_Base
         {
@@ -45,7 +61,9 @@ namespace omw
             FileInterface_Base(const std::string& filename);
             virtual ~FileInterface_Base();
 
-            const omw::string& filename() const;
+            const omw::string& filename() const { return m_filename; }
+
+            void setFileName(const std::string& filename) { m_filename = filename; }
 
             void open(openmode mode) const;
             void openRead() const { open(FileInterface_Base::rd); }
@@ -85,12 +103,9 @@ namespace omw
 
 
 
-        //std::streamoff size_to_streamoff(size_t val);
         std::streamsize size_to_streamsize(size_t  val);
-        //size_t streamoff_to_size(std::streamoff val);
         size_t streampos_to_size(const std::streampos& val);
-        std::streamoff streampos_to_streamoff(const std::streampos& val);
-        //size_t streamsize_to_size(std::streamsize val);
+        std::streamoff streampos_to_streamoff(const std::streampos& val) { return static_cast<std::streamoff>(val); }
 
 
 
