@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            20.08.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            15.01.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #include <stdexcept>
@@ -704,21 +704,21 @@ bool omw::stob(const std::string& boolStr)
     throw std::out_of_range("omw::stob");
 }
 
-size_t omw::stouz(const std::string& str, size_t* pos, int base)
+size_t omw::stoz(const std::string& str, size_t* pos, int base)
 {
     size_t r;
 
-//#if (OMW_PBITW == 32u)
+//#if (SIZE_MAX == UINT32_MAX) // (OMW_PBITW == 32u)
 //    using ull_t = unsigned long long;
 //    const ull_t value = std::stoull(str, pos, base);
 //    constexpr ull_t size_max = SIZE_MAX;
 //    if (value > size_max) throw std::out_of_range("omw::stouz");
 //    r = (size_t)value;
-//#elif (OMW_PBITW == 64u)
+//#elif (SIZE_MAX == UINT64_MAX) // (OMW_PBITW == 64u)
 //    r = std::stoull(str, pos, base);
 //#else
-    if (sizeof(size_t) == sizeof(unsigned long)) r = std::stoul(str, pos, base);
-    else if (sizeof(size_t) == sizeof(unsigned long long)) r = std::stoull(str, pos, base);
+    if (sizeof(size_t) == sizeof(unsigned long)) r = (size_t)std::stoul(str, pos, base);
+    else if (sizeof(size_t) == sizeof(unsigned long long)) r = (size_t)std::stoull(str, pos, base);
     else
     {
         using ull_t = unsigned long long;

@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            20.08.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            15.01.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef IG_OMW_STRING_H
@@ -17,6 +17,35 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include "../omw/int.h"
 #include "../omw/vector.h"
 
+/*! \addtogroup grp_stringLib
+* @{
+*/
+
+//! \name UTF-8 Byte Strings
+/// @{
+#define OMW_UTF8CP_00C4 "\xC3\x84"
+#define OMW_UTF8CP_00D6 "\xC3\x96"
+#define OMW_UTF8CP_00DC "\xC3\x9C"
+#define OMW_UTF8CP_00E4 "\xC3\xA4"
+#define OMW_UTF8CP_00F6 "\xC3\xB6"
+#define OMW_UTF8CP_00FC "\xC3\xBC"
+#define OMW_UTF8CP_2580 "\xE2\x96\x80"
+#define OMW_UTF8CP_2584 "\xE2\x96\x84"
+#define OMW_UTF8CP_2588 "\xE2\x96\x88"
+/// @}
+
+//! \name UFT-8 Byte String Aliases
+/// @{
+#define OMW_UTF8CP_Auml OMW_UTF8CP_00C4
+#define OMW_UTF8CP_Ouml OMW_UTF8CP_00D6
+#define OMW_UTF8CP_Uuml OMW_UTF8CP_00DC
+#define OMW_UTF8CP_auml OMW_UTF8CP_00E4
+#define OMW_UTF8CP_ouml OMW_UTF8CP_00F6
+#define OMW_UTF8CP_uuml OMW_UTF8CP_00FC
+/// @}
+
+/*! @} */
+
 namespace omw
 {
     /*! \addtogroup grp_stringLib
@@ -25,17 +54,17 @@ namespace omw
 
     //! \name UTF-8 Byte Strings
     /// @{
-    const char* const UTF8CP_00C4 = "\xC3\x84";
-    const char* const UTF8CP_00D6 = "\xC3\x96";
-    const char* const UTF8CP_00DC = "\xC3\x9C";
-    const char* const UTF8CP_00E4 = "\xC3\xA4";
-    const char* const UTF8CP_00F6 = "\xC3\xB6";
-    const char* const UTF8CP_00FC = "\xC3\xBC";
-    const char* const UTF8CP_2580 = "\xE2\x96\x80";
-    const char* const UTF8CP_2584 = "\xE2\x96\x84";
-    const char* const UTF8CP_2588 = "\xE2\x96\x88";
+    const char* const UTF8CP_00C4 = OMW_UTF8CP_00C4;
+    const char* const UTF8CP_00D6 = OMW_UTF8CP_00D6;
+    const char* const UTF8CP_00DC = OMW_UTF8CP_00DC;
+    const char* const UTF8CP_00E4 = OMW_UTF8CP_00E4;
+    const char* const UTF8CP_00F6 = OMW_UTF8CP_00F6;
+    const char* const UTF8CP_00FC = OMW_UTF8CP_00FC;
+    const char* const UTF8CP_2580 = OMW_UTF8CP_2580;
+    const char* const UTF8CP_2584 = OMW_UTF8CP_2584;
+    const char* const UTF8CP_2588 = OMW_UTF8CP_2588;
     /// @}
-
+    
     //! \name UFT-8 Byte String Aliases
     /// @{
     const char* const UTF8CP_Auml = omw::UTF8CP_00C4;
@@ -179,7 +208,7 @@ namespace omw
     /// @{
     bool stob(const std::string& boolStr);
 
-    size_t stouz(const std::string& str, size_t* pos = nullptr, int base = 10);
+    size_t stoz(const std::string& str, size_t* pos = nullptr, int base = 10);
 
     std::pair<int32_t, int32_t> stoipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<uint32_t, uint32_t> stouipair(const std::string& str, char delimiter = pairtos_defaultDelimiter);

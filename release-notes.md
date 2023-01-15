@@ -9,7 +9,7 @@
 ### v0.2.1-alpha.1
 
 New
- - `omw::stouz()`
+ - `omw::stoz()`
  - `omw::string::reverse()` and `reversed()`
  - `omw::io::FileInterface_Base::openRead()`
  - `omw::io::FileInterface_Base::openWrite()`
