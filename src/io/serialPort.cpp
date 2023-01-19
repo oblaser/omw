@@ -28,7 +28,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 namespace
 {
-#ifdef OMW_PLAT_WIN
+#if defined(OMW_PLAT_WIN)
     bool isCom0com(const std::string& device)
     {
         const omw::string tmpDevice = (omw::string(device)).toLower_asciiExt();
@@ -46,11 +46,7 @@ namespace
 
         return false;
     }
-#endif // OMW_PLAT_WIN
-
-#if defined(OMW_PLAT_WIN)
 #elif defined(OMW_PLAT_UNIX)
-
     speed_t getUnixBaud(omw::io::SerialPort::baud_t baud, int* error)
     {
         int e = 0;
@@ -182,7 +178,7 @@ namespace
         case 4000000:
             r = B4000000;
             break;
-#endif
+#endif // OMW_PLAT_LINUX
 
         default:
             e = 1;
@@ -193,9 +189,16 @@ namespace
 
         return r;
     }
-
-#endif
+#endif // OMW_PLAT_..
 }
+
+
+
+#if defined(OMW_PLAT_UNIX)
+    static inline int alias_close(int fd) __attribute__((always_inline));
+    static inline ssize_t alias_read(int fd, void *buf, size_t count) __attribute__((always_inline));
+    static inline ssize_t alias_write(int fd, const void *buf, size_t count) __attribute__((always_inline));
+#endif // OMW_PLAT_UNIX
 
 
 
@@ -239,7 +242,7 @@ int omw::io::SerialPort::open(const std::string& port, baud_type baud/*, nDataBi
                 tty.c_cflag &= ~PARENB; // no parity
                 tty.c_cflag &= ~CSTOPB; // clear stop field => one stop bit
                 tty.c_cflag &= ~CSIZE;
-                tty.c_cflag |= CS8 TODO mask zeros; // 8bit data word
+                tty.c_cflag |= CS8; // 8bit data word
                 tty.c_cflag &= ~CRTSCTS; // disable RTS/CTS hardware flow control
                 tty.c_cflag |= CREAD | CLOCAL; // turn on READ & ignore ctrl lines (CLOCAL = 1)
 
@@ -287,7 +290,7 @@ int omw::io::SerialPort::open(const std::string& port, baud_type baud/*, nDataBi
             if (r == 0) m_isOpen = true;
             else
             {
-                if (close(m_fd) != 0) r += (__LINE__ * 10000);
+                if (alias_close(m_fd) != 0) r += (__LINE__ * 10000);
                 else m_fd = -1;
             }
         }
@@ -377,7 +380,7 @@ int omw::io::SerialPort::close()
 
 #elif defined(OMW_PLAT_UNIX)
 
-    if (close(m_fd) != 0) r = __LINE__;
+    if (alias_close(m_fd) != 0) r = __LINE__;
     else
     {
         m_isOpen = false;
@@ -417,7 +420,7 @@ int omw::io::SerialPort::read(uint8_t* buffer, size_t bufferSize, size_t* nBytes
 
 #elif defined(OMW_PLAT_UNIX)
 
-    const ssize_t rdres = read(m_fd, buffer, bufferSize);
+    const ssize_t rdres = alias_read(m_fd, buffer, bufferSize);
 
     if (rdres < 0) r = __LINE__;
     else
@@ -460,7 +463,7 @@ int omw::io::SerialPort::write(const uint8_t* data, size_t count, size_t* nBytes
 
 #elif defined(OMW_PLAT_UNIX)
 
-    const ssize_t wrres = write(m_fd, data, count);
+    const ssize_t wrres = alias_write(m_fd, data, count);
 
     if (wrres < 0) r = __LINE__;
     else
@@ -593,3 +596,11 @@ void omw::preview::sortSerialPortList(std::vector<std::string>& ports)
     omw::preview::sortSerialPortList(tmpPorts);
     ports = omw::stdStringVector(tmpPorts);
 }
+
+
+
+#if defined(OMW_PLAT_UNIX)
+    inline int alias_close(int fd) { return close(fd); }
+    inline ssize_t alias_read(int fd, void *buf, size_t count) { return read(fd, buf, count); }
+    inline ssize_t alias_write(int fd, const void *buf, size_t count) { return write(fd, buf, count); }
+#endif // OMW_PLAT_UNIX
