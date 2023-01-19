@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            22.08.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            19.01.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #include <algorithm>
@@ -212,7 +212,7 @@ omw::io::SerialPort::SerialPort()
     m_good(true)
 {}
 
-int omw::io::SerialPort::open(const std::string& port, baud_t baud/*, nDataBits, parity, nStopBits*/)
+int omw::io::SerialPort::open(const std::string& port, baud_type baud/*, nDataBits, parity, nStopBits*/)
 {
     int r = 0;
 
@@ -223,63 +223,8 @@ int omw::io::SerialPort::open(const std::string& port, baud_t baud/*, nDataBits,
 #if defined(OMW_PLAT_WIN)
 
         DCB dcb;
-        COMMTIMEOUTS tout;
-
-        m_handle = CreateFileA(
-            ("\\\\.\\" + port).c_str(),
-            GENERIC_READ | GENERIC_WRITE,
-            0,
-            NULL,
-            OPEN_EXISTING,
-            0,
-            NULL);
-
-        if (m_handle == INVALID_HANDLE_VALUE) r = __LINE__;
-        else
-        {
-            memset(&dcb, 0, sizeof(dcb));
-            dcb.DCBlength = sizeof(dcb);
-
-            // see https://docs.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-dcb
-            dcb.BaudRate = baud;
-            dcb.fBinary = TRUE;
-            dcb.fParity = FALSE; // parity
-            dcb.fOutxCtsFlow = FALSE;
-            dcb.fOutxDsrFlow = FALSE;
-            dcb.fDtrControl = DTR_CONTROL_ENABLE;
-            dcb.fDsrSensitivity = FALSE;
-            dcb.fTXContinueOnXoff = TRUE;
-            dcb.fOutX = FALSE;
-            dcb.fInX = FALSE;
-            dcb.fErrorChar = FALSE; // parity
-            dcb.fNull = FALSE;
-            dcb.fRtsControl = RTS_CONTROL_ENABLE;
-            dcb.fAbortOnError = FALSE;
-            dcb.XonLim = 0;
-            dcb.XoffLim = 1;
-            dcb.ByteSize = 8; // nDataBits
-            dcb.Parity = NOPARITY; // parity
-            dcb.StopBits = ONESTOPBIT; // nStopBits
-
-            if (!SetCommState(m_handle, &dcb)) r = __LINE__;
-            else
-            {
-                tout.ReadIntervalTimeout = MAXDWORD;
-                tout.ReadTotalTimeoutMultiplier = 0;
-                tout.ReadTotalTimeoutConstant = 0;
-                tout.WriteTotalTimeoutMultiplier = 0;
-                tout.WriteTotalTimeoutConstant = 0;
-
-                if (!SetCommTimeouts(m_handle, &tout)) r = __LINE__;
-            }
-
-            if (r == 0) m_isOpen = true;
-            else
-            {
-                if (!CloseHandle(m_handle)) r += (__LINE__ * 10000);
-                else m_handle = INVALID_HANDLE_VALUE;
-            }
-        }
+        initDcb(&dcb, baud);
+        r = open(port, &dcb);
 
 #elif defined(OMW_PLAT_UNIX)
 
@@ -356,6 +301,66 @@ int omw::io::SerialPort::open(const std::string& port, baud_t baud/*, nDataBits,
     m_good = (r == 0);
     return r;
 }
+
+#if defined(OMW_PLAT_WIN)
+int omw::io::SerialPort::open(const std::string& port, void* DCB_customDcb, const void* COMMTIMEOUTS_customTmo)
+{
+    int r = 0;
+
+    if (DCB_customDcb)
+    {
+        m_handle = CreateFileA(
+            ("\\\\.\\" + port).c_str(),
+            GENERIC_READ | GENERIC_WRITE,
+            0,
+            NULL,
+            OPEN_EXISTING,
+            0,
+            NULL);
+
+        if (m_handle == INVALID_HANDLE_VALUE) r = __LINE__;
+        else
+        {
+            COMMTIMEOUTS tmo;
+
+            if (COMMTIMEOUTS_customTmo)
+            {
+                tmo.ReadIntervalTimeout = reinterpret_cast<const COMMTIMEOUTS*>(COMMTIMEOUTS_customTmo)->ReadIntervalTimeout;
+                tmo.ReadTotalTimeoutMultiplier = reinterpret_cast<const COMMTIMEOUTS*>(COMMTIMEOUTS_customTmo)->ReadTotalTimeoutMultiplier;
+                tmo.ReadTotalTimeoutConstant = reinterpret_cast<const COMMTIMEOUTS*>(COMMTIMEOUTS_customTmo)->ReadTotalTimeoutConstant;
+                tmo.WriteTotalTimeoutMultiplier = reinterpret_cast<const COMMTIMEOUTS*>(COMMTIMEOUTS_customTmo)->WriteTotalTimeoutMultiplier;
+                tmo.WriteTotalTimeoutConstant = reinterpret_cast<const COMMTIMEOUTS*>(COMMTIMEOUTS_customTmo)->WriteTotalTimeoutConstant;
+            }
+            else
+            {
+                tmo.ReadIntervalTimeout = MAXDWORD;
+                tmo.ReadTotalTimeoutMultiplier = 0;
+                tmo.ReadTotalTimeoutConstant = 0;
+                tmo.WriteTotalTimeoutMultiplier = 0;
+                tmo.WriteTotalTimeoutConstant = 0;
+            }
+
+            if (!SetCommState(m_handle, static_cast<DCB*>(DCB_customDcb))) r = __LINE__;
+            else
+            {
+                if (!SetCommTimeouts(m_handle, &tmo)) r = __LINE__;
+            }
+
+            if (r == 0) m_isOpen = true;
+            else
+            {
+                if (!CloseHandle(m_handle)) r += (__LINE__ * 10000);
+                else m_handle = INVALID_HANDLE_VALUE;
+            }
+        }
+    }
+    else r = __LINE__;
+
+    m_good = (r == 0);
+    return r;
+}
+#elif defined(OMW_PLAT_UNIX)
+#endif
 
 int omw::io::SerialPort::close()
 {
@@ -472,6 +477,37 @@ int omw::io::SerialPort::write(const uint8_t* data, size_t count, size_t* nBytes
     m_good = (r == 0);
     return r;
 }
+
+#if defined(OMW_PLAT_WIN)
+void omw::io::SerialPort::initDcb(void* DCB_customDcb, baud_type baud)
+{
+    memset(DCB_customDcb, 0, sizeof(DCB));
+    
+    reinterpret_cast<DCB*>(DCB_customDcb)->DCBlength = sizeof(DCB);
+
+    // see https://docs.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-dcb
+    reinterpret_cast<DCB*>(DCB_customDcb)->BaudRate = baud;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fBinary = TRUE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fParity = FALSE; // parity
+    reinterpret_cast<DCB*>(DCB_customDcb)->fOutxCtsFlow = FALSE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fOutxDsrFlow = FALSE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fDtrControl = DTR_CONTROL_ENABLE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fDsrSensitivity = FALSE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fTXContinueOnXoff = TRUE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fOutX = FALSE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fInX = FALSE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fErrorChar = FALSE; // parity
+    reinterpret_cast<DCB*>(DCB_customDcb)->fNull = FALSE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fRtsControl = RTS_CONTROL_ENABLE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->fAbortOnError = FALSE;
+    reinterpret_cast<DCB*>(DCB_customDcb)->XonLim = 0;
+    reinterpret_cast<DCB*>(DCB_customDcb)->XoffLim = 1;
+    reinterpret_cast<DCB*>(DCB_customDcb)->ByteSize = 8; // nDataBits
+    reinterpret_cast<DCB*>(DCB_customDcb)->Parity = NOPARITY; // parity
+    reinterpret_cast<DCB*>(DCB_customDcb)->StopBits = ONESTOPBIT; // nStopBits
+}
+#elif defined(OMW_PLAT_UNIX)
+#endif
 
 
 
