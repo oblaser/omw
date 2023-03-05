@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            28.02.2023
+date            05.03.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -157,7 +157,11 @@ TEST_CASE("algorithm.h levenshteinDistance() strings")
         LevenshteinStrTestRecord("kitten", "sitting", 3),
         LevenshteinStrTestRecord("sitting", "kitten", 3),
         LevenshteinStrTestRecord("Sunday", "Saturday", 3),
+        LevenshteinStrTestRecord("Meilenstein", "Levenshtein", 4),
         LevenshteinStrTestRecord("Tier", "Tor", 2),
+        LevenshteinStrTestRecord("Fest", "Test", 1),
+        LevenshteinStrTestRecord("Apfel", "Pferd", 4),
+        LevenshteinStrTestRecord("apfel", "pferd", 3),
         LevenshteinStrTestRecord("asdf", "qwertz", 6),
         LevenshteinStrTestRecord("", "abcd", 4),
         LevenshteinStrTestRecord("Abcd", "abcd", 1)
