@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            20.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            28.02.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef TEST_OMW_ALGORITHM_H
@@ -90,6 +90,123 @@ TEST_CASE("algorithm.h doubleDabble() 128 bit")
     if (stdOut) std::cout << std::endl;
 }
 
+
+
+class LevenshteinStrTestRecord
+{
+public:
+    LevenshteinStrTestRecord() : m_a(""), m_b("-"), m_r(-1) {}
+    LevenshteinStrTestRecord(const char* a, const char* b, size_t r) : m_a(a), m_b(b), m_r(r) {}
+
+    const char* a() const { return m_a; }
+    const char* b() const { return m_b; }
+    size_t aLen() const { return std::strlen(m_a); }
+    size_t bLen() const { return std::strlen(m_b); }
+    std::string aStr() const { return m_a; }
+    std::string bStr() const { return m_b; }
+
+    size_t r() const { return m_r; }
+
+private:
+    const char* const m_a;
+    const char* const m_b;
+    size_t m_r;
+};
+
+template <typename T>
+class LevenshteinTestRecord
+{
+public:
+    LevenshteinTestRecord() : m_a(), m_b(), m_r(-1) {}
+    LevenshteinTestRecord(const std::vector<T>& a, const std::vector<T>& b, size_t r) : m_a(a), m_b(b), m_r(r) {}
+
+    const std::vector<T>& a() const { return m_a; }
+    const std::vector<T>& b() const { return m_b; }
+
+    size_t r() const { return m_r; }
+
+private:
+    std::vector<T> m_a;
+    std::vector<T> m_b;
+    size_t m_r;
+};
+
+TEST_CASE("algorithm.h levenshteinDistance() nullptr")
+{
+    const char* const n = nullptr;
+    CHECK(omw::levenshteinDistance(n, 1, n, 2) == SIZE_MAX);
+    CHECK(omw::levenshteinDistance(n, 1, "asdf", 4) == SIZE_MAX);
+    CHECK(omw::levenshteinDistance("asdf", 4, n, 2) == SIZE_MAX);
+
+    CHECK(omw::levenshteinDistance(nullptr, nullptr) == SIZE_MAX);
+    CHECK(omw::levenshteinDistance(nullptr, "asdf") == SIZE_MAX);
+    CHECK(omw::levenshteinDistance("asdf", nullptr) == SIZE_MAX);
+}
+
+TEST_CASE("algorithm.h levenshteinDistance() strings")
+{
+    CHECK(omw::levenshteinDistance("kitten", 6, "sitting", 7) == 3);
+    CHECK(omw::levenshteinDistance("kitten", "sitting") == 3);
+    
+    std::vector<LevenshteinStrTestRecord> testRecords =
+    {
+        LevenshteinStrTestRecord("Levenshtein", "Levenshtein", 0),
+        LevenshteinStrTestRecord("asdf", "asdf", 0),
+        LevenshteinStrTestRecord("", "", 0),
+        LevenshteinStrTestRecord("Lewenstein", "Levenshtein", 2),
+        LevenshteinStrTestRecord("kitten", "sitting", 3),
+        LevenshteinStrTestRecord("sitting", "kitten", 3),
+        LevenshteinStrTestRecord("Sunday", "Saturday", 3),
+        LevenshteinStrTestRecord("Tier", "Tor", 2),
+        LevenshteinStrTestRecord("asdf", "qwertz", 6),
+        LevenshteinStrTestRecord("", "abcd", 4),
+        LevenshteinStrTestRecord("Abcd", "abcd", 1)
+    };
+
+    for (size_t i = 0; i < testRecords.size(); ++i)
+    {
+        const auto& x = testRecords[i];
+        //std::cout << x.a() << " " << x.b() << " " << x.r() << " - " << omw::levenshteinDistance(x.a(), x.b()) << std::endl;
+        CHECK(omw::levenshteinDistance(x.a(), x.aLen(), x.b(), x.bLen()) == x.r());
+        CHECK(omw::levenshteinDistance(x.a(), x.b()) == x.r());
+        CHECK(omw::levenshteinDistance(x.aStr(), x.bStr()) == x.r());
+    }
+}
+
+TEST_CASE("algorithm.h levenshteinDistance() empty vector")
+{
+    std::vector<LevenshteinTestRecord<int>> testRecords =
+    {
+        LevenshteinTestRecord<int>({}, {}, 0),
+        LevenshteinTestRecord<int>({}, { 1, 2, 3 }, 3),
+        LevenshteinTestRecord<int>({ 1, 2, 3 }, {}, 3)
+    };
+
+    for (size_t i = 0; i < testRecords.size(); ++i)
+    {
+        const auto& x = testRecords[i];
+        CHECK(omw::levenshteinDistance(x.a(), x.b()) == x.r());
+    }
+}
+
+TEST_CASE("algorithm.h levenshteinDistance() vector")
+{
+    std::vector<LevenshteinTestRecord<int>> testRecords =
+    {
+        LevenshteinTestRecord<int>({ 1, 2, 3 }, { 1, 2, 3 }, 0),
+        LevenshteinTestRecord<int>({ -2, 2, -123456, 1, 0, 3 }, { -2, 2, -123456, 1, 0, 3 }, 0),
+        LevenshteinTestRecord<int>({ 1, 2, 3 }, { 1, 2, 3, 4 }, 1),
+        LevenshteinTestRecord<int>({ 1, 2, 3 }, { 1, 2, 4 }, 1),
+        LevenshteinTestRecord<int>({ -2, 2, -123456, 1, 0, 3 }, { -2, 2, -123, 1, 5, 3 }, 2)
+    };
+
+    for (size_t i = 0; i < testRecords.size(); ++i)
+    {
+        const auto& x = testRecords[i];
+        CHECK(omw::levenshteinDistance(x.a().data(), x.a().size(), x.b().data(), x.b().size()) == x.r());
+        CHECK(omw::levenshteinDistance(x.a(), x.b()) == x.r());
+    }
+}
 
 
 #endif // TEST_OMW_ALGORITHM_H

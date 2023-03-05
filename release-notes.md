@@ -9,6 +9,7 @@
 ### v0.2.1-alpha.1
 
 New
+ - `omw::levenshteinDistance()`
  - `omw::stouz()`
  - `omw::string::reverse()` and `reversed()`
  - `omw::io::FileInterface_Base::openRead()`
