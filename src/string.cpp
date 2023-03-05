@@ -1,9 +1,10 @@
 /*
 author          Oliver Blaser
-date            15.01.2023
+date            05.03.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
+#include <cctype>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -589,41 +590,6 @@ omw::string omw::string::toUpper_asciiExt() const
 
 
 
-omw::string omw::to_string(int32_t value)
-{
-    return std::to_string(value);
-}
-
-omw::string omw::to_string(uint32_t value)
-{
-    return std::to_string(value);
-}
-
-omw::string omw::to_string(int64_t value)
-{
-    return std::to_string(value);
-}
-
-omw::string omw::to_string(uint64_t value)
-{
-    return std::to_string(value);
-}
-
-omw::string omw::to_string(float value)
-{
-    return std::to_string(value);
-}
-
-omw::string omw::to_string(double value)
-{
-    return std::to_string(value);
-}
-
-omw::string omw::to_string(long double value)
-{
-    return std::to_string(value);
-}
-
 omw::string omw::to_string(bool value, bool asText)
 {
     if (asText) return (value ? "true" : "false");
@@ -712,11 +678,12 @@ size_t omw::stoz(const std::string& str, size_t* pos, int base)
 //    using ull_t = unsigned long long;
 //    const ull_t value = std::stoull(str, pos, base);
 //    constexpr ull_t size_max = SIZE_MAX;
-//    if (value > size_max) throw std::out_of_range("omw::stouz");
+//    if (value > size_max) throw std::out_of_range("omw::stoz");
 //    r = (size_t)value;
 //#elif (SIZE_MAX == UINT64_MAX) // (OMW_PBITW == 64u)
 //    r = std::stoull(str, pos, base);
 //#else
+
     if (sizeof(size_t) == sizeof(unsigned long)) r = (size_t)std::stoul(str, pos, base);
     else if (sizeof(size_t) == sizeof(unsigned long long)) r = (size_t)std::stoull(str, pos, base);
     else
@@ -724,9 +691,14 @@ size_t omw::stoz(const std::string& str, size_t* pos, int base)
         using ull_t = unsigned long long;
         const ull_t value = std::stoull(str, pos, base);
         constexpr ull_t size_max = SIZE_MAX;
-        if (value > size_max) throw std::out_of_range("omw::stouz");
+        if (value > size_max) throw std::out_of_range("omw::stoz");
         r = (size_t)value;
     }
+
+    size_t start = 0;
+    while (std::isspace(str[start])) ++start;
+    if (str[start] == '-') throw std::out_of_range("omw::stoz");
+
 //#endif
 
     return r;

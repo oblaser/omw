@@ -183,13 +183,13 @@ namespace omw
 
     //! \name Convert To String
     /// @{
-    omw::string to_string(int32_t value);
-    omw::string to_string(uint32_t value);
-    omw::string to_string(int64_t value);
-    omw::string to_string(uint64_t value);
-    omw::string to_string(float value);
-    omw::string to_string(double value);
-    omw::string to_string(long double value);
+    inline omw::string to_string(int32_t value) { return std::to_string(value); }
+    inline omw::string to_string(uint32_t value) { return std::to_string(value); }
+    inline omw::string to_string(int64_t value) { return std::to_string(value); }
+    inline omw::string to_string(uint64_t value) { return std::to_string(value); }
+    inline omw::string to_string(float value) { return std::to_string(value); }
+    inline omw::string to_string(double value) { return std::to_string(value); }
+    inline omw::string to_string(long double value) { return std::to_string(value); }
 
     omw::string to_string(bool value, bool asText = true);
     omw::string to_string(const omw::int128_t& value);
