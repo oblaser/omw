@@ -157,39 +157,59 @@ namespace
 * Used by `omw::string::replaceFirst()` and `omw::string::replaceAll()`.
 */
 
-omw::StringReplacePair::StringReplacePair()
-    : searchElem(), replaceElem()
+
+
+omw::stringVector_t omw::split(const std::string& str, char delimiter, omw::stringVector_t::size_type maxTokenCount)
 {
+    omw::stringVector_t r(0);
+
+    if (maxTokenCount > 0)
+    {
+        const omw::stringVector_t::size_type n = maxTokenCount - 1;
+        std::string::size_type pos = 0;
+
+        while (pos < std::string::npos)
+        {
+            if (r.size() < n)
+            {
+                const std::string::size_type end = str.find(delimiter, pos);
+                r.push_back(str.substr(pos, end - pos));
+                pos = end;
+                if (pos < std::string::npos) ++pos;
+            }
+            else
+            {
+                r.push_back(str.substr(pos));
+                pos = std::string::npos;
+            }
+        }
+    }
+
+    return r;
 }
 
-omw::StringReplacePair::StringReplacePair(const std::string& searchElement, const std::string& replaceElement)
-    : searchElem(searchElement), replaceElem(replaceElement)
+omw::stringVector_t omw::splitLen(const std::string& str, std::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount)
 {
-}
+    omw::stringVector_t r(0);
 
-omw::StringReplacePair::StringReplacePair(const char searchElement, const std::string& replaceElement)
-    : searchElem(1, searchElement), replaceElem(replaceElement)
-{
-}
+    if (maxTokenCount > 0)
+    {
+        const std::string::size_type len = str.length();
+        std::string::size_type pos = 0;
 
-omw::StringReplacePair::StringReplacePair(const std::string& searchElement, const char replaceElement)
-    : searchElem(searchElement), replaceElem(1, replaceElement)
-{
-}
+        for (omw::stringVector_t::size_type iToken = 0; (iToken < maxTokenCount) && (pos < len); ++iToken)
+        {
+            r.push_back(str.substr(pos, tokenLength));
+            pos += tokenLength;
+        }
 
-omw::StringReplacePair::StringReplacePair(const char searchElement, const char replaceElement)
-    : searchElem(1, searchElement), replaceElem(1, replaceElement)
-{
-}
+        if (pos < len)
+        {
+            r.back() += str.substr(pos);
+        }
+    }
 
-const std::string& omw::StringReplacePair::search() const
-{
-    return searchElem;
-}
-
-const std::string& omw::StringReplacePair::replace() const
-{
-    return replaceElem;
+    return r;
 }
 
 
@@ -463,55 +483,12 @@ omw::string omw::string::reversed() const
 
 omw::stringVector_t omw::string::split(char delimiter, omw::stringVector_t::size_type maxTokenCount) const
 {
-    omw::stringVector_t r(0);
-
-    if (maxTokenCount > 0)
-    {
-        const omw::stringVector_t::size_type n = maxTokenCount - 1;
-        omw::string::size_type pos = 0;
-
-        while (pos < omw::string::npos)
-        {
-            if (r.size() < n)
-            {
-                const omw::string::size_type end = this->find(delimiter, pos);
-                r.push_back(this->substr(pos, end - pos));
-                pos = end;
-                if (pos < omw::string::npos) ++pos;
-            }
-            else
-            {
-                r.push_back(this->substr(pos));
-                pos = omw::string::npos;
-            }
-        }
-    }
-
-    return r;
+    return omw::split(*this, delimiter, maxTokenCount);
 }
 
 omw::stringVector_t omw::string::splitLen(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount) const
 {
-    omw::stringVector_t r(0);
-
-    if (maxTokenCount > 0)
-    {
-        const omw::string::size_type len = this->length();
-        omw::string::size_type pos = 0;
-
-        for (omw::stringVector_t::size_type iToken = 0; (iToken < maxTokenCount) && (pos < len); ++iToken)
-        {
-            r.push_back(this->substr(pos, tokenLength));
-            pos += tokenLength;
-        }
-
-        if (pos < len)
-        {
-            r[r.size() - 1] += this->substr(pos);
-        }
-    }
-
-    return r;
+    return omw::splitLen(*this, tokenLength, maxTokenCount);
 }
 
 omw::string& omw::string::lower_ascii()

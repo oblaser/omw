@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            15.01.2023
+date            05.03.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -16,6 +16,12 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include "../omw/defs.h"
 #include "../omw/int.h"
 #include "../omw/vector.h"
+
+#if OMW_CPPSTD >= OMW_CPPSTD_20
+#define OMW_STDSTRING_CONSTEXPR constexpr
+#else
+#define OMW_STDSTRING_CONSTEXPR 
+#endif
 
 /*! \addtogroup grp_stringLib
 * @{
@@ -95,20 +101,38 @@ namespace omw
     class StringReplacePair
     {
     public:
-        StringReplacePair();
-        StringReplacePair(const std::string& searchElement, const std::string& replaceElement);
-        StringReplacePair(const char searchElement, const std::string& replaceElement);
-        StringReplacePair(const std::string& searchElement, const char replaceElement);
-        StringReplacePair(const char searchElement, const char replaceElement);
+        StringReplacePair() : m_s(), m_r() {}
+        StringReplacePair(const std::string& searchElement, const std::string& replaceElement) : m_s(searchElement), m_r(replaceElement) {}
+        StringReplacePair(const char searchElement, const std::string& replaceElement) : m_s(1, searchElement), m_r(replaceElement) {}
+        StringReplacePair(const std::string& searchElement, const char replaceElement) : m_s(searchElement), m_r(1, replaceElement) {}
+        StringReplacePair(const char searchElement, const char replaceElement) : m_s(1, searchElement), m_r(1, replaceElement) {}
         virtual ~StringReplacePair() {}
 
-        const std::string& search() const;
-        const std::string& replace() const;
+        const std::string& search() const { return m_s; }
+        const std::string& replace() const { return m_r; }
 
     private:
-        std::string searchElem;
-        std::string replaceElem;
+        std::string m_s;
+        std::string m_r;
     };
+
+
+
+    //! \name omw::string Implementation Functions
+    /// @{
+    inline OMW_STDSTRING_CONSTEXPR bool contains(const std::string& str, char ch) { return (str.find(ch) != std::string::npos); }
+    inline OMW_STDSTRING_CONSTEXPR bool contains(const std::string& str, const char* s) { return (str.find(s) != std::string::npos); }
+#if (OMW_CPPSTD < OMW_CPPSTD_17)
+    inline OMW_STDSTRING_CONSTEXPR bool contains(const std::string& str, const std::string& s) { return (str.find(s) != std::string::npos); }
+#else
+    inline OMW_STDSTRING_CONSTEXPR bool contains(const std::string& str, const std::string_view& sv) { return (str.find(sv) != std::string::npos); }
+#endif
+
+    omw::stringVector_t split(const std::string& str, char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos);
+    omw::stringVector_t splitLen(const std::string& str, std::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos);
+    /// @}
+
+
 
     class string : public std::string
     {
