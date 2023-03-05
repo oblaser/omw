@@ -40,7 +40,6 @@ The version must be consistent in the following files:
 - `build/dep_readme.txt`
 - `doc/Doxyfile`
 - `include/omw/omw.h`
-- `src/omw.cpp`
 - `tests/unit/main.cpp`
 
 

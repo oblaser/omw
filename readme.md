@@ -5,19 +5,6 @@ C++ middleware/library with my often used units.
 Find the documentation and downloads on the
 [project webpage](https://static.oblaser.ch/omw/).
 
-
-## Git Branches
-### master
-Latest stable release, allways save to use.
-May see some website/readme updates.
-
-### devmaster
-Latest pre-release, including alpha versions.
-
-The main page of the doc includes information about which parts are
-in which pre-release state.
-
-
 ---
 
 # Build
