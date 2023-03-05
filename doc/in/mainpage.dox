@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            22.08.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            05.03.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 /*!
@@ -15,9 +15,6 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 The Following objects are in a pre-release state.
 
 \b Alpha
-- `omw::io::ConfigFile`
-- `omw::io::FileInterface_Base::openRead()`
-- `omw::io::FileInterface_Base::openWrite()`
 - `omw::io::SerialPort`
 \internal
 \endinternal

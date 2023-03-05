@@ -60,7 +60,7 @@ void omw::io::FileInterface_Base::open(openmode mode) const
     if (getState() != good) throw fstream::failure("omw::io::FileInterface_Base::open");
 }
 
-/*
+/*!
 * \fn omw::io::FileInterface_Base::openRead()
 * 
 * Opens the file in read mode.
@@ -69,7 +69,7 @@ void omw::io::FileInterface_Base::open(openmode mode) const
 * - `fstream::failure` if an error occures
 */
 
-/*
+/*!
 * \fn omw::io::FileInterface_Base::openWrite()
 * 
 * Opens the file in write mode.
