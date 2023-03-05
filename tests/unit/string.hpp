@@ -604,6 +604,47 @@ TEST_CASE("string.h stob()")
     TESTUTIL_TRYCATCH_CHECK(omw::stob("-1"), std::out_of_range);
 }
 
+TEST_CASE("string.h stoz()")
+{
+    TESTUTIL_TRYCATCH_DECLARE_VAL(size_t, 45678);
+
+    if (sizeof(size_t) == 4)
+    {
+        CHECK(omw::stoz("0") == 0);
+        CHECK(omw::stoz("123") == 123);
+        CHECK(omw::stoz("4294967295") == UINT32_MAX);
+
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("asdf"), std::invalid_argument);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-170141183460469231731687303715884105728"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-9223372036854775809"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-9223372036854775808"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-456"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-1"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("4294967296"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("18446744073709551615"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("18446744073709551616"), std::out_of_range);
+    }
+    else if (sizeof(size_t) == 8)
+    {
+        CHECK(omw::stoz("0") == 0);
+        CHECK(omw::stoz("123") == 123);
+        CHECK(omw::stoz("18446744073709551615") == UINT64_MAX);
+
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("asdf"), std::invalid_argument);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-170141183460469231731687303715884105728"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-9223372036854775809"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-9223372036854775808"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-456"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-1"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("18446744073709551616"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("340282366920938463463374607431768211455"), std::out_of_range);
+    }
+    else
+    {
+        CHECK(false);
+    }
+}
+
 TEST_CASE("string.h stoipair()")
 {
     CHECK(std::pair<int32_t, int32_t>(-1, 123) == omw::stoipair("-1#123", '#'));

@@ -29,8 +29,8 @@ valueType tu_trycatch_val = tu_trycatch_initVal                 \
 
 #define TESTUTIL_TRYCATCH_CHECK(call, exType)                                               \
 try { tu_trycatch_val = call; tu_trycatch_correctCatch = false; }                           \
-catch (exType& ex) { const char* const msg = ex.what(); tu_trycatch_correctCatch = true; }  \
-catch (std::exception& ex) { std::cout << "testUtil catch: " << ex.what() << std::endl; tu_trycatch_correctCatch = false; } \
+catch (const exType& ex) { const char* const msg = ex.what(); tu_trycatch_correctCatch = true; }  \
+catch (const std::exception& ex) { std::cout << "testUtil catch: " << ex.what() << std::endl; tu_trycatch_correctCatch = false; } \
 catch (...) { tu_trycatch_correctCatch = false; }                                           \
 REQUIRE(tu_trycatch_correctCatch);                                                          \
 REQUIRE(tu_trycatch_val == tu_trycatch_initVal)                                             \

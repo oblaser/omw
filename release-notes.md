@@ -10,8 +10,10 @@
 
 New
  - `omw::levenshteinDistance()`
- - `omw::stouz()`
+ - `omw::stoz()`
  - `omw::string::reverse()` and `reversed()`
+ - "omw::string Implementation Functions" in Module "Strings Library" (*grp_stringLib*)
+ - `omw::Base_Nullable` and `omw::Nullable<T>`
  - `omw::io::FileInterface_Base::openRead()`
  - `omw::io::FileInterface_Base::openWrite()`
  - `omw::io::SerialPort`

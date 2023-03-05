@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            19.01.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            05.03.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef TEST_OMW_UTIL_H
@@ -1454,6 +1454,73 @@ TEST_CASE("utility.h shiftRight() 64-bit")
 #endif
 
 #pragma endregion
+
+
+
+TEST_CASE("utility.h Nullable")
+{
+    omw::Nullable<int> a;
+    omw::Nullable<int> b;
+
+
+
+    CHECK(a.isNull());
+    CHECK(a.get(-5) == -5);
+    CHECK(a.get(123) == 123);
+
+    b = a;
+    CHECK(b.isNull());
+    CHECK(b.get(-5) == -5);
+    CHECK(b.get(123) == 123);
+
+
+
+    a = 3;
+    CHECK(a.isNull() == false);
+    CHECK(a.get(-5) == 3);
+    CHECK(a.get(123) == 3);
+
+    b = a;
+    CHECK(b.isNull() == false);
+    CHECK(b.get(-5) == 3);
+    CHECK(b.get(123) == 3);
+
+
+
+    a.free();
+    CHECK(a.isNull() == false);
+    CHECK(a.get(-5) == 0);
+    CHECK(a.get(123) == 0);
+
+    b = a;
+    CHECK(b.isNull() == false);
+    CHECK(b.get(-5) == 0);
+    CHECK(b.get(123) == 0);
+
+
+
+    a = -456;
+    CHECK(a.isNull() == false);
+    CHECK(a.get(-5) == -456);
+    CHECK(a.get(123) == -456);
+
+    b = a;
+    CHECK(b.isNull() == false);
+    CHECK(b.get(-5) == -456);
+    CHECK(b.get(123) == -456);
+
+
+
+    a.makeNull();
+    CHECK(a.isNull());
+    CHECK(a.get(-5) == -5);
+    CHECK(a.get(123) == 123);
+
+    b = a;
+    CHECK(b.isNull());
+    CHECK(b.get(-5) == -5);
+    CHECK(b.get(123) == 123);
+}
 
 
 

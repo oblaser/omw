@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            22.08.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            19.01.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef IG_OMW_IO_SERIALPORT_H
@@ -27,13 +27,17 @@ namespace omw
         class SerialPort
         {
         public:
-            using baud_t = uint32_t;
+            using baud_type = uint32_t;
 
         public:
             SerialPort();
             virtual ~SerialPort() {}
 
-            int open(const std::string& port, baud_t baud/*, nDataBits, parity, nStopBits*/);
+            int open(const std::string& port, baud_type baud/*, nDataBits, parity, nStopBits*/);
+#if defined(OMW_PLAT_WIN)
+            int open(const std::string& port, void* DCB_customDcb, const void* COMMTIMEOUTS_customTmo = nullptr);
+#elif defined(OMW_PLAT_UNIX)
+#endif
             int close();
 
             int read(uint8_t* buffer, size_t bufferSize, size_t* nBytesRead);
@@ -44,6 +48,11 @@ namespace omw
 
             bool isOpen() const { return m_isOpen; }
             bool good() const { return m_good; }
+
+#if defined(OMW_PLAT_WIN)
+            static void initDcb(void* DCB_customDcb, baud_type baud);
+#elif defined(OMW_PLAT_UNIX)
+#endif
 
         private:
             //std::string m_port;
