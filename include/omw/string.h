@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            05.03.2023
+date            13.03.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -129,7 +129,9 @@ namespace omw
 #endif
 
     omw::stringVector_t split(const std::string& str, char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos);
+    omw::stringVector_t split(const char* str, char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) { return (str ? omw::split(std::string(str), delimiter, maxTokenCount) : omw::stringVector_t()); }
     omw::stringVector_t splitLen(const std::string& str, std::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos);
+    omw::stringVector_t splitLen(const char* str, std::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) { return (str ? omw::splitLen(std::string(str), tokenLength, maxTokenCount) : omw::stringVector_t()); }
     /// @}
 
 
