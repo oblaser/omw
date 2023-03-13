@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            22.01.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            13.03.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #include <sstream>
@@ -33,7 +33,7 @@ omw::string omw::info::infoTxt()
 #endif
     s << std::endl;
 
-    s << OMWi_DISPSTR("Copyright (c) 2022 Oliver Blaser.") << std::endl;
+    s << OMWi_DISPSTR("Copyright (c) 2023 Oliver Blaser.") << std::endl;
     s << OMWi_DISPSTR("License: MIT <https://opensource.org/licenses/MIT>.") << std::endl;
     s << OMWi_DISPSTR("This is free software. There is NO WARRANTY.") << std::endl;
     s << OMWi_DISPSTR("See <https://github.com/oblaser/omw> for further information.");
