@@ -6,6 +6,13 @@
 
 
 
+### v0.2.1-alpha.2
+
+New
+ - "omw::vector Implementation Functions" in Module "Containers Library" (*grp_containersLib*)
+
+
+
 ### v0.2.1-alpha.1
 
 New

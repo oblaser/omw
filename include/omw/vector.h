@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            13.03.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef IG_OMW_VECTOR_H
@@ -11,13 +11,37 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include <cstdint>
 #include <initializer_list>
 #include <memory>
+#include <string>
 #include <vector>
+
+#include "../omw/string.h"
 
 namespace omw
 {
     /*! \addtogroup grp_containersLib
     * @{
     */
+
+    //! \name omw::vector Implementation Functions
+    /// @{
+    template <class T, class Allocator = std::allocator<T>>
+    bool contains(const std::vector<T, Allocator>& v, const T& item)
+    {
+        bool r = false;
+        for (std::vector<T, Allocator>::size_type i = 0; i < v.size(); ++i) { if (v[i] == item) { r = true; break; } }
+        return r;
+    }
+
+    //template <class T, class Allocator = std::allocator<T>>
+    //bool contains(const std::vector<T, Allocator>& v, const T::value_type* item)
+    //{
+    //    bool r = false;
+    //    for (std::vector<T, Allocator>::size_type i = 0; i < v.size(); ++i) { if (v[i] == item) { r = true; break; } }
+    //    return r;
+    //}
+    //template<> bool contains(const std::vector<std::string>&, const std::string::value_type*);
+    //template<> bool contains(const std::vector<omw::string>&, const omw::string::value_type*);
+    /// @}
 
     template <class T, class Allocator = std::allocator<T>>
     class vector : public std::vector<T, Allocator>
@@ -40,13 +64,7 @@ namespace omw
         vector(const std::vector<T, Allocator>& other) : std::vector<T, Allocator>(other) {}
         ~vector() {}
 
-        bool contains(const T& item) const
-        {
-            bool r = false;
-            for (size_type i = 0; (i < this->size()) && !r; ++i)
-                if (this->at(i) == item) r = true;
-            return r;
-        }
+        bool contains(const T& item) const { return omw::contains(*this, item); }
 
         void reserveAdd(size_type addCap) { this->reserve(this->size() + addCap); }
     };

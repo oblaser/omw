@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            25.01.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            13.03.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef TEST_OMW_VECTOR_H
@@ -17,6 +17,21 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include <omw/vector.h>
 
 
+
+TEST_CASE("vector.h omw::contains()")
+{
+    const std::vector<int> vInt = { 1, 5, 9 };
+    CHECK(omw::contains(vInt, 1));
+    CHECK_FALSE(omw::contains(vInt, 0));
+
+    const std::vector<std::string> vStdString = { "the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog" };
+    CHECK(omw::contains(vStdString, std::string("fox")));
+    CHECK_FALSE(omw::contains(vStdString, std::string("boat")));
+
+    const omw::vector<omw::string> vString = { "pack", "my", "box", "with", "five", "dozen", "liquor", "jugs" };
+    CHECK(omw::contains(vString, omw::string("five")));
+    CHECK_FALSE(omw::contains(vString, omw::string("boat")));
+}
 
 TEST_CASE("vector.h omw::vector ctor")
 {
@@ -34,7 +49,7 @@ TEST_CASE("vector.h omw::vector ctor")
     CHECK(v == r);
 }
 
-TEST_CASE("vector.h vector.h omw::vector::contains()")
+TEST_CASE("vector.h omw::vector::contains()")
 {
     const omw::vector<int> vInt = { 1, 5, 9 };
     CHECK(vInt.contains(1));
