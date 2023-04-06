@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            05.03.2022
+date            06.04.2022
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -102,6 +102,8 @@ namespace omw
     protected:
         value_type m_value;
     };
+    
+    inline bool isNull(const omw::Base_Nullable& value) { return value.isNull(); }
 
 
 

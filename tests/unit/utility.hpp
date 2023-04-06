@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            05.03.2023
+date            06.04.2022
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -1464,11 +1464,13 @@ TEST_CASE("utility.h Nullable")
 
 
 
+    CHECK(omw::isNull(a));
     CHECK(a.isNull());
     CHECK(a.get(-5) == -5);
     CHECK(a.get(123) == 123);
 
     b = a;
+    CHECK(omw::isNull(b));
     CHECK(b.isNull());
     CHECK(b.get(-5) == -5);
     CHECK(b.get(123) == 123);
@@ -1476,11 +1478,13 @@ TEST_CASE("utility.h Nullable")
 
 
     a = 3;
+    CHECK(omw::isNull(a) == false);
     CHECK(a.isNull() == false);
     CHECK(a.get(-5) == 3);
     CHECK(a.get(123) == 3);
 
     b = a;
+    CHECK(omw::isNull(b) == false);
     CHECK(b.isNull() == false);
     CHECK(b.get(-5) == 3);
     CHECK(b.get(123) == 3);
@@ -1488,11 +1492,13 @@ TEST_CASE("utility.h Nullable")
 
 
     a.free();
+    CHECK(omw::isNull(a) == false);
     CHECK(a.isNull() == false);
     CHECK(a.get(-5) == 0);
     CHECK(a.get(123) == 0);
 
     b = a;
+    CHECK(omw::isNull(b) == false);
     CHECK(b.isNull() == false);
     CHECK(b.get(-5) == 0);
     CHECK(b.get(123) == 0);
@@ -1500,11 +1506,13 @@ TEST_CASE("utility.h Nullable")
 
 
     a = -456;
+    CHECK(omw::isNull(a) == false);
     CHECK(a.isNull() == false);
     CHECK(a.get(-5) == -456);
     CHECK(a.get(123) == -456);
 
     b = a;
+    CHECK(omw::isNull(b) == false);
     CHECK(b.isNull() == false);
     CHECK(b.get(-5) == -456);
     CHECK(b.get(123) == -456);
@@ -1512,11 +1520,13 @@ TEST_CASE("utility.h Nullable")
 
 
     a.makeNull();
+    CHECK(omw::isNull(a));
     CHECK(a.isNull());
     CHECK(a.get(-5) == -5);
     CHECK(a.get(123) == 123);
 
     b = a;
+    CHECK(omw::isNull(b));
     CHECK(b.isNull());
     CHECK(b.get(-5) == -5);
     CHECK(b.get(123) == 123);
