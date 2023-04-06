@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            01.03.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            06.04.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef TEST_OMW_STRING_H
@@ -1062,6 +1062,32 @@ TEST_CASE("string.h isHex()")
         if (chr == 0) expectedResult = true;
         CHECK(omw::isHex(hexStr) == expectedResult);
     }
+
+    const char* substrTest = "AB-06CD;12345-a4d902q";
+
+    CHECK(omw::isHex(substrTest) == false);
+    CHECK(omw::isHex(substrTest, 0, 2) == true);
+    CHECK(omw::isHex(substrTest, 0, 3) == false);
+    CHECK(omw::isHex(substrTest, 3, 4) == true);
+    CHECK(omw::isHex(substrTest, 8, 5) == true);
+    CHECK(omw::isHex(substrTest, 8, 6) == false);
+    CHECK(omw::isHex(substrTest, 14, 6) == true);
+    CHECK(omw::isHex(substrTest, 14, 7) == false);
+    CHECK(omw::isHex(substrTest, 20, 1) == false);
+    CHECK(omw::isHex(substrTest, 20, 2) == false);
+
+    substrTest = "12345-a4d902";
+
+    CHECK(omw::isHex(substrTest) == false);
+    CHECK(omw::isHex(substrTest, 6) == true);
+    CHECK(omw::isHex(substrTest, 6, 100) == true);
+    CHECK(omw::isHex(substrTest, 5, 100) == false);
+
+    CHECK(omw::isHex(substrTest, 12) == false);
+    CHECK(omw::isHex(substrTest, 13) == false);
+    CHECK(omw::isHex(substrTest, 12, 5) == false);
+    CHECK(omw::isHex(substrTest, 1, 0) == false);
+    CHECK(omw::isHex("1234", 0, 5) == true);
 }
 
 

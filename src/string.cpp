@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            05.03.2023
+date            06.04.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -1208,23 +1208,28 @@ bool omw::isUInteger(const std::string& str)
 //! 
 //! An empty string returns `false`.
 //! 
-bool omw::isHex(const std::string& str)
+bool omw::isHex(const std::string& str, std::string::size_type pos, std::string::size_type count)
 {
-    bool r;
+    bool r = false;
 
-    if (str.length() > 0)
+    if ((pos < str.length()) && (count > 0))
     {
-        const omw::string hexDigits(omw::hexStrDigitsLower);
-        omw::string tmpStr(str);
-        tmpStr.lower_ascii();
-
         r = true;
-        for (omw::string::size_type i = 0; (i < tmpStr.length()) && r; ++i)
+        for (std::string::size_type i = 0; (i < count) && ((pos + i) < str.length()); ++i)
         {
-            r = hexDigits.contains(tmpStr[i]);
+            const char& c = str[pos + i];
+            
+            if (!(
+                ((c >= '0') && (c <= '9')) ||
+                ((c >= 'A') && (c <= 'F')) ||
+                ((c >= 'a') && (c <= 'f'))
+                ))
+            {
+                r = false;
+                break;
+            }
         }
     }
-    else r = false;
 
     return r;
 }
