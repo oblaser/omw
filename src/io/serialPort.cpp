@@ -47,7 +47,7 @@ namespace
         return false;
     }
 #elif defined(OMW_PLAT_UNIX)
-    speed_t getUnixBaud(omw::io::SerialPort::baud_t baud, int* error)
+    speed_t getUnixBaud(omw::io::SerialPort::baud_type baud, int* error)
     {
         int e = 0;
         speed_t r;

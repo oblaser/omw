@@ -56,7 +56,7 @@ namespace omw
 
         private:
             //std::string m_port;
-            //baud_t m_baud;
+            //baud_type m_baud;
             // m_nDataBits
             // m_parity;
             // m_nStopBits;

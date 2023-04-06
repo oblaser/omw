@@ -10,6 +10,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <string>
 #include <vector>
 
