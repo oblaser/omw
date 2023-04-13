@@ -12,7 +12,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 \internal
 \endinternal
 \section mainpage_preReleaseNotes Pre-Release Notes
-The Following objects are in a pre-release state.
+The Following objects are in a pre-release and/or untested state.
 
 \b Alpha
 - `omw::io::SerialPort`

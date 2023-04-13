@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            13.03.2023
+date            06.04.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -367,7 +367,7 @@ namespace omw
     /// @{
     bool isInteger(const std::string& str);
     bool isUInteger(const std::string& str);
-    bool isHex(const std::string& str);
+    bool isHex(const std::string& str, std::string::size_type pos = 0, std::string::size_type count = std::string::npos);
     /// @}
 
     size_t peekNewLine(const char* p);
