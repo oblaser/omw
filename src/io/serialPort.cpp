@@ -195,24 +195,47 @@ namespace
     }
 
 #endif
+
+    class ImplementationClass
+    {
+    public:
+        ImplementationClass() {}
+        virtual ~ImplementationClass() {}
+
+#if defined(OMW_PLAT_WIN)
+        DCB dcb;
+        COMMTIMEOUTS tout;
+#elif defined(OMW_PLAT_UNIX)
+        m_fd(-1),
+#endif
+    };
 }
 
 
 
 omw::io::SerialPort::SerialPort()
     :
+    //m_port(),
+    //m_baud(-1),
+    m_isOpen(false),
+    m_good(true),
 #if defined(OMW_PLAT_WIN)
     m_handle(INVALID_HANDLE_VALUE),
 #elif defined(OMW_PLAT_UNIX)
     m_fd(-1),
 #endif
-    //m_port(),
-    //m_baud(-1),
-    m_isOpen(false),
-    m_good(true)
-{}
+    m_implementation(nullptr)
+{
+    //m_implementation = new ImplementationClass();
+}
 
-int omw::io::SerialPort::open(const std::string& port, baud_t baud/*, nDataBits, parity, nStopBits*/)
+omw::io::SerialPort::~SerialPort()
+{
+    // https://stackoverflow.com/a/25037360    
+    //delete static_cast<ImplementationClass*>(m_implementation);
+}
+
+int omw::io::SerialPort::open(const std::string& port, baud_t baud/*, nDataBits, parity, nStopBits*/, const void* DCB_customDcb)
 {
     int r = 0;
 
@@ -237,6 +260,12 @@ int omw::io::SerialPort::open(const std::string& port, baud_t baud/*, nDataBits,
         if (m_handle == INVALID_HANDLE_VALUE) r = __LINE__;
         else
         {
+            if (DCB_customDcb)
+            {
+                memcpy(&dcb, DCB_customDcb, sizeof(dcb));
+            }
+            else
+            {
             memset(&dcb, 0, sizeof(dcb));
             dcb.DCBlength = sizeof(dcb);
 
@@ -260,6 +289,7 @@ int omw::io::SerialPort::open(const std::string& port, baud_t baud/*, nDataBits,
             dcb.ByteSize = 8; // nDataBits
             dcb.Parity = NOPARITY; // parity
             dcb.StopBits = ONESTOPBIT; // nStopBits
+            }
 
             if (!SetCommState(m_handle, &dcb)) r = __LINE__;
             else

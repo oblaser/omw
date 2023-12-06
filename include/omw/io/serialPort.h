@@ -31,9 +31,9 @@ namespace omw
 
         public:
             SerialPort();
-            virtual ~SerialPort() {}
+            virtual ~SerialPort();
 
-            int open(const std::string& port, baud_t baud/*, nDataBits, parity, nStopBits*/);
+            int open(const std::string& port, baud_t baud/*, nDataBits, parity, nStopBits*/, const void* DCB_customDcb = nullptr);
             int close();
 
             int read(uint8_t* buffer, size_t bufferSize, size_t* nBytesRead);
@@ -61,6 +61,7 @@ namespace omw
 #elif defined(OMW_PLAT_UNIX)
             int m_fd;
 #endif
+            void* m_implementation;
         };
 
         /*! @} */
