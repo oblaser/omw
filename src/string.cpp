@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.04.2023
+date            19.11.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -304,8 +304,7 @@ const std::string& omw::string::std() const
 //! @return `*this`
 omw::string& omw::string::replaceFirst(const std::string& search, const std::string& replace, size_type startPos)
 {
-    size_type pos = find(search, startPos);
-    if ((pos < length()) && (pos != std::string::npos)) this->replace(pos, search.length(), replace);
+    omw::replaceFirst(*this, search, replace, startPos);
     return *this;
 }
 
@@ -324,19 +323,7 @@ omw::string& omw::string::replaceFirst(const omw::StringReplacePair& pair, size_
 //! @return `*this`
 omw::string& omw::string::replaceAll(char search, char replace, size_type startPos, size_t* nReplacements)
 {
-    size_t cnt = 0;
-
-    for (size_t i = startPos; i < length(); ++i)
-    {
-        if (at(i) == search)
-        {
-            at(i) = replace;
-            ++cnt;
-        }
-    }
-
-    if (nReplacements) *nReplacements = cnt;
-
+    omw::replaceAll(*this, search, replace, startPos, nReplacements);
     return *this;
 }
 
@@ -367,22 +354,7 @@ omw::string& omw::string::replaceAll(const std::string& search, char replace, si
 //! @return `*this`
 omw::string& omw::string::replaceAll(const std::string& search, const std::string& replace, size_type startPos, size_t* nReplacements)
 {
-    size_t cnt = 0;
-
-    if (search.length() > 0)
-    {
-        size_type pos = find(search, startPos);
-        while ((pos < length()) && (pos != std::string::npos))
-        {
-            this->replace(pos, search.length(), replace);
-            ++cnt;
-            pos = find(search, pos + replace.length());
-        }
-    }
-    else cnt = OMW_SIZE_MAX;
-
-    if (nReplacements) *nReplacements = cnt;
-
+    omw::replaceAll(*this, search, replace, startPos, nReplacements);
     return *this;
 }
 
@@ -402,27 +374,7 @@ omw::string& omw::string::replaceAll(const omw::StringReplacePair& pair, size_ty
 //! @return `*this`
 omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos, size_t* nReplacementsTotal, std::vector<size_t>* nReplacements)
 {
-    bool allInvalid = true;
-    size_t cnt = 0;
-    size_t tmpCnt;
-
-    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), OMW_SIZE_MAX);
-
-    for (size_t i = 0; i < pairs.size(); ++i)
-    {
-        replaceAll(pairs[i], startPos, &tmpCnt);
-        if (nReplacements) nReplacements->at(i) = tmpCnt;
-        if (tmpCnt != OMW_SIZE_MAX)
-        {
-            cnt += tmpCnt;
-            allInvalid = false;
-        }
-    }
-
-    if (allInvalid) cnt = OMW_SIZE_MAX;
-
-    if (nReplacementsTotal) *nReplacementsTotal = cnt;
-
+    omw::replaceAll(*this, pairs, startPos, nReplacementsTotal, nReplacements);
     return *this;
 }
 
@@ -563,6 +515,147 @@ omw::string omw::string::toUpper_asciiExt() const
 {
     omw::string s(this->c_str());
     return s.upper_asciiExt();
+}
+
+
+
+//! @param [in,out] str 
+//! @param search Substring to be replaced
+//! @param replace String for replacement
+//! @param startPos From where to start searching
+//! @return The parameter `str`
+std::string& omw::replaceFirst(std::string& str, const std::string& search, const std::string& replace, std::string::size_type startPos)
+{
+    std::string::size_type pos = str.find(search, startPos);
+    if ((pos < str.length()) && (pos != std::string::npos)) str.replace(pos, search.length(), replace);
+    return str;
+}
+
+//! @param [in,out] str 
+//! @param search Character to be replaced
+//! @param replace Character for replacement
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return The parameter `str`
+std::string& omw::replaceAll(std::string& str, char search, char replace, std::string::size_type startPos, size_t* nReplacements)
+{
+    size_t cnt = 0;
+
+    for (size_t i = startPos; i < str.length(); ++i)
+    {
+        if (str.at(i) == search)
+        {
+            str.at(i) = replace;
+            ++cnt;
+        }
+    }
+
+    if (nReplacements) *nReplacements = cnt;
+
+    return str;
+}
+
+//! @param [in,out] str 
+//! @param search Character to be replaced
+//! @param replace String for replacement
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return The parameter `str`
+std::string& omw::replaceAll(std::string& str, char search, const std::string& replace, std::string::size_type startPos, size_t* nReplacements)
+{
+    return omw::replaceAll(str, omw::StringReplacePair(search, replace), startPos, nReplacements);
+}
+
+//! @param [in,out] str 
+//! @param search Substring to be replaced
+//! @param replace Character for replacement
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return The parameter `str`
+std::string& omw::replaceAll(std::string& str, const std::string& search, char replace, std::string::size_type startPos, size_t* nReplacements)
+{
+    return omw::replaceAll(str, omw::StringReplacePair(search, replace), startPos, nReplacements);
+}
+
+//! @param [in,out] str 
+//! @param search Substring to be replaced
+//! @param replace String for replacement
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return The parameter `str`
+std::string& omw::replaceAll(std::string& str, const std::string& search, const std::string& replace, std::string::size_type startPos, size_t* nReplacements)
+{
+    size_t cnt = 0;
+
+    if (search.length() > 0)
+    {
+        std::string::size_type pos = str.find(search, startPos);
+        while ((pos < str.length()) && (pos != std::string::npos))
+        {
+            str.replace(pos, search.length(), replace);
+            ++cnt;
+            pos = str.find(search, pos + replace.length());
+        }
+    }
+    else cnt = OMW_SIZE_MAX;
+
+    if (nReplacements) *nReplacements = cnt;
+
+    return str;
+}
+
+//! @param [in,out] str 
+//! @param pair Search and replace string pair
+//! @param startPos From where to start searching
+//! @param [out] nReplacements Number of occurrences
+//! @return The parameter `str`
+std::string& omw::replaceAll(std::string& str, const omw::StringReplacePair& pair, std::string::size_type startPos, size_t* nReplacements)
+{
+    return omw::replaceAll(str, pair.search(), pair.replace(), startPos, nReplacements);
+}
+
+//! @param [in,out] str 
+//! @param pairs Search and replace string pair vector
+//! @param startPos From where to start searching
+//! @param [out] nReplacementsTotal Total number of occurrences
+//! @param [out] nReplacements Number of occurrences of specific replace pair
+//! @return The parameter `str`
+std::string& omw::replaceAll(std::string& str, const std::vector<omw::StringReplacePair>& pairs, std::string::size_type startPos, size_t* nReplacementsTotal, std::vector<size_t>* nReplacements)
+{
+    bool allInvalid = true;
+    size_t cnt = 0;
+    size_t tmpCnt;
+
+    if (nReplacements) *nReplacements = std::vector<size_t>(pairs.size(), OMW_SIZE_MAX);
+
+    for (size_t i = 0; i < pairs.size(); ++i)
+    {
+        omw::replaceAll(str, pairs[i], startPos, &tmpCnt);
+        if (nReplacements) nReplacements->at(i) = tmpCnt;
+        if (tmpCnt != OMW_SIZE_MAX)
+        {
+            cnt += tmpCnt;
+            allInvalid = false;
+        }
+    }
+
+    if (allInvalid) cnt = OMW_SIZE_MAX;
+
+    if (nReplacementsTotal) *nReplacementsTotal = cnt;
+
+    return str;
+}
+
+//! @param [in,out] str 
+//! @param pairs Pointer to a replace pair array
+//! @param count 
+//! @param startPos From where to start searching
+//! @param [out] nReplacementsTotal Total number of occurrences
+//! @param [out] nReplacements Number of occurrences of specific replace pair
+//! @return The parameter `str`
+std::string& omw::replaceAll(std::string& str, const omw::StringReplacePair* pairs, size_t count, std::string::size_type startPos, size_t* nReplacementsTotal, std::vector<size_t>* nReplacements)
+{
+    return omw::replaceAll(str, std::vector<omw::StringReplacePair>(pairs, pairs + count), startPos, nReplacementsTotal, nReplacements);
 }
 
 

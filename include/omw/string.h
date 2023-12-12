@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.04.2023
+date            19.11.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -204,6 +204,22 @@ namespace omw
         omw::string toUpper_asciiExt() const;
         /// @}
     };
+
+
+
+    //! \name Find and Replace
+    /// @{
+    std::string& replaceFirst(std::string& str, const std::string& search, const std::string& replace, std::string::size_type startPos = 0);
+    inline std::string& replaceFirst(std::string& str, const omw::StringReplacePair& pair, std::string::size_type startPos = 0) { return omw::replaceFirst(str, pair.search(), pair.replace(), startPos); }
+
+    std::string& replaceAll(std::string& str, char search, char replace, std::string::size_type startPos = 0, size_t* nReplacements = nullptr);
+    std::string& replaceAll(std::string& str, char search, const std::string& replace, std::string::size_type startPos = 0, size_t* nReplacements = nullptr);
+    std::string& replaceAll(std::string& str, const std::string& search, char replace, std::string::size_type startPos = 0, size_t* nReplacements = nullptr);
+    std::string& replaceAll(std::string& str, const std::string& search, const std::string& replace, std::string::size_type startPos = 0, size_t* nReplacements = nullptr);
+    std::string& replaceAll(std::string& str, const omw::StringReplacePair& pair, std::string::size_type startPos = 0, size_t* nReplacements = nullptr);
+    std::string& replaceAll(std::string& str, const std::vector<omw::StringReplacePair>& pairs, std::string::size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
+    std::string& replaceAll(std::string& str, const omw::StringReplacePair* pairs, size_t count, std::string::size_type startPos = 0, size_t* nReplacementsTotal = nullptr, std::vector<size_t>* nReplacements = nullptr);
+    /// @}
 
 
 

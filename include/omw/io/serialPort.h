@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            19.01.2023
+date            12.12.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -29,6 +29,11 @@ namespace omw
         public:
             using baud_type = uint32_t;
 
+#if defined(OMW_PLAT_WIN)
+            static void initDcb(void* DCB_customDcb, baud_type baud/*, nDataBits, parity, nStopBits*/);
+#elif defined(OMW_PLAT_UNIX)
+#endif
+
         public:
             SerialPort();
             virtual ~SerialPort() {}
@@ -48,11 +53,6 @@ namespace omw
 
             bool isOpen() const { return m_isOpen; }
             bool good() const { return m_good; }
-
-#if defined(OMW_PLAT_WIN)
-            static void initDcb(void* DCB_customDcb, baud_type baud);
-#elif defined(OMW_PLAT_UNIX)
-#endif
 
         private:
             //std::string m_port;

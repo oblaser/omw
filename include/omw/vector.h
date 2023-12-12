@@ -25,10 +25,10 @@ namespace omw
     //! \name omw::vector Implementation Functions
     /// @{
     template <class T, class Allocator = std::allocator<T>>
-    bool contains(const std::vector<T, Allocator>& v, const T& item)
+    bool contains(const typename std::vector<T, Allocator>& v, const T& item)
     {
         bool r = false;
-        for (std::vector<T, Allocator>::size_type i = 0; i < v.size(); ++i) { if (v[i] == item) { r = true; break; } }
+        for (typename std::vector<T, Allocator>::size_type i = 0; i < v.size(); ++i) { if (v[i] == item) { r = true; break; } }
         return r;
     }
 
@@ -66,7 +66,7 @@ namespace omw
 
         bool contains(const T& item) const { return omw::contains(*this, item); }
 
-        void reserveAdd(size_type addCap) { this->reserve(this->size() + addCap); }
+        void reserveAdd(size_type additionalCapacity) { this->reserve(this->size() + additionalCapacity); }
     };
 
     /*! @} */
