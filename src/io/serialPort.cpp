@@ -343,7 +343,7 @@ int omw::io::SerialPort::open(const std::string& port, void* DCB_customDcb, cons
                 tmo.WriteTotalTimeoutConstant = 0;
             }
 
-            if (!SetCommState(m_handle, static_cast<DCB*>(DCB_customDcb))) r = __LINE__;
+            if (!SetCommState(m_handle, reinterpret_cast<DCB*>(DCB_customDcb))) r = __LINE__;
             else
             {
                 if (!SetCommTimeouts(m_handle, &tmo)) r = __LINE__;
