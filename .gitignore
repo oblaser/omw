@@ -1,7 +1,13 @@
 
 /build/cmake/*
 !/build/cmake/CMakeLists.txt
+
+!/build/cmake/lib
+/build/cmake/lib/*
 !/build/cmake/lib/CMakeLists.txt
+
+!/build/cmake/unit-tests
+/build/cmake/unit-tests/*
 !/build/cmake/unit-tests/CMakeLists.txt
 
 /build/cmake-system-tests/*
