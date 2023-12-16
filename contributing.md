@@ -14,7 +14,7 @@ Classes however are in upper camel case. Exception classes are in lowercase and 
 > For base classes I don't have a clear idea. Maybe something like a `_Base` suffix.
 > It may differ from case to case.
 
-Macros are in uppercase and start with `OMW_`.
+Macros and defines are in uppercase and begin with `OMW_`.
 
 
 
@@ -36,11 +36,11 @@ In development. May not be backwards compatible.
 
 ### Files
 The version must be consistent in the following files:
-- `build/dep_omw_globals.sh`
-- `build/dep_readme.txt`
+- `build/dep_vstr.txt`
 - `doc/Doxyfile`
 - `include/omw/omw.h`
 - `tests/unit/main.cpp`
+- `release-notes.md`
 
 
 
