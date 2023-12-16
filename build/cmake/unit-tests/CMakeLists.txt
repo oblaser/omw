@@ -4,9 +4,11 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-project(omw)
+project(omw-unit-tests)
 
 
+set(UNIT_TEST_EXE_SHARED ${BINNAME}-unit-test-shared)
+set(UNIT_TEST_EXE_STATIC ${BINNAME}-unit-test-static)
 
 include_directories(../../../include/)
 

@@ -10,8 +10,9 @@
 /build/cmake/unit-tests/*
 !/build/cmake/unit-tests/CMakeLists.txt
 
-/build/cmake-system-tests/*
-!/build/cmake-system-tests/CMakeLists.txt
+!/build/cmake/system-tests
+/build/cmake/system-tests/*
+!/build/cmake/system-tests/CMakeLists.txt
 
 /build/packed/
 
