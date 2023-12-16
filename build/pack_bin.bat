@@ -1,6 +1,6 @@
 @rem    author          Oliver Blaser
-@rem    date            22.12.2021
-@rem    copyright       MIT - Copyright (c) 2021 Oliver Blaser
+@rem    date            16.12.2023
+@rem    copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 
 
@@ -31,7 +31,7 @@ xcopy /i ..\lib\omw.lib packed\omw_win\omw\lib\
 @rem xcopy /i ..\lib64\omw-d.lib packed\omw_win\omw\lib64\
 @rem xcopy /i ..\lib64\omw.lib packed\omw_win\omw\lib64\
 
-copy dep_readme.txt packed\omw_win\omw\readme.txt
+bash -c "source dep_globals.sh && writeReadmeFile packed/omw_win/omw/readme.txt"
 xcopy ..\license.txt packed\omw_win\omw
 
 cd packed\omw_win

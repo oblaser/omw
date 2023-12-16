@@ -9,7 +9,7 @@
 
 
 
-source dep_omw_globals.sh
+source dep_globals.sh
 
 errCnt=0
 function procErrorCode()

@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # author        Oliver Blaser
-# date          21.12.2021
-# copyright     MIT - Copyright (c) 2021 Oliver Blaser
+# date          16.12.2023
+# copyright     MIT - Copyright (c) 2022 Oliver Blaser
 
-source dep_omw_globals.sh
+source dep_globals.sh
 
 packedDir="./packed"
-outDirName="omw_doc"
+outDirName="${prjDirName}_doc"
 outDir="$packedDir/$outDirName"
-archive="$packedDir/omw_doc_v$versionstr.tar.gz"
+archive="$packedDir/${prjDirName}_doc_v$versionstr.tar.gz"
 
 rm -rf $outDir
 
@@ -17,7 +17,7 @@ mkdir -p $outDir
 
 cp -r ../doc/out/* $outDir
 
-cp dep_readme.txt $outDir/readme.txt
+writeReadmeFile $outDir/readme.txt
 cp ../license.txt $outDir
 
 rm -f $archive
