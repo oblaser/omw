@@ -11,8 +11,8 @@
     `----'   |   | |`-'     \   \   | \ |
              |   ;/          \   \  |--"
              '---'            \   \ |
-v0.2.1-alpha.2                 '---"
-
+                               '---"
+v0.2.1-beta
 
 
 Webpage     https://static.oblaser.ch/omw/

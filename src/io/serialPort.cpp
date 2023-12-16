@@ -593,7 +593,7 @@ void omw::preview::sortSerialPortList(std::vector<std::string>& ports)
 
 
 #if defined(OMW_PLAT_UNIX)
-    inline int alias_close(int fd) { return close(fd); }
-    inline ssize_t alias_read(int fd, void *buf, size_t count) { return read(fd, buf, count); }
-    inline ssize_t alias_write(int fd, const void *buf, size_t count) { return write(fd, buf, count); }
+inline int alias_close(int fd) { return close(fd); }
+inline ssize_t alias_read(int fd, void *buf, size_t count) { return read(fd, buf, count); }
+inline ssize_t alias_write(int fd, const void *buf, size_t count) { return write(fd, buf, count); }
 #endif // OMW_PLAT_UNIX

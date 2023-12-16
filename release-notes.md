@@ -6,10 +6,16 @@
 
 
 
-### v0.2.1-alpha.2
+### v0.2.1-beta
 
 New
  - "omw::vector Implementation Functions" in Module "Containers Library" (*grp_containersLib*)
+ - added overloads of `omw::split` and `omw::splitLen`
+ - `omw::isNull()`
+ - `omw::replaceFirst()` and `omw::replaceAll()` for `std::string`
+
+Improved
+ - `omw::isHex()`
 
 
 
