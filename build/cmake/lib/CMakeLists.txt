@@ -8,12 +8,6 @@ project(omw)
 
 
 
-set(BINSHARED ${BINNAME}-shared)
-set(BINSTATIC ${BINNAME}-static)
-
-#set(CMAKE_CXX_STANDARD 17)
-#set(CMAKE_CXX_STANDARD_REQUIRED true)
-
 include_directories(../../../include/)
 
 set(SOURCES
@@ -41,7 +35,7 @@ set(SOURCES
 )
 
 add_library(${BINSHARED} SHARED ${SOURCES})
-add_library(${BINSTATIC} STATIC ${SOURCES})
-
 set_target_properties(${BINSHARED} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../)
+
+add_library(${BINSTATIC} STATIC ${SOURCES})
 set_target_properties(${BINSTATIC} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../)

@@ -10,5 +10,13 @@ set(BINNAME omw)
 
 
 
+set(BINSHARED ${BINNAME}-shared)
+set(BINSTATIC ${BINNAME}-static)
+set(UNIT_TEST_EXE_SHARED ${BINNAME}-unit-test-shared)
+set(UNIT_TEST_EXE_STATIC ${BINNAME}-unit-test-static)
+
+#set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD_REQUIRED true)
+
 add_subdirectory(lib)
 add_subdirectory(unit-tests)

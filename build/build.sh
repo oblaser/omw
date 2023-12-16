@@ -60,27 +60,9 @@ function copy_bin()
     fi
 }
 
-function cmd_cmake_clean()
+function cmd_cleanAll()
 {
-    rm -rf $cmakeDirName/CMakeFiles/
-    procErrorCode $?
-
-    rm -f $cmakeDirName/CMakeCache.txt
-    procErrorCode $?
-
-    rm -f $cmakeDirName/cmake_install.cmake
-    procErrorCode $?
-
-    rm -f $cmakeDirName/Makefile
-    procErrorCode $?
-
-    rm -f $cmakeDirName/*.a
-    procErrorCode $?
-
-    rm -f $cmakeDirName/*.so
-    procErrorCode $?
-
-    rm -f $cmakeDirName/$exeName
+    git clean -dfx $cmakeDirName/
     procErrorCode $?
 }
 
@@ -123,7 +105,7 @@ function procArg()
 {
     ptintTitle "$echoTitle - $1" 4
     
-    if [ "$1" == "cleanAll" ]; then cmd_cmake_clean
+    if [ "$1" == "cleanAll" ]; then cmd_cleanAll
     elif [ "$1" == "cmake" ]; then cmd_cmake
     elif [ "$1" == "make" ]; then cmd_make
     elif [ "$1" == "clean" ]; then cmd_clean
