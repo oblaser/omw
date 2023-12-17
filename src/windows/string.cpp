@@ -38,12 +38,12 @@ size_t omw::windows::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSiz
     r = utf8_to_wstr(src, dest, destSize, ec);
 
     if (ec.code() == omw::windows::EC_OK) return r;
-    else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) throw std::range_error(ec.msg());
-    else if (ec.code() == omw::windows::EC_INV_ARG) throw std::invalid_argument(ec.msg());
-    else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode(ec.msg());
+    else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) throw std::range_error("omw::windows::utf8_to_wstr: " + ec.msg());
+    else if (ec.code() == omw::windows::EC_INV_ARG) throw std::invalid_argument("omw::windows::utf8_to_wstr: " + ec.msg());
+    else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode("omw::windows::utf8_to_wstr: " + ec.msg());
     //else nop
 
-    throw std::runtime_error(ec.msg());
+    throw std::runtime_error("omw::windows::utf8_to_wstr: " + ec.msg());
 }
 
 //! @param src The input string
@@ -117,12 +117,12 @@ size_t omw::windows::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSiz
     r = wstr_to_utf8(src, dest, destSize, ec);
 
     if (ec.code() == omw::windows::EC_OK) return r;
-    else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) throw std::range_error(ec.msg());
-    else if (ec.code() == omw::windows::EC_INV_ARG) throw std::invalid_argument(ec.msg());
-    else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode(ec.msg());
+    else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) throw std::range_error("omw::windows::wstr_to_utf8: " + ec.msg());
+    else if (ec.code() == omw::windows::EC_INV_ARG) throw std::invalid_argument("omw::windows::wstr_to_utf8: " + ec.msg());
+    else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode("omw::windows::wstr_to_utf8: " + ec.msg());
     //else nop
 
-    throw std::runtime_error(ec.msg());
+    throw std::runtime_error("omw::windows::wstr_to_utf8: " + ec.msg());
 }
 
 //! @param src The input string (`LPCWCH`)
@@ -193,12 +193,12 @@ void omw::windows::wstr_to_utf8(const wchar_t* src, std::string& dest)
     wstr_to_utf8(src, dest, ec);
 
     if (ec.code() == omw::windows::EC_OK) return;
-    else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) throw std::range_error(ec.msg());
-    else if (ec.code() == omw::windows::EC_INV_ARG) throw std::invalid_argument(ec.msg());
-    else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode(ec.msg());
+    else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) throw std::range_error("omw::windows::wstr_to_utf8: " + ec.msg());
+    else if (ec.code() == omw::windows::EC_INV_ARG) throw std::invalid_argument("omw::windows::wstr_to_utf8: " + ec.msg());
+    else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode("omw::windows::wstr_to_utf8: " + ec.msg());
     //else nop
 
-    throw std::runtime_error(ec.msg());
+    throw std::runtime_error("omw::windows::wstr_to_utf8: " + ec.msg());
 }
 
 //! @param src The input string (`LPCWCH`)

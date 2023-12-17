@@ -32,10 +32,10 @@ const uint8_t* omw::windows::getResource(int idr, int type, size_t* size)
     const uint8_t* data = getResource(idr, type, size, ec);
 
     if (ec.good()) return data;
-    else if (ec.code() == omw::windows::EC_RESOURCE_NOT_FOUND) throw omw::windows::resource_not_found(ec.msg());
+    else if (ec.code() == omw::windows::EC_RESOURCE_NOT_FOUND) throw omw::windows::resource_not_found("omw::windows::getResource: " + ec.msg());
     // else nop (EC_RESOURCE_NOT_LOADED throws std::runtime_error)
 
-    throw std::runtime_error(ec.msg());
+    throw std::runtime_error("omw::windows::getResource: " + ec.msg());
 }
 
 //! @param idr Resource ID (16bit)

@@ -40,11 +40,11 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName)
     std::string value = getEnvironmentVariable(varName, ec);
 
     if (ec.code() == omw::windows::EC_OK) return value;
-    else if (ec.code() == omw::windows::EC_ENVVAR_NOT_FOUND) throw omw::windows::envVar_not_found(ec.msg());
-    else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode(ec.msg());
+    else if (ec.code() == omw::windows::EC_ENVVAR_NOT_FOUND) throw omw::windows::envVar_not_found("omw::windows::getEnvironmentVariable: " + ec.msg());
+    else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode("omw::windows::getEnvironmentVariable: " + ec.msg());
     // else nop
 
-    throw std::runtime_error(ec.msg());
+    throw std::runtime_error("omw::windows::getEnvironmentVariable: " + ec.msg());
 }
 
 //! @brief Gets the value of an environment variable.
