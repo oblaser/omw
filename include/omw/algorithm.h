@@ -64,7 +64,7 @@ namespace omw
         return r;
     }
 
-    inline size_t levenshteinDistance(const char* a, const char* b)
+    static inline size_t levenshteinDistance(const char* a, const char* b)
     {
         size_t r;
         if (a && b) r = levenshteinDistance(a, std::strlen(a), b, std::strlen(b));
@@ -72,7 +72,7 @@ namespace omw
         return r;
     }
 
-    inline size_t levenshteinDistance(const std::string& a, const std::string& b) { return levenshteinDistance(a.data(), a.size(), b.data(), b.size()); }
+    static inline size_t levenshteinDistance(const std::string& a, const std::string& b) { return levenshteinDistance(a.data(), a.size(), b.data(), b.size()); }
     
     template <typename T>
     inline size_t levenshteinDistance(const std::vector<T>& a, const std::vector<T>& b)

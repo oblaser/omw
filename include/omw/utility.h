@@ -60,8 +60,8 @@ namespace omw
     * @{
     */
 
-    inline void toggle(bool& value) { value = !value; }
-    inline void toggle(int& value) { value = (value ? 0 : 1); }
+    static inline void toggle(bool& value) { value = !value; }
+    static inline void toggle(int& value) { value = (value ? 0 : 1); }
 
     // grp_utility_gpUtil
     /*! @} */

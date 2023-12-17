@@ -611,14 +611,15 @@ TEST_CASE("string.h stoz()")
     if (sizeof(size_t) == 4)
     {
         CHECK(omw::stoz("0") == 0);
-        CHECK(omw::stoz("123") == 123);
+        CHECK(omw::stoz("   123asdf") == 123);
         CHECK(omw::stoz("4294967295") == UINT32_MAX);
+        CHECK(omw::stoz("4294967295") == SIZE_MAX);
 
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("asdf"), std::invalid_argument);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("-170141183460469231731687303715884105728"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("-9223372036854775809"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("-9223372036854775808"), std::out_of_range);
-        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-456"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("  -456asdf"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("-1"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("4294967296"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("18446744073709551615"), std::out_of_range);
@@ -627,14 +628,15 @@ TEST_CASE("string.h stoz()")
     else if (sizeof(size_t) == 8)
     {
         CHECK(omw::stoz("0") == 0);
-        CHECK(omw::stoz("123") == 123);
+        CHECK(omw::stoz("   123asdf") == 123);
         CHECK(omw::stoz("18446744073709551615") == UINT64_MAX);
+        CHECK(omw::stoz("18446744073709551615") == SIZE_MAX);
 
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("asdf"), std::invalid_argument);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("-170141183460469231731687303715884105728"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("-9223372036854775809"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("-9223372036854775808"), std::out_of_range);
-        TESTUTIL_TRYCATCH_CHECK(omw::stoz("-456"), std::out_of_range);
+        TESTUTIL_TRYCATCH_CHECK(omw::stoz("  -456asdf"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("-1"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("18446744073709551616"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("340282366920938463463374607431768211455"), std::out_of_range);

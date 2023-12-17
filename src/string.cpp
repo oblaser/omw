@@ -717,29 +717,35 @@ omw::string omw::to_string(const std::pair<long double, long double>& value, cha
 
 
 
-//! @param boolStr Boolean string representation
-//! @return Bool value of the string
+//! @param str Boolean string representation
+//! @return The string converted to `bool`
 //! 
-//! \b true and \b 1 converts to `true`, \b false and \b 0 to `false`. The input is not case sensitive.
+//! \b true and \b 1 converts to `true`, \b false and \b 0 to `false`. The case of the characters is ignored.
 //! 
 //! \b Exceptions
 //! - `std::out_of_range` if the value isn't an element of `{ "0", "1", "true", "false" }`
 //! - <tt><a href="https://en.cppreference.com/w/cpp/string/basic_string/stol" target="_blank">std::stoi()</a></tt> is called and may throw `std::out_of_range` or `std::invalid_argument`
 //! 
-bool omw::stob(const std::string& boolStr)
+bool omw::stob(const std::string& str)
 {
-    const omw::string tmpStr = boolStr;
+    const omw::string tmpStr = str;
     if (tmpStr.toLower_ascii() == "true") return true;
     if (tmpStr.toLower_ascii() == "false") return false;
 
-    int boolInt = std::stoi(boolStr);
-
+    const int boolInt = std::stoi(str);
     if (boolInt == 1) return true;
     if (boolInt == 0) return false;
 
     throw std::out_of_range("omw::stob");
 }
 
+//! @param str The string to convert
+//! @param pos Address of an integer to store the number of characters processed
+//! @param base The number base
+//! @return The string converted to `size_t`
+//! 
+//! Does not apply unsigned integer wraparound rules. Negative numbers throw an out of range exception.
+//! 
 size_t omw::stoz(const std::string& str, size_t* pos, int base)
 {
     size_t r;
@@ -756,18 +762,20 @@ size_t omw::stoz(const std::string& str, size_t* pos, int base)
 
     if (sizeof(size_t) == sizeof(unsigned long)) r = (size_t)std::stoul(str, pos, base);
     else if (sizeof(size_t) == sizeof(unsigned long long)) r = (size_t)std::stoull(str, pos, base);
-    else
-    {
-        using ull_t = unsigned long long;
-        const ull_t value = std::stoull(str, pos, base);
-        constexpr ull_t size_max = SIZE_MAX;
-        if (value > size_max) throw std::out_of_range("omw::stoz");
-        r = (size_t)value;
-    }
+    
+    static_assert(((sizeof(size_t) == sizeof(unsigned long)) || (sizeof(size_t) == sizeof(unsigned long long))), "weired platform!?");
+    //else // some weired platform
+    //{
+    //    using ull_t = unsigned long long;
+    //    const ull_t value = std::stoull(str, pos, base);
+    //    constexpr ull_t size_max = SIZE_MAX;
+    //    if (value > size_max) throw std::out_of_range("omw::stoz");
+    //    r = (size_t)value;
+    //}
 
-    size_t start = 0;
-    while (std::isspace(str[start])) ++start;
-    if (str[start] == '-') throw std::out_of_range("omw::stoz");
+    const char* p = str.c_str();
+    while (std::isspace(*p)) ++p;
+    if (*p == '-') throw std::out_of_range("omw::stoz");
 
 //#endif
 

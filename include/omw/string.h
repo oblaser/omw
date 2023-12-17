@@ -129,9 +129,9 @@ namespace omw
 #endif
 
     omw::stringVector_t split(const std::string& str, char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos);
-    inline omw::stringVector_t split(const char* str, char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) { return (str ? omw::split(std::string(str), delimiter, maxTokenCount) : omw::stringVector_t()); }
+    static inline omw::stringVector_t split(const char* str, char delimiter, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) { return (str ? omw::split(std::string(str), delimiter, maxTokenCount) : omw::stringVector_t()); }
     omw::stringVector_t splitLen(const std::string& str, std::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos);
-    inline omw::stringVector_t splitLen(const char* str, std::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) { return (str ? omw::splitLen(std::string(str), tokenLength, maxTokenCount) : omw::stringVector_t()); }
+    static inline omw::stringVector_t splitLen(const char* str, std::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount = omw::stringVector_npos) { return (str ? omw::splitLen(std::string(str), tokenLength, maxTokenCount) : omw::stringVector_t()); }
     /// @}
 
 
@@ -248,7 +248,7 @@ namespace omw
 
     //! \name Convert From String
     /// @{
-    bool stob(const std::string& boolStr);
+    bool stob(const std::string& str);
 
     size_t stoz(const std::string& str, size_t* pos = nullptr, int base = 10);
 
