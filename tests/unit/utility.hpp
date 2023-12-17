@@ -1457,83 +1457,6 @@ TEST_CASE("utility.h shiftRight() 64-bit")
 
 
 
-TEST_CASE("utility.h Nullable")
-{
-    omw::Nullable<int> a;
-    omw::Nullable<int> b;
-
-
-
-    CHECK(omw::isNull(a));
-    CHECK(a.isNull());
-    CHECK(a.get(-5) == -5);
-    CHECK(a.get(123) == 123);
-
-    b = a;
-    CHECK(omw::isNull(b));
-    CHECK(b.isNull());
-    CHECK(b.get(-5) == -5);
-    CHECK(b.get(123) == 123);
-
-
-
-    a = 3;
-    CHECK(omw::isNull(a) == false);
-    CHECK(a.isNull() == false);
-    CHECK(a.get(-5) == 3);
-    CHECK(a.get(123) == 3);
-
-    b = a;
-    CHECK(omw::isNull(b) == false);
-    CHECK(b.isNull() == false);
-    CHECK(b.get(-5) == 3);
-    CHECK(b.get(123) == 3);
-
-
-
-    a.free();
-    CHECK(omw::isNull(a) == false);
-    CHECK(a.isNull() == false);
-    CHECK(a.get(-5) == 0);
-    CHECK(a.get(123) == 0);
-
-    b = a;
-    CHECK(omw::isNull(b) == false);
-    CHECK(b.isNull() == false);
-    CHECK(b.get(-5) == 0);
-    CHECK(b.get(123) == 0);
-
-
-
-    a = -456;
-    CHECK(omw::isNull(a) == false);
-    CHECK(a.isNull() == false);
-    CHECK(a.get(-5) == -456);
-    CHECK(a.get(123) == -456);
-
-    b = a;
-    CHECK(omw::isNull(b) == false);
-    CHECK(b.isNull() == false);
-    CHECK(b.get(-5) == -456);
-    CHECK(b.get(123) == -456);
-
-
-
-    a.makeNull();
-    CHECK(omw::isNull(a));
-    CHECK(a.isNull());
-    CHECK(a.get(-5) == -5);
-    CHECK(a.get(123) == 123);
-
-    b = a;
-    CHECK(omw::isNull(b));
-    CHECK(b.isNull());
-    CHECK(b.get(-5) == -5);
-    CHECK(b.get(123) == 123);
-}
-
-
-
 TEST_CASE("utility.h toggle()")
 {
     bool b = false;
@@ -1551,23 +1474,6 @@ TEST_CASE("utility.h toggle()")
     CHECK(i == 1);
     omw::toggle(i);
     CHECK(i == 0);
-}
-
-
-
-TEST_CASE("utility.h vectorContains()")
-{
-    const std::vector<int> vInt = { 1, 5, 9 };
-    CHECK(omw::vectorContains(vInt, 1));
-    CHECK_FALSE(omw::vectorContains(vInt, 0));
-
-    const std::vector<std::string> vStdString = { "the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog" };
-    CHECK(omw::vectorContains(vStdString, std::string("fox")));
-    CHECK_FALSE(omw::vectorContains(vStdString, std::string("boat")));
-
-    const std::vector<omw::string> vString = { "pack", "my", "box", "with", "five", "dozen", "liquor", "jugs" };
-    CHECK(omw::vectorContains(vString, omw::string("five")));
-    CHECK_FALSE(omw::vectorContains(vString, omw::string("boat")));
 }
 
 

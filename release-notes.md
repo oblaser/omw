@@ -6,6 +6,13 @@
 
 
 
+### v0.2.1
+
+Removed
+ - `omw::Base_Nullable` and `omw::Nullable<T>`, use `std::optional`
+
+
+
 ### v0.2.1-beta
 
 New

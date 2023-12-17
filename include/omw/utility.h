@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            06.04.2022
+date            17.12.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -60,64 +60,8 @@ namespace omw
     * @{
     */
 
-    class Base_Nullable
-    {
-    public:
-        Base_Nullable() : m_isNull(true) {}
-        explicit Base_Nullable(bool isNull) : m_isNull(isNull) {}
-        virtual ~Base_Nullable() {}
-
-        bool isNull() const { return m_isNull; }
-        
-        virtual void makeNull() { m_isNull = true; }
-
-    protected:
-        void setIsNull(bool isNull) { m_isNull = isNull; }
-
-    private:
-        bool m_isNull;
-    };
-
-    template <typename T>
-    class Nullable : public Base_Nullable
-    {
-    public:
-        using value_type = T;
-        using reference = value_type&;
-        using const_reference = const value_type&;
-
-    public:
-        Nullable() : Base_Nullable(), m_value() {}
-        Nullable(const_reference value) : Base_Nullable(false), m_value(value) {}
-        virtual ~Nullable() {}
-
-        const_reference get(const_reference fallback) const { return (isNull() ? fallback : m_value); }
-        void set(const_reference value) { setIsNull(false); m_value = value; }
-
-        virtual void free() { m_value = value_type(); }
-        virtual void makeNull() { free(); Base_Nullable::makeNull(); }
-
-        explicit operator value_type() const { return m_value; }
-
-    protected:
-        value_type m_value;
-    };
-    
-    inline bool isNull(const omw::Base_Nullable& value) { return value.isNull(); }
-
-
-
     inline void toggle(bool& value) { value = !value; }
     inline void toggle(int& value) { value = (value ? 0 : 1); }
-
-    template <class Type>
-    bool vectorContains(const std::vector<Type>& v, const Type& item)
-    {
-        bool r = false;
-        for (size_t i = 0; (i < v.size()) && !r; ++i)
-            if (v[i] == item) r = true;
-        return r;
-    }
 
     // grp_utility_gpUtil
     /*! @} */
