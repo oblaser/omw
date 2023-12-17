@@ -21,12 +21,16 @@ instead.
 #define IG_OMW_WINDOWS_RESOURCETYPES_H
 
 
+/*! \addtogroup grp_windows
+* @{
+*/
 
 // custom resource types
 //#define OMW_RCT__BASE_ 20000
 #define OMW_RCT_BINFILE 20001       /*!< Binary file resource type */
 #define OMW_RCT_TEXTFILE 20002      /*!< Text file resource type */
 
+/*! @} */
 
 
 #endif // IG_OMW_WINDOWS_RESOURCETYPES_H

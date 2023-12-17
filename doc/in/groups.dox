@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            26.01.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            17.12.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 
@@ -127,4 +127,9 @@ See also <a href="https://en.cppreference.com/w/cpp/language/operator_arithmetic
 `#include <omw/encoding.h>`
 
 Decode and encode byte buffers from/to several formats
+*/
+
+/*!
+\defgroup grp_windows Windows Convenience Library
+Wrappers and helper functions for the Windows API.
 */

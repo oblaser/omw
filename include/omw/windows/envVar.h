@@ -19,6 +19,10 @@ namespace omw
 {
     namespace windows
     {
+        /*! \addtogroup grp_windows
+        * @{
+        */
+
         constexpr size_t envVarValueMaxSize = 32767;
 
         //! \name Environment Variables
@@ -26,6 +30,8 @@ namespace omw
         std::string getEnvironmentVariable(const std::string& varName);
         std::string getEnvironmentVariable(const std::string& varName, omw::windows::ErrorCode& ec);
         /// @}
+
+        /*! @} */
     }
 }
 

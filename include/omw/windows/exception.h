@@ -17,6 +17,10 @@ namespace omw
 {
     namespace windows
     {
+        /*! \addtogroup grp_windows
+        * @{
+        */
+
         class envVar_not_found : public std::runtime_error
         {
         public:
@@ -43,6 +47,8 @@ namespace omw
             explicit resource_not_found(const char* message) : std::runtime_error(message) {}
             virtual ~resource_not_found() {}
         };
+
+        /*! @} */
     }
 }
 

@@ -17,6 +17,10 @@ namespace omw
 {
     namespace windows
     {
+        /*! \addtogroup grp_windows
+        * @{
+        */
+
         enum ERRORCODE
         {
             EC_OK = 0,                      /*!< No error occured */
@@ -54,6 +58,8 @@ namespace omw
             int errorCode;
             std::string errorMsg;
         };
+
+        /*! @} */
     }
 }
 

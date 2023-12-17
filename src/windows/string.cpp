@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            15.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            17.12.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #include "omw/windows/string.h"
@@ -21,20 +21,17 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 
 
-//! @brief Converts an UTF-8 string to a Windows API compatible wide string.
 //! @param src The input string
-//! @param [out] LPWSTR_dest Pointer (`LPWSTR`) to the output buffer (`WCHAR[]`)
+//! @param [out] dest Pointer (`LPWSTR`) to the output buffer (`WCHAR[]`)
 //! @param destSize Size of the destination buffer (number of `WCHAR`)
 //! @return Number of wide chars written to dest (not including the terminating null character)
 //! 
-//! The \b src argument can also be of type <tt>const char*</tt> (implicit <tt>std::string()</tt> constructor).
+//! Converts an UTF-8 string to a Windows API compatible wide string.
 //! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-size_t omw::windows::utf8_to_wstr(const std::string& src, void* LPWSTR_dest, size_t destSize)
+size_t omw::windows::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSize)
 {
-    LPWSTR dest = reinterpret_cast<LPWSTR>(LPWSTR_dest);
-
     size_t r;
     ErrorCode ec;
 
@@ -49,24 +46,21 @@ size_t omw::windows::utf8_to_wstr(const std::string& src, void* LPWSTR_dest, siz
     throw std::runtime_error(ec.msg());
 }
 
-//! @brief Converts an UTF-8 string to a Windows API compatible wide string.
 //! @param src The input string
-//! @param [out] LPWSTR_dest Pointer (`LPWSTR`) to the output buffer (`WCHAR[]`)
+//! @param [out] dest Pointer (`LPWSTR`) to the output buffer (`WCHAR[]`)
 //! @param destSize Size of the destination buffer (number of `WCHAR`)
 //! @param [out] ec See \ref omw_windows_strConv_infoText
 //! @return Number of wide chars written to dest (not including the terminating null character)
 //! 
-//! The \b src argument can also be of type <tt>const char*</tt> (implicit <tt>std::string()</tt> constructor).
+//! Converts an UTF-8 string to a Windows API compatible wide string.
 //! 
-size_t omw::windows::utf8_to_wstr(const std::string& src, void* LPWSTR_dest, size_t destSize, ErrorCode& ec)
+size_t omw::windows::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSize, ErrorCode& ec)
 {
-    LPWSTR dest = reinterpret_cast<LPWSTR>(LPWSTR_dest);
-
     int r;
 
     if (destSize > (size_t)INT_MAX) destSize = INT_MAX;
 
-    r = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, src.c_str(), -1, dest, (int)destSize);
+    r = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, src, -1, dest, (int)destSize);
 
     if (r <= 0)
     {
@@ -106,18 +100,17 @@ size_t omw::windows::utf8_to_wstr(const std::string& src, void* LPWSTR_dest, siz
     return r - 1;
 }
 
-//! @brief Converts a Windows API compatible wide string to an UTF-8 string.
 //! @param src The input string (`LPCWCH`)
 //! @param [out] dest Pointer to the output buffer
 //! @param destSize Size of the destination buffer
 //! @return Number of bytes written to dest (not including the terminating null character)
 //! 
+//! Converts a Windows API compatible wide string to an UTF-8 string.
+//! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-size_t omw::windows::wstr_to_utf8(const void* LPCWCH_src, char* dest, size_t destSize)
+size_t omw::windows::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSize)
 {
-    LPCWCH src = reinterpret_cast<LPCWCH>(LPCWCH_src);
-
     size_t r;
     ErrorCode ec;
 
@@ -132,16 +125,16 @@ size_t omw::windows::wstr_to_utf8(const void* LPCWCH_src, char* dest, size_t des
     throw std::runtime_error(ec.msg());
 }
 
-//! @brief Converts a Windows API compatible wide string to an UTF-8 string.
 //! @param src The input string (`LPCWCH`)
 //! @param [out] dest Pointer to the output buffer
 //! @param destSize Size of the destination buffer
 //! @param [out] ec See \ref omw_windows_strConv_infoText
 //! @return Number of bytes written to dest (not including the terminating null character)
-size_t omw::windows::wstr_to_utf8(const void* LPCWCH_src, char* dest, size_t destSize, ErrorCode& ec)
+//! 
+//! Converts a Windows API compatible wide string to an UTF-8 string.
+//! 
+size_t omw::windows::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSize, ErrorCode& ec)
 {
-    LPCWCH src = reinterpret_cast<LPCWCH>(LPCWCH_src);
-
     int r;
 
     if (destSize > (size_t)INT_MAX) destSize = INT_MAX;
@@ -186,16 +179,15 @@ size_t omw::windows::wstr_to_utf8(const void* LPCWCH_src, char* dest, size_t des
     return r - 1;
 }
 
-//! @brief Converts a Windows API compatible wide string to an UTF-8 string.
 //! @param src The input string (`LPCWCH`)
 //! @param [out] dest Reference to the output string
 //! 
+//! Converts a Windows API compatible wide string to an UTF-8 string.
+//! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-void omw::windows::wstr_to_utf8(const void* LPCWCH_src, std::string& dest)
+void omw::windows::wstr_to_utf8(const wchar_t* src, std::string& dest)
 {
-    LPCWCH src = reinterpret_cast<LPCWCH>(LPCWCH_src);
-
     ErrorCode ec;
 
     wstr_to_utf8(src, dest, ec);
@@ -209,14 +201,14 @@ void omw::windows::wstr_to_utf8(const void* LPCWCH_src, std::string& dest)
     throw std::runtime_error(ec.msg());
 }
 
-//! @brief Converts a Windows API compatible wide string to an UTF-8 string.
 //! @param src The input string (`LPCWCH`)
 //! @param [out] dest Reference to the output string
 //! @param [out] ec See \ref omw_windows_strConv_infoText
-void omw::windows::wstr_to_utf8(const void* LPCWCH_src, std::string& dest, ErrorCode& ec)
+//! 
+//! Converts a Windows API compatible wide string to an UTF-8 string.
+//! 
+void omw::windows::wstr_to_utf8(const wchar_t* src, std::string& dest, ErrorCode& ec)
 {
-    LPCWCH src = reinterpret_cast<LPCWCH>(LPCWCH_src);
-
     const size_t bufferSizeInitial = 300;   // adapt unit test "windows_string.hpp" if
     const size_t bufferSizeGrow = 100;      // one of these values change
 

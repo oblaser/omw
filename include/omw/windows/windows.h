@@ -24,6 +24,10 @@ namespace omw
 {
     namespace windows
     {
+        /*! \addtogroup grp_windows
+        * @{
+        */
+
         std::vector<omw::string> getAllDosDevices();
         std::vector<omw::string> queryDosDevice(const std::string& device);
 
@@ -74,6 +78,8 @@ namespace omw
         bool consoleSetCodePage(uint32_t cp);
         bool consoleSetCodePageUTF8();
         /// @}
+
+        /*! @} */
     }
 }
 

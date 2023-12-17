@@ -23,6 +23,10 @@ namespace omw
 {
     namespace windows
     {
+        /*! \addtogroup grp_windows
+        * @{
+        */
+
         //! \name Resources
         /// @{
         const uint8_t* getResource(int idr, int type, size_t* size);
@@ -35,6 +39,8 @@ namespace omw
         std::string getTextResource(int idr);
         std::string getTextResource(int idr, omw::windows::ErrorCode& ec);
         /// @}
+
+        /*! @} */
     }
 }
 
