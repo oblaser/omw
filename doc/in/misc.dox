@@ -49,23 +49,14 @@ An example can be seen in the sourcecode of the `omw::windows::getEnvironmentVar
 
 `#include <omw/windows/string.h>`
 
-The functions `utf8_to_wstr()` and `wstr_to_utf8()` are used to convert between UTF-8 `char` strings
-and `WCHAR` strings used in the Windows API. Both do have several overloads.
+The functions `u8tows()` and `wstou8()` are used to convert between UTF-8 `char` strings
+and `WCHAR` (`wchar_t`) strings used in the Windows API.
 
-The overloads with the `ErrorCode& ec` out parameter has only sucessfully performed if `ec.good()` returns `true`.
-Possible code values:
- - `omw::windows::EC_OK`
- - `omw::windows::EC_INV_ARG`
- - `omw::windows::EC_INV_UNICODE`
- - `omw::windows::EC_INTERNAL`
- - `omw::windows::EC_UNKNOWN_WIN`
- - `omw::windows::EC_STRCONV_DEST_BUFFER_SIZE`
-
-The other overloads can throw
- - `std::range_error` if `dest` buffer is too small
- - `std::invalid_argument` when invalid arguments are passed to the function (such as null pointers)
+Exceptions:
+ - `std::invalid_argument` when invalid arguments are passed to the function (null pointers)
  - `omw::windows::invalid_unicode` when src contains invalid unicode codepoints
  - `std::runtime_error` on unexpected behaviour of underlaying function
+ - Calls to `Allocator::allocate` may throw.
 
 
 

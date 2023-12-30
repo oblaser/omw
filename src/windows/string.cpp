@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            17.12.2023
+date            30.12.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -20,6 +20,92 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include <Windows.h>
 
 
+#define u8tows_fnNamePrefix "omw::windows::u8tows: "
+
+
+using namespace std::literals::string_literals;
+
+
+
+//! @param src The input UTF-8 string
+//! @return The converted wide char string
+//! 
+//! Converts an UTF-8 string to a Windows API compatible wide char string.
+//! 
+//! Throwing function, see \ref omw_windows_strConv_infoText.
+//! 
+std::wstring omw::windows::u8tows(const char* src)
+{
+    using size_type = std::vector<wchar_t>::size_type;
+    static_assert(sizeof(size_type) >= sizeof(int), "invalid integer sizes"); // should always be true on Windows
+
+    std::vector<wchar_t> buffer;
+
+    if (src)
+    {
+        constexpr size_type initialSize = 300;
+        size_type incSize = 50;
+        int res;
+        int destSize;
+
+        buffer = std::vector<wchar_t>(initialSize, L'\0');
+
+        do
+        {
+            if (buffer.size() > static_cast<size_type>(INT_MAX)) destSize = INT_MAX;
+            else destSize = static_cast<int>(buffer.size());
+
+            res = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, src, -1, buffer.data(), destSize);
+
+            if (res <= 0)
+            {
+                const DWORD err = GetLastError();
+
+                if (err == ERROR_INSUFFICIENT_BUFFER)
+                {
+                    buffer = std::vector<wchar_t>(initialSize + incSize, L'\0');
+                    incSize *= 2;
+                }
+                else if (err == ERROR_INVALID_PARAMETER)
+                {
+                    throw std::invalid_argument(u8tows_fnNamePrefix OMWi_DISPSTR("invalid arguments"));
+                }
+                else if (err == ERROR_NO_UNICODE_TRANSLATION)
+                {
+                    throw omw::windows::invalid_unicode(u8tows_fnNamePrefix OMWi_DISPSTR("invalid unicode in src"));
+                }
+                else if (err == ERROR_INVALID_FLAGS)
+                {
+                    throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("internal error (invalid flags)"));
+                }
+                else if (res < 0)
+                {
+                    throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("Windows API error, MultiByteToWideChar() returned ") + std::to_string(res));
+                }
+                else
+                {
+                    throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("internal error"));
+                }
+            }
+        }
+        while (res <= 0);
+    }
+    else throw std::invalid_argument(u8tows_fnNamePrefix OMWi_DISPSTR("src is NULL"));
+
+    return buffer.data();
+}
+
+//! @param src The input wide char string
+//! @return The converted UTF-8 string
+//! 
+//! Converts a Windows API compatible wide char string to an UTF-8 string.
+//! 
+//! Throwing function, see \ref omw_windows_strConv_infoText.
+//! 
+std::string omw::windows::wstou8(const wchar_t* src)
+{
+    return "";
+}
 
 //! @param src The input string
 //! @param [out] dest Pointer (`LPWSTR`) to the output buffer (`WCHAR[]`)

@@ -8,8 +8,12 @@
 
 ### v0.2.1
 
+New
+ - `omw::windows::u8tows()` and `omw::windows::wstou8()` (note that the exceptions differ from the old functions)
+
 Removed
- - `omw::Base_Nullable` and `omw::Nullable<T>`, use `std::optional`
+ - Nullable, use `std::optional`
+ - `omw::windows::utf8_to_wstr()` and `omw::windows::wstr_to_utf8()`
 
 
 

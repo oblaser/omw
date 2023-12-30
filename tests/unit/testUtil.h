@@ -16,13 +16,13 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 #define TESTUTIL_TRYCATCH_OPEN_DECLARE_VAL(valueType, initialValue) \
-{bool tu_trycatch_correctCatch;                                 \
+{bool tu_trycatch_correctCatch = false;                         \
 const valueType tu_trycatch_initVal = initialValue;             \
 valueType tu_trycatch_val = tu_trycatch_initVal                 \
 // end TESTUTIL_TRYCATCH_OPEN_DECLARE_VAL()
 
 #define TESTUTIL_TRYCATCH_DECLARE_VAL(valueType, initialValue)  \
-bool tu_trycatch_correctCatch;                                  \
+bool tu_trycatch_correctCatch = false;                          \
 const valueType tu_trycatch_initVal = initialValue;             \
 valueType tu_trycatch_val = tu_trycatch_initVal                 \
 // end TESTUTIL_TRYCATCH_DECLARE_VAL()
@@ -41,14 +41,14 @@ REQUIRE(tu_trycatch_val == tu_trycatch_initVal)                                 
 
 
 #define TESTUTIL_TRYCATCH_SE_OPEN_DECLARE_VAL(valueType, pValue, initialValue) \
-{bool tu_trycatch_correctCatch;                                             \
+{bool tu_trycatch_correctCatch = false;                                     \
 const valueType tu_trycatch_initVal = initialValue;                         \
 valueType tu_trycatch_val = tu_trycatch_initVal;                            \
 pValue = &tu_trycatch_val                                                   \
 // end TESTUTIL_TRYCATCH_SE_DECLARE_VAL()
 
 #define TESTUTIL_TRYCATCH_SE_DECLARE_VAL(valueType, pValue, initialValue)   \
-bool tu_trycatch_correctCatch;                                              \
+bool tu_trycatch_correctCatch = false;                                      \
 const valueType tu_trycatch_initVal = initialValue;                         \
 valueType tu_trycatch_val = tu_trycatch_initVal;                            \
 pValue = &tu_trycatch_val                                                   \

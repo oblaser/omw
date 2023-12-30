@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            11.06.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            30.12.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef TEST_OMW_WINDOWS_STRING_H
@@ -22,10 +22,23 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 TEST_CASE("omw::windows string coversion functions")
 {
-    const size_t destSize = 100;
     omw::windows::ErrorCode ec;
     const WCHAR wcs[] = L"The five b\x00F6xing wizards jump quickly.";
     const char str[] = "The five b\xC3\xB6xing wizards jump quickly.";
+    std::wstring wres;
+    std::string res;
+
+    wres = omw::windows::u8tows(str);
+    CHECK(wres.length() == 37);
+    CHECK(wcscmp(wcs, wres.c_str()) == 0);
+
+    //res = omw::windows::wstou8(wcs);
+    //CHECK(res.length() == 38);
+    //CHECK(strcmp(str, res.c_str()) == 0);
+
+
+
+    constexpr size_t destSize = 100;
     WCHAR wdest[destSize];
     char dest[destSize];
 
@@ -45,6 +58,21 @@ TEST_CASE("omw::windows string coversion functions invalid unicode")
     omw::windows::ErrorCode ec;
     const WCHAR wcs[] = L"The five \xD800 boxing wizards jump quickly.";
     const char str[] = "The five \x80 boxing wizards jump quickly.";
+    std::wstring wres;
+    std::string res;
+    
+    std::wstring* pWTryCatchValue;
+    TESTUTIL_TRYCATCH_SE_OPEN_DECLARE_VAL(std::wstring, pWTryCatchValue, L"abcd\xD800""efg");
+    TESTUTIL_TRYCATCH_SE_CHECK(*pWTryCatchValue = omw::windows::u8tows(str), omw::windows::invalid_unicode);
+    TESTUTIL_TRYCATCH_SE_CLOSE();
+
+    //std::string* pTryCatchValue;
+    //TESTUTIL_TRYCATCH_SE_OPEN_DECLARE_VAL(std::string, pTryCatchValue, "abcd\x80""efg");
+    //TESTUTIL_TRYCATCH_SE_CHECK(*pTryCatchValue = omw::windows::wstou8(wcs), omw::windows::invalid_unicode);
+    //TESTUTIL_TRYCATCH_SE_CLOSE();
+
+
+
     WCHAR wdest[512];
     char dest[512];
 
@@ -53,6 +81,12 @@ TEST_CASE("omw::windows string coversion functions invalid unicode")
 
     CHECK(omw::windows::utf8_to_wstr(str, wdest, 512, ec) == 0);
     CHECK(ec.code() == omw::windows::EC_INV_UNICODE);
+}
+
+TEST_CASE("omw::windows string coversion functions stress big string")
+{
+    // TODO
+    CHECK(true);
 }
 
 TEST_CASE("omw::windows::wstr_to_utf8(LPCWCH, std::string&, ErrorCode&) stress big string")
