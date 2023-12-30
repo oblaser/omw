@@ -271,7 +271,8 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #ifndef OMWi_DOXYGEN_PREDEFINE
 
-#define OMWi_DISPSTR(x) (x)
+// x and not (x) to concat string literals in C style, often used when throwing
+#define OMWi_DISPSTR(x) x
 
 #ifdef OMW__FILENAME__
 constexpr const char* OMWi_file_to_filename(const char* p)
