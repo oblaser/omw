@@ -55,6 +55,7 @@ and `WCHAR` (`wchar_t`) strings used in the Windows API.
 Exceptions:
  - `std::invalid_argument` when invalid arguments are passed to the function (null pointers)
  - `omw::windows::invalid_unicode` when src contains invalid unicode codepoints
+ - `std::length_error` when the input string is too long
  - `std::runtime_error` on unexpected behaviour of underlaying function
  - Calls to `Allocator::allocate` may throw.
 

@@ -32,9 +32,9 @@ TEST_CASE("omw::windows string coversion functions")
     CHECK(wres.length() == 37);
     CHECK(wcscmp(wcs, wres.c_str()) == 0);
 
-    //res = omw::windows::wstou8(wcs);
-    //CHECK(res.length() == 38);
-    //CHECK(strcmp(str, res.c_str()) == 0);
+    res = omw::windows::wstou8(wcs);
+    CHECK(res.length() == 38);
+    CHECK(strcmp(str, res.c_str()) == 0);
 
 
 
@@ -66,10 +66,10 @@ TEST_CASE("omw::windows string coversion functions invalid unicode")
     TESTUTIL_TRYCATCH_SE_CHECK(*pWTryCatchValue = omw::windows::u8tows(str), omw::windows::invalid_unicode);
     TESTUTIL_TRYCATCH_SE_CLOSE();
 
-    //std::string* pTryCatchValue;
-    //TESTUTIL_TRYCATCH_SE_OPEN_DECLARE_VAL(std::string, pTryCatchValue, "abcd\x80""efg");
-    //TESTUTIL_TRYCATCH_SE_CHECK(*pTryCatchValue = omw::windows::wstou8(wcs), omw::windows::invalid_unicode);
-    //TESTUTIL_TRYCATCH_SE_CLOSE();
+    std::string* pTryCatchValue;
+    TESTUTIL_TRYCATCH_SE_OPEN_DECLARE_VAL(std::string, pTryCatchValue, "abcd\x80""efg");
+    TESTUTIL_TRYCATCH_SE_CHECK(*pTryCatchValue = omw::windows::wstou8(wcs), omw::windows::invalid_unicode);
+    TESTUTIL_TRYCATCH_SE_CLOSE();
 
 
 

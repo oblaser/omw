@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            30.12.2023
+date            31.12.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -20,10 +20,11 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include <Windows.h>
 
 
+#define INITIAL_BUFFER_SIZE (300)
+#define INITIAL_INC_SIZE    (50)
+
 #define u8tows_fnNamePrefix "omw::windows::u8tows: "
-
-
-using namespace std::literals::string_literals;
+#define wstou8_fnNamePrefix "omw::windows::wstou8: "
 
 
 
@@ -43,16 +44,17 @@ std::wstring omw::windows::u8tows(const char* src)
 
     if (src)
     {
-        constexpr size_type initialSize = 300;
-        size_type incSize = 50;
+        constexpr size_type initialSize = INITIAL_BUFFER_SIZE;
+        size_type incSize = INITIAL_INC_SIZE;
         int res;
+        constexpr int maxDestSize = INT_MAX;
         int destSize;
 
         buffer = std::vector<wchar_t>(initialSize, L'\0');
 
         do
         {
-            if (buffer.size() > static_cast<size_type>(INT_MAX)) destSize = INT_MAX;
+            if (buffer.size() > static_cast<size_type>(maxDestSize)) destSize = maxDestSize;
             else destSize = static_cast<int>(buffer.size());
 
             res = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, src, -1, buffer.data(), destSize);
@@ -63,6 +65,8 @@ std::wstring omw::windows::u8tows(const char* src)
 
                 if (err == ERROR_INSUFFICIENT_BUFFER)
                 {
+                    if (destSize == maxDestSize) throw std::length_error(u8tows_fnNamePrefix OMWi_DISPSTR("src is too long"));
+
                     buffer = std::vector<wchar_t>(initialSize + incSize, L'\0');
                     incSize *= 2;
                 }
@@ -104,7 +108,66 @@ std::wstring omw::windows::u8tows(const char* src)
 //! 
 std::string omw::windows::wstou8(const wchar_t* src)
 {
-    return "";
+    using size_type = std::vector<char>::size_type;
+    static_assert(sizeof(size_type) >= sizeof(int), "invalid integer sizes"); // should always be true on Windows
+
+    std::vector<char> buffer;
+
+    if (src)
+    {
+        constexpr size_type initialSize = INITIAL_BUFFER_SIZE;
+        size_type incSize = INITIAL_INC_SIZE;
+        int res;
+        constexpr int maxDestSize = INT_MAX;
+        int destSize;
+
+        buffer = std::vector<char>(initialSize, '\0');
+
+        do
+        {
+            if (buffer.size() > static_cast<size_type>(maxDestSize)) destSize = maxDestSize;
+            else destSize = static_cast<int>(buffer.size());
+
+            res = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, src, -1, buffer.data(), destSize, NULL, NULL);
+
+            if (res <= 0)
+            {
+                const DWORD err = GetLastError();
+
+                if (err == ERROR_INSUFFICIENT_BUFFER)
+                {
+                    if (destSize == maxDestSize) throw std::length_error(wstou8_fnNamePrefix OMWi_DISPSTR("src is too long"));
+
+                    buffer = std::vector<char>(initialSize + incSize, '\0');
+                    incSize *= 2;
+                }
+                else if (err == ERROR_INVALID_PARAMETER)
+                {
+                    throw std::invalid_argument(wstou8_fnNamePrefix OMWi_DISPSTR("invalid arguments"));
+                }
+                else if (err == ERROR_NO_UNICODE_TRANSLATION)
+                {
+                    throw omw::windows::invalid_unicode(wstou8_fnNamePrefix OMWi_DISPSTR("invalid unicode in src"));
+                }
+                else if (err == ERROR_INVALID_FLAGS)
+                {
+                    throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("internal error (invalid flags)"));
+                }
+                else if (res < 0)
+                {
+                    throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("Windows API error, WideCharToMultiByte() returned ") + std::to_string(res));
+                }
+                else
+                {
+                    throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("internal error"));
+                }
+            }
+        }
+        while (res <= 0);
+    }
+    else throw std::invalid_argument(wstou8_fnNamePrefix OMWi_DISPSTR("src is NULL"));
+
+    return buffer.data();
 }
 
 //! @param src The input string
