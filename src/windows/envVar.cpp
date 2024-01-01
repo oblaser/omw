@@ -1,7 +1,7 @@
 /*
-author      Oliver Blaser
-date        24.09.2021
-copyright   MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            31.12.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #include "omw/windows/envVar.h"
@@ -18,6 +18,11 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 
 #include <Windows.h>
 
+
+#define fnNamePrefix_getEnvironmentVariableW "omw::windows::getEnvironmentVariableW: "
+
+
+
 /*!
 * \var constexpr size_t omw::windows::envVarValueMaxSize
 * \brief Max buffer size (including terminating null) of an environment variables value.
@@ -26,15 +31,90 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 //! @brief Gets the value of an environment variable.
+//! @param varName_u8 Name of the environment variable, UTF-8 encoded
+//! @return Value of the environment variable, UTF-8 encoded
+//! 
+//! \b Exceptions
+//! - omw::windows::envVar_not_found
+//! - Calls `omw::windows::u8tows()` and `::wstou8()`, see \ref omw_windows_strConv_infoText
+//! - Calls to `Allocator::allocate` may throw
+//! 
+std::string omw::windows::getEnvironmentVariable(const std::string& varName_u8)
+{
+    return omw::windows::wstou8(omw::windows::getEnvironmentVariableW(omw::windows::u8tows(varName_u8)));
+}
+
+//! @brief Gets the value of an environment variable.
+//! @param varName_u8 Name of the environment variable, UTF-8 encoded
+//! @return Value of the environment variable
+//! 
+//! \b Exceptions
+//! - omw::windows::envVar_not_found
+//! - Calls `omw::windows::u8tows()`, see \ref omw_windows_strConv_infoText
+//! - Calls to `Allocator::allocate` may throw
+//! 
+std::wstring omw::windows::getEnvironmentVariableW(const std::string& varName_u8)
+{
+    return omw::windows::getEnvironmentVariableW(omw::windows::u8tows(varName_u8));
+}
+
+//! @brief Gets the value of an environment variable.
+//! @param varName_u8 Name of the environment variable, UTF-8 encoded
+//! @return Value of the environment variable
+//! 
+//! \b Exceptions
+//! - omw::windows::envVar_not_found
+//! - Calls `omw::windows::u8tows()`, see \ref omw_windows_strConv_infoText
+//! - Calls to `Allocator::allocate` may throw
+//! 
+std::wstring omw::windows::getEnvironmentVariableW(const std::wstring& varName)
+{
+    using size_type = DWORD;
+    static_assert(sizeof(std::vector<wchar_t>::size_type) >= sizeof(size_type), "invalid integer sizes"); // should always be true on Windows
+
+#ifdef OMW_DEBUG
+    // for unit tests
+    constexpr size_type initialSize = 3;
+#else // OMW_DEBUG
+    constexpr size_type initialSize = 300;
+#endif // OMW_DEBUG
+
+    std::vector<wchar_t> buffer;
+
+    DWORD res = initialSize;
+    do
+    {
+        buffer = std::vector<wchar_t>(res, L'\0');
+
+        res = GetEnvironmentVariableW(varName.c_str(), buffer.data(), static_cast<size_type>(buffer.size()));
+
+        if (res == 0)
+        {
+            DWORD err = GetLastError();
+
+            if (err == ERROR_ENVVAR_NOT_FOUND)
+                throw omw::windows::envVar_not_found(fnNamePrefix_getEnvironmentVariableW OMWi_DISPSTR("environment variable not found"));
+            else
+                throw std::runtime_error(fnNamePrefix_getEnvironmentVariableW OMWi_DISPSTR("Windows API error, GetEnvironmentVariableW() GetLastError() returned ") + std::to_string(err));
+        }
+    }
+    while (res > static_cast<size_type>(buffer.size()));
+
+    return buffer.data();
+}
+
+//! @brief Gets the value of an environment variable.
 //! @param varName Name of the environment variable
 //! @return Value of the environment variable
+//! 
+//! Old implementation of this function!!!
 //! 
 //! \b Exceptions
 //! - omw::windows::envVar_not_found
 //! - omw::windows::invalid_unicode
 //! - std::runtime_error
 //! 
-std::string omw::windows::getEnvironmentVariable(const std::string& varName)
+std::string omw::windows::deprecated::getEnvironmentVariable(const std::string& varName)
 {
     ErrorCode ec;
     std::string value = getEnvironmentVariable(varName, ec);
@@ -52,6 +132,8 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName)
 //! @param [out] ec Error code
 //! @return Value of the environment variable
 //! 
+//! Old implementation of this function!!!
+//! 
 //! Possible `ec.code()` values:
 //! - `omw::windows::EC_OK`
 //! - `omw::windows::EC_ENVVAR_NOT_FOUND`
@@ -59,7 +141,7 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName)
 //! - `omw::windows::EC_INTERNAL`
 //! - `omw::windows::EC_UNKNOWN_WIN`
 //! 
-std::string omw::windows::getEnvironmentVariable(const std::string& varName, ErrorCode& ec)
+std::string omw::windows::deprecated::getEnvironmentVariable(const std::string& varName, ErrorCode& ec)
 {
     const size_t bufferSizeInitial = 300;
     const size_t bufferSizeGrow = 100;
@@ -67,7 +149,7 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName, Err
     std::string value;
     std::vector<WCHAR> wVarName(300, 0);
 
-    omw::windows::utf8_to_wstr(varName, wVarName.data(), wVarName.size(), ec);
+    omw::windows::deprecated::utf8_to_wstr(varName, wVarName.data(), wVarName.size(), ec);
 
     if (ec.code() == omw::windows::EC_OK)
     {
@@ -100,7 +182,7 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName, Err
             {
                 const size_t currentSize = wVal.size();
 
-                if (currentSize < (omw::windows::envVarValueMaxSize - bufferSizeGrow))
+                if (currentSize < (omw::windows::deprecated::envVarValueMaxSize - bufferSizeGrow))
                 {
                     wVal.resize((currentSize + bufferSizeGrow));
                 }
@@ -113,7 +195,7 @@ std::string omw::windows::getEnvironmentVariable(const std::string& varName, Err
             }
             else
             {
-                omw::windows::wstr_to_utf8(wVal.data(), value, ec);
+                omw::windows::deprecated::wstr_to_utf8(wVal.data(), value, ec);
 
                 if (ec.code() == omw::windows::EC_OK)
                 {

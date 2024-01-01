@@ -15,6 +15,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include <vector>
 
 #include "catch2/catch.hpp"
+#include "testUtil.h"
 
 #include <omw/windows/string.h>
 
@@ -43,12 +44,12 @@ TEST_CASE("omw::windows string coversion functions")
     char dest[destSize];
 
     for (size_t i = 0; i < destSize; ++i) { wdest[i] = 0; dest[i] = 0; }
-    CHECK(omw::windows::wstr_to_utf8(wcs, dest, destSize, ec) == 38);
+    CHECK(omw::windows::deprecated::wstr_to_utf8(wcs, dest, destSize, ec) == 38);
     CHECK(ec.code() == omw::windows::EC_OK);
     CHECK(strcmp(str, dest) == 0);
 
     for (size_t i = 0; i < destSize; ++i) { wdest[i] = 0; dest[i] = 0; }
-    CHECK(omw::windows::utf8_to_wstr(str, wdest, destSize, ec) == 37);
+    CHECK(omw::windows::deprecated::utf8_to_wstr(str, wdest, destSize, ec) == 37);
     CHECK(ec.code() == omw::windows::EC_OK);
     CHECK(wcscmp(wcs, wdest) == 0);
 }
@@ -76,10 +77,10 @@ TEST_CASE("omw::windows string coversion functions invalid unicode")
     WCHAR wdest[512];
     char dest[512];
 
-    CHECK(omw::windows::wstr_to_utf8(wcs, dest, 512, ec) == 0);
+    CHECK(omw::windows::deprecated::wstr_to_utf8(wcs, dest, 512, ec) == 0);
     CHECK(ec.code() == omw::windows::EC_INV_UNICODE);
 
-    CHECK(omw::windows::utf8_to_wstr(str, wdest, 512, ec) == 0);
+    CHECK(omw::windows::deprecated::utf8_to_wstr(str, wdest, 512, ec) == 0);
     CHECK(ec.code() == omw::windows::EC_INV_UNICODE);
 }
 
@@ -143,7 +144,7 @@ TEST_CASE("omw::windows::wstr_to_utf8(LPCWCH, std::string&, ErrorCode&) stress b
         omw::windows::ErrorCode ec;
         std::string string;
 
-        omw::windows::wstr_to_utf8(wString.data(), string, ec);
+        omw::windows::deprecated::wstr_to_utf8(wString.data(), string, ec);
 
         CHECK(ec.code() == omw::windows::EC_OK);
         CHECK(string.length() == (wStringSize - 1));

@@ -84,7 +84,7 @@ std::wstring omw::windows::u8tows(const char* src)
                 }
                 else if (res < 0)
                 {
-                    throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("Windows API error, MultiByteToWideChar() returned ") + std::to_string(res));
+                    throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("Windows API error, MultiByteToWideChar() ") + std::to_string(res) + OMWi_DISPSTR(", GetLastError() ") + std::to_string(err));
                 }
                 else
                 {
@@ -155,7 +155,7 @@ std::string omw::windows::wstou8(const wchar_t* src)
                 }
                 else if (res < 0)
                 {
-                    throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("Windows API error, WideCharToMultiByte() returned ") + std::to_string(res));
+                    throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("Windows API error, WideCharToMultiByte() ") + std::to_string(res) + OMWi_DISPSTR(", GetLastError() ") + std::to_string(err));
                 }
                 else
                 {
@@ -179,7 +179,7 @@ std::string omw::windows::wstou8(const wchar_t* src)
 //! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-size_t omw::windows::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSize)
+size_t omw::windows::deprecated::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSize)
 {
     size_t r;
     ErrorCode ec;
@@ -203,7 +203,7 @@ size_t omw::windows::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSiz
 //! 
 //! Converts an UTF-8 string to a Windows API compatible wide string.
 //! 
-size_t omw::windows::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSize, ErrorCode& ec)
+size_t omw::windows::deprecated::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSize, ErrorCode& ec)
 {
     int r;
 
@@ -258,7 +258,7 @@ size_t omw::windows::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSiz
 //! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-size_t omw::windows::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSize)
+size_t omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSize)
 {
     size_t r;
     ErrorCode ec;
@@ -282,7 +282,7 @@ size_t omw::windows::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSiz
 //! 
 //! Converts a Windows API compatible wide string to an UTF-8 string.
 //! 
-size_t omw::windows::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSize, ErrorCode& ec)
+size_t omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSize, ErrorCode& ec)
 {
     int r;
 
@@ -335,7 +335,7 @@ size_t omw::windows::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSiz
 //! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-void omw::windows::wstr_to_utf8(const wchar_t* src, std::string& dest)
+void omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, std::string& dest)
 {
     ErrorCode ec;
 
@@ -356,7 +356,7 @@ void omw::windows::wstr_to_utf8(const wchar_t* src, std::string& dest)
 //! 
 //! Converts a Windows API compatible wide string to an UTF-8 string.
 //! 
-void omw::windows::wstr_to_utf8(const wchar_t* src, std::string& dest, ErrorCode& ec)
+void omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, std::string& dest, ErrorCode& ec)
 {
     const size_t bufferSizeInitial = 300;   // adapt unit test "windows_string.hpp" if
     const size_t bufferSizeGrow = 100;      // one of these values change

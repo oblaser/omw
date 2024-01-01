@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            31.12.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #include "omw/windows/windows.h"
@@ -40,9 +40,7 @@ namespace
         std::vector<omw::string> strings;
         for (size_t i = 0; i < wStrings.size(); ++i)
         {
-            std::string tmpStr;
-            omw::windows::wstr_to_utf8(wStrings[i], tmpStr);
-            strings.push_back(tmpStr);
+            strings.push_back(omw::windows::wstou8(wStrings[i]));
         }
 
         return strings;
@@ -89,26 +87,25 @@ namespace
 
 
 
+//! @return 
+//! 
+//! \b Exceptions
+//! - `omw::windows::wstou8()` is called and may throw exceptions
+//!  
 std::vector<omw::string> omw::windows::getAllDosDevices()
 {
     return queryDosDevice_base(nullptr);
 }
 
-//! @param device 
-//! @return
+//! @param device Device, UTF-8 encoded
+//! @return 
 //! 
 //! \b Exceptions
-//! - `omw::windows::utf8_to_wstr()` is called and may throw exceptions
+//! - `omw::windows::wstou8()` and `::u8tows()` is called and may throw exceptions
 //!  
-std::vector<omw::string> omw::windows::queryDosDevice(const std::string& device)
+std::vector<omw::string> omw::windows::queryDosDevice(const std::string& device_u8)
 {
-    constexpr size_t bufferSize = 512;
-    WCHAR buffer[bufferSize];
-
-    omw::windows::utf8_to_wstr(device, buffer, bufferSize);
-
-    // TODO: buffer grow
-    return queryDosDevice_base(buffer);
+    return queryDosDevice_base(omw::windows::u8tows(device_u8).c_str());
 }
 
 #include <Windows.h>

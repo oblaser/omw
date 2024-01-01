@@ -8,12 +8,15 @@
 
 ### v0.2.1
 
+Implementation changed
+ - `omw::windows::getEnvironmentVariable()` watch new exceptions
+
 New
  - `omw::windows::u8tows()` and `omw::windows::wstou8()` (note that the exceptions differ from the old functions)
 
 Removed
  - Nullable, use `std::optional`
- - `omw::windows::utf8_to_wstr()` and `omw::windows::wstr_to_utf8()`
+ - moved `omw::windows::utf8_to_wstr()` and `omw::windows::wstr_to_utf8()` to deprecated namespace
 
 
 

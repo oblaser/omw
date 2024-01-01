@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            09.06.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            31.12.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef IG_OMW_WINDOWS_ENVVAR_H
@@ -23,13 +23,20 @@ namespace omw
         * @{
         */
 
-        constexpr size_t envVarValueMaxSize = 32767;
-
         //! \name Environment Variables
         /// @{
-        std::string getEnvironmentVariable(const std::string& varName);
-        std::string getEnvironmentVariable(const std::string& varName, omw::windows::ErrorCode& ec);
+        std::string getEnvironmentVariable(const std::string& varName_u8);
+        std::wstring getEnvironmentVariableW(const std::string& varName_u8);
+        std::wstring getEnvironmentVariableW(const std::wstring& varName);
         /// @}
+
+        namespace deprecated
+        {
+            constexpr size_t envVarValueMaxSize = 32767;
+
+            std::string getEnvironmentVariable(const std::string& varName);
+            std::string getEnvironmentVariable(const std::string& varName, omw::windows::ErrorCode& ec);
+        }
 
         /*! @} */
     }

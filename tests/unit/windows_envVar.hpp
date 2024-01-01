@@ -1,7 +1,7 @@
 /*
-author         Oliver Blaser
-date           13.08.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            31.12.2023
+copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 #ifndef TEST_OMW_WINDOWS_ENVVAR_H
@@ -21,15 +21,12 @@ copyright      MIT - Copyright (c) 2021 Oliver Blaser
 
 TEST_CASE("omw::windows::getEnvironmentVariable()")
 {
-    omw::windows::ErrorCode ec;
-    std::string value;
+    std::string* pTryCatchValue;
+    TESTUTIL_TRYCATCH_SE_OPEN_DECLARE_VAL(std::string, pTryCatchValue, "abcdefg");
+    TESTUTIL_TRYCATCH_SE_CHECK(*pTryCatchValue = omw::windows::getEnvironmentVariable("noEnvVarName_123456"), omw::windows::envVar_not_found);
+    TESTUTIL_TRYCATCH_SE_CLOSE();
 
-    value = omw::windows::getEnvironmentVariable("noEnvVarName_123456", ec);
-    CHECK(ec.code() == omw::windows::EC_ENVVAR_NOT_FOUND);
-    CHECK(value.length() == 0);
-
-    value = omw::windows::getEnvironmentVariable("windir", ec);
-    CHECK(ec.code() == omw::windows::EC_OK);
+    std::string value = omw::windows::getEnvironmentVariable("windir");
     CHECK(value.length() == 10);
 
     for (size_t i = 0; i < value.length(); ++i)

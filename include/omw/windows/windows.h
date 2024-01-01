@@ -29,7 +29,7 @@ namespace omw
         */
 
         std::vector<omw::string> getAllDosDevices();
-        std::vector<omw::string> queryDosDevice(const std::string& device);
+        std::vector<omw::string> queryDosDevice(const std::string& device_u8);
 
         //! \name Performance Counter
         /// @{
