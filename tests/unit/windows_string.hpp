@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            30.12.2023
+date            31.12.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -23,10 +23,10 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 TEST_CASE("omw::windows string coversion functions")
 {
     omw::windows::ErrorCode ec;
-    const WCHAR wcs[] = L"The five b\x00F6xing wizards jump quickly.";
     const char str[] = "The five b\xC3\xB6xing wizards jump quickly.";
-    std::wstring wres;
+    const WCHAR wcs[] = L"The five b\x00F6xing wizards jump quickly.";
     std::string res;
+    std::wstring wres;
 
     wres = omw::windows::u8tows(str);
     CHECK(wres.length() == 37);
@@ -56,10 +56,10 @@ TEST_CASE("omw::windows string coversion functions")
 TEST_CASE("omw::windows string coversion functions invalid unicode")
 {
     omw::windows::ErrorCode ec;
-    const WCHAR wcs[] = L"The five \xD800 boxing wizards jump quickly.";
     const char str[] = "The five \x80 boxing wizards jump quickly.";
-    std::wstring wres;
+    const WCHAR wcs[] = L"The five \xD800 boxing wizards jump quickly.";
     std::string res;
+    std::wstring wres;
     
     std::wstring* pWTryCatchValue;
     TESTUTIL_TRYCATCH_SE_OPEN_DECLARE_VAL(std::wstring, pWTryCatchValue, L"abcd\xD800""efg");
@@ -85,8 +85,41 @@ TEST_CASE("omw::windows string coversion functions invalid unicode")
 
 TEST_CASE("omw::windows string coversion functions stress big string")
 {
-    // TODO
-    CHECK(true);
+    // string sizes (aka test cases)
+    const size_t sizes[] =
+    {
+        60,
+        1024,
+        100 * 1024
+    };
+    const size_t nTest = (sizeof(sizes) / sizeof(sizes[0]));
+
+    constexpr char firstAlphChar = ' ';
+    constexpr char lastAlphChar = '~';
+    constexpr int alphabetSize = lastAlphChar - firstAlphChar + 1;
+
+    for (size_t iTest = 0; iTest < nTest; ++iTest)
+    {
+        const size_t len = sizes[iTest];
+
+        std::string str(len, 0);
+        std::wstring wcs(len, 0);
+        for (size_t i = 0; i < len ; ++i)
+        {
+            str[i] = (firstAlphChar + (i % alphabetSize));
+            wcs[i] = (firstAlphChar + (i % alphabetSize)); // implicit (ASCII) char to wchar_t is OK
+        }
+        str.replace(len - 3, 1, "\xC3\x8A"); // ^E
+        wcs.replace(len - 3, 1, L"\x00CA");  // ^E
+
+        const auto wres = omw::windows::u8tows(str);
+        CHECK(wres.length() == len);
+        CHECK(wcscmp(wcs.c_str(), wres.c_str()) == 0);
+
+        const auto res = omw::windows::wstou8(wcs);
+        CHECK(res.length() == len + 1);
+        CHECK(strcmp(str.c_str(), res.c_str()) == 0);
+    }
 }
 
 TEST_CASE("omw::windows::wstr_to_utf8(LPCWCH, std::string&, ErrorCode&) stress big string")
