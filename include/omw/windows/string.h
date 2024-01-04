@@ -25,11 +25,16 @@ namespace omw
 
         //! \name String Conversion
         /// @{
-        std::wstring u8tows(const char* src);
-        static inline std::wstring u8tows(const std::string& src) { return u8tows(src.c_str()); }
+        std::wstring u8tows(const char* str);
+        static inline std::wstring u8tows(const std::string& str) { return u8tows(str.c_str()); }
 
-        std::string wstou8(const wchar_t* src);
-        static inline std::string wstou8(const std::wstring& src) { return wstou8(src.c_str()); }
+        std::string wstou8(const wchar_t* str);
+        static inline std::string wstou8(const std::wstring& str) { return wstou8(str.c_str()); }
+
+        std::wstring acptows(const char* str);
+        static inline std::wstring acptows(const std::string& str) { return omw::windows::acptows(str.c_str()); }
+        static inline std::string acptou8(const char* str) { return omw::windows::wstou8(omw::windows::acptows(str)); }
+        static inline std::string acptou8(const std::string& str) { return omw::windows::wstou8(omw::windows::acptows(str)); }
         /// @}
 
         namespace deprecated

@@ -28,21 +28,21 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 
 
-//! @param src The input UTF-8 string
+//! @param str The input UTF-8 string
 //! @return The converted wide char string
 //! 
 //! Converts an UTF-8 string to a Windows API compatible wide char string.
 //! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-std::wstring omw::windows::u8tows(const char* src)
+std::wstring omw::windows::u8tows(const char* str)
 {
     using size_type = std::vector<wchar_t>::size_type;
     static_assert(sizeof(size_type) >= sizeof(int), "invalid integer sizes"); // should always be true on Windows
 
     std::vector<wchar_t> buffer;
 
-    if (src)
+    if (str)
     {
         constexpr size_type initialSize = INITIAL_BUFFER_SIZE;
         size_type incSize = INITIAL_INC_SIZE;
@@ -57,7 +57,7 @@ std::wstring omw::windows::u8tows(const char* src)
             if (buffer.size() > static_cast<size_type>(maxDestSize)) destSize = maxDestSize;
             else destSize = static_cast<int>(buffer.size());
 
-            res = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, src, -1, buffer.data(), destSize);
+            res = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, str, -1, buffer.data(), destSize);
 
             if (res <= 0)
             {
@@ -99,21 +99,21 @@ std::wstring omw::windows::u8tows(const char* src)
     return buffer.data();
 }
 
-//! @param src The input wide char string
+//! @param str The input wide char string
 //! @return The converted UTF-8 string
 //! 
 //! Converts a Windows API compatible wide char string to an UTF-8 string.
 //! 
 //! Throwing function, see \ref omw_windows_strConv_infoText.
 //! 
-std::string omw::windows::wstou8(const wchar_t* src)
+std::string omw::windows::wstou8(const wchar_t* str)
 {
     using size_type = std::vector<char>::size_type;
     static_assert(sizeof(size_type) >= sizeof(int), "invalid integer sizes"); // should always be true on Windows
 
     std::vector<char> buffer;
 
-    if (src)
+    if (str)
     {
         constexpr size_type initialSize = INITIAL_BUFFER_SIZE;
         size_type incSize = INITIAL_INC_SIZE;
@@ -128,7 +128,7 @@ std::string omw::windows::wstou8(const wchar_t* src)
             if (buffer.size() > static_cast<size_type>(maxDestSize)) destSize = maxDestSize;
             else destSize = static_cast<int>(buffer.size());
 
-            res = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, src, -1, buffer.data(), destSize, NULL, NULL);
+            res = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, str, -1, buffer.data(), destSize, NULL, NULL);
 
             if (res <= 0)
             {
