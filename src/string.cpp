@@ -1,6 +1,5 @@
 /*
 author          Oliver Blaser
-date            19.11.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -807,6 +806,23 @@ std::pair<int32_t, int32_t> omw::stoipair(const std::string& str, char delimiter
     return std::pair<int32_t, int32_t>(std::stoi(first), std::stoi(second));
 }
 
+std::pair<double, double> omw::stodpair(const std::string& str, char delimiter)
+{
+    const std::string fnName = "omw::stodpair";
+
+    std::string::size_type sp = str.find(delimiter);
+
+    if ((sp == 0) || (sp >= (str.length() - 1)) || (sp == std::string::npos)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": invalid separator char pos"));
+
+    const std::string first = str.substr(0, sp);
+    const std::string second = str.substr(sp + 1);
+
+    if (!isFloat(first)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": first is not a double"));
+    if (!isFloat(second)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": second is not a double"));
+
+    return std::pair<double, double>(std::stod(first), std::stod(second));
+}
+
 //omw::int128_t omw::stoi128(const std::string& str)
 //{
 //    reversed double dabble needed, wich is not implemented yet
@@ -1299,6 +1315,50 @@ bool omw::isUInteger(const std::string& str)
         for (std::string::size_type i = 0; (i < str.length()) && r; ++i)
         {
             if ((str[i] < '0') || (str[i] > '9')) r = false;
+        }
+    }
+    else r = false;
+
+    return r;
+}
+
+//! 
+//! Exponential format is not yet supported.
+//! 
+//! An empty string returns `false`.
+//! 
+bool omw::isFloat(const std::string& str, char decimalPoint)
+{
+    bool r;
+
+    if (str.length() > 0)
+    {
+        std::string::size_type startPos = 0;
+        if (str[0] == '-') startPos = 1;
+        
+        unsigned cntDp = 0;
+        r = (str.length() > startPos);
+
+        for (std::string::size_type i = startPos; i < str.length(); ++i)
+        {
+            const char& c = str[i];
+
+            if (((c < '0') || (c > '9')) && (c != decimalPoint))
+            {
+                r = false;
+                break;
+            }
+
+            if (c == decimalPoint)
+            {
+                if (cntDp >= 1)
+                {
+                    r = false;
+                    break;
+                }
+                
+                ++cntDp;
+            }
         }
     }
     else r = false;

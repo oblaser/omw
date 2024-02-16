@@ -1,6 +1,5 @@
 /*
 author          Oliver Blaser
-date            06.04.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -657,8 +656,38 @@ TEST_CASE("string.h stoipair()")
     TESTUTIL_TRYCATCH_CHECK(omw::stoipair(";123"), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::stoipair("123;"), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::stoipair(";"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("abc;123"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("123;abc"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair(";abc"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("abc"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("1234"), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::stoipair("0;2200000000"), std::out_of_range);
     TESTUTIL_TRYCATCH_CHECK(omw::stoipair("2200000000;123"), std::out_of_range);
+}
+
+TEST_CASE("string.h stodpair()")
+{
+    CHECK(std::pair<double, double>(-1.567, 123) == omw::stodpair("-1.567#123", '#'));
+
+    // TODO check max integer in double (9007199254740991 ?)
+
+    
+
+    const auto maxStr = std::to_string(std::stod("1.7976931348623157e+308")); // abs(min) = abs(max) so only max is needed
+
+    typedef std::pair<double, double> dpair;
+    TESTUTIL_TRYCATCH_DECLARE_VAL(dpair, dpair(0.1234, -1.234));
+    TESTUTIL_TRYCATCH_CHECK(omw::stodpair("-1 123"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stodpair(";123"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stodpair("123;"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stodpair(";"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("abc;123"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("123;abc"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair(";abc"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("abc"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stoipair("1234"), std::invalid_argument);
+    TESTUTIL_TRYCATCH_CHECK(omw::stodpair("0;1" + maxStr), std::out_of_range);
+    TESTUTIL_TRYCATCH_CHECK(omw::stodpair("-1" + maxStr + ";123"), std::out_of_range);
 }
 
 TEST_CASE("string.h toHexStr()")
@@ -1029,6 +1058,28 @@ TEST_CASE("string.h isInteger()")
     CHECK(omw::isUInteger("-123") == false);
     CHECK(omw::isUInteger("1") == true);
     CHECK(omw::isUInteger("123") == true);
+}
+
+TEST_CASE("string.h isFloat()")
+{
+    // TODO improve isFloat test case
+
+    CHECK(omw::isFloat("1234") == true);
+    CHECK(omw::isFloat("-1234") == true);
+    CHECK(omw::isFloat("0") == true);
+    CHECK(omw::isFloat("-0") == true);
+
+    CHECK(omw::isFloat("1.234") == true);
+    CHECK(omw::isFloat("-1.234") == true);
+    CHECK(omw::isFloat("0.0") == true);
+    CHECK(omw::isFloat("-0.0") == true);
+    CHECK(omw::isFloat(".0") == true);
+    CHECK(omw::isFloat("-.0") == true);
+    CHECK(omw::isFloat("0.") == true);
+    CHECK(omw::isFloat("-0.") == true);
+
+    CHECK(omw::isFloat("") == false);
+    CHECK(omw::isFloat("-") == false);
 }
 
 TEST_CASE("string.h isHex()")

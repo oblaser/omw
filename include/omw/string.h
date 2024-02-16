@@ -1,6 +1,5 @@
 /*
 author          Oliver Blaser
-date            19.11.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
@@ -257,7 +256,7 @@ namespace omw
     //std::pair<int64_t, int64_t> stoi64pair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<uint64_t, uint64_t> stoui64pair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<float, float> stofpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
-    //std::pair<double, double> stodpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
+    std::pair<double, double> stodpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
     //std::pair<long double, long double> stoldpair(const std::string& str, char delimiter = pairtos_defaultDelimiter);
 
     //omw::int128_t stoi128(const std::string& str);
@@ -383,6 +382,7 @@ namespace omw
     /// @{
     bool isInteger(const std::string& str);
     bool isUInteger(const std::string& str);
+    bool isFloat(const std::string& str, char decimalPoint = '.');
     bool isHex(const std::string& str, std::string::size_type pos = 0, std::string::size_type count = std::string::npos);
     /// @}
 
