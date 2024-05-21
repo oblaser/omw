@@ -1,10 +1,19 @@
 
 /build/cmake/*
 !/build/cmake/CMakeLists.txt
+!/build/cmake/libomw.var.cmake
 
 !/build/cmake/lib
 /build/cmake/lib/*
 !/build/cmake/lib/CMakeLists.txt
+
+!/build/cmake/libomw.a
+/build/cmake/libomw.a/*
+!/build/cmake/libomw.a/CMakeLists.txt
+
+!/build/cmake/libomw.so
+/build/cmake/libomw.so/*
+!/build/cmake/libomw.so/CMakeLists.txt
 
 !/build/cmake/unit-tests
 /build/cmake/unit-tests/*
