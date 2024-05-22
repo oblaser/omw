@@ -6,7 +6,7 @@
 ################################################################################
 #
 # This file is not to be used in conjunction with the build.sh script, it's
-# meant to be included by a projects CMakeLists.txt file.
+# meant to be added to a projects CMakeLists.txt file (add_subdirectory).
 #
 ################################################################################
 
