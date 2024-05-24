@@ -28,6 +28,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 //! \name UTF-8 Byte Strings
 /// @{
+#define OMW_UTF8CP_00B0 "\xC2\xB0"
 #define OMW_UTF8CP_00C4 "\xC3\x84"
 #define OMW_UTF8CP_00D6 "\xC3\x96"
 #define OMW_UTF8CP_00DC "\xC3\x9C"
@@ -41,6 +42,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 //! \name UFT-8 Byte String Aliases
 /// @{
+#define OMW_UTF8CP_deg  OMW_UTF8CP_00B0
 #define OMW_UTF8CP_Auml OMW_UTF8CP_00C4
 #define OMW_UTF8CP_Ouml OMW_UTF8CP_00D6
 #define OMW_UTF8CP_Uuml OMW_UTF8CP_00DC
