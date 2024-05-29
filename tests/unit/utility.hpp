@@ -56,7 +56,7 @@ CHECK(omw::shiftRight(uiv, n) == uir)   \
 
 
 
-#pragma region shift_functions
+#ifndef ___OMWi_REGION_shift_functions
 
 #define UTILITY_SHIFTFUNCTIONS_SUPPRESS_TRUNC_WARNING (1)
 
@@ -1453,7 +1453,7 @@ TEST_CASE("utility.h shiftRight() 64-bit")
 #endif
 #endif
 
-#pragma endregion
+#endif // ___OMWi_REGION_shift_functions
 
 
 

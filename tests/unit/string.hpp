@@ -173,7 +173,7 @@ TEST_CASE("string.h omw::string::replaceAll()")
     omw::string s;
     size_t nReplacements;
 
-#pragma region char-char
+#ifndef ___OMWi_REGION_char_char
     s = str;
     s.replaceAll('a', 'X', 0, &nReplacements);
     CHECK(s == "X boy with X hXt");
@@ -199,9 +199,9 @@ TEST_CASE("string.h omw::string::replaceAll()")
     s.replaceAll('t', '\0', 0, &nReplacements);
     CHECK(s == std::string("a boy wi\0h a ha\0", std::strlen(str)));
     CHECK(nReplacements == 2);
-#pragma endregion char-char
+#endif // ___OMWi_REGION_char_char
 
-#pragma region char-string
+#ifndef ___OMWi_REGION_char_string
     s = str;
     s.replaceAll('a', "XYZ ", 0, &nReplacements);
     CHECK(s == "XYZ  boy with XYZ  hXYZ t");
@@ -227,9 +227,9 @@ TEST_CASE("string.h omw::string::replaceAll()")
     s.replaceAll('t', "", 0, &nReplacements);
     CHECK(s == "a boy wih a ha");
     CHECK(nReplacements == 2);
-#pragma endregion char-string
+#endif // ___OMWi_REGION_char_string
 
-#pragma region string-char
+#ifndef ___OMWi_REGION_string_char
     s = str;
     s.replaceAll("a ", 'X', 0, &nReplacements);
     CHECK(s == "Xboy with Xhat");
@@ -255,9 +255,9 @@ TEST_CASE("string.h omw::string::replaceAll()")
     s.replaceAll("t", '\0', 0, &nReplacements);
     CHECK(s == std::string("a boy wi\0h a ha\0", std::strlen(str)));
     CHECK(nReplacements == 2);
-#pragma endregion string-char
+#endif // ___OMWi_REGION_string_char
 
-#pragma region string-string
+#ifndef ___OMWi_REGION_string_string
     s = str;
     s.replaceAll("a ", "XYZ ", 0, &nReplacements);
     CHECK(s == "XYZ boy with XYZ hat");
@@ -298,7 +298,7 @@ TEST_CASE("string.h omw::string::replaceAll()")
     s.replaceAll("", "", 3, &nReplacements);
     CHECK(s == str);
     CHECK(nReplacements == omw::string::npos);
-#pragma endregion string-string
+#endif // ___OMWi_REGION_string_string
 
 
     const omw::StringReplacePair rp1('a', "#t#");

@@ -474,7 +474,7 @@ omw::UnsignedInt128& omw::UnsignedInt128::operator>>=(unsigned int count)
 
 
 
-#pragma region operators
+#ifndef ___OMWi_REGION_operators
 
 #define OMWi_IMPLEMENT_OPERATOR_UNARY_PLUS(a)   \
 return a                                        \
@@ -639,4 +639,4 @@ OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::SignedInt128, omw::UnsignedInt12
 OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::UnsignedInt128, omw::SignedInt128)
 OMWi_DEFINE_DEPENDENT_COMPARSION_OPERATORS(omw::UnsignedInt128, omw::UnsignedInt128)
 
-#pragma endregion operators
+#endif // ___OMWi_REGION_operators

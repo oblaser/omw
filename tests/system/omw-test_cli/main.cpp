@@ -104,7 +104,8 @@ int main(int argc, char** argv)
     }
 #endif
 
-#pragma region sgr
+#ifndef ___OMWi_REGION_sgr
+
     cout << "\n  --======# SGR #======--" << endl;
 
     cout << omw::fgBrightBlack << "bright" << omw::fgBlack << "black" << endl;
@@ -256,7 +257,7 @@ int main(int argc, char** argv)
         cout << omw::normal << endl;
     }
 
-#pragma endregion sgr
+#endif // ___OMWi_REGION_sgr
 
 
 

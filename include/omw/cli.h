@@ -346,7 +346,8 @@ namespace omw
         }
     }
 
-#pragma region sgr-ostream-manip
+#ifndef ___OMWi_REGION_sgr_ostream_manip
+
     //! \name Out Stream Manipulators
     /// @{
     inline omw::ansiesc_ostream_manip_t backColor(int color8bit) { return omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setBackColor, omw::ansiesc::csi::sgr::setColor_8bit, color8bit); }
@@ -531,7 +532,8 @@ namespace omw
     template<class CharT, class Traits = std::char_traits<CharT>>
     inline std::basic_ostream<CharT, Traits>& underlineOff(std::basic_ostream<CharT, Traits>& os) { return (os << omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::underlineOff).c_str()); }
     /// @}
-#pragma endregion sgr-ostream-manip
+
+#endif // ___OMWi_REGION_sgr_ostream_manip
 
 
     /*! @} */
