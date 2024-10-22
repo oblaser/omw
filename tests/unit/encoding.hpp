@@ -20,9 +20,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include <omw/int.h>
 
 
-TEST_CASE("encoding.h omw::bcd")
-{
-}
+TEST_CASE("encoding.h omw::bcd") {}
 
 
 TEST_CASE("encoding.h omw::bigEndian decode")
@@ -107,13 +105,13 @@ TEST_CASE("encoding.h omw::bigEndian encode_16()")
     sVal = 0xEF;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0x00, 0xEF, 2, 3, 4, 5, 6, 7, 8, 9 };
-    omw::bigEndian::encode_16(buffer.data() + 0, buffer.data() + bufferSize, sVal);
+    omw::bigEndian::encode_16(buffer.data() + 0, sVal);
     CHECK(buffer == result);
 
     sVal = -1;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 0xFF, 0xFF, 3, 4, 5, 6, 7, 8, 9 };
-    omw::bigEndian::encode_16(buffer.data() + 1, buffer.data() + bufferSize, sVal);
+    omw::bigEndian::encode_16(buffer.data() + 1, sVal);
     CHECK(buffer == result);
 
 
@@ -122,27 +120,21 @@ TEST_CASE("encoding.h omw::bigEndian encode_16()")
     uVal = 513;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 1, 2, 1, 4, 5, 6, 7, 8, 9 };
-    omw::bigEndian::encode_16(buffer.data() + 2, buffer.data() + bufferSize, uVal);
+    omw::bigEndian::encode_16(buffer.data() + 2, uVal);
     CHECK(buffer == result);
 
     uVal = 0xFFFF;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 1, 2, 3, 4, 5, 6, 7, 0xFF, 0xFF };
-    omw::bigEndian::encode_16(buffer.data() + 8, buffer.data() + bufferSize, uVal);
+    omw::bigEndian::encode_16(buffer.data() + 8, uVal);
     CHECK(buffer == result);
 
 
     buffer_type* pTryCatchValue;
     const buffer_type initial = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     TESTUTIL_TRYCATCH_SE_DECLARE_VAL(buffer_type, pTryCatchValue, initial);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(nullptr, pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(pTryCatchValue->data(), nullptr, sVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(pTryCatchValue->data() + pTryCatchValue->size() - 1, pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(pTryCatchValue->data() + pTryCatchValue->size(), pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(nullptr, pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(pTryCatchValue->data(), nullptr, uVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(pTryCatchValue->data() + pTryCatchValue->size() - 1, pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(pTryCatchValue->data() + pTryCatchValue->size(), pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::out_of_range);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(nullptr, sVal)), std::invalid_argument);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_16(nullptr, uVal)), std::invalid_argument);
 }
 TEST_CASE("encoding.h omw::bigEndian encode_32()")
 {
@@ -157,13 +149,13 @@ TEST_CASE("encoding.h omw::bigEndian encode_32()")
     sVal = 0xCDEF12;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0x00, 0xCD, 0xEF, 0x12, 4, 5, 6, 7, 8, 9 };
-    omw::bigEndian::encode_32(buffer.data() + 0, buffer.data() + bufferSize, sVal);
+    omw::bigEndian::encode_32(buffer.data() + 0, sVal);
     CHECK(buffer == result);
 
     sVal = -1;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 0xFF, 0xFF, 0xFF, 0xFF, 5, 6, 7, 8, 9 };
-    omw::bigEndian::encode_32(buffer.data() + 1, buffer.data() + bufferSize, sVal);
+    omw::bigEndian::encode_32(buffer.data() + 1, sVal);
     CHECK(buffer == result);
 
 
@@ -172,27 +164,21 @@ TEST_CASE("encoding.h omw::bigEndian encode_32()")
     uVal = 514;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 1, 0, 0, 2, 2, 6, 7, 8, 9 };
-    omw::bigEndian::encode_32(buffer.data() + 2, buffer.data() + bufferSize, uVal);
+    omw::bigEndian::encode_32(buffer.data() + 2, uVal);
     CHECK(buffer == result);
 
     uVal = 0xFFFFFFFF;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 1, 2, 3, 4, 5, 0xFF, 0xFF, 0xFF, 0xFF };
-    omw::bigEndian::encode_32(buffer.data() + 6, buffer.data() + bufferSize, uVal);
+    omw::bigEndian::encode_32(buffer.data() + 6, uVal);
     CHECK(buffer == result);
 
 
     buffer_type* pTryCatchValue;
     const buffer_type initial = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     TESTUTIL_TRYCATCH_SE_DECLARE_VAL(buffer_type, pTryCatchValue, initial);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(nullptr, pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(pTryCatchValue->data(), nullptr, sVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(pTryCatchValue->data() + pTryCatchValue->size() - 1, pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(pTryCatchValue->data() + pTryCatchValue->size(), pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(nullptr, pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(pTryCatchValue->data(), nullptr, uVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(pTryCatchValue->data() + pTryCatchValue->size() - 3, pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(pTryCatchValue->data() + pTryCatchValue->size(), pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::out_of_range);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(nullptr, sVal)), std::invalid_argument);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_32(nullptr, uVal)), std::invalid_argument);
 }
 TEST_CASE("encoding.h omw::bigEndian encode_64()")
 {
@@ -207,13 +193,13 @@ TEST_CASE("encoding.h omw::bigEndian encode_64()")
     sVal = 0xABCDEF12345678;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78, 8, 9 };
-    omw::bigEndian::encode_64(buffer.data() + 0, buffer.data() + bufferSize, sVal);
+    omw::bigEndian::encode_64(buffer.data() + 0, sVal);
     CHECK(buffer == result);
 
     sVal = -1;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 9 };
-    omw::bigEndian::encode_64(buffer.data() + 1, buffer.data() + bufferSize, sVal);
+    omw::bigEndian::encode_64(buffer.data() + 1, sVal);
     CHECK(buffer == result);
 
 
@@ -222,27 +208,21 @@ TEST_CASE("encoding.h omw::bigEndian encode_64()")
     uVal = 512;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 1, 0, 0, 0, 0, 0, 0, 2, 0 };
-    omw::bigEndian::encode_64(buffer.data() + 2, buffer.data() + bufferSize, uVal);
+    omw::bigEndian::encode_64(buffer.data() + 2, uVal);
     CHECK(buffer == result);
 
     uVal = 0xFFFFFFFFFFFFFFFF;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     result = { 0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 9 };
-    omw::bigEndian::encode_64(buffer.data() + 1, buffer.data() + bufferSize, uVal);
+    omw::bigEndian::encode_64(buffer.data() + 1, uVal);
     CHECK(buffer == result);
 
 
     buffer_type* pTryCatchValue;
     const buffer_type initial = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     TESTUTIL_TRYCATCH_SE_DECLARE_VAL(buffer_type, pTryCatchValue, initial);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(nullptr, pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(pTryCatchValue->data(), nullptr, sVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(pTryCatchValue->data() + pTryCatchValue->size() - 1, pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(pTryCatchValue->data() + pTryCatchValue->size(), pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(nullptr, pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(pTryCatchValue->data(), nullptr, uVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(pTryCatchValue->data() + pTryCatchValue->size() - 7, pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(pTryCatchValue->data() + pTryCatchValue->size(), pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::out_of_range);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(nullptr, sVal)), std::invalid_argument);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_64(nullptr, uVal)), std::invalid_argument);
 }
 TEST_CASE("encoding.h omw::bigEndian encode_128()")
 {
@@ -257,13 +237,13 @@ TEST_CASE("encoding.h omw::bigEndian encode_128()")
     sVal.sets(-1, 0xABCDEF123456);
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
     result = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 16, 17, 18, 19 };
-    omw::bigEndian::encode_128(buffer.data() + 0, buffer.data() + bufferSize, sVal);
+    omw::bigEndian::encode_128(buffer.data() + 0, sVal);
     CHECK(buffer == result);
 
     sVal = -1;
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
     result = { 0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 17, 18, 19 };
-    omw::bigEndian::encode_128(buffer.data() + 1, buffer.data() + bufferSize, sVal);
+    omw::bigEndian::encode_128(buffer.data() + 1, sVal);
     CHECK(buffer == result);
 
 
@@ -272,27 +252,21 @@ TEST_CASE("encoding.h omw::bigEndian encode_128()")
     uVal.set(10, 0x123456);
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
     result = { 0, 1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0x12, 0x34, 0x56 };
-    omw::bigEndian::encode_128(buffer.data() + 4, buffer.data() + bufferSize, uVal);
+    omw::bigEndian::encode_128(buffer.data() + 4, uVal);
     CHECK(buffer == result);
 
     uVal.sets(-1);
     buffer = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
     result = { 0, 1, 2, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 19 };
-    omw::bigEndian::encode_128(buffer.data() + 3, buffer.data() + bufferSize, uVal);
+    omw::bigEndian::encode_128(buffer.data() + 3, uVal);
     CHECK(buffer == result);
 
 
     buffer_type* pTryCatchValue;
     const buffer_type initial = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
     TESTUTIL_TRYCATCH_SE_DECLARE_VAL(buffer_type, pTryCatchValue, initial);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(nullptr, pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(pTryCatchValue->data(), nullptr, sVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(pTryCatchValue->data() + pTryCatchValue->size() - 1, pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(pTryCatchValue->data() + pTryCatchValue->size(), pTryCatchValue->data() + pTryCatchValue->size(), sVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(nullptr, pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(pTryCatchValue->data(), nullptr, uVal)), std::invalid_argument);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(pTryCatchValue->data() + pTryCatchValue->size() - 15, pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::out_of_range);
-    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(pTryCatchValue->data() + pTryCatchValue->size(), pTryCatchValue->data() + pTryCatchValue->size(), uVal)), std::out_of_range);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(nullptr, sVal)), std::invalid_argument);
+    TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(nullptr, uVal)), std::invalid_argument);
 }
 
 

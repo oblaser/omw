@@ -10,6 +10,7 @@
 
 Implementation changed
  - `omw::windows::getEnvironmentVariable()` watch new exceptions
+ - `omw::bigEndian` simplified encode functions
 
 New
  - `omw::windows::u8tows()` and `omw::windows::wstou8()` (note that the exceptions differ from the old functions)
