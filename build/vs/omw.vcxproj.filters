@@ -155,5 +155,8 @@
     <ClInclude Include="..\..\include\omw\intdef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\omw\windows\winnls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

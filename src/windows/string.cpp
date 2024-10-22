@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            31.12.2023
-copyright       MIT - Copyright (c) 2023 Oliver Blaser
+date            06.01.2024
+copyright       MIT - Copyright (c) 2024 Oliver Blaser
 */
 
 #include "omw/windows/string.h"
@@ -25,6 +25,8 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 #define u8tows_fnNamePrefix "omw::windows::u8tows: "
 #define wstou8_fnNamePrefix "omw::windows::wstou8: "
+#define wstocp_fnNamePrefix "omw::windows::wstocp: "
+#define cptows_fnNamePrefix "omw::windows::cptows: "
 
 
 
@@ -169,6 +171,32 @@ std::string omw::windows::wstou8(const wchar_t* str)
 
     return buffer.data();
 }
+
+#if 0
+//! @param str 
+//! @param codepage One of omw::windows::WINNLS_CODEPAGE or a MS code page
+//! @return 
+//! 
+//! See https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers for available code pages.
+//! 
+//! Throwing function, see \ref omw_windows_strConv_infoText.
+//! 
+std::wstring omw::windows::cptows(const char* str, unsigned int codepage)
+{
+}
+
+//! @param str 
+//! @param codepage One of omw::windows::WINNLS_CODEPAGE or a MS code page 
+//! @return 
+//! 
+//! See https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers for available code pages.
+//! 
+//! Throwing function, see \ref omw_windows_strConv_infoText.
+//! 
+std::string omw::windows::wstocp(const wchar_t* str, unsigned int codepage)
+{
+}
+#endif
 
 //! @param src The input string
 //! @param [out] dest Pointer (`LPWSTR`) to the output buffer (`WCHAR[]`)
