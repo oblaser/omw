@@ -1,6 +1,5 @@
 /*
 author          Oliver Blaser
-date            06.01.2024
 copyright       MIT - Copyright (c) 2024 Oliver Blaser
 */
 
@@ -26,11 +25,16 @@ namespace omw
 
         //! \name String Conversion
         /// @{
-
         std::wstring u8tows(const char* str);
         static inline std::wstring u8tows(const std::string& str) { return omw::windows::u8tows(str.c_str()); }
+
         std::string wstou8(const wchar_t* str);
         static inline std::string wstou8(const std::wstring& str) { return omw::windows::wstou8(str.c_str()); }
+
+        std::wstring acptows(const char* str);
+        static inline std::wstring acptows(const std::string& str) { return omw::windows::acptows(str.c_str()); }
+        static inline std::string acptou8(const char* str) { return omw::windows::wstou8(omw::windows::acptows(str)); }
+        static inline std::string acptou8(const std::string& str) { return omw::windows::wstou8(omw::windows::acptows(str)); }
 
         //std::wstring cptows(const char* str, unsigned int codepage);
         //static inline std::wstring cptows(const std::string& str, unsigned int codepage) { return omw::windows::cptows(str.c_str(), codepage); }
@@ -51,7 +55,6 @@ namespace omw
         //static inline std::string acptou8(const std::string& str) { return omw::windows::acptou8(str.c_str()); }
         //static inline std::string u8toacp(const char* str) { return omw::windows::wstoacp(omw::windows::u8tows(str)); }
         //static inline std::string u8toacp(const std::string& str) { return omw::windows::u8toacp(str.c_str()); }
-        
         /// @}
 
         namespace deprecated
