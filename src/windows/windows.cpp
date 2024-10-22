@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            31.12.2023
-copyright       MIT - Copyright (c) 2023 Oliver Blaser
+date            06.01.2024
+copyright       MIT - Copyright (c) 2024 Oliver Blaser
 */
 
 #include "omw/windows/windows.h"
@@ -23,6 +23,15 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 namespace
 {
+    static_assert((CP_ACP == omw::windows::ACP) &&
+        (CP_OEMCP == omw::windows::OEMCP) &&
+        (CP_MACCP == omw::windows::MACCP) &&
+        (CP_THREAD_ACP == omw::windows::THREAD_ACP) &&
+        (CP_SYMBOL == omw::windows::SYMBOLCP) &&
+        (CP_UTF7 == omw::windows::UTF7CP) &&
+        (CP_UTF8 == omw::windows::UTF8CP),
+        "invalid code page definitions");
+
     // expected format: string1\0string2\0\0
     std::vector<omw::string> multiStringConvert(LPCWSTR multiStr)
     {
@@ -340,36 +349,36 @@ bool omw::windows::consoleEnVirtualTermProc()
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-uint32_t omw::windows::consoleGetInCodePage()
+unsigned int omw::windows::consoleGetInCodePage()
 {
-    return (uint32_t)GetConsoleCP();
+    return GetConsoleCP();
 }
 
 //! @return The code page on success, 0 otherwise
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-uint32_t omw::windows::consoleGetOutCodePage()
+unsigned int omw::windows::consoleGetOutCodePage()
 {
-    return (uint32_t)GetConsoleOutputCP();
+    return GetConsoleOutputCP();
 }
 
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-bool omw::windows::consoleSetInCodePage(uint32_t cp)
+bool omw::windows::consoleSetInCodePage(unsigned int cp)
 {
-    return (SetConsoleCP((UINT)cp) != 0);
+    return (SetConsoleCP(cp) != 0);
 }
 
 //! @return <tt>true</tt> on success, <tt>false</tt> otherwise
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-bool omw::windows::consoleSetOutCodePage(uint32_t cp)
+bool omw::windows::consoleSetOutCodePage(unsigned int cp)
 {
-    return (SetConsoleOutputCP((UINT)cp) != 0);
+    return (SetConsoleOutputCP(cp) != 0);
 }
 
 //! @brief Sets the input and output code page of the console.
@@ -377,7 +386,7 @@ bool omw::windows::consoleSetOutCodePage(uint32_t cp)
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-bool omw::windows::consoleSetCodePage(uint32_t cp)
+bool omw::windows::consoleSetCodePage(unsigned int cp)
 {
     return (omw::windows::consoleSetInCodePage(cp) &&
         omw::windows::consoleSetOutCodePage(cp));

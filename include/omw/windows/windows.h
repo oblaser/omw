@@ -17,6 +17,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "../../omw/windows/error.h"
 #include "../../omw/windows/exception.h"
 #include "../../omw/windows/string.h"
+#include "../../omw/windows/winnls.h"
 
 
 
@@ -71,11 +72,11 @@ namespace omw
         /// @{
         bool consoleEnVirtualTermProc();
 
-        uint32_t consoleGetInCodePage();
-        uint32_t consoleGetOutCodePage();
-        bool consoleSetInCodePage(uint32_t cp);
-        bool consoleSetOutCodePage(uint32_t cp);
-        bool consoleSetCodePage(uint32_t cp);
+        unsigned int consoleGetInCodePage();
+        unsigned int consoleGetOutCodePage();
+        bool consoleSetInCodePage(unsigned int cp);
+        bool consoleSetOutCodePage(unsigned int cp);
+        bool consoleSetCodePage(unsigned int cp);
         bool consoleSetCodePageUTF8();
         /// @}
 
