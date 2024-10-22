@@ -1,6 +1,5 @@
 /*
 author          Oliver Blaser
-date            06.01.2024
 copyright       MIT - Copyright (c) 2024 Oliver Blaser
 */
 
@@ -92,6 +91,18 @@ namespace
 
         return multiStringConvert(buffer.data());
     }
+
+    typedef struct
+    {
+        DWORD f;
+        DWORD t;
+    } beepThreadParams_t;
+
+    DWORD WINAPI beep_thread(__in LPVOID lpParameter)
+    {
+        const beepThreadParams_t* const p = (beepThreadParams_t*)lpParameter;
+        return (Beep(p->f, p->t) ? 0 : 1);
+    }
 }
 
 
@@ -116,26 +127,6 @@ std::vector<omw::string> omw::windows::queryDosDevice(const std::string& device_
 {
     return queryDosDevice_base(omw::windows::u8tows(device_u8).c_str());
 }
-
-#include <Windows.h>
-
-
-namespace
-{
-    typedef struct
-    {
-        DWORD f;
-        DWORD t;
-    } beepThreadParams_t;
-
-    DWORD WINAPI beep_thread(__in LPVOID lpParameter)
-    {
-        const beepThreadParams_t* const p = (beepThreadParams_t*)lpParameter;
-        return (Beep(p->f, p->t) ? 0 : 1);
-    }
-}
-
-
 
 //! @return Value of the performance counter
 //! 
@@ -349,7 +340,7 @@ bool omw::windows::consoleEnVirtualTermProc()
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-unsigned int omw::windows::consoleGetInCodePage()
+omw::windows::codepage_t omw::windows::consoleGetInCodePage()
 {
     return GetConsoleCP();
 }
@@ -358,7 +349,7 @@ unsigned int omw::windows::consoleGetInCodePage()
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-unsigned int omw::windows::consoleGetOutCodePage()
+omw::windows::codepage_t omw::windows::consoleGetOutCodePage()
 {
     return GetConsoleOutputCP();
 }
@@ -367,7 +358,7 @@ unsigned int omw::windows::consoleGetOutCodePage()
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-bool omw::windows::consoleSetInCodePage(unsigned int cp)
+bool omw::windows::consoleSetInCodePage(codepage_t cp)
 {
     return (SetConsoleCP(cp) != 0);
 }
@@ -376,7 +367,7 @@ bool omw::windows::consoleSetInCodePage(unsigned int cp)
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-bool omw::windows::consoleSetOutCodePage(unsigned int cp)
+bool omw::windows::consoleSetOutCodePage(codepage_t cp)
 {
     return (SetConsoleOutputCP(cp) != 0);
 }
@@ -386,7 +377,7 @@ bool omw::windows::consoleSetOutCodePage(unsigned int cp)
 //! 
 //! See \ref omw_windows_consoleCodePage_infoText.
 //! 
-bool omw::windows::consoleSetCodePage(unsigned int cp)
+bool omw::windows::consoleSetCodePage(codepage_t cp)
 {
     return (omw::windows::consoleSetInCodePage(cp) &&
         omw::windows::consoleSetOutCodePage(cp));
@@ -401,7 +392,6 @@ bool omw::windows::consoleSetCodePageUTF8()
 {
     return omw::windows::consoleSetCodePage(CP_UTF8);
 }
-
 
 
 #endif // OMW_PLAT_WIN

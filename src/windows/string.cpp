@@ -1,6 +1,5 @@
 /*
 author          Oliver Blaser
-date            06.01.2024
 copyright       MIT - Copyright (c) 2024 Oliver Blaser
 */
 
