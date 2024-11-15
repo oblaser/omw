@@ -149,7 +149,7 @@ NamespaceIndentation: Inner
 #ObjCSpaceAfterProperty: false
 #ObjCSpaceBeforeProtocolList: true
 PPIndentWidth: 2
-PackConstructorInitializers: NextLineOnly
+PackConstructorInitializers: NextLineOnly #NextLine
 #PenaltyBreakAssignment: 2
 #PenaltyBreakBeforeFirstCallParameter: 19
 #PenaltyBreakComment: 300

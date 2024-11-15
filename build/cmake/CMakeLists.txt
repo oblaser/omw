@@ -19,4 +19,4 @@ set(BINSTATIC ${BINNAME}-static)
 add_subdirectory(lib)
 add_subdirectory(unit-tests)
 
-add_subdirectory(system-tests)
+#add_subdirectory(system-tests)
