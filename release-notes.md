@@ -16,6 +16,7 @@ New
  - `omw::windows::u8tows()` and `omw::windows::wstou8()` (note that the exceptions differ from the old functions)
  - `omw::isFloat()`
  - `omw::stodpair()`
+ - `math.h`
 
 Removed
  - Nullable, use `std::optional`

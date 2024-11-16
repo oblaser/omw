@@ -17,6 +17,14 @@ namespace omw
     * @{
     */
 
+    template <class T> const constexpr T& max(const T& a, const T& b) { return (a > b ? a : b); }
+    template <class T> const constexpr T& max(const T& a, const T& b, const T& c) { return omw::max(omw::max(a, b), c); }
+    template <class T> const constexpr T& max(const T& a, const T& b, const T& c, const T& d) { return omw::max(omw::max(a, b), c, d); }
+
+    template <class T> const constexpr T& min(const T& a, const T& b) { return (a < b ? a : b); }
+    template <class T> const constexpr T& min(const T& a, const T& b, const T& c) { return omw::min(omw::min(a, b), c); }
+    template <class T> const constexpr T& min(const T& a, const T& b, const T& c, const T& d) { return omw::min(omw::min(a, b), c, d); }
+
     //int sign(int value) { return ((0 < value) - (value < 0)); }
     //int sign(int64_t value) { return ((0 < value) - (value < 0)); }
     //int sign(float value);

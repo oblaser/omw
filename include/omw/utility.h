@@ -12,6 +12,23 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include <string>
 #include <vector>
 
+
+
+/*! \addtogroup grp_utility_langSupport
+* @{
+*/
+
+#define OMW_SIZEOF_ARRAY(_array) (sizeof(_array) / sizeof(_array[0]))
+
+#ifndef SIZEOF_ARRAY
+#define SIZEOF_ARRAY(_array) OMW_SIZEOF_ARRAY(_array)
+#endif
+
+// grp_utility_langSupport
+/*! @} */
+
+
+
 namespace omw
 {
     /*! \addtogroup grp_utility_langSupport
