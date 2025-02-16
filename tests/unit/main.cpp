@@ -31,6 +31,7 @@ TEST_CASE("omw lib")
 
 #include "algorithm.hpp"
 #include "checksum.hpp"
+#include "clock.hpp"
 #include "color.hpp"
 #include "encoding.hpp"
 #include "int.hpp"
@@ -42,9 +43,6 @@ TEST_CASE("omw lib")
 #include "version.hpp"
 #include "windows_envVar.hpp"
 #include "windows_string.hpp"
-
-
-
 
 
 
@@ -84,7 +82,7 @@ TEST_CASE("windows.h beep() & some perfCntr..()")
     const double relErrorTh = 0.05; // 5%
 #else
     const double absErrorTh = 0.005; // 5ms
-    const double relErrorTh = 0.02; // 2%
+    const double relErrorTh = 0.02;  // 2%
 #endif
 
     std::cout << "\n" << omw::fgBrightBlack << "Beep Test" << std::endl;

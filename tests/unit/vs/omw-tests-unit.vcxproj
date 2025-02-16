@@ -125,6 +125,7 @@
     <ClInclude Include="..\algorithm.hpp" />
     <ClInclude Include="..\checksum.hpp" />
     <ClInclude Include="..\cli.hpp" />
+    <ClInclude Include="..\clock.hpp" />
     <ClInclude Include="..\color.hpp" />
     <ClInclude Include="..\encoding.hpp" />
     <ClInclude Include="..\int.hpp" />
