@@ -23,6 +23,7 @@ set(SOURCES
 ../../../src/algorithm.cpp
 ../../../src/checksum.cpp
 ../../../src/cli.cpp
+../../../src/clock.cpp
 ../../../src/color.cpp
 ../../../src/encoding.cpp
 ../../../src/int.cpp

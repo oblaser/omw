@@ -132,6 +132,7 @@
     <ClCompile Include="..\..\src\algorithm.cpp" />
     <ClCompile Include="..\..\src\checksum.cpp" />
     <ClCompile Include="..\..\src\cli.cpp" />
+    <ClCompile Include="..\..\src\clock.cpp" />
     <ClCompile Include="..\..\src\color.cpp" />
     <ClCompile Include="..\..\src\encoding.cpp" />
     <ClCompile Include="..\..\src\io\configFile.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="..\..\include\omw\algorithm.h" />
     <ClInclude Include="..\..\include\omw\checksum.h" />
     <ClInclude Include="..\..\include\omw\cli.h" />
+    <ClInclude Include="..\..\include\omw\clock.h" />
     <ClInclude Include="..\..\include\omw\color.h" />
     <ClInclude Include="..\..\include\omw\defs.h" />
     <ClInclude Include="..\..\include\omw\encoding.h" />

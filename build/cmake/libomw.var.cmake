@@ -17,6 +17,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../../src/windows/windows.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/algorithm.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/checksum.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/cli.cpp
+${CMAKE_CURRENT_LIST_DIR}/../../src/clock.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/color.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/encoding.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/int.cpp
