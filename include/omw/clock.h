@@ -25,6 +25,9 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #define OMW_HOUR_us   (OMW_HOUR_ms * 1000ll)
 #define OMW_DAY_us    (OMW_DAY_ms * 1000ll)
 
+#define OMW_TIMEPOINT_MIN (INT64_MIN)
+#define OMW_TIMEPOINT_MAX (INT64_MAX)
+
 
 namespace omw {
 namespace clock {
@@ -39,8 +42,8 @@ namespace clock {
     //                    10'000'000'000'000 ms = approx 316 years
     //                10'000'000'000'000'000 us = approx 316 years
 
-    constexpr timepoint_t timepoint_min = INT64_MIN;
-    constexpr timepoint_t timepoint_max = INT64_MAX;
+    constexpr timepoint_t timepoint_min = OMW_TIMEPOINT_MIN;
+    constexpr timepoint_t timepoint_max = OMW_TIMEPOINT_MAX;
 
     constexpr timepoint_t second_s = OMW_SECOND_s;
     constexpr timepoint_t minute_s = OMW_MINUTE_s;
@@ -74,9 +77,10 @@ namespace clock {
     }
 
     /**
-     * @brief Converts a timespec to `timepoint_t`.
+     * @brief Converts a timespec to `omw::clock::timepoint_t`.
      *
-     * [`struct timespec`](https://man7.org/linux/man-pages/man3/timespec.3type.html)
+     * [`struct timespec` man7.org](https://man7.org/linux/man-pages/man3/timespec.3type.html)
+     * [`struct timespec` gnu.org](https://www.gnu.org/software/libc/manual/html_node/Time-Types.html)
      *
      * @param tv_sec Seconds
      * @param tv_nsec Nanoseconds [0, 999'999'999]
@@ -85,7 +89,11 @@ namespace clock {
     static inline timepoint_t fromTimespec(time_t tv_sec, long long tv_nsec)
     {
         timepoint_t us = (timepoint_t)tv_sec * second_us;
+
+        // According to the GNU spec tv_nsec describes "the number of nanoseconds elapsed since the time given by the tv_sec member". This means that the nsec
+        // field goes always forwards in time, and is not added to the magnitude of the seconds since epoch.
         us += (timepoint_t)tv_nsec / 1000ll;
+
         return us;
     }
 

@@ -1,4 +1,6 @@
 
+/.vscode/
+
 /build/cmake/*
 !/build/cmake/CMakeLists.txt
 !/build/cmake/libomw.var.cmake
