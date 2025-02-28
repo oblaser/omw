@@ -59,6 +59,13 @@ See also \ref ns_omw_ansiesc_section_ansiEscMode and `omw::windows::consoleEnVir
 */
 
 /*!
+\defgroup grp_clockLib Clock Library
+`#include <omw/clock.h>`
+
+Clock for measuring process time (not to be used as wall clock time).
+*/
+
+/*!
 \defgroup grp_containersLib Containers Library
 */
 

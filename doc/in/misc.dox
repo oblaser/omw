@@ -12,10 +12,8 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 /*!
-\namespace omw::preview
-
-Not yet worked out "nice/proper" implementations/concepts/interfaces.
-
+\namespace omw::clock
+\brief \ref grp_clockLib
 */
 
 /*!
@@ -26,6 +24,13 @@ Not yet worked out "nice/proper" implementations/concepts/interfaces.
 /*!
 \namespace omw::io
 \brief \ref grp_ioLib
+*/
+
+/*!
+\namespace omw::preview
+
+Not yet worked out "nice/proper" implementations/concepts/interfaces.
+
 */
 
 /*!

@@ -15,7 +15,7 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 
-omw::clock::timepoint_t omw::clock::get()
+omw::clock::timepoint_t omw::clock::now()
 {
     timepoint_t r = 0;
 

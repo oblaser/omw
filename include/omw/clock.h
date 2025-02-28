@@ -16,6 +16,10 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #endif
 
 
+/*! \addtogroup grp_clockLib
+ * @{
+ */
+
 #define OMW_SECOND_s (1)
 #define OMW_MINUTE_s (60 * OMW_SECOND_s)
 #define OMW_HOUR_s   (60 * OMW_MINUTE_s)
@@ -34,11 +38,15 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #define OMW_TIMEPOINT_MIN (INT64_MIN)
 #define OMW_TIMEPOINT_MAX (INT64_MAX)
 
+/*! @} */
+
 
 namespace omw {
 namespace clock {
 
-    // TODO add Doxygen group
+    /*! \addtogroup grp_clockLib
+     * @{
+     */
 
     /**
      * @brief Counter value with 1us resolution.
@@ -71,11 +79,11 @@ namespace clock {
     /**
      * @brief Returns the current counter value.
      *
-     * - Posix: `CLOCK_MONOTONIC`
+     * - Unix: `CLOCK_MONOTONIC`
      * - Linux: `CLOCK_BOOTTIME`
      * - Windows: `PerformanceCounter`
      */
-    timepoint_t get();
+    timepoint_t now();
 
     static inline bool elapsed_us(timepoint_t now_us, timepoint_t start_us, timepoint_t interval_us) { return ((now_us - start_us) >= interval_us); }
 
@@ -85,14 +93,7 @@ namespace clock {
     }
 
     /**
-     * @brief Converts a timespec to `omw::clock::timepoint_t`.
-     *
-     * [`struct timespec` man7.org](https://man7.org/linux/man-pages/man3/timespec.3type.html)
-     * [`struct timespec` gnu.org](https://www.gnu.org/software/libc/manual/html_node/Time-Types.html)
-     *
-     * @param tv_sec Seconds
-     * @param tv_nsec Nanoseconds [0, 999'999'999]
-     * @return `omw::clock::timepoint_t`
+     * See \ref timespec for parameter description.
      */
     static inline timepoint_t fromTimespec(time_t tv_sec, long long tv_nsec)
     {
@@ -109,6 +110,8 @@ namespace clock {
     static inline timepoint_t fromTimespec(const struct timespec& tspec) { return fromTimespec(tspec.tv_sec, tspec.tv_nsec); }
     static inline timepoint_t fromTimespec(const struct timespec* tspec) { return fromTimespec(tspec->tv_sec, tspec->tv_nsec); }
 #endif
+
+    /*! @} */
 
 } // namespace clock
 } // namespace omw

@@ -65,32 +65,32 @@ TEST_CASE("clock.h constant expressions")
     CHECK(omw::clock::timepoint_max == OMW_TIMEPOINT_MAX);
 }
 
-TEST_CASE("clock.h omw::clock::get() measure system sleep")
+TEST_CASE("clock.h omw::clock::now() measure system sleep")
 {
     omw::clock::timepoint_t start, duration;
 
 
 
-    start = omw::clock::get();
+    start = omw::clock::now();
 #ifdef OMW_PLAT_WIN
     Sleep(1000);
 #else
     sleep(1);
 #endif
-    duration = omw::clock::get() - start;
+    duration = omw::clock::now() - start;
 
     CHECK(duration >= (990 * 1000ll));
     CHECK(duration <= (1050 * 1000ll));
 
 
 
-    start = omw::clock::get();
+    start = omw::clock::now();
 #ifdef OMW_PLAT_WIN
     Sleep(10);
 #else
     usleep(10 * 1000);
 #endif
-    duration = omw::clock::get() - start;
+    duration = omw::clock::now() - start;
 
     CHECK(duration >= (9900ll));
 
@@ -103,7 +103,7 @@ TEST_CASE("clock.h omw::clock::get() measure system sleep")
 
 TEST_CASE("clock.h omw::clock::elapsed_..()")
 {
-    const omw::clock::timepoint_t tpStart = omw::clock::get();
+    const omw::clock::timepoint_t tpStart = omw::clock::now();
     omw::clock::timepoint_t tpEnd;
 
     tpEnd = tpStart + 1;
