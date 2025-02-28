@@ -29,10 +29,9 @@ Required software: `Visual Studio 2019`
     0. Run the debug and release executables from the command line
 
 
----
 
 ---
 
-### files to edit on version update
+### files to edit on release
 
 See [Contributing > Versioning > Files](../contributing.md#files)

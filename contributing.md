@@ -40,7 +40,12 @@ The version must be consistent in the following files:
 - `doc/Doxyfile`
 - `include/omw/omw.h`
 - `tests/unit/main.cpp`
+- `web/doc/index.html`
 - `release-notes.md`
+
+Copyright year showing up in binaries or packages:
+- `build/dep_globals.sh`
+- `src/omw.cpp`
 
 
 
