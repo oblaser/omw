@@ -366,30 +366,3 @@ void omw::Version::parseVersion(const omw::string& identifiers)
         m_pat = -1;
     }
 }
-
-
-
-//!
-//! All comparisons are using `omw::Version::compare()`.
-//!
-bool omw::operator!=(const omw::Version& a, const omw::Version& b) { return !(a == b); }
-
-//!
-//! All comparisons are using `omw::Version::compare()`.
-//!
-bool omw::operator<(const omw::Version& a, const omw::Version& b) { return (a.compare(b) < 0); }
-
-//!
-//! All comparisons are using `omw::Version::compare()`.
-//!
-bool omw::operator>(const omw::Version& a, const omw::Version& b) { return (b < a); }
-
-//!
-//! All comparisons are using `omw::Version::compare()`.
-//!
-bool omw::operator<=(const omw::Version& a, const omw::Version& b) { return !(a > b); }
-
-//!
-//! All comparisons are using `omw::Version::compare()`.
-//!
-bool omw::operator>=(const omw::Version& a, const omw::Version& b) { return !(a < b); }

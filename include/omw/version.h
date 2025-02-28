@@ -65,12 +65,12 @@ protected:
 
 //! \name Operators
 /// @{
-inline bool operator==(const omw::Version& a, const omw::Version& b) { return (a.compare(b) == 0); } ///< All comparisons are using `omw::Version::compare()`.
-bool operator!=(const omw::Version& a, const omw::Version& b);
-bool operator<(const omw::Version& a, const omw::Version& b);
-bool operator>(const omw::Version& a, const omw::Version& b);
-bool operator<=(const omw::Version& a, const omw::Version& b);
-bool operator>=(const omw::Version& a, const omw::Version& b);
+inline bool operator==(const omw::Version& a, const omw::Version& b) { return (a.compare(b) == 0); }
+inline bool operator!=(const omw::Version& a, const omw::Version& b) { return !(a == b); }
+inline bool operator<(const omw::Version& a, const omw::Version& b) { return (a.compare(b) < 0); }
+inline bool operator>(const omw::Version& a, const omw::Version& b) { return (b < a); }
+inline bool operator<=(const omw::Version& a, const omw::Version& b) { return !(a > b); }
+inline bool operator>=(const omw::Version& a, const omw::Version& b) { return !(a < b); }
 /// @}
 
 /*! @} */
