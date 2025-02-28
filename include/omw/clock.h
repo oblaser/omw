@@ -9,6 +9,12 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #include <cstdint>
 #include <ctime>
 
+#include "../omw/defs.h"
+
+#if OMW_PLAT_UNIX
+#include <time.h>
+#endif
+
 
 #define OMW_SECOND_s (1)
 #define OMW_MINUTE_s (60 * OMW_SECOND_s)
@@ -42,6 +48,7 @@ namespace clock {
     //                    10'000'000'000'000 ms = approx 316 years
     //                10'000'000'000'000'000 us = approx 316 years
 
+
     constexpr timepoint_t timepoint_min = OMW_TIMEPOINT_MIN;
     constexpr timepoint_t timepoint_max = OMW_TIMEPOINT_MAX;
 
@@ -60,6 +67,7 @@ namespace clock {
     constexpr timepoint_t hour_us = OMW_HOUR_us;
     constexpr timepoint_t day_us = OMW_DAY_us;
 
+
     /**
      * @brief Returns the current counter value.
      *
@@ -69,11 +77,11 @@ namespace clock {
      */
     timepoint_t get();
 
-    static inline bool elapsed_us(timepoint_t now_us, timepoint_t last_us, timepoint_t interval_us) { return ((now_us - last_us) >= interval_us); }
+    static inline bool elapsed_us(timepoint_t now_us, timepoint_t start_us, timepoint_t interval_us) { return ((now_us - start_us) >= interval_us); }
 
-    static inline bool elapsed_ms(timepoint_t now_us, timepoint_t last_us, int64_t interval_ms)
+    static inline bool elapsed_ms(timepoint_t now_us, timepoint_t start_us, int64_t interval_ms)
     {
-        return elapsed_us(now_us, last_us, ((timepoint_t)interval_ms * 1000ll));
+        return elapsed_us(now_us, start_us, ((timepoint_t)interval_ms * 1000ll));
     }
 
     /**
@@ -96,6 +104,11 @@ namespace clock {
 
         return us;
     }
+
+#if OMW_PLAT_UNIX || (OMW_CPPSTD >= OMW_CPPSTD_17) || defined(OMWi_DOXYGEN_PREDEFINE)
+    static inline timepoint_t fromTimespec(const struct timespec& tspec) { return fromTimespec(tspec.tv_sec, tspec.tv_nsec); }
+    static inline timepoint_t fromTimespec(const struct timespec* tspec) { return fromTimespec(tspec->tv_sec, tspec->tv_nsec); }
+#endif
 
 } // namespace clock
 } // namespace omw
