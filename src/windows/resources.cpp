@@ -5,8 +5,8 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 */
 
 #include "omw/windows/resources.h"
-
 #ifdef OMW_PLAT_WIN
+
 
 #include <cstddef>
 #include <cstdint>
@@ -18,14 +18,13 @@ copyright   MIT - Copyright (c) 2021 Oliver Blaser
 #include <Windows.h>
 
 
-
 //! @param idr Resource ID (16bit)
 //! @param type Resource type (16bit)
 //! @param [out] size Number of bytes
 //! @return Pointer to the byte array
-//! 
+//!
 //! Throwing function, see \ref omw_windows_getResrc_infoText.
-//! 
+//!
 const uint8_t* omw::windows::getResource(int idr, int type, size_t* size)
 {
     ErrorCode ec;
@@ -54,10 +53,7 @@ const uint8_t* omw::windows::getResource(int idr, int type, size_t* size, omw::w
     {
         HGLOBAL rcData = LoadResource(handle, rc);
 
-        if (rcData == NULL)
-        {
-            ec = ErrorCode(omw::windows::EC_RESOURCE_NOT_LOADED, OMWi_DISPSTR("could not load resource"));
-        }
+        if (rcData == NULL) { ec = ErrorCode(omw::windows::EC_RESOURCE_NOT_LOADED, OMWi_DISPSTR("could not load resource")); }
         else
         {
             const size_t tmpSize = SizeofResource(handle, rc);
@@ -77,9 +73,9 @@ const uint8_t* omw::windows::getResource(int idr, int type, size_t* size, omw::w
 //! @param idr Resource ID (16bit)
 //! @param type Resource type (16bit)
 //! @return Content of the resource
-//! 
+//!
 //! Throwing function, see \ref omw_windows_getResrc_infoText.
-//! 
+//!
 std::vector<uint8_t> omw::windows::getResource(int idr, int type)
 {
     size_t size;
@@ -107,27 +103,21 @@ std::vector<uint8_t> omw::windows::getResource(int idr, int type, omw::windows::
 
 //! @param idr Resource ID (16bit)
 //! @return Content of the resource
-//! 
+//!
 //! Throwing function, see \ref omw_windows_getResrc_infoText.
-//! 
-std::vector<uint8_t> omw::windows::getBinaryResource(int idr)
-{
-    return getResource(idr, OMW_RCT_BINFILE);
-}
+//!
+std::vector<uint8_t> omw::windows::getBinaryResource(int idr) { return getResource(idr, OMW_RCT_BINFILE); }
 
 //! @param idr Resource ID (16bit)
 //! @param [out] ec See \ref omw_windows_getResrc_infoText
 //! @return Content of the resource
-std::vector<uint8_t> omw::windows::getBinaryResource(int idr, omw::windows::ErrorCode& ec)
-{
-    return getResource(idr, OMW_RCT_BINFILE, ec);
-}
+std::vector<uint8_t> omw::windows::getBinaryResource(int idr, omw::windows::ErrorCode& ec) { return getResource(idr, OMW_RCT_BINFILE, ec); }
 
 //! @param idr Resource ID (16bit)
 //! @return Content of the text resource
-//! 
+//!
 //! Throwing function, see \ref omw_windows_getResrc_infoText.
-//! 
+//!
 std::string omw::windows::getTextResource(int idr)
 {
     size_t size;
@@ -146,7 +136,6 @@ std::string omw::windows::getTextResource(int idr, omw::windows::ErrorCode& ec)
 
     return std::string(data, data + size);
 }
-
 
 
 #endif // OMW_PLAT_WIN

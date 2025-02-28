@@ -5,11 +5,11 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 /* !
-* \file
-* \brief Integer Definitions.
-*
-* See also \ref grp_utility_langSupport_typeSupport.
-*/
+ * \file
+ * \brief Integer Definitions.
+ *
+ * See also \ref grp_utility_langSupport_typeSupport.
+ */
 
 #ifndef IG_OMW_INTDEF_H
 #define IG_OMW_INTDEF_H
@@ -20,8 +20,8 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 /*! \addtogroup grp_utility_langSupport_typeSupport
-* @{
-*/
+ * @{
+ */
 
 #define OMW_8BIT_LSB (0x01)
 #define OMW_8BIT_MSB (0x80)
@@ -44,15 +44,16 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 /*! @} */
 
 
-namespace omw
-{
-    /*! \addtogroup grp_utility_langSupport_typeSupport
-    * @{
-    */
+namespace omw {
 
-    constexpr size_t size_max = static_cast<size_t>(-1);
+/*! \addtogroup grp_utility_langSupport_typeSupport
+ * @{
+ */
 
-    /*! @} */
+constexpr size_t size_max = static_cast<size_t>(-1);
+
+/*! @} */
+
 }
 
 

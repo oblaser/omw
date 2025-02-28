@@ -13,44 +13,67 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <stdexcept>
 #include <string>
 
-namespace omw
-{
-    namespace windows
+
+namespace omw {
+namespace windows {
+
+    /*! \addtogroup grp_windows
+     * @{
+     */
+
+    class envVar_not_found : public std::runtime_error
     {
-        /*! \addtogroup grp_windows
-        * @{
-        */
+    public:
+        envVar_not_found() = delete;
 
-        class envVar_not_found : public std::runtime_error
-        {
-        public:
-            envVar_not_found() = delete;
-            explicit envVar_not_found(const std::string& message) : std::runtime_error(message) {}
-            explicit envVar_not_found(const char* message) : std::runtime_error(message) {}
-            virtual ~envVar_not_found() {}
-        };
+        explicit envVar_not_found(const std::string& message)
+            : std::runtime_error(message)
+        {}
 
-        class invalid_unicode : public std::runtime_error
-        {
-        public:
-            invalid_unicode() = delete;
-            explicit invalid_unicode(const std::string& message) : std::runtime_error(message) {}
-            explicit invalid_unicode(const char* message) : std::runtime_error(message) {}
-            virtual ~invalid_unicode() {}
-        };
+        explicit envVar_not_found(const char* message)
+            : std::runtime_error(message)
+        {}
 
-        class resource_not_found : public std::runtime_error
-        {
-        public:
-            resource_not_found() = delete;
-            explicit resource_not_found(const std::string& message) : std::runtime_error(message) {}
-            explicit resource_not_found(const char* message) : std::runtime_error(message) {}
-            virtual ~resource_not_found() {}
-        };
+        virtual ~envVar_not_found() {}
+    };
 
-        /*! @} */
-    }
-}
+    class invalid_unicode : public std::runtime_error
+    {
+    public:
+        invalid_unicode() = delete;
+
+        explicit invalid_unicode(const std::string& message)
+            : std::runtime_error(message)
+        {}
+
+        explicit invalid_unicode(const char* message)
+            : std::runtime_error(message)
+        {}
+
+        virtual ~invalid_unicode() {}
+    };
+
+    class resource_not_found : public std::runtime_error
+    {
+    public:
+        resource_not_found() = delete;
+
+        explicit resource_not_found(const std::string& message)
+            : std::runtime_error(message)
+        {}
+
+        explicit resource_not_found(const char* message)
+            : std::runtime_error(message)
+        {}
+
+        virtual ~resource_not_found() {}
+    };
+
+    /*! @} */
+
+} // namespace windows
+} // namespace omw
+
 
 #endif // OMW_PLAT_WIN
 #endif // IG_OMW_WINDOWS_EXCEPTION_H

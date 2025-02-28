@@ -18,31 +18,31 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include "../../omw/windows/resourceTypes.h"
 
 
+namespace omw {
+namespace windows {
 
-namespace omw
-{
-    namespace windows
-    {
-        /*! \addtogroup grp_windows
-        * @{
-        */
+    /*! \addtogroup grp_windows
+     * @{
+     */
 
-        //! \name Resources
-        /// @{
-        const uint8_t* getResource(int idr, int type, size_t* size);
-        const uint8_t* getResource(int idr, int type, size_t* size, omw::windows::ErrorCode& ec);
-        std::vector<uint8_t> getResource(int idr, int type);
-        std::vector<uint8_t> getResource(int idr, int type, omw::windows::ErrorCode& ec);
+    //! \name Resources
+    /// @{
+    const uint8_t* getResource(int idr, int type, size_t* size);
+    const uint8_t* getResource(int idr, int type, size_t* size, omw::windows::ErrorCode& ec);
+    std::vector<uint8_t> getResource(int idr, int type);
+    std::vector<uint8_t> getResource(int idr, int type, omw::windows::ErrorCode& ec);
 
-        std::vector<uint8_t> getBinaryResource(int idr);
-        std::vector<uint8_t> getBinaryResource(int idr, omw::windows::ErrorCode& ec);
-        std::string getTextResource(int idr);
-        std::string getTextResource(int idr, omw::windows::ErrorCode& ec);
-        /// @}
+    std::vector<uint8_t> getBinaryResource(int idr);
+    std::vector<uint8_t> getBinaryResource(int idr, omw::windows::ErrorCode& ec);
+    std::string getTextResource(int idr);
+    std::string getTextResource(int idr, omw::windows::ErrorCode& ec);
+    /// @}
 
-        /*! @} */
-    }
-}
+    /*! @} */
+
+} // namespace windows
+} // namespace omw
+
 
 #endif // OMW_PLAT_WIN
 #endif // IG_OMW_WINDOWS_RESOURCES_H

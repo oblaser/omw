@@ -4,17 +4,17 @@ copyright       MIT - Copyright (c) 2024 Oliver Blaser
 */
 
 #include "omw/windows/string.h"
-
 #ifdef OMW_PLAT_WIN
+
 
 #include <stdexcept>
 #include <string>
 #include <vector>
 
+#include "..\..\include\omw\string.h"
 #include "omw/defs.h"
 #include "omw/windows/error.h"
 #include "omw/windows/exception.h"
-#include "..\..\include\omw\string.h"
 
 #include <Windows.h>
 
@@ -28,14 +28,13 @@ copyright       MIT - Copyright (c) 2024 Oliver Blaser
 #define cptows_fnNamePrefix "omw::windows::cptows: "
 
 
-
 //! @param str The input UTF-8 string
 //! @return The converted wide char string
-//! 
+//!
 //! Converts an UTF-8 string to a Windows API compatible wide char string.
-//! 
+//!
 //! Throwing function, see \ref omw_windows_strConv_infoText.
-//! 
+//!
 std::wstring omw::windows::u8tows(const char* str)
 {
     using size_type = std::vector<wchar_t>::size_type;
@@ -53,10 +52,9 @@ std::wstring omw::windows::u8tows(const char* str)
 
         buffer = std::vector<wchar_t>(initialSize, L'\0');
 
-        do
-        {
-            if (buffer.size() > static_cast<size_type>(maxDestSize)) destSize = maxDestSize;
-            else destSize = static_cast<int>(buffer.size());
+        do {
+            if (buffer.size() > static_cast<size_type>(maxDestSize)) { destSize = maxDestSize; }
+            else { destSize = static_cast<int>(buffer.size()); }
 
             res = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, str, -1, buffer.data(), destSize);
 
@@ -71,26 +69,18 @@ std::wstring omw::windows::u8tows(const char* str)
                     buffer = std::vector<wchar_t>(initialSize + incSize, L'\0');
                     incSize *= 2;
                 }
-                else if (err == ERROR_INVALID_PARAMETER)
-                {
-                    throw std::invalid_argument(u8tows_fnNamePrefix OMWi_DISPSTR("invalid arguments"));
-                }
+                else if (err == ERROR_INVALID_PARAMETER) { throw std::invalid_argument(u8tows_fnNamePrefix OMWi_DISPSTR("invalid arguments")); }
                 else if (err == ERROR_NO_UNICODE_TRANSLATION)
                 {
                     throw omw::windows::invalid_unicode(u8tows_fnNamePrefix OMWi_DISPSTR("invalid unicode in src"));
                 }
-                else if (err == ERROR_INVALID_FLAGS)
-                {
-                    throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("internal error (invalid flags)"));
-                }
+                else if (err == ERROR_INVALID_FLAGS) { throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("internal error (invalid flags)")); }
                 else if (res < 0)
                 {
-                    throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("Windows API error, MultiByteToWideChar() ") + std::to_string(res) + OMWi_DISPSTR(", GetLastError() ") + std::to_string(err));
+                    throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("Windows API error, MultiByteToWideChar() ") + std::to_string(res) +
+                                             OMWi_DISPSTR(", GetLastError() ") + std::to_string(err));
                 }
-                else
-                {
-                    throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("internal error"));
-                }
+                else { throw std::runtime_error(u8tows_fnNamePrefix OMWi_DISPSTR("internal error")); }
             }
         }
         while (res <= 0);
@@ -102,11 +92,11 @@ std::wstring omw::windows::u8tows(const char* str)
 
 //! @param str The input wide char string
 //! @return The converted UTF-8 string
-//! 
+//!
 //! Converts a Windows API compatible wide char string to an UTF-8 string.
-//! 
+//!
 //! Throwing function, see \ref omw_windows_strConv_infoText.
-//! 
+//!
 std::string omw::windows::wstou8(const wchar_t* str)
 {
     using size_type = std::vector<char>::size_type;
@@ -124,10 +114,9 @@ std::string omw::windows::wstou8(const wchar_t* str)
 
         buffer = std::vector<char>(initialSize, '\0');
 
-        do
-        {
-            if (buffer.size() > static_cast<size_type>(maxDestSize)) destSize = maxDestSize;
-            else destSize = static_cast<int>(buffer.size());
+        do {
+            if (buffer.size() > static_cast<size_type>(maxDestSize)) { destSize = maxDestSize; }
+            else { destSize = static_cast<int>(buffer.size()); }
 
             res = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, str, -1, buffer.data(), destSize, NULL, NULL);
 
@@ -142,26 +131,18 @@ std::string omw::windows::wstou8(const wchar_t* str)
                     buffer = std::vector<char>(initialSize + incSize, '\0');
                     incSize *= 2;
                 }
-                else if (err == ERROR_INVALID_PARAMETER)
-                {
-                    throw std::invalid_argument(wstou8_fnNamePrefix OMWi_DISPSTR("invalid arguments"));
-                }
+                else if (err == ERROR_INVALID_PARAMETER) { throw std::invalid_argument(wstou8_fnNamePrefix OMWi_DISPSTR("invalid arguments")); }
                 else if (err == ERROR_NO_UNICODE_TRANSLATION)
                 {
                     throw omw::windows::invalid_unicode(wstou8_fnNamePrefix OMWi_DISPSTR("invalid unicode in src"));
                 }
-                else if (err == ERROR_INVALID_FLAGS)
-                {
-                    throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("internal error (invalid flags)"));
-                }
+                else if (err == ERROR_INVALID_FLAGS) { throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("internal error (invalid flags)")); }
                 else if (res < 0)
                 {
-                    throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("Windows API error, WideCharToMultiByte() ") + std::to_string(res) + OMWi_DISPSTR(", GetLastError() ") + std::to_string(err));
+                    throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("Windows API error, WideCharToMultiByte() ") + std::to_string(res) +
+                                             OMWi_DISPSTR(", GetLastError() ") + std::to_string(err));
                 }
-                else
-                {
-                    throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("internal error"));
-                }
+                else { throw std::runtime_error(wstou8_fnNamePrefix OMWi_DISPSTR("internal error")); }
             }
         }
         while (res <= 0);
@@ -201,11 +182,11 @@ std::string omw::windows::wstocp(const wchar_t* str, unsigned int codepage)
 //! @param [out] dest Pointer (`LPWSTR`) to the output buffer (`WCHAR[]`)
 //! @param destSize Size of the destination buffer (number of `WCHAR`)
 //! @return Number of wide chars written to dest (not including the terminating null character)
-//! 
+//!
 //! Converts an UTF-8 string to a Windows API compatible wide string.
-//! 
+//!
 //! Throwing function, see \ref omw_windows_strConv_infoText.
-//! 
+//!
 size_t omw::windows::deprecated::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSize)
 {
     size_t r;
@@ -217,7 +198,7 @@ size_t omw::windows::deprecated::utf8_to_wstr(const char* src, wchar_t* dest, si
     else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) throw std::range_error("omw::windows::utf8_to_wstr: " + ec.msg());
     else if (ec.code() == omw::windows::EC_INV_ARG) throw std::invalid_argument("omw::windows::utf8_to_wstr: " + ec.msg());
     else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode("omw::windows::utf8_to_wstr: " + ec.msg());
-    //else nop
+    // else nop
 
     throw std::runtime_error("omw::windows::utf8_to_wstr: " + ec.msg());
 }
@@ -227,9 +208,9 @@ size_t omw::windows::deprecated::utf8_to_wstr(const char* src, wchar_t* dest, si
 //! @param destSize Size of the destination buffer (number of `WCHAR`)
 //! @param [out] ec See \ref omw_windows_strConv_infoText
 //! @return Number of wide chars written to dest (not including the terminating null character)
-//! 
+//!
 //! Converts an UTF-8 string to a Windows API compatible wide string.
-//! 
+//!
 size_t omw::windows::deprecated::utf8_to_wstr(const char* src, wchar_t* dest, size_t destSize, ErrorCode& ec)
 {
     int r;
@@ -265,7 +246,7 @@ size_t omw::windows::deprecated::utf8_to_wstr(const char* src, wchar_t* dest, si
             ec = ErrorCode(omw::windows::EC_UNKNOWN_WIN, OMWi_DISPSTR("Windows API error, MultiByteToWideChar() returned ") + std::to_string(r));
             return 0;
         }
-        //else nop
+        // else nop
 
         ec = ErrorCode(omw::windows::EC_INTERNAL, msg);
         return 0;
@@ -280,11 +261,11 @@ size_t omw::windows::deprecated::utf8_to_wstr(const char* src, wchar_t* dest, si
 //! @param [out] dest Pointer to the output buffer
 //! @param destSize Size of the destination buffer
 //! @return Number of bytes written to dest (not including the terminating null character)
-//! 
+//!
 //! Converts a Windows API compatible wide string to an UTF-8 string.
-//! 
+//!
 //! Throwing function, see \ref omw_windows_strConv_infoText.
-//! 
+//!
 size_t omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSize)
 {
     size_t r;
@@ -296,7 +277,7 @@ size_t omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, char* dest, si
     else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) throw std::range_error("omw::windows::wstr_to_utf8: " + ec.msg());
     else if (ec.code() == omw::windows::EC_INV_ARG) throw std::invalid_argument("omw::windows::wstr_to_utf8: " + ec.msg());
     else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode("omw::windows::wstr_to_utf8: " + ec.msg());
-    //else nop
+    // else nop
 
     throw std::runtime_error("omw::windows::wstr_to_utf8: " + ec.msg());
 }
@@ -306,9 +287,9 @@ size_t omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, char* dest, si
 //! @param destSize Size of the destination buffer
 //! @param [out] ec See \ref omw_windows_strConv_infoText
 //! @return Number of bytes written to dest (not including the terminating null character)
-//! 
+//!
 //! Converts a Windows API compatible wide string to an UTF-8 string.
-//! 
+//!
 size_t omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, char* dest, size_t destSize, ErrorCode& ec)
 {
     int r;
@@ -338,13 +319,13 @@ size_t omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, char* dest, si
             ec = ErrorCode(omw::windows::EC_INV_UNICODE, OMWi_DISPSTR("invalid unicode in src"));
             return 0;
         }
-        else if (err == ERROR_INVALID_FLAGS) msg += OMWi_DISPSTR(" (invalid flags)");
+        else if (err == ERROR_INVALID_FLAGS) { msg += OMWi_DISPSTR(" (invalid flags)"); }
         else if (r < 0)
         {
             ec = ErrorCode(omw::windows::EC_UNKNOWN_WIN, OMWi_DISPSTR("Windows API error, WideCharToMultiByte() returned ") + std::to_string(r));
             return 0;
         }
-        //else nop
+        // else nop
 
         ec = ErrorCode(omw::windows::EC_INTERNAL, msg);
         return 0;
@@ -357,22 +338,22 @@ size_t omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, char* dest, si
 
 //! @param src The input string (`LPCWCH`)
 //! @param [out] dest Reference to the output string
-//! 
+//!
 //! Converts a Windows API compatible wide string to an UTF-8 string.
-//! 
+//!
 //! Throwing function, see \ref omw_windows_strConv_infoText.
-//! 
+//!
 void omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, std::string& dest)
 {
     ErrorCode ec;
 
     wstr_to_utf8(src, dest, ec);
 
-    if (ec.code() == omw::windows::EC_OK) return;
-    else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) throw std::range_error("omw::windows::wstr_to_utf8: " + ec.msg());
-    else if (ec.code() == omw::windows::EC_INV_ARG) throw std::invalid_argument("omw::windows::wstr_to_utf8: " + ec.msg());
-    else if (ec.code() == omw::windows::EC_INV_UNICODE) throw omw::windows::invalid_unicode("omw::windows::wstr_to_utf8: " + ec.msg());
-    //else nop
+    if (ec.code() == omw::windows::EC_OK) { return; }
+    else if (ec.code() == omw::windows::EC_STRCONV_DEST_BUFFER_SIZE) { throw std::range_error("omw::windows::wstr_to_utf8: " + ec.msg()); }
+    else if (ec.code() == omw::windows::EC_INV_ARG) { throw std::invalid_argument("omw::windows::wstr_to_utf8: " + ec.msg()); }
+    else if (ec.code() == omw::windows::EC_INV_UNICODE) { throw omw::windows::invalid_unicode("omw::windows::wstr_to_utf8: " + ec.msg()); }
+    // else nop
 
     throw std::runtime_error("omw::windows::wstr_to_utf8: " + ec.msg());
 }
@@ -380,13 +361,13 @@ void omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, std::string& des
 //! @param src The input string (`LPCWCH`)
 //! @param [out] dest Reference to the output string
 //! @param [out] ec See \ref omw_windows_strConv_infoText
-//! 
+//!
 //! Converts a Windows API compatible wide string to an UTF-8 string.
-//! 
+//!
 void omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, std::string& dest, ErrorCode& ec)
 {
-    const size_t bufferSizeInitial = 300;   // adapt unit test "windows_string.hpp" if
-    const size_t bufferSizeGrow = 100;      // one of these values change
+    const size_t bufferSizeInitial = 300; // adapt unit test "windows_string.hpp" if
+    const size_t bufferSizeGrow = 100;    // one of these values change
 
     bool proc;
     std::vector<char> buffer(bufferSizeInitial, 0);
@@ -398,8 +379,8 @@ void omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, std::string& des
         maxSize |= (size_t)0x01;
     }
 
-    if ((buffer.max_size() - 1) < maxSize) maxSize = buffer.max_size() - 1;
-    if (dest.max_size() < maxSize) maxSize = dest.max_size();
+    if ((buffer.max_size() - 1) < maxSize) { maxSize = buffer.max_size() - 1; }
+    if (dest.max_size() < maxSize) { maxSize = dest.max_size(); }
 
     proc = true;
     while (proc)
@@ -410,16 +391,14 @@ void omw::windows::deprecated::wstr_to_utf8(const wchar_t* src, std::string& des
         {
             const size_t currentSize = buffer.size();
 
-            if (currentSize < (maxSize - bufferSizeGrow))
-            {
-                buffer.assign((currentSize + bufferSizeGrow), 0);
-            }
-            else proc = false;
+            if (currentSize < (maxSize - bufferSizeGrow)) { buffer.assign((currentSize + bufferSizeGrow), 0); }
+            else { proc = false; }
         }
-        else proc = false;
+        else { proc = false; }
     }
 
     dest = std::string(buffer.data());
 }
+
 
 #endif // OMW_PLAT_WIN

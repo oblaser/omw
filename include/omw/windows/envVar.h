@@ -15,32 +15,33 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 #include "../../omw/windows/error.h"
 
-namespace omw
-{
-    namespace windows
-    {
-        /*! \addtogroup grp_windows
-        * @{
-        */
 
-        //! \name Environment Variables
-        /// @{
-        std::string getEnvironmentVariable(const std::string& varName_u8);
-        std::wstring getEnvironmentVariableW(const std::string& varName_u8);
-        std::wstring getEnvironmentVariableW(const std::wstring& varName);
-        /// @}
+namespace omw {
+namespace windows {
 
-        namespace deprecated
-        {
-            constexpr size_t envVarValueMaxSize = 32767;
+    /*! \addtogroup grp_windows
+     * @{
+     */
 
-            std::string getEnvironmentVariable(const std::string& varName);
-            std::string getEnvironmentVariable(const std::string& varName, omw::windows::ErrorCode& ec);
-        }
+    //! \name Environment Variables
+    /// @{
+    std::string getEnvironmentVariable(const std::string& varName_u8);
+    std::wstring getEnvironmentVariableW(const std::string& varName_u8);
+    std::wstring getEnvironmentVariableW(const std::wstring& varName);
+    /// @}
 
-        /*! @} */
+    namespace deprecated {
+        constexpr size_t envVarValueMaxSize = 32767;
+
+        std::string getEnvironmentVariable(const std::string& varName);
+        std::string getEnvironmentVariable(const std::string& varName, omw::windows::ErrorCode& ec);
     }
-}
+
+    /*! @} */
+
+} // namespace windows
+} // namespace omw
+
 
 #endif // OMW_PLAT_WIN
 #endif // IG_OMW_WINDOWS_ENVVAR_H

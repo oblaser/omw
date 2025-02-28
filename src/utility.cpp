@@ -15,90 +15,72 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 #define OMWi_IMPLEMENT_SHIFTLEFT(T) \
-T r = value;                        \
-shiftLeftAssign(r, n);              \
-return r                            \
-// end OMWi_IMPLEMENT_SHIFTLEFT
+    T r = value;                    \
+    shiftLeftAssign(r, n);          \
+    return r
 
-#define OMWi_IMPLEMENT_SHIFTRIGHT(T)    \
-T r = value;                            \
-shiftRightAssign(r, n);                 \
-return r                                \
-// end OMWi_IMPLEMENT_SHIFTRIGHT
+#define OMWi_IMPLEMENT_SHIFTRIGHT(T) \
+    T r = value;                     \
+    shiftRightAssign(r, n);          \
+    return r
 
 
-namespace
+namespace {
+
+template <typename Ts, typename Tu, unsigned int nBits> void shiftLeftAssign(Ts& value, unsigned int n)
 {
-    template <typename Ts, typename Tu, unsigned int nBits>
-    void shiftLeftAssign(Ts& value, unsigned int n)
+    if (n < nBits)
     {
-        if (n < nBits)
+        const Tu tmp = static_cast<Tu>(value);
+        value = static_cast<Ts>(tmp << n);
+    }
+    else value = 0;
+}
+
+template <typename Ts, typename Tu, unsigned int nBits> void shiftRightAssign_pos(Ts& value, unsigned int n)
+{
+    if (n < nBits)
+    {
+        const Tu tmp = static_cast<Tu>(value);
+        value = static_cast<Ts>(tmp >> n);
+    }
+    else value = 0;
+}
+
+template <typename Ts, typename Tu, unsigned int nBits> void shiftRightAssign_neg(Ts& value, unsigned int n)
+{
+    if (n < nBits)
+    {
+        if (n)
         {
-            const Tu tmp = static_cast<Tu>(value);
-            value = static_cast<Ts>(tmp << n);
+            constexpr Tu mask = static_cast<Tu>(-1);
+            Tu tmp = static_cast<Tu>(value);
+            tmp = tmp >> n;
+            tmp |= (mask << (nBits - n));
+            value = static_cast<Ts>(tmp);
         }
-        else value = 0;
     }
-
-    template <typename Ts, typename Tu, unsigned int nBits>
-    void shiftRightAssign_pos(Ts& value, unsigned int n)
-    {
-        if (n < nBits)
-        {
-            const Tu tmp = static_cast<Tu>(value);
-            value = static_cast<Ts>(tmp >> n);
-        }
-        else value = 0;
-    }
-
-    template <typename Ts, typename Tu, unsigned int nBits>
-    void shiftRightAssign_neg(Ts& value, unsigned int n)
-    {
-        if (n < nBits)
-        {
-            if (n)
-            {
-                constexpr Tu mask = static_cast<Tu>(-1);
-                Tu tmp = static_cast<Tu>(value);
-                tmp = tmp >> n;
-                tmp |= (mask << (nBits - n));
-                value = static_cast<Ts>(tmp);
-            }
-        }
-        else value = -1;
-    }
-
-    template <typename Ts, typename Tu, unsigned int nBits>
-    void shiftRightAssign(Ts& value, unsigned int n)
-    {
-        Tu msb = 0x01;
-        msb = msb << (nBits - 1);
-        if (static_cast<Tu>(value) & msb) shiftRightAssign_neg<Ts, Tu, nBits>(value, n);
-        else shiftRightAssign_pos<Ts, Tu, nBits>(value, n);
-    }
+    else value = -1;
 }
 
-
-
-void omw::shiftLeftAssign(int8_t& value, unsigned int n)
+template <typename Ts, typename Tu, unsigned int nBits> void shiftRightAssign(Ts& value, unsigned int n)
 {
-    ::shiftLeftAssign<int8_t, uint8_t, 8>(value, n);
+    Tu msb = 0x01;
+    msb = msb << (nBits - 1);
+    if (static_cast<Tu>(value) & msb) shiftRightAssign_neg<Ts, Tu, nBits>(value, n);
+    else shiftRightAssign_pos<Ts, Tu, nBits>(value, n);
 }
 
-void omw::shiftLeftAssign(int16_t& value, unsigned int n)
-{
-    ::shiftLeftAssign<int16_t, uint16_t, 16>(value, n);
-}
+} // namespace
 
-void omw::shiftLeftAssign(int32_t& value, unsigned int n)
-{
-    ::shiftLeftAssign<int32_t, uint32_t, 32>(value, n);
-}
 
-void omw::shiftLeftAssign(int64_t& value, unsigned int n)
-{
-    ::shiftLeftAssign<int64_t, uint64_t, 64>(value, n);
-}
+void omw::shiftLeftAssign(int8_t& value, unsigned int n) { ::shiftLeftAssign<int8_t, uint8_t, 8>(value, n); }
+
+void omw::shiftLeftAssign(int16_t& value, unsigned int n) { ::shiftLeftAssign<int16_t, uint16_t, 16>(value, n); }
+
+void omw::shiftLeftAssign(int32_t& value, unsigned int n) { ::shiftLeftAssign<int32_t, uint32_t, 32>(value, n); }
+
+void omw::shiftLeftAssign(int64_t& value, unsigned int n) { ::shiftLeftAssign<int64_t, uint64_t, 64>(value, n); }
 
 void omw::shiftLeftAssign(uint8_t& value, unsigned int n)
 {
@@ -124,25 +106,13 @@ void omw::shiftLeftAssign(uint64_t& value, unsigned int n)
     else value = 0;
 }
 
-void omw::shiftRightAssign(int8_t& value, unsigned int n)
-{
-    ::shiftRightAssign<int8_t, uint8_t, 8>(value, n);
-}
+void omw::shiftRightAssign(int8_t& value, unsigned int n) { ::shiftRightAssign<int8_t, uint8_t, 8>(value, n); }
 
-void omw::shiftRightAssign(int16_t& value, unsigned int n)
-{
-    ::shiftRightAssign<int16_t, uint16_t, 16>(value, n);
-}
+void omw::shiftRightAssign(int16_t& value, unsigned int n) { ::shiftRightAssign<int16_t, uint16_t, 16>(value, n); }
 
-void omw::shiftRightAssign(int32_t& value, unsigned int n)
-{
-    ::shiftRightAssign<int32_t, uint32_t, 32>(value, n);
-}
+void omw::shiftRightAssign(int32_t& value, unsigned int n) { ::shiftRightAssign<int32_t, uint32_t, 32>(value, n); }
 
-void omw::shiftRightAssign(int64_t& value, unsigned int n)
-{
-    ::shiftRightAssign<int64_t, uint64_t, 64>(value, n);
-}
+void omw::shiftRightAssign(int64_t& value, unsigned int n) { ::shiftRightAssign<int64_t, uint64_t, 64>(value, n); }
 
 void omw::shiftRightAssign(uint8_t& value, unsigned int n)
 {
@@ -189,8 +159,8 @@ uint64_t omw::shiftRight(uint64_t value, unsigned int n) { OMWi_IMPLEMENT_SHIFTR
 
 // /* or /*!
 /*
-* \fn void omw::toggle(bool& value)
-* \param value The value to toggle
-*
-* Toggles a boolean value.
-*/
+ * \fn void omw::toggle(bool& value)
+ * \param value The value to toggle
+ *
+ * Toggles a boolean value.
+ */

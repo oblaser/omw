@@ -26,184 +26,182 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 
 
-namespace
-{
+namespace {
+
 #if defined(OMW_PLAT_WIN)
-    bool isCom0com(const std::string& device)
+bool isCom0com(const std::string& device)
+{
+    const omw::string tmpDevice = (omw::string(device)).toLower_asciiExt();
+    const std::vector<omw::string> info = omw::windows::queryDosDevice(device);
+
+    for (size_t i = 0; i < info.size(); ++i)
     {
-        const omw::string tmpDevice = (omw::string(device)).toLower_asciiExt();
-        const std::vector<omw::string> info = omw::windows::queryDosDevice(device);
+        const omw::string tmpInfo = info[i].toLower_asciiExt();
 
-        for (size_t i = 0; i < info.size(); ++i)
-        {
-            const omw::string tmpInfo = info[i].toLower_asciiExt();
-
-            if (tmpInfo.contains("com0com") && !tmpDevice.contains("com0com#port#"))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        if (tmpInfo.contains("com0com") && !tmpDevice.contains("com0com#port#")) { return true; }
     }
+
+    return false;
+}
 #elif defined(OMW_PLAT_UNIX)
-    speed_t getUnixBaud(omw::io::SerialPort::baud_type baud, int* error)
+speed_t getUnixBaud(omw::io::SerialPort::baud_type baud, int* error)
+{
+    int e = 0;
+    speed_t r;
+
+    switch (baud)
     {
-        int e = 0;
-        speed_t r;
+    case 0:
+        r = B0;
+        break;
 
-        switch (baud)
-        {
-        case 0:
-            r = B0;
-            break;
+    case 50:
+        r = B50;
+        break;
 
-        case 50:
-            r = B50;
-            break;
+    case 75:
+        r = B75;
+        break;
 
-        case 75:
-            r = B75;
-            break;
+    case 110:
+        r = B110;
+        break;
 
-        case 110:
-            r = B110;
-            break;
+    case 134:
+        r = B134;
+        break;
 
-        case 134:
-            r = B134;
-            break;
+    case 150:
+        r = B150;
+        break;
 
-        case 150:
-            r = B150;
-            break;
+    case 200:
+        r = B200;
+        break;
 
-        case 200:
-            r = B200;
-            break;
+    case 300:
+        r = B300;
+        break;
 
-        case 300:
-            r = B300;
-            break;
+    case 600:
+        r = B600;
+        break;
 
-        case 600:
-            r = B600;
-            break;
+    case 1200:
+        r = B1200;
+        break;
 
-        case 1200:
-            r = B1200;
-            break;
+    case 1800:
+        r = B1800;
+        break;
 
-        case 1800:
-            r = B1800;
-            break;
+    case 2400:
+        r = B2400;
+        break;
 
-        case 2400:
-            r = B2400;
-            break;
+    case 4800:
+        r = B4800;
+        break;
 
-        case 4800:
-            r = B4800;
-            break;
+    case 9600:
+        r = B9600;
+        break;
 
-        case 9600:
-            r = B9600;
-            break;
+    case 19200:
+        r = B19200;
+        break;
 
-        case 19200:
-            r = B19200;
-            break;
+    case 38400:
+        r = B38400;
+        break;
 
-        case 38400:
-            r = B38400;
-            break;
+    case 57600:
+        r = B57600;
+        break;
 
-        case 57600:
-            r = B57600;
-            break;
+    case 115200:
+        r = B115200;
+        break;
 
-        case 115200:
-            r = B115200;
-            break;
+    case 230400:
+        r = B230400;
+        break;
 
-        case 230400:
-            r = B230400;
-            break;
-
-        case 460800:
-            r = B460800;
-            break;
+    case 460800:
+        r = B460800;
+        break;
 
 #if defined(OMW_PLAT_LINUX)
-        case 500000:
-            r = B500000;
-            break;
+    case 500000:
+        r = B500000;
+        break;
 
-        case 576000:
-            r = B576000;
-            break;
+    case 576000:
+        r = B576000;
+        break;
 
-        case 921600:
-            r = B921600;
-            break;
+    case 921600:
+        r = B921600;
+        break;
 
-        case 1000000:
-            r = B1000000;
-            break;
+    case 1000000:
+        r = B1000000;
+        break;
 
-        case 1152000:
-            r = B1152000;
-            break;
+    case 1152000:
+        r = B1152000;
+        break;
 
-        case 1500000:
-            r = B1500000;
-            break;
+    case 1500000:
+        r = B1500000;
+        break;
 
-        case 2000000:
-            r = B2000000;
-            break;
+    case 2000000:
+        r = B2000000;
+        break;
 
-        case 2500000:
-            r = B2500000;
-            break;
+    case 2500000:
+        r = B2500000;
+        break;
 
-        case 3000000:
-            r = B3000000;
-            break;
+    case 3000000:
+        r = B3000000;
+        break;
 
-        case 3500000:
-            r = B3500000;
-            break;
+    case 3500000:
+        r = B3500000;
+        break;
 
-        case 4000000:
-            r = B4000000;
-            break;
+    case 4000000:
+        r = B4000000;
+        break;
 #endif // OMW_PLAT_LINUX
 
-        default:
-            e = 1;
-            break;
-        };
+    default:
+        e = 1;
+        break;
+    };
 
-        if (error) *error = e;
+    if (error) *error = e;
 
-        return r;
-    }
-#endif // OMW_PLAT_..
+    return r;
 }
+#endif // OMW_PLAT_..
+
+} // namespace
 
 
 
 #if defined(OMW_PLAT_UNIX)
 static inline int alias_close(int fd) __attribute__((always_inline));
-static inline ssize_t alias_read(int fd, void *buf, size_t count) __attribute__((always_inline));
-static inline ssize_t alias_write(int fd, const void *buf, size_t count) __attribute__((always_inline));
+static inline ssize_t alias_read(int fd, void* buf, size_t count) __attribute__((always_inline));
+static inline ssize_t alias_write(int fd, const void* buf, size_t count) __attribute__((always_inline));
 #endif // OMW_PLAT_UNIX
 
 
 
 #if defined(OMW_PLAT_WIN)
-void omw::io::SerialPort::initDcb(void* DCB_customDcb, baud_type baud/*, nDataBits, parity, nStopBits*/)
+void omw::io::SerialPort::initDcb(void* DCB_customDcb, baud_type baud /*, nDataBits, parity, nStopBits*/)
 {
     memset(DCB_customDcb, 0, sizeof(DCB));
 
@@ -226,8 +224,8 @@ void omw::io::SerialPort::initDcb(void* DCB_customDcb, baud_type baud/*, nDataBi
     static_cast<DCB*>(DCB_customDcb)->fAbortOnError = FALSE;
     static_cast<DCB*>(DCB_customDcb)->XonLim = 0;
     static_cast<DCB*>(DCB_customDcb)->XoffLim = 1;
-    static_cast<DCB*>(DCB_customDcb)->ByteSize = 8; // nDataBits
-    static_cast<DCB*>(DCB_customDcb)->Parity = NOPARITY; // parity
+    static_cast<DCB*>(DCB_customDcb)->ByteSize = 8;          // nDataBits
+    static_cast<DCB*>(DCB_customDcb)->Parity = NOPARITY;     // parity
     static_cast<DCB*>(DCB_customDcb)->StopBits = ONESTOPBIT; // nStopBits
 }
 #elif defined(OMW_PLAT_UNIX)
@@ -236,24 +234,23 @@ void omw::io::SerialPort::initDcb(void* DCB_customDcb, baud_type baud/*, nDataBi
 omw::io::SerialPort::SerialPort()
     :
 #if defined(OMW_PLAT_WIN)
-    m_handle(INVALID_HANDLE_VALUE),
+      m_handle(INVALID_HANDLE_VALUE),
 #elif defined(OMW_PLAT_UNIX)
-    m_fd(-1),
+      m_fd(-1),
 #endif
-    //m_port(),
-    //m_baud(-1),
-    m_isOpen(false),
-    m_good(true)
+      // m_port(),
+      // m_baud(-1),
+      m_isOpen(false),
+      m_good(true)
 {}
 
-int omw::io::SerialPort::open(const std::string& port, baud_type baud/*, nDataBits, parity, nStopBits*/)
+int omw::io::SerialPort::open(const std::string& port, baud_type baud /*, nDataBits, parity, nStopBits*/)
 {
     int r = 0;
 
     if (m_isOpen) r = __LINE__;
     else
     {
-
 #if defined(OMW_PLAT_WIN)
 
         DCB dcb;
@@ -273,23 +270,23 @@ int omw::io::SerialPort::open(const std::string& port, baud_type baud/*, nDataBi
                 tty.c_cflag &= ~PARENB; // no parity
                 tty.c_cflag &= ~CSTOPB; // clear stop field => one stop bit
                 tty.c_cflag &= ~CSIZE;
-                tty.c_cflag |= CS8; // 8bit data word
-                tty.c_cflag &= ~CRTSCTS; // disable RTS/CTS hardware flow control
+                tty.c_cflag |= CS8;            // 8bit data word
+                tty.c_cflag &= ~CRTSCTS;       // disable RTS/CTS hardware flow control
                 tty.c_cflag |= CREAD | CLOCAL; // turn on READ & ignore ctrl lines (CLOCAL = 1)
 
                 tty.c_lflag &= ~ICANON; // non-canonical mode
-                tty.c_lflag &= ~ECHO; // disable echo
-                tty.c_lflag &= ~ECHOE; // disable erasure
+                tty.c_lflag &= ~ECHO;   // disable echo
+                tty.c_lflag &= ~ECHOE;  // disable erasure
                 tty.c_lflag &= ~ECHONL; // disable new-line echo
-                tty.c_lflag &= ~ISIG; // disable interpretation of INTR, QUIT and SUSP
+                tty.c_lflag &= ~ISIG;   // disable interpretation of INTR, QUIT and SUSP
 
-                tty.c_iflag &= ~(IXON | IXOFF | IXANY); // turn off s/w flow ctrl
+                tty.c_iflag &= ~(IXON | IXOFF | IXANY);                                      // turn off s/w flow ctrl
                 tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL); // disable any special handling of received bytes
 
                 tty.c_oflag &= ~OPOST; // prevent special interpretation of output bytes (e.g. newline chars)
                 tty.c_oflag &= ~ONLCR; // prevent conversion of newline to carriage return/line feed
-                //tty.c_oflag &= ~OXTABS; // prevent conversion of tabs to spaces (NOT PRESENT IN LINUX)
-                //tty.c_oflag &= ~ONOEOT; // prevent removal of C-d chars (0x004) in output (NOT PRESENT IN LINUX)
+                // tty.c_oflag &= ~OXTABS; // prevent conversion of tabs to spaces (NOT PRESENT IN LINUX)
+                // tty.c_oflag &= ~ONOEOT; // prevent removal of C-d chars (0x004) in output (NOT PRESENT IN LINUX)
 
                 // non blocking read
                 tty.c_cc[VTIME] = 0;
@@ -304,10 +301,7 @@ int omw::io::SerialPort::open(const std::string& port, baud_type baud/*, nDataBi
                     {
                         if (cfsetospeed(&tty, unixBaud) == 0)
                         {
-                            if (tcsetattr(m_fd, TCSANOW, &tty) != 0)
-                            {
-                                r = __LINE__;
-                            }
+                            if (tcsetattr(m_fd, TCSANOW, &tty) != 0) { r = __LINE__; }
                             // else nop, set to OK above
                         }
                         else r = __LINE__;
@@ -329,7 +323,6 @@ int omw::io::SerialPort::open(const std::string& port, baud_type baud/*, nDataBi
 #else
 #error "platform not supported"
 #endif
-
     }
 
     m_good = (r == 0);
@@ -343,14 +336,7 @@ int omw::io::SerialPort::open(const std::string& port, void* DCB_customDcb, cons
 
     if (DCB_customDcb)
     {
-        m_handle = CreateFileA(
-            ("\\\\.\\" + port).c_str(),
-            GENERIC_READ | GENERIC_WRITE,
-            0,
-            NULL,
-            OPEN_EXISTING,
-            0,
-            NULL);
+        m_handle = CreateFileA(("\\\\.\\" + port).c_str(), (GENERIC_READ | GENERIC_WRITE), 0, NULL, OPEN_EXISTING, 0, NULL);
 
         if (m_handle == INVALID_HANDLE_VALUE) r = __LINE__;
         else
@@ -511,21 +497,27 @@ omw::vector<omw::string> omw::preview::getSerialPortList(bool onlyCOMx)
 {
     std::vector<omw::string> serialPorts;
 
-#ifdef OMW_PLAT_WIN
+#if OMW_PLAT_WIN
+
     const std::vector<omw::string> devices = omw::windows::getAllDosDevices();
 
     for (size_t i = 0; i < devices.size(); ++i)
     {
         bool isC0C = false;
 
-        if (!onlyCOMx) isC0C = ::isCom0com(devices[i]);
+        if (!onlyCOMx) { isC0C = ::isCom0com(devices[i]); }
 
-        if ((devices[i].compare(0, 3, "COM") == 0) || (!onlyCOMx && isC0C))
-        {
-            serialPorts.push_back(devices[i]);
-        }
+        if ((devices[i].compare(0, 3, "COM") == 0) || (!onlyCOMx && isC0C)) { serialPorts.push_back(devices[i]); }
     }
-#endif // OMW_PLAT_WIN
+
+#elif OMW_PLAT_UNIX
+
+    // ls -al /dev | grep -iE "dialout|usb" # Ubuntu
+    // ls -al /dev | grep -iE "uucp|usb" # Manjaro
+
+#else  // OMW_PLAT_..
+// nop, empty list
+#endif // OMW_PLAT_..
 
     return serialPorts;
 }
@@ -551,12 +543,15 @@ void omw::preview::sortSerialPortList(std::vector<omw::string>& ports)
             {
                 const omw::string intStr = port.substr(3);
 
-                if (omw::isUInteger(intStr)) comPorts.push_back(std::stoi(intStr));
-                else throw (-1);
+                if (omw::isUInteger(intStr)) { comPorts.push_back(std::stoi(intStr)); }
+                else { throw(-1); }
             }
-            else throw (-1);
+            else { throw(-1); }
         }
-        catch (...) { otherPorts.push_back(ports[i]); }
+        catch (...)
+        {
+            otherPorts.push_back(ports[i]);
+        }
     }
 
     std::sort(comPorts.begin(), comPorts.end());
@@ -565,15 +560,9 @@ void omw::preview::sortSerialPortList(std::vector<omw::string>& ports)
     ports.clear();
     ports.reserve(comPorts.size() + otherPorts.size());
 
-    for (size_t i = 0; i < comPorts.size(); ++i)
-    {
-        ports.push_back(comStr + std::to_string(comPorts[i]));
-    }
+    for (size_t i = 0; i < comPorts.size(); ++i) { ports.push_back(comStr + std::to_string(comPorts[i])); }
 
-    for (size_t i = 0; i < otherPorts.size(); ++i)
-    {
-        ports.push_back(otherPorts[i]);
-    }
+    for (size_t i = 0; i < otherPorts.size(); ++i) { ports.push_back(otherPorts[i]); }
 #endif
 
 #else // OMW_PLAT_WIN
@@ -594,6 +583,6 @@ void omw::preview::sortSerialPortList(std::vector<std::string>& ports)
 
 #if defined(OMW_PLAT_UNIX)
 inline int alias_close(int fd) { return close(fd); }
-inline ssize_t alias_read(int fd, void *buf, size_t count) { return read(fd, buf, count); }
-inline ssize_t alias_write(int fd, const void *buf, size_t count) { return write(fd, buf, count); }
+inline ssize_t alias_read(int fd, void* buf, size_t count) { return read(fd, buf, count); }
+inline ssize_t alias_write(int fd, const void* buf, size_t count) { return write(fd, buf, count); }
 #endif // OMW_PLAT_UNIX

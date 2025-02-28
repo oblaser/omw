@@ -15,6 +15,7 @@ copyright       MIT - Copyright (c) 2024 Oliver Blaser
 #include "../../omw/windows/error.h"
 #include "../../omw/windows/winnls.h"
 
+
 namespace omw {
 namespace windows {
 
@@ -87,6 +88,7 @@ namespace windows {
 
 } // namespace windows
 } // namespace omw
+
 
 #endif // OMW_PLAT_WIN
 #endif // IG_OMW_WINDOWS_STRING_H

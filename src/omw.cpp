@@ -11,7 +11,6 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include "omw/omw.h"
 
 
-
 //!
 //! Returns the version of the library
 //!

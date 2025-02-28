@@ -12,18 +12,17 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 
-namespace
-{
-}
+namespace {}
 
 
 
 #if 0
+
 /*!
-* \class omw::io::ConfigFileLine
-*
-* Used by `omw::io::ConfigFile`.
-*/
+ * \class omw::io::ConfigFileLine
+ *
+ * Used by `omw::io::ConfigFile`.
+ */
 
 omw::io::ConfigFileLine::ConfigFileLine()
     : m_preKey(), m_key(), m_preValue(), m_value(), m_preComment(), m_comment()
@@ -32,24 +31,24 @@ omw::io::ConfigFileLine::ConfigFileLine()
 
 
 /*!
-* \class omw::io::ConfigFile
-*
-* `#include <omw/io/configFile.h>`
-*
-* \section class_omw__io_ConfigFile_section_fileSpec File Specification
-*
-* ...
-*/
+ * \class omw::io::ConfigFile
+ *
+ * `#include <omw/io/configFile.h>`
+ *
+ * \section class_omw__io_ConfigFile_section_fileSpec File Specification
+ *
+ * ...
+ */
 
 omw::io::ConfigFile::ConfigFile()
-    : m_lineEnd{ 0x0A,0,0 }, m_writeUtf8Bom(false), m_lines(0)
+    : m_lineEnd{ 0x0A, 0, 0 }, m_writeUtf8Bom(false), m_lines(0)
 {}
 
 void omw::io::ConfigFile::minimize()
 {
-    for (size_t i = 0; i < m_lines.size(); )
+    for (size_t i = 0; i < m_lines.size();)
     {
-        if (m_lines[i].isEmpty()) m_lines.erase();
+        if (m_lines[i].isEmpty()) { m_lines.erase(); }
         else
         {
             m_lines[i].preKey().clear();
@@ -60,4 +59,5 @@ void omw::io::ConfigFile::minimize()
         }
     }
 }
+
 #endif

@@ -15,6 +15,7 @@ copyright       MIT - Copyright (c) 2024 Oliver Blaser
 #include "../omw/int.h"
 #include "../omw/string.h"
 
+
 namespace omw {
 
 /*! \addtogroup grp_utility_gpUtil_encoding
@@ -64,5 +65,6 @@ namespace url {
 /*! @} */
 
 } // namespace omw
+
 
 #endif // IG_OMW_ENCODING_H

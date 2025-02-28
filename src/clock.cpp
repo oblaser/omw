@@ -14,7 +14,6 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #endif // UNIX || LINUX
 
 
-
 omw::clock::timepoint_t omw::clock::now()
 {
     timepoint_t r = 0;

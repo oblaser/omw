@@ -22,13 +22,12 @@ instead.
 
 
 /*! \addtogroup grp_windows
-* @{
-*/
+ * @{
+ */
 
-// custom resource types
-//#define OMW_RCT__BASE_ 20000
-#define OMW_RCT_BINFILE 20001       /*!< Binary file resource type */
-#define OMW_RCT_TEXTFILE 20002      /*!< Text file resource type */
+#define OMW_RCT__BASE_   20000 /*!< custom resource types base value*/
+#define OMW_RCT_BINFILE  20001 /*!< Binary file resource type */
+#define OMW_RCT_TEXTFILE 20002 /*!< Text file resource type */
 
 /*! @} */
 

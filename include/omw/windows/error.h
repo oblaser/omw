@@ -13,55 +13,57 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #include <iostream>
 #include <string>
 
-namespace omw
-{
-    namespace windows
+
+namespace omw {
+namespace windows {
+
+    /*! \addtogroup grp_windows
+     * @{
+     */
+
+    enum ERRORCODE
     {
-        /*! \addtogroup grp_windows
-        * @{
-        */
+        EC_OK = 0,      /*!< No error occured */
+        EC_ERROR,       /*!< General error */
+        EC_INV_ARG,     /*!< Invalid arguments */
+        EC_INV_UNICODE, /*!< Invalid unicode codepoints are present */
+        EC_INTERNAL,    /*!< A linbrary internal error occured (bugfix in source needed) */
+        EC_UNKNOWN_WIN, /*!< An unspecified Windows API error occurred */
 
-        enum ERRORCODE
-        {
-            EC_OK = 0,                      /*!< No error occured */
-            EC_ERROR,                       /*!< General error */
-            EC_INV_ARG,                     /*!< Invalid arguments */
-            EC_INV_UNICODE,                 /*!< Invalid unicode codepoints are present */
-            EC_INTERNAL,                    /*!< A linbrary internal error occured (bugfix in source needed) */
-            EC_UNKNOWN_WIN,                 /*!< An unspecified Windows API error occurred */
-            
-            EC_ENVVAR_NOT_FOUND,            /*!< The specified environment variable could not be found */
+        EC_ENVVAR_NOT_FOUND, /*!< The specified environment variable could not be found */
 
-            EC_RESOURCE_NOT_FOUND,          /*!< The specified resource could not be found */
-            EC_RESOURCE_NOT_LOADED,         /*!< The resource could not be loaded */
-            
-            EC_STRCONV_DEST_BUFFER_SIZE     /*!< `dest` buffer is too small */
-        };
+        EC_RESOURCE_NOT_FOUND,  /*!< The specified resource could not be found */
+        EC_RESOURCE_NOT_LOADED, /*!< The resource could not be loaded */
 
-        class ErrorCode
-        {
-        public:
-            ErrorCode();
-            ErrorCode(int code, const std::string& message = "");
-            virtual ~ErrorCode();
+        EC_STRCONV_DEST_BUFFER_SIZE /*!< `dest` buffer is too small */
+    };
 
-            virtual int code() const;
-            virtual const std::string& msg() const;
+    class ErrorCode
+    {
+    public:
+        ErrorCode();
+        ErrorCode(int code, const std::string& message = "");
+        virtual ~ErrorCode();
 
-            virtual bool good() const;
+        virtual int code() const;
+        virtual const std::string& msg() const;
 
-            std::string toString() const;
+        virtual bool good() const;
 
-            friend std::ostream& operator<<(std::ostream& os, const ErrorCode& ec);
+        std::string toString() const;
 
-        private:
-            int errorCode;
-            std::string errorMsg;
-        };
+        friend std::ostream& operator<<(std::ostream& os, const ErrorCode& ec);
 
-        /*! @} */
-    }
-}
+    private:
+        int errorCode;
+        std::string errorMsg;
+    };
+
+    /*! @} */
+
+} // namespace windows
+} // namespace omw
+
 
 #endif // OMW_PLAT_WIN
 #endif // IG_OMW_WINDOWS_ERROR_H

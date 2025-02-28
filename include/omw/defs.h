@@ -5,27 +5,27 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
 /*!
-* \file
-* \brief Some macro definitions.
-*
-* See also \ref grp_macro.
-*/
+ * \file
+ * \brief Some macro definitions.
+ *
+ * See also \ref grp_macro.
+ */
 
 #ifndef IG_OMW_DEFS_H
 #define IG_OMW_DEFS_H
 
 /*! \addtogroup grp_macro
-* @{
-*/
+ * @{
+ */
 
 
 
 //! \name Compiler
-//! 
+//!
 //! `#include <omw/defs.h>`
-//! 
+//!
 //! Only one is defined, depending which compiler is used.
-//! 
+//!
 /// @{
 
 #ifndef OMWi_DOXYGEN_PREDEFINE
@@ -47,13 +47,13 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #endif
 
 #else // OMWi_DOXYGEN_PREDEFINE
-#define OMW_CXX_CLANG (1)
-#define OMW_CXX_GCC (1)
-#define OMW_CXX_MSVC (1)
-#define OMW_CXX_MINGW32 (1)
-#define OMW_CXX_MINGW64 (1)
+#define OMW_CXX_CLANG      (1)
+#define OMW_CXX_GCC        (1)
+#define OMW_CXX_MSVC       (1)
+#define OMW_CXX_MINGW32    (1)
+#define OMW_CXX_MINGW64    (1)
 #define OMW_CXX_EMSCRIPTEN (1)
-#define OMW_CXX_UNKNOWN (1)
+#define OMW_CXX_UNKNOWN    (1)
 #endif // OMWi_DOXYGEN_PREDEFINE
 
 /// @}
@@ -61,12 +61,12 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 //! \name Platform
-//! 
+//!
 //! `#include <omw/defs.h>`
-//! 
+//!
 //! Defined as `1` or undefined, depending on the target platform.
 //! Multiple definitions possible.
-//! 
+//!
 /// @{
 
 #ifndef OMWi_DOXYGEN_PREDEFINE
@@ -112,14 +112,14 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 #else // OMWi_DOXYGEN_PREDEFINE
-#define OMW_PLAT_WIN (1)
-#define OMW_PLAT_WIN32 (1)
-#define OMW_PLAT_WIN64 (1)
-#define OMW_PLAT_UNIX (1)
-#define OMW_PLAT_POSIX (1)
-#define OMW_PLAT_LINUX (1)
-#define OMW_PLAT_APPLE (1)
-#define OMW_PLAT_BSD (1)
+#define OMW_PLAT_WIN     (1)
+#define OMW_PLAT_WIN32   (1)
+#define OMW_PLAT_WIN64   (1)
+#define OMW_PLAT_UNIX    (1)
+#define OMW_PLAT_POSIX   (1)
+#define OMW_PLAT_LINUX   (1)
+#define OMW_PLAT_APPLE   (1)
+#define OMW_PLAT_BSD     (1)
 #define OMW_PLAT_UNKNOWN (1)
 #endif // OMWi_DOXYGEN_PREDEFINE
 
@@ -128,11 +128,11 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 //! \name Processor Architecture
-//! 
+//!
 //! `#include <omw/defs.h>`
-//! 
+//!
 //! Only one is defined, depending on the targeted processor architecture.
-//! 
+//!
 /// @{
 
 #ifndef OMWi_DOXYGEN_PREDEFINE
@@ -171,26 +171,26 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 
-//#ifdef OMW_PARCH_UNKNOWN
-//#define OMW_PBITW (0u)
-//#else // OMW_PARCH_UNKNOWN
-//#if (defined(OMW_PARCH_x86_32) || defined(OMW_PARCH_ARM32))
-//#define OMW_PBITW (32u)
-//#else
-//#define OMW_PBITW (64u)
-//#endif
-//#endif // OMW_PARCH_UNKNOWN
+// #ifdef OMW_PARCH_UNKNOWN
+// #define OMW_PBITW (0u)
+// #else // OMW_PARCH_UNKNOWN
+// #if (defined(OMW_PARCH_x86_32) || defined(OMW_PARCH_ARM32))
+// #define OMW_PBITW (32u)
+// #else
+// #define OMW_PBITW (64u)
+// #endif
+// #endif // OMW_PARCH_UNKNOWN
 
 
 
 #else // OMWi_DOXYGEN_PREDEFINE
-#define OMW_PARCH_x86_32 (1)
-#define OMW_PARCH_x86_64 (1)
-#define OMW_PARCH_ARM32 (1)
-#define OMW_PARCH_ARM64 (1)
+#define OMW_PARCH_x86_32  (1)
+#define OMW_PARCH_x86_64  (1)
+#define OMW_PARCH_ARM32   (1)
+#define OMW_PARCH_ARM64   (1)
 #define OMW_PARCH_POWERPC (1)
 #define OMW_PARCH_UNKNOWN (1)
-//#define OMW_PBITW
+// #define OMW_PBITW
 #endif // OMWi_DOXYGEN_PREDEFINE
 
 /// @}
@@ -221,11 +221,11 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define OMW_CPPSTD_17 (201703L)
 #define OMW_CPPSTD_20 (202002L)
 
-//! 
+//!
 //! C++23 isn't released yet. Thus the value may change in the future!
-//! 
+//!
 //! The current value is from GCC 11.1.0
-//! 
+//!
 #define OMW_CPPSTD_23 (202100L)
 
 /// @}
@@ -240,7 +240,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #endif // _DEBUG
 
 #if (OMW_CPPSTD >= OMW_CPPSTD_14)
-#define OMW__FILENAME__     (OMWi_file_to_filename(__FILE__))
+#define OMW__FILENAME__ (OMWi_file_to_filename(__FILE__))
 #endif
 
 #ifdef OMWi_DOXYGEN_PREDEFINE
@@ -254,13 +254,11 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 
-
-
-//##############################################################################
+// ##############################################################################
 //
-//      Things below might not be of interest for users
-// 
-//##############################################################################
+//       Things below might not be of interest for users
+//
+// ##############################################################################
 
 
 
@@ -275,7 +273,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 // x and not (x) to concat string literals in C style, often used when throwing
 
 #ifdef OMW__FILENAME__
-constexpr const char* OMWi_file_to_filename(const char* p)
+const constexpr char* OMWi_file_to_filename(const char* p)
 {
     const char* fn = p;
     while (*p)
@@ -301,43 +299,47 @@ constexpr const char* OMWi_file_to_filename(const char* p)
 
 
 /*!
-* \def OMW_PLAT_WIN32
-* Defined as `1` if target is 32-bit Windows, otherwise undefined.
-*/
+ * \def OMW_PLAT_WIN32
+ * Defined as `1` if target is 32-bit Windows, otherwise undefined.
+ */
+
 /*!
-* \def OMW_PLAT_WIN64
-* Defined as `1` if target is 64-bit Windows, otherwise undefined.
-*/
+ * \def OMW_PLAT_WIN64
+ * Defined as `1` if target is 64-bit Windows, otherwise undefined.
+ */
+
 /*!
-* \def OMW_PLAT_WIN
-* Defined as `1` if `OMW_PLAT_WIN32` or `OMW_PLAT_WIN64` is defined, otherwise undefined.
-*/
+ * \def OMW_PLAT_WIN
+ * Defined as `1` if `OMW_PLAT_WIN32` or `OMW_PLAT_WIN64` is defined, otherwise undefined.
+ */
+
 /*!
-* \def OMW_PLAT_POSIX
-* Defined as `1` if the Unix is POSIX compliant, otherwise undefined.
-*/
+ * \def OMW_PLAT_POSIX
+ * Defined as `1` if the Unix is POSIX compliant, otherwise undefined.
+ */
 
 
 /*!
-* \def OMW_CPPSTD
-* 
-* Used to compare to `OMW_CPPSTD_xx`.
-* 
-* If MSVC is used it's defined as an alias for the MSVC specific macro `_MSVC_LANG`, otherwise it's an alias for `__cplusplus`.
-*/
+ * \def OMW_CPPSTD
+ *
+ * Used to compare to `OMW_CPPSTD_xx`.
+ *
+ * If MSVC is used it's defined as an alias for the MSVC specific macro `_MSVC_LANG`, otherwise it's an alias for `__cplusplus`.
+ */
 
 
 /*!
-* \def OMW_DEBUG
-* Defined as `1` if `_DEBUG` is defined, otherwise undefined.
-*/
+ * \def OMW_DEBUG
+ * Defined as `1` if `_DEBUG` is defined, otherwise undefined.
+ */
+
 /*!
-* \def OMW__FILENAME__
-* _since C++14_
-* 
-* Returns the filename of the current file as `const char*`.
-* Similar to `__FILE__`, but does not contain the full path.
-*/
+ * \def OMW__FILENAME__
+ * _since C++14_
+ *
+ * Returns the filename of the current file as `const char*`.
+ * Similar to `__FILE__`, but does not contain the full path.
+ */
 
 
 #endif // IG_OMW_DEFS_H
