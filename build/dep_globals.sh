@@ -9,7 +9,7 @@ prjDisplayName="omw"
 prjBinName=$prjName
 prjDirName=$prjName
 repoDirName=$prjName
-copyrightYear="2023"
+copyrightYear="2025"
 
 versionstr=$(head -n 1 dep_vstr.txt)
 
