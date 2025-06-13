@@ -94,6 +94,7 @@ constexpr char toHexStr_defaultDelimiter = 0x20;
 
 
 using stdStringVector_t = std::vector<std::string>;
+using StringVector = std::vector<std::string>;
 constexpr omw::stdStringVector_t::size_type stdStringVector_npos = static_cast<omw::stdStringVector_t::size_type>(-1);
 
 class string;

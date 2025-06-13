@@ -14,7 +14,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 //!
 //! Returns the version of the library
 //!
-omw::Version omw::info::version() { return omw::Version(OMW_VERSION_MAJ, OMW_VERSION_MIN, OMW_VERSION_PAT, OMW_VERSION_PRSTR); }
+omw::Semver omw::info::version() { return omw::Semver(OMW_VERSION_MAJ, OMW_VERSION_MIN, OMW_VERSION_PAT, OMW_VERSION_PRSTR); }
 
 //!
 //! The info text contains version, copyright and a link to the project webpage.

@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            22.01.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            13.06.2025
+copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
 #ifndef IG_OMW_VERSION_H
@@ -19,58 +19,121 @@ namespace omw {
  * @{
  */
 
-class Version
+class MajMinVer
+{
+    // TODO implement
+    // TODO unit tests
+};
+
+/**
+ * @class omw::Semver
+ * @brief Compliant to _semver_.
+ *
+ * `#include <omw/version.h>`
+ *
+ * Compliant to <a href="https://semver.org/spec/v2.0.0.html" target="_blank">Semantic Versioning 2.0.0</a>.
+ */
+class Semver
 {
 public:
-    Version();
-    Version(int32_t major, int32_t minor, int32_t patch, const char* preRelease, const char* build = nullptr);
-    Version(int32_t major, int32_t minor, int32_t patch, const std::string& preRelease = "", const std::string& build = "");
-    Version(const char* str);
-    Version(const std::string& str);
-    virtual ~Version() {}
+    /**
+     * Creates an object with version `0.0.0`.
+     */
+    Semver()
+        : m_major(0), m_minor(0), m_patch(0), m_preRelease(), m_build()
+    {}
 
-    void set(int32_t major, int32_t minor, int32_t patch, const char* preRelease, const char* build = nullptr);
-    void set(int32_t major, int32_t minor, int32_t patch, const std::string& preRelease = "", const std::string& build = "");
-    void set(const char* str);
-    void set(const std::string& str);
+    Semver(int32_t major, int32_t minor, int32_t patch, const char* preRelease = nullptr, const char* build = nullptr)
+        : m_major(major), m_minor(minor), m_patch(patch), m_preRelease(), m_build()
+    {
+        m_parsePreRelease(preRelease);
+        m_parseBuild(build);
+    }
 
-    int32_t major() const;
-    int32_t minor() const;
-    int32_t patch() const;
-    omw::string preRelease() const;
-    const omw::stringVector_t& preReleaseIdentifiers() const;
-    omw::string build() const;
-    const omw::stringVector_t& buildIdentifiers() const;
+    Semver(int32_t major, int32_t minor, int32_t patch, const std::string& preRelease, const std::string& build = "")
+        : m_major(major), m_minor(minor), m_patch(patch), m_preRelease(), m_build()
+    {
+        m_parsePreRelease(preRelease);
+        m_parseBuild(build);
+    }
 
-    int compare(const omw::Version& b) const;
+    Semver(const char* str)
+        : m_major(0), m_minor(0), m_patch(0), m_preRelease(), m_build()
+    {
+        m_parse(str);
+    }
 
-    omw::string toString() const;
+    Semver(const std::string& str)
+        : m_major(0), m_minor(0), m_patch(0), m_preRelease(), m_build()
+    {
+        m_parse(str);
+    }
 
-    bool hasBuild() const;
-    bool isPreRelease() const;
-    bool isValid() const; /*!< Checks if the member values are compliant to _semver_. See `omw::Version`. */
+    virtual ~Semver() {}
+
+    virtual void set(const char* str) { m_parse(str); }
+    virtual void set(const std::string& str) { m_parse(str); }
+    void set(int32_t major, int32_t minor, int32_t patch, const char* preRelease = nullptr, const char* build = nullptr);
+    void set(int32_t major, int32_t minor, int32_t patch, const std::string& preRelease, const std::string& build = "");
+
+    int32_t major() const { return m_major; }
+    int32_t minor() const { return m_minor; }
+    int32_t patch() const { return m_patch; }
+    std::string preRelease() const { return omw::join(omw::stringVector(m_preRelease), '.'); }
+    std::string build() const { return omw::join(omw::stringVector(m_build), '.'); }
+
+    const omw::StringVector& preReleaseIdentifiers() const { return m_preRelease; }
+    const omw::StringVector& buildIdentifiers() const { return m_build; }
+
+    /**
+     * Compares according to the _semver_ rules.
+     *
+     * | Result             | Return Value |
+     * |:------------------:|:------------:|
+     * | `*this` < `other`  |     <0       |
+     * | `*this` == `other` |      0       |
+     * | `*this` > `other`  |     >0       |
+     */
+    int compare(const omw::Semver& other) const;
+
+    virtual std::string toString() const;
+
+    bool hasBuild() const { return !m_build.empty(); }
+    bool isPreRelease() const { return !m_preRelease.empty(); }
+
+    /**
+     * Checks if the member values are compliant to _semver_.
+     */
+    virtual bool isValid() const;
 
 protected:
-    int32_t m_maj;
-    int32_t m_min;
-    int32_t m_pat;
-    omw::stringVector_t m_preRelease;
-    omw::stringVector_t m_build;
+    int32_t m_major;
+    int32_t m_minor;
+    int32_t m_patch;
+    omw::StringVector m_preRelease;
+    omw::StringVector m_build;
 
-    void parse(const omw::string& str);
-    void parseBuild(const omw::string& identifiers);
-    void parsePreRelease(const omw::string& identifiers);
-    void parseVersion(const omw::string& identifiers);
+    virtual void m_parse(const char* str) { m_parse(std::string(str ? str : "")); };
+    virtual void m_parse(const std::string& str);
+
+    virtual void m_parseBuild(const char* identifiers) { m_parseBuild(std::string(identifiers ? identifiers : "")); }
+    virtual void m_parseBuild(const std::string& identifiers);
+
+    virtual void m_parsePreRelease(const char* identifiers) { m_parsePreRelease(std::string(identifiers ? identifiers : "")); }
+    virtual void m_parsePreRelease(const std::string& identifiers);
+
+    virtual void m_parseVersion(const char* identifiers) { m_parseVersion(std::string(identifiers ? identifiers : "")); }
+    virtual void m_parseVersion(const std::string& identifiers);
 };
 
 //! \name Operators
 /// @{
-inline bool operator==(const omw::Version& a, const omw::Version& b) { return (a.compare(b) == 0); }
-inline bool operator!=(const omw::Version& a, const omw::Version& b) { return !(a == b); }
-inline bool operator<(const omw::Version& a, const omw::Version& b) { return (a.compare(b) < 0); }
-inline bool operator>(const omw::Version& a, const omw::Version& b) { return (b < a); }
-inline bool operator<=(const omw::Version& a, const omw::Version& b) { return !(a > b); }
-inline bool operator>=(const omw::Version& a, const omw::Version& b) { return !(a < b); }
+static inline bool operator==(const omw::Semver& a, const omw::Semver& b) { return (a.compare(b) == 0); }
+static inline bool operator!=(const omw::Semver& a, const omw::Semver& b) { return !(a == b); }
+static inline bool operator<(const omw::Semver& a, const omw::Semver& b) { return (a.compare(b) < 0); }
+static inline bool operator>(const omw::Semver& a, const omw::Semver& b) { return (b < a); }
+static inline bool operator<=(const omw::Semver& a, const omw::Semver& b) { return !(a > b); }
+static inline bool operator>=(const omw::Semver& a, const omw::Semver& b) { return !(a < b); }
 /// @}
 
 /*! @} */

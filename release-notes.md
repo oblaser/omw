@@ -6,6 +6,16 @@
 
 
 
+### v0.3.0
+
+New
+- `omw::Semver` and `omw::MajMinVer`
+
+Removed
+- `omw::Version`
+
+
+
 ### v0.2.2
 
 
