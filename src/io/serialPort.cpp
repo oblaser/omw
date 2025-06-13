@@ -193,9 +193,10 @@ speed_t getUnixBaud(omw::io::SerialPort::baud_type baud, int* error)
 
 
 #if defined(OMW_PLAT_UNIX)
-static inline int alias_close(int fd) __attribute__((always_inline));
-static inline ssize_t alias_read(int fd, void* buf, size_t count) __attribute__((always_inline));
-static inline ssize_t alias_write(int fd, const void* buf, size_t count) __attribute__((always_inline));
+static inline int __attribute__((always_inline)) alias_open(const char* path, int flags) { return open(path, flags); }
+static inline int __attribute__((always_inline)) alias_close(int fd) { return close(fd); }
+static inline ssize_t __attribute__((always_inline)) alias_read(int fd, void* buf, size_t count) { return read(fd, buf, count); }
+static inline ssize_t __attribute__((always_inline)) alias_write(int fd, const void* buf, size_t count) { return write(fd, buf, count); }
 #endif // OMW_PLAT_UNIX
 
 
@@ -259,7 +260,7 @@ int omw::io::SerialPort::open(const std::string& port, baud_type baud /*, nDataB
 
 #elif defined(OMW_PLAT_UNIX)
 
-        m_fd = open(port.c_str(), O_RDWR);
+        m_fd = alias_open(port.c_str(), O_RDWR);
 
         if (!(m_fd >= 0)) r = __LINE__;
         else
@@ -578,11 +579,3 @@ void omw::preview::sortSerialPortList(std::vector<std::string>& ports)
     omw::preview::sortSerialPortList(tmpPorts);
     ports = omw::stdStringVector(tmpPorts);
 }
-
-
-
-#if defined(OMW_PLAT_UNIX)
-inline int alias_close(int fd) { return close(fd); }
-inline ssize_t alias_read(int fd, void* buf, size_t count) { return read(fd, buf, count); }
-inline ssize_t alias_write(int fd, const void* buf, size_t count) { return write(fd, buf, count); }
-#endif // OMW_PLAT_UNIX
