@@ -17,11 +17,11 @@ copyright      MIT - Copyright (c) 2022 Oliver Blaser
 
 
 
-TEST_CASE("omw::Version ctor")
+TEST_CASE("omw::Semver ctor")
 {
-    omw::Version v;
+    omw::Semver v;
 
-    v = omw::Version();
+    v = omw::Semver();
     CHECK(v.major() == 0);
     CHECK(v.minor() == 0);
     CHECK(v.patch() == 0);
@@ -33,7 +33,7 @@ TEST_CASE("omw::Version ctor")
     CHECK(v.hasBuild() == false);
     CHECK(v.isPreRelease() == false);
 
-    v = omw::Version(1, 2, 3);
+    v = omw::Semver(1, 2, 3);
     CHECK(v.major() == 1);
     CHECK(v.minor() == 2);
     CHECK(v.patch() == 3);
@@ -45,7 +45,7 @@ TEST_CASE("omw::Version ctor")
     CHECK(v.hasBuild() == false);
     CHECK(v.isPreRelease() == false);
 
-    v = omw::Version(-1, -2, -3);
+    v = omw::Semver(-1, -2, -3);
     CHECK(v.major() == -1);
     CHECK(v.minor() == -2);
     CHECK(v.patch() == -3);
@@ -57,7 +57,7 @@ TEST_CASE("omw::Version ctor")
     CHECK(v.hasBuild() == false);
     CHECK(v.isPreRelease() == false);
 
-    v = omw::Version(2, 4, 8, "beta.3.a#b");
+    v = omw::Semver(2, 4, 8, "beta.3.a#b");
     CHECK(v.major() == 2);
     CHECK(v.minor() == 4);
     CHECK(v.patch() == 8);
@@ -72,7 +72,7 @@ TEST_CASE("omw::Version ctor")
     CHECK(v.hasBuild() == false);
     CHECK(v.isPreRelease() == true);
 
-    v = omw::Version(2, 4, 8, "", "000123.abcd$54987");
+    v = omw::Semver(2, 4, 8, "", "000123.abcd$54987");
     CHECK(v.major() == 2);
     CHECK(v.minor() == 4);
     CHECK(v.patch() == 8);
@@ -143,9 +143,9 @@ TEST_CASE("omw::Version ctor")
     CHECK(v.isPreRelease() == true);
 }
 
-TEST_CASE("omw::Version::set()")
+TEST_CASE("omw::Semver::set()")
 {
-    omw::Version v;
+    omw::Semver v;
 
     v.set(1, 2, 3);
     CHECK(v.major() == 1);
@@ -259,9 +259,9 @@ TEST_CASE("omw::Version::set()")
     CHECK(v.isPreRelease() == true);
 }
 
-TEST_CASE("omw::Version::isValid()")
+TEST_CASE("omw::Semver::isValid()")
 {
-    omw::Version v;
+    omw::Semver v;
 
     v = "1.2.3";
     CHECK(v.isValid());
@@ -330,17 +330,17 @@ TEST_CASE("omw::Version::isValid()")
     CHECK(v.isValid());
 }
 
-TEST_CASE("omw::Version compare operators")
+TEST_CASE("omw::Semver compare operators")
 {
-    const omw::Version v000(0, 0, 0, "5");
-    const omw::Version v001(0, 0, 1, "1");
-    const omw::Version v010(0, 1, 0, "beta");
-    const omw::Version v011(0, 1, 1, "0");
-    const omw::Version v011_2(0, 1, 1, "0");
-    const omw::Version v100(1, 0, 0, "alpha");
-    const omw::Version v101(1, 0, 1, "12");
-    const omw::Version v110(1, 1, 0, "rc.1");
-    const omw::Version v111(1, 1, 1, "rc");
+    const omw::Semver v000(0, 0, 0, "5");
+    const omw::Semver v001(0, 0, 1, "1");
+    const omw::Semver v010(0, 1, 0, "beta");
+    const omw::Semver v011(0, 1, 1, "0");
+    const omw::Semver v011_2(0, 1, 1, "0");
+    const omw::Semver v100(1, 0, 0, "alpha");
+    const omw::Semver v101(1, 0, 1, "12");
+    const omw::Semver v110(1, 1, 0, "rc.1");
+    const omw::Semver v111(1, 1, 1, "rc");
 
     CHECK_FALSE(v011 == v000);
     CHECK_FALSE(v011 == v001);
@@ -397,19 +397,19 @@ TEST_CASE("omw::Version compare operators")
     CHECK_FALSE(v011 >= v111);
 }
 
-TEST_CASE("omw::Version compare operators pre-release")
+TEST_CASE("omw::Semver compare operators pre-release")
 {
-    const omw::Version v00(1, 2, 3, "alpha");
-    const omw::Version v01(1, 2, 3, "alpha.1");
-    const omw::Version v02(1, 2, 3, "aplha.test");
-    const omw::Version v03(1, 2, 3, "beta");
-    const omw::Version v04(1, 2, 3, "beta.3");
-    const omw::Version v05(1, 2, 3, "beta.10");
-    const omw::Version v06(1, 2, 3, "beta.10abc");
-    const omw::Version v07(1, 2, 3, "beta.3abc");
-    const omw::Version v08(1, 2, 3, "rc");
-    const omw::Version vMax(1, 2, 3);
-    omw::Version v;
+    const omw::Semver v00(1, 2, 3, "alpha");
+    const omw::Semver v01(1, 2, 3, "alpha.1");
+    const omw::Semver v02(1, 2, 3, "aplha.test");
+    const omw::Semver v03(1, 2, 3, "beta");
+    const omw::Semver v04(1, 2, 3, "beta.3");
+    const omw::Semver v05(1, 2, 3, "beta.10");
+    const omw::Semver v06(1, 2, 3, "beta.10abc");
+    const omw::Semver v07(1, 2, 3, "beta.3abc");
+    const omw::Semver v08(1, 2, 3, "rc");
+    const omw::Semver vMax(1, 2, 3);
+    omw::Semver v;
 
     v = v00;
     CHECK(((v == v00) && !(v == v01) && !(v == v02) && !(v == v03) && !(v == v04) && !(v == v05) && !(v == v06) && !(v == v07) && !(v == v08) && !(v == vMax)));
