@@ -95,7 +95,7 @@ TEST_CASE("color.h omw::Color implicit ctor")
     CHECK(col.b() == 0x05);
     CHECK(col.a() == 255);
 
-    const omw::string colorStr2("#42a3c8");
+    const char* colorStr2 = "#42a3c8";
     col = colorStr2;
     CHECK(col.r() == 0x42);
     CHECK(col.g() == 0xA3);
@@ -330,9 +330,9 @@ TEST_CASE("color.h omw::Color A over B operator")
 
     result.set(0xFF, 0, 0);
     result += omw::Color(0, 0, 0xFF, 0x7F);
-    CHECK(result.r() == 128); //  }
-    CHECK(result.g() == 0);   //   } rounding error because neither 127 nor 128 is the perfect half of 255 (0.498 -> 127, 0.502 -> 128).
-    CHECK(result.b() == 127); //  }
+    CHECK(result.r() == 128); // }
+    CHECK(result.g() == 0);   // } rounding error because neither 127 nor 128 is the perfect half of 255 (0.498 -> 127, 0.502 -> 128).
+    CHECK(result.b() == 127); // }
     CHECK(result.a() == 255);
     CHECK(result.isValid());
 

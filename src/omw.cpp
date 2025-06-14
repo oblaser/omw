@@ -19,7 +19,7 @@ omw::Semver omw::info::version() { return omw::Semver(OMW_VERSION_MAJ, OMW_VERSI
 //!
 //! The info text contains version, copyright and a link to the project webpage.
 //!
-omw::string omw::info::infoTxt()
+std::string omw::info::infoTxt()
 {
     std::stringstream s;
 

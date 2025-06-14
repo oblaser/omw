@@ -10,12 +10,12 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #ifdef OMW_PLAT_WIN
 
 #include <cstdint>
+#include <string>
 
 #include "../../omw/string.h"
 #include "../../omw/windows/envVar.h"
 #include "../../omw/windows/error.h"
 #include "../../omw/windows/exception.h"
-#include "../../omw/windows/string.h"
 #include "../../omw/windows/winnls.h"
 
 
@@ -25,8 +25,8 @@ namespace windows {
      * @{
      */
 
-    std::vector<omw::string> getAllDosDevices();
-    std::vector<omw::string> queryDosDevice(const std::string& device_u8);
+    std::vector<std::string> getAllDosDevices();
+    std::vector<std::string> queryDosDevice(const std::string& device_u8);
 
     //! \name Performance Counter
     /// @{

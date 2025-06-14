@@ -14,8 +14,6 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include <string>
 #include <vector>
 
-#include "../omw/string.h"
-
 
 namespace omw {
 
@@ -49,7 +47,6 @@ template <class T, class Allocator = std::allocator<T>> bool contains(const type
 //     return r;
 // }
 // template<> bool contains(const std::vector<std::string>&, const std::string::value_type*);
-// template<> bool contains(const std::vector<omw::string>&, const omw::string::value_type*);
 /// @}
 
 template <class T, class Allocator = std::allocator<T>> class vector : public std::vector<T, Allocator>

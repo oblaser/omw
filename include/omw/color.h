@@ -8,8 +8,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 #define IG_OMW_COLOR_H
 
 #include <cstdint>
-
-#include "../omw/string.h"
+#include <string>
 
 
 namespace omw {
@@ -54,9 +53,9 @@ public:
     int32_t toRGB() const;
     int32_t toARGB() const;
 
-    omw::string toString() const;
-    omw::string toStringARGB() const;
-    omw::string toCssStr() const;
+    std::string toString() const;
+    std::string toStringARGB() const;
+    std::string toCssStr() const;
 
     omw::Color& operator+=(const omw::Color& operand);
 

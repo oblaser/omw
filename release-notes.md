@@ -10,9 +10,11 @@
 
 New
 - `omw::Semver` and `omw::MajMinVer`
+- Moved `omw::string` member functions to `omw` namespace
 
 Removed
 - `omw::Version`
+- `omw::string`
 
 
 

@@ -9,6 +9,7 @@ copyright       MIT - Copyright (c) 2021 Oliver Blaser
 
 #include "omw/color.h"
 #include "omw/defs.h"
+#include "omw/string.h"
 
 
 /*!
@@ -136,7 +137,7 @@ void omw::Color::set(const std::string& css)
         if (css[0] == '#') pos = 1;
     }
 
-    omw::string colStr(css, pos);
+    std::string colStr(css, pos);
     int32_t col;
 
     if (colStr.length() == 3)
@@ -232,9 +233,9 @@ int32_t omw::Color::toARGB() const
 //!
 //! Format: `"RRGGBB"`
 //!
-omw::string omw::Color::toString() const
+std::string omw::Color::toString() const
 {
-    omw::string str = "";
+    std::string str = "";
     str += omw::toHexStr(r());
     str += omw::toHexStr(g());
     str += omw::toHexStr(b());
@@ -245,15 +246,15 @@ omw::string omw::Color::toString() const
 //!
 //! Format: `"AARRGGBB"`
 //!
-omw::string omw::Color::toStringARGB() const { return omw::toHexStr(toARGB()); }
+std::string omw::Color::toStringARGB() const { return omw::toHexStr(toARGB()); }
 
 //! @return A CSS string representation of the color
 //!
 //! Format: `"#RRGGBB"`
 //!
-omw::string omw::Color::toCssStr() const
+std::string omw::Color::toCssStr() const
 {
-    omw::string str = "#";
+    std::string str = "#";
     str += omw::toHexStr(r());
     str += omw::toHexStr(g());
     str += omw::toHexStr(b());

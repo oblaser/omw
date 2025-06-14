@@ -13,8 +13,9 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #ifndef IG_OMW_H
 #define IG_OMW_H
 
+#include <string>
+
 #include "../omw/defs.h"
-#include "../omw/string.h"
 #include "../omw/version.h"
 
 
@@ -64,7 +65,7 @@ namespace omw {
 
 namespace info {
     omw::Semver version();
-    omw::string infoTxt();
+    std::string infoTxt();
 }
 
 } // namespace omw

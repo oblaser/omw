@@ -27,57 +27,56 @@ using std::endl;
 namespace csi = omw::ansiesc::csi;
 namespace sgr = csi::sgr;
 
-namespace
+namespace {
+omw::Color intToColor(uint32_t value) // color circle 0 .. 0x5FF
 {
-    omw::Color intToColor(uint32_t value) // color circle 0 .. 0x5FF
+    uint32_t col_value;
+    uint32_t state;
+
+    col_value = (value & 0x00FF);
+    state = (value >> 8);
+
+    switch (state)
     {
-        uint32_t col_value;
-        uint32_t state;
+    case 0: // red full ; + green
+        col_value = (0xFF0000 | (col_value << 8));
+        break;
 
-        col_value = (value & 0x00FF);
-        state = (value >> 8);
+    case 1: // green full ; - red
+        col_value = (0x00FF00 | ((255 - col_value) << 16));
+        break;
 
-        switch (state)
-        {
-            case 0: // red full ; + green
-                col_value = (0xFF0000 | (col_value << 8));
-                break;
+    case 2: // green full ; + blue
+        col_value = (0x00FF00 | (col_value << 0));
+        break;
 
-            case 1: // green full ; - red
-                col_value = (0x00FF00 | ((255 - col_value) << 16));
-                break;
+    case 3: // blue full ; - green
+        col_value = (0x0000FF | ((255 - col_value) << 8));
+        break;
 
-            case 2: // green full ; + blue
-                col_value = (0x00FF00 | (col_value << 0));
-                break;
+    case 4: // blue full ; + red
+        col_value = (0x0000FF | (col_value << 16));
+        break;
 
-            case 3: // blue full ; - green
-                col_value = (0x0000FF | ((255 - col_value) << 8));
-                break;
+    case 5: // red full ; -blue
+        col_value = (0xFF0000 | ((255 - col_value) << 0));
+        break;
 
-            case 4: // blue full ; + red
-                col_value = (0x0000FF | (col_value << 16));
-                break;
-
-            case 5: // red full ; -blue
-                col_value = (0xFF0000 | ((255 - col_value) << 0));
-                break;
-
-            default:
-                break;
-        }
-
-        return col_value;
+    default:
+        break;
     }
+
+    return col_value;
+}
 
 #ifdef OMW_PLAT_WIN
-    void setCpBack(uint32_t cpIn, uint32_t cpOut)
-    {
-        if (!omw::windows::consoleSetInCodePage(cpIn)) cout << "faild to set in code page back to " << cpIn << endl;
-        if (!omw::windows::consoleSetOutCodePage(cpOut)) cout << "faild to set out code page back to " << cpOut << endl;
-    }
-#endif
+void setCpBack(uint32_t cpIn, uint32_t cpOut)
+{
+    if (!omw::windows::consoleSetInCodePage(cpIn)) cout << "faild to set in code page back to " << cpIn << endl;
+    if (!omw::windows::consoleSetOutCodePage(cpOut)) cout << "faild to set out code page back to " << cpOut << endl;
 }
+#endif
+} // namespace
 
 
 
@@ -100,7 +99,7 @@ int main(int argc, char** argv)
     {
         const bool vtEnable = omw::windows::consoleEnVirtualTermProc();
         omw::ansiesc::enable(vtEnable);
-        if(!vtEnable) cout << "faild to enable virtual terminal processing" << endl;
+        if (!vtEnable) cout << "faild to enable virtual terminal processing" << endl;
     }
 #endif
 
@@ -127,12 +126,14 @@ int main(int argc, char** argv)
 
     {
         cout << "\n";
-        std::wcout << omw::backColor(0b100) << omw::fgBrightWhite << "SGR and char string to std::" << omw::bold << "w" << omw::boldOff << "cout" << omw::normal << endl;
-        std::wcout << omw::backColor(0b101) << omw::fgBrightYellow << L"SGR and wchar_t string to std::" << omw::bold << "w" << omw::boldOff << "cout" << omw::normal << endl;
+        std::wcout << omw::backColor(0b100) << omw::fgBrightWhite << "SGR and char string to std::" << omw::bold << "w" << omw::boldOff << "cout" << omw::normal
+                   << endl;
+        std::wcout << omw::backColor(0b101) << omw::fgBrightYellow << L"SGR and wchar_t string to std::" << omw::bold << "w" << omw::boldOff << "cout"
+                   << omw::normal << endl;
     }
 
     {
-        const omw::string colorTableChar = omw::string(omw::UTF8CP_2588) + omw::string(omw::UTF8CP_2588);
+        const std::string colorTableChar = std::string(omw::UTF8CP_2588) + std::string(omw::UTF8CP_2588);
 
         cout << endl;
 
@@ -170,22 +171,35 @@ int main(int argc, char** argv)
 
         constexpr int incStep = 3;
         int barWidth = 0;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(i, 0, 0) << omw::UTF8CP_2588; ++barWidth; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(i, i, 0) << omw::UTF8CP_2588; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(0, i, 0) << omw::UTF8CP_2588; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(0, i, i) << omw::UTF8CP_2588; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(0, 0, i) << omw::UTF8CP_2588; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(i, 0, i) << omw::UTF8CP_2588; } cout << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(i, i, i) << omw::UTF8CP_2588; } cout << endl;
+        for (int i = 0; i <= 255; i += incStep)
+        {
+            cout << omw::foreColor(i, 0, 0) << omw::UTF8CP_2588;
+            ++barWidth;
+        }
+        cout << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(i, i, 0) << omw::UTF8CP_2588; }
+        cout << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(0, i, 0) << omw::UTF8CP_2588; }
+        cout << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(0, i, i) << omw::UTF8CP_2588; }
+        cout << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(0, 0, i) << omw::UTF8CP_2588; }
+        cout << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(i, 0, i) << omw::UTF8CP_2588; }
+        cout << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::foreColor(i, i, i) << omw::UTF8CP_2588; }
+        cout << endl;
         for (int i = 0; i < barWidth; ++i) cout << omw::foreColor(intToColor(std::lround((double)0x5FF * (double)i / (double)barWidth))) << omw::UTF8CP_2588;
 
         cout << omw::normal << endl;
     }
 
-    cout << "\nnormal " << omw::bold << "bold" << omw::normal << " " << omw::underline << "un" << omw::underlineColor(13) << "derli" << omw::defaultUnderlineColor << "ne" <<
-        omw::normal << " " << omw::strike << "strike" << omw::normal << " " << omw::italic << "italic" << omw::normal << " " << omw::fraktur << "fraktur" << omw::normal << endl;
+    cout << "\nnormal " << omw::bold << "bold" << omw::normal << " " << omw::underline << "un" << omw::underlineColor(13) << "derli"
+         << omw::defaultUnderlineColor << "ne" << omw::normal << " " << omw::strike << "strike" << omw::normal << " " << omw::italic << "italic" << omw::normal
+         << " " << omw::fraktur << "fraktur" << omw::normal << endl;
 
-    cout << omw::fgBrightCyan << "\nnormal " << omw::reverseVideo << " reversed " << omw::fgDefault << " video " << omw::reverseVideoOff << " normal" << omw::normal << endl;
+    cout << omw::fgBrightCyan << "\nnormal " << omw::reverseVideo << " reversed " << omw::fgDefault << " video " << omw::reverseVideoOff << " normal"
+         << omw::normal << endl;
 
     {
         cout << "\n";
@@ -202,12 +216,13 @@ int main(int argc, char** argv)
     }
 
     cout << "\n";
-    cout << "the q" << omw::underline << "uick b" << omw::bold << "rown" << sgr::seq(sgr::underlineOff, sgr::boldOff, sgr::fgColorGreen) << " fox jumps" << omw::normal << endl;
-    cout << "the" << omw::underline << omw::underlineColor(sgr::col8bit_brightMagenta) << " qu" << omw::fgBrightYellow << "ick br" << omw::bgBrightBlack << "own" <<
-        omw::underlineColor(sgr::col8bit_standardCyan) << "fox" << omw::defaultColors << " jumps" << omw::normal << endl;
+    cout << "the q" << omw::underline << "uick b" << omw::bold << "rown" << sgr::seq(sgr::underlineOff, sgr::boldOff, sgr::fgColorGreen) << " fox jumps"
+         << omw::normal << endl;
+    cout << "the" << omw::underline << omw::underlineColor(sgr::col8bit_brightMagenta) << " qu" << omw::fgBrightYellow << "ick br" << omw::bgBrightBlack
+         << "own" << omw::underlineColor(sgr::col8bit_standardCyan) << "fox" << omw::defaultColors << " jumps" << omw::normal << endl;
 
     {
-        const omw::string colorTableChar = "  ";
+        const std::string colorTableChar = "  ";
 
         cout << endl;
 
@@ -245,21 +260,30 @@ int main(int argc, char** argv)
 
         constexpr int incStep = 3;
         int barWidth = 0;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, 0, 0) << " "; ++barWidth; } cout << omw::normal << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, i, 0) << " "; } cout << omw::normal << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, i, 0) << " "; } cout << omw::normal << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, i, i) << " "; } cout << omw::normal << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, 0, i) << " "; } cout << omw::normal << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, 0, i) << " "; } cout << omw::normal << endl;
-        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, i, i) << " "; } cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep)
+        {
+            cout << omw::backColor(i, 0, 0) << " ";
+            ++barWidth;
+        }
+        cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, i, 0) << " "; }
+        cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, i, 0) << " "; }
+        cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, i, i) << " "; }
+        cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(0, 0, i) << " "; }
+        cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, 0, i) << " "; }
+        cout << omw::normal << endl;
+        for (int i = 0; i <= 255; i += incStep) { cout << omw::backColor(i, i, i) << " "; }
+        cout << omw::normal << endl;
         for (int i = 0; i < barWidth; ++i) cout << omw::backColor(intToColor(std::lround((double)0x5FF * (double)i / (double)barWidth))) << " ";
 
         cout << omw::normal << endl;
     }
 
 #endif // ___OMWi_REGION_sgr
-
-
 
 
 
@@ -279,11 +303,14 @@ int main(int argc, char** argv)
 
 #else // !TESTING_WIN_CODE_PAGE_CHANGES
 
-const char* const testStringChp = "\xCE\xB1\xCE\xB2\xCE\xB3\xCE\xB4\xCE\xB5\xCE\xB6\xCE\xB7\xCE\xB8\xCE\xB9\xCE\xBA\xCE\xBB\xCE\xBC\xCE\xBD\xCE\xBE\xCE\xBF\xCF\x80\xCF\x81\xCF\x82\xCF\x83\xCF\x8\xCF\x85\xCF\x86\xCF\x87\xCF\x88\xCF\x89";
-const std::string testStringStd = "\xCE\xB1\xCE\xB2\xCE\xB3\xCE\xB4\xCE\xB5\xCE\xB6\xCE\xB7\xCE\xB8\xCE\xB9\xCE\xBA\xCE\xBB\xCE\xBC\xCE\xBD\xCE\xBE\xCE\xBF\xCF\x80\xCF\x81\xCF\x82\xCF\x83\xCF\x8\xCF\x85\xCF\x86\xCF\x87\xCF\x88\xCF\x89";
-const omw::string testStringOmw = "\xCE\xB1\xCE\xB2\xCE\xB3\xCE\xB4\xCE\xB5\xCE\xB6\xCE\xB7\xCE\xB8\xCE\xB9\xCE\xBA\xCE\xBB\xCE\xBC\xCE\xBD\xCE\xBE\xCE\xBF\xCF\x80\xCF\x81\xCF\x82\xCF\x83\xCF\x8\xCF\x85\xCF\x86\xCF\x87\xCF\x88\xCF\x89";
-const omw::string testStringComposed = "composed string " + omw::string(omw::UTF8CP_2580) + omw::UTF8CP_2584 + std::string(omw::UTF8CP_2588) + " " +
-omw::string(omw::UTF8CP_auml) + omw::UTF8CP_ouml + omw::string(omw::UTF8CP_uuml) + omw::UTF8CP_Auml + omw::string(omw::UTF8CP_Ouml) + omw::UTF8CP_Uuml;
+// clang-format off
+const char* const testStringChp = "\xCE\xB1\xCE\xB2\xCE\xB3\xCE\xB4\xCE\xB5\xCE\xB6\xCE\xB7\xCE\xB8\xCE\xB9\xCE\xBA\xCE\xBB\xCE\xBC\xCE\xBD\xCE\xBE\xCE\xBF\xCF\x80\xCF\x81\xCF\x82\xCF\x83\xCF\x84\xCF\x85\xCF\x86\xCF\x87\xCF\x88\xCF\x89";
+const std::string testStringStd = "\xCE\xB1\xCE\xB2\xCE\xB3\xCE\xB4\xCE\xB5\xCE\xB6\xCE\xB7\xCE\xB8\xCE\xB9\xCE\xBA\xCE\xBB\xCE\xBC\xCE\xBD\xCE\xBE\xCE\xBF\xCF\x80\xCF\x81\xCF\x82\xCF\x83\xCF\x84\xCF\x85\xCF\x86\xCF\x87\xCF\x88\xCF\x89";
+const std::string testStringOmw = "\xCE\xB1\xCE\xB2\xCE\xB3\xCE\xB4\xCE\xB5\xCE\xB6\xCE\xB7\xCE\xB8\xCE\xB9\xCE\xBA\xCE\xBB\xCE\xBC\xCE\xBD\xCE\xBE\xCE\xBF\xCF\x80\xCF\x81\xCF\x82\xCF\x83\xCF\x84\xCF\x85\xCF\x86\xCF\x87\xCF\x88\xCF\x89";
+// clang-format on
+const std::string testStringComposed = "composed string " + std::string(omw::UTF8CP_2580) + omw::UTF8CP_2584 + std::string(omw::UTF8CP_2588) + " " +
+                                       std::string(omw::UTF8CP_auml) + omw::UTF8CP_ouml + std::string(omw::UTF8CP_uuml) + omw::UTF8CP_Auml +
+                                       std::string(omw::UTF8CP_Ouml) + omw::UTF8CP_Uuml;
 
 static void normal();
 static void utf8(uint32_t, uint32_t);
@@ -304,10 +331,18 @@ int main(int argc, char** argv)
     if (argc == 1) normal();
     else if (argc == 2)
     {
-        if (omw::string(argv[1]) == "-u8") utf8(cpIn, cpOut);
-        else { cout << invArg << endl; r = -1; }
+        if (std::string(argv[1]) == "-u8") utf8(cpIn, cpOut);
+        else
+        {
+            cout << invArg << endl;
+            r = -1;
+        }
     }
-    else { cout << invArg << endl; r = -1; }
+    else
+    {
+        cout << invArg << endl;
+        r = -1;
+    }
 
     return r;
 }

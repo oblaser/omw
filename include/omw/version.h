@@ -136,8 +136,8 @@ public:
     int32_t major() const { return m_major; }
     int32_t minor() const { return m_minor; }
     int32_t patch() const { return m_patch; }
-    std::string preRelease() const { return omw::join(omw::stringVector(m_preRelease), '.'); }
-    std::string build() const { return omw::join(omw::stringVector(m_build), '.'); }
+    std::string preRelease() const { return omw::join(m_preRelease, '.'); }
+    std::string build() const { return omw::join(m_build, '.'); }
 
     const omw::StringVector& preReleaseIdentifiers() const { return m_preRelease; }
     const omw::StringVector& buildIdentifiers() const { return m_build; }

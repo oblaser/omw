@@ -95,7 +95,7 @@ void omw::MajMinVer::m_parse(const std::string& str)
 {
     try
     {
-        const omw::StringVector data = omw::stdStringVector(omw::split(str, '.'));
+        const omw::StringVector data = omw::split(str, '.');
 
         if (data.size() == 2)
         {
@@ -177,8 +177,8 @@ int omw::Semver::compare(const omw::Semver& other) const
 
                 for (omw::StringVector::size_type i = 0; (i < n) && (r == 0); ++i)
                 {
-                    const omw::string& tmpIdentifier_a = pra[i];
-                    const omw::string& tmpIdentifier_b = prb[i];
+                    const std::string& tmpIdentifier_a = pra[i];
+                    const std::string& tmpIdentifier_b = prb[i];
 
                     const bool isnuma = semver::isNumericIdentifier(tmpIdentifier_a);
                     const bool isnumb = semver::isNumericIdentifier(tmpIdentifier_b);
@@ -271,7 +271,7 @@ void omw::Semver::m_parse(const std::string& str)
 
 void omw::Semver::m_parseBuild(const std::string& identifiers)
 {
-    if (!identifiers.empty()) { m_build = omw::stdStringVector(omw::split(identifiers, '.')); }
+    if (!identifiers.empty()) { m_build = omw::split(identifiers, '.'); }
     else { m_build.clear(); }
 
     m_build.shrink_to_fit();
@@ -279,7 +279,7 @@ void omw::Semver::m_parseBuild(const std::string& identifiers)
 
 void omw::Semver::m_parsePreRelease(const std::string& identifiers)
 {
-    if (identifiers.length() > 0) { m_preRelease = omw::stdStringVector(omw::split(identifiers, '.')); }
+    if (identifiers.length() > 0) { m_preRelease = omw::split(identifiers, '.'); }
     else { m_preRelease.clear(); }
 
     m_preRelease.shrink_to_fit();
@@ -289,7 +289,7 @@ void omw::Semver::m_parseVersion(const std::string& identifiers)
 {
     try
     {
-        const omw::StringVector data = omw::stdStringVector(omw::split(identifiers, '.'));
+        const omw::StringVector data = omw::split(identifiers, '.');
 
         if (data.size() == 3)
         {

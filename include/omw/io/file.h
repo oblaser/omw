@@ -14,7 +14,6 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include <vector>
 
 #include "../../omw/defs.h"
-#include "../../omw/string.h"
 #include "../../omw/vector.h"
 
 namespace omw {
@@ -60,7 +59,7 @@ namespace io {
         FileInterface_Base(const std::string& filename);
         virtual ~FileInterface_Base();
 
-        const omw::string& filename() const { return m_filename; }
+        const std::string& filename() const { return m_filename; }
 
         void setFileName(const std::string& filename) { m_filename = filename; }
 
@@ -78,7 +77,7 @@ namespace io {
         iostate getState() const;
 
     private:
-        omw::string m_filename;
+        std::string m_filename;
         mutable fstream m_fs;
     };
 

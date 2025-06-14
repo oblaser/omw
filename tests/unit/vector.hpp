@@ -28,9 +28,9 @@ TEST_CASE("vector.h omw::contains()")
     CHECK(omw::contains(vStdString, std::string("fox")));
     CHECK_FALSE(omw::contains(vStdString, std::string("boat")));
 
-    const omw::vector<omw::string> vString = { "pack", "my", "box", "with", "five", "dozen", "liquor", "jugs" };
-    CHECK(omw::contains(vString, omw::string("five")));
-    CHECK_FALSE(omw::contains(vString, omw::string("boat")));
+    const omw::vector<std::string> vString = { "pack", "my", "box", "with", "five", "dozen", "liquor", "jugs" };
+    CHECK(omw::contains(vString, std::string("five")));
+    CHECK_FALSE(omw::contains(vString, std::string("boat")));
 }
 
 TEST_CASE("vector.h omw::vector ctor")
@@ -43,7 +43,7 @@ TEST_CASE("vector.h omw::vector ctor")
     CHECK(r_omw == r);
     CHECK(omw::vector<int>(r) == r);
     CHECK(omw::vector<int>(r) == r_omw);
-    
+
     omw::vector<int> v = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     std::for_each(v.begin(), v.end(), [](int& val) { val *= 11; });
     CHECK(v == r);
@@ -59,7 +59,7 @@ TEST_CASE("vector.h omw::vector::contains()")
     CHECK(vStdString.contains("fox"));
     CHECK_FALSE(vStdString.contains("boat"));
 
-    const omw::vector<omw::string> vString = { "pack", "my", "box", "with", "five", "dozen", "liquor", "jugs" };
+    const omw::vector<std::string> vString = { "pack", "my", "box", "with", "five", "dozen", "liquor", "jugs" };
     CHECK(vString.contains("five"));
     CHECK_FALSE(vString.contains("boat"));
 }

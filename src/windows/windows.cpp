@@ -34,7 +34,7 @@ namespace {
 // clang-format on
 
 // expected format: string1\0string2\0\0
-std::vector<omw::string> multiStringConvert(LPCWSTR multiStr)
+std::vector<std::string> multiStringConvert(LPCWSTR multiStr)
 {
     const WCHAR* p = multiStr;
 
@@ -46,13 +46,13 @@ std::vector<omw::string> multiStringConvert(LPCWSTR multiStr)
     }
     while (*p != 0);
 
-    std::vector<omw::string> strings;
+    std::vector<std::string> strings;
     for (size_t i = 0; i < wStrings.size(); ++i) { strings.push_back(omw::windows::wstou8(wStrings[i])); }
 
     return strings;
 }
 
-std::vector<omw::string> queryDosDevice_base(const WCHAR* deviceName)
+std::vector<std::string> queryDosDevice_base(const WCHAR* deviceName)
 {
     std::vector<WCHAR> buffer;
     buffer.resize(8192);
@@ -104,7 +104,7 @@ DWORD WINAPI beep_thread(__in LPVOID lpParameter)
 //! \b Exceptions
 //! - `omw::windows::wstou8()` is called and may throw exceptions
 //!
-std::vector<omw::string> omw::windows::getAllDosDevices() { return queryDosDevice_base(nullptr); }
+std::vector<std::string> omw::windows::getAllDosDevices() { return queryDosDevice_base(nullptr); }
 
 //! @param device Device, UTF-8 encoded
 //! @return
@@ -112,7 +112,7 @@ std::vector<omw::string> omw::windows::getAllDosDevices() { return queryDosDevic
 //! \b Exceptions
 //! - `omw::windows::wstou8()` and `::u8tows()` is called and may throw exceptions
 //!
-std::vector<omw::string> omw::windows::queryDosDevice(const std::string& device_u8) { return queryDosDevice_base(omw::windows::u8tows(device_u8).c_str()); }
+std::vector<std::string> omw::windows::queryDosDevice(const std::string& device_u8) { return queryDosDevice_base(omw::windows::u8tows(device_u8).c_str()); }
 
 //! @return Value of the performance counter
 //!

@@ -21,6 +21,14 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 
 
+TEST_CASE("string.h omw::StringVector")
+{
+    static_assert(sizeof(omw::StringVector_npos) == sizeof(size_t));
+    CHECK(omw::StringVector_npos == SIZE_MAX);
+}
+
+
+
 TEST_CASE("string.h omw::StringReplacePair")
 {
     const char s1[] = "search1";
@@ -61,243 +69,208 @@ TEST_CASE("string.h omw::StringReplacePair")
 
 
 
-TEST_CASE("string.h omw::string ctor")
-{
-    const char str[] = "a boy with a hat";
-    const std::string stdstr(str);
-    const omw::string omwstr = std::string(3, 'a');
-    const std::string stdfromomw = omwstr;
-
-    CHECK(std::strcmp(omw::string().c_str(), "") == 0);
-    CHECK(std::strcmp(omw::string(str).c_str(), str) == 0);
-    CHECK(std::strcmp(omw::string(stdstr).c_str(), str) == 0);
-    CHECK(std::strcmp(omw::string(str, str + std::strlen(str)).c_str(), str) == 0);
-    CHECK(std::strcmp(omwstr.c_str(), "aaa") == 0);
-    CHECK(std::strcmp(stdfromomw.c_str(), "aaa") == 0);
-    CHECK(std::strcmp((omw::string(1, 'b')).c_str(), "b") == 0);
-}
-
-class String_ToStdTestClass
-{
-public:
-    String_ToStdTestClass() : m_str() {}
-    String_ToStdTestClass(const std::string& str) : m_str(str) {}
-    std::string m_str;
-};
-std::string String_ToStdTestFunc(const String_ToStdTestClass& data) { return data.m_str; }
-TEST_CASE("string.h omw::string std()")
-{
-    const char* const ps = "qwertz123456";
-
-    omw::string s(ps);
-    CHECK(String_ToStdTestFunc(s.std()) == ps);
-
-    const omw::string cs(ps);
-    CHECK(String_ToStdTestFunc(cs.std()) == ps);
-}
-
-TEST_CASE("string.h omw::string::contains()")
+TEST_CASE("string.h omw::contains()")
 {
     char chr;
     const char* ptr;
     std::string str;
-    omw::string omwstr;
+    std::string omwstr;
 
-    const omw::string s("The quick brown fox jumps over the lazy dog");
+    const std::string s("The quick brown fox jumps over the lazy dog");
 
     chr = 'q';
     ptr = "ox j";
     str = "The q";
     omwstr = "ck bro";
-    CHECK(s.contains(chr));
-    CHECK(s.contains(ptr));
-    CHECK(s.contains(str));
-    CHECK(s.contains(omwstr));
+    CHECK(omw::contains(s, chr));
+    CHECK(omw::contains(s, ptr));
+    CHECK(omw::contains(s, str));
+    CHECK(omw::contains(s, omwstr));
 
     chr = 'x';
     ptr = "jump";
     str = "az";
     omwstr = "ps ove";
-    CHECK(s.contains(chr));
-    CHECK(s.contains(ptr));
-    CHECK(s.contains(str));
-    CHECK(s.contains(omwstr));
+    CHECK(omw::contains(s, chr));
+    CHECK(omw::contains(s, ptr));
+    CHECK(omw::contains(s, str));
+    CHECK(omw::contains(s, omwstr));
 
     chr = '-';
     ptr = "mobile";
     str = "cellphone";
     omwstr = "case";
-    CHECK_FALSE(s.contains(chr));
-    CHECK_FALSE(s.contains(ptr));
-    CHECK_FALSE(s.contains(str));
-    CHECK_FALSE(s.contains(omwstr));
+    CHECK_FALSE(omw::contains(s, chr));
+    CHECK_FALSE(omw::contains(s, ptr));
+    CHECK_FALSE(omw::contains(s, str));
+    CHECK_FALSE(omw::contains(s, omwstr));
 }
 
-TEST_CASE("string.h omw::string::replaceFirst()")
+TEST_CASE("string.h omw::replaceFirst()")
 {
     const char str[] = "a boy with a hat";
-    omw::string s;
+    std::string s;
 
     s = str;
-    s.replaceFirst("t", "#");
+    omw::replaceFirst(s, "t", "#");
     CHECK(s == "a boy wi#h a hat");
-    s.replaceFirst("t", "#");
+    omw::replaceFirst(s, "t", "#");
     CHECK(s == "a boy wi#h a ha#");
 
     s = str;
-    s.replaceFirst("t", "#", 9);
+    omw::replaceFirst(s, "t", "#", 9);
     CHECK(s == "a boy with a ha#");
 
     s = str;
-    s.replaceFirst(omw::StringReplacePair('t', "[?]"), 9);
+    omw::replaceFirst(s, omw::StringReplacePair('t', "[?]"), 9);
     CHECK(s == "a boy with a ha[?]");
 
 
 
     s = str;
-    s.replaceFirst("", "$");
+    omw::replaceFirst(s, "", "$");
     CHECK(s == "$a boy with a hat");
 
     s = str;
-    s.replaceFirst("t", "");
+    omw::replaceFirst(s, "t", "");
     CHECK(s == "a boy wih a hat");
 
     s = str;
-    s.replaceFirst("", "");
+    omw::replaceFirst(s, "", "");
     CHECK(s == "a boy with a hat");
 }
 
-TEST_CASE("string.h omw::string::replaceAll()")
+TEST_CASE("string.h omw::replaceAll()")
 {
     const char str[] = "a boy with a hat";
-    omw::string s;
+    std::string s;
     size_t nReplacements;
 
 #ifndef ___OMWi_REGION_char_char
     s = str;
-    s.replaceAll('a', 'X', 0, &nReplacements);
+    omw::replaceAll(s, 'a', 'X', 0, &nReplacements);
     CHECK(s == "X boy with X hXt");
     CHECK(nReplacements == 3);
 
     s = str;
-    s.replaceAll('a', 'X', 5, &nReplacements);
+    omw::replaceAll(s, 'a', 'X', 5, &nReplacements);
     CHECK(s == "a boy with X hXt");
     CHECK(nReplacements == 2);
 
     s = str;
-    s.replaceAll('q', '#', 1, &nReplacements);
+    omw::replaceAll(s, 'q', '#', 1, &nReplacements);
     CHECK(s == str);
     CHECK(nReplacements == 0);
 
 
     s = str;
-    s.replaceAll('\0', '#', 0, &nReplacements);
+    omw::replaceAll(s, '\0', '#', 0, &nReplacements);
     CHECK(s == str);
     CHECK(nReplacements == 0);
 
     s = str;
-    s.replaceAll('t', '\0', 0, &nReplacements);
+    omw::replaceAll(s, 't', '\0', 0, &nReplacements);
     CHECK(s == std::string("a boy wi\0h a ha\0", std::strlen(str)));
     CHECK(nReplacements == 2);
 #endif // ___OMWi_REGION_char_char
 
 #ifndef ___OMWi_REGION_char_string
     s = str;
-    s.replaceAll('a', "XYZ ", 0, &nReplacements);
+    omw::replaceAll(s, 'a', "XYZ ", 0, &nReplacements);
     CHECK(s == "XYZ  boy with XYZ  hXYZ t");
     CHECK(nReplacements == 3);
 
     s = str;
-    s.replaceAll('a', "XYZ ", 5, &nReplacements);
+    omw::replaceAll(s, 'a', "XYZ ", 5, &nReplacements);
     CHECK(s == "a boy with XYZ  hXYZ t");
     CHECK(nReplacements == 2);
 
     s = str;
-    s.replaceAll('q', "#", 1, &nReplacements);
+    omw::replaceAll(s, 'q', "#", 1, &nReplacements);
     CHECK(s == str);
     CHECK(nReplacements == 0);
 
 
     s = str;
-    s.replaceAll('\0', "$", 0, &nReplacements);
+    omw::replaceAll(s, '\0', "$", 0, &nReplacements);
     CHECK(s == str);
     CHECK(nReplacements == 0);
 
     s = str;
-    s.replaceAll('t', "", 0, &nReplacements);
+    omw::replaceAll(s, 't', "", 0, &nReplacements);
     CHECK(s == "a boy wih a ha");
     CHECK(nReplacements == 2);
 #endif // ___OMWi_REGION_char_string
 
 #ifndef ___OMWi_REGION_string_char
     s = str;
-    s.replaceAll("a ", 'X', 0, &nReplacements);
+    omw::replaceAll(s, "a ", 'X', 0, &nReplacements);
     CHECK(s == "Xboy with Xhat");
     CHECK(nReplacements == 2);
 
     s = str;
-    s.replaceAll("a ", 'X', 5, &nReplacements);
+    omw::replaceAll(s, "a ", 'X', 5, &nReplacements);
     CHECK(s == "a boy with Xhat");
     CHECK(nReplacements == 1);
 
     s = str;
-    s.replaceAll("ABCDEFGHI", '#', 1, &nReplacements);
+    omw::replaceAll(s, "ABCDEFGHI", '#', 1, &nReplacements);
     CHECK(s == str);
     CHECK(nReplacements == 0);
 
 
     s = str;
-    s.replaceAll("", '$', 0, &nReplacements);
+    omw::replaceAll(s, "", '$', 0, &nReplacements);
     CHECK(s == str);
-    CHECK(nReplacements == omw::string::npos);
+    CHECK(nReplacements == std::string::npos);
 
     s = str;
-    s.replaceAll("t", '\0', 0, &nReplacements);
+    omw::replaceAll(s, "t", '\0', 0, &nReplacements);
     CHECK(s == std::string("a boy wi\0h a ha\0", std::strlen(str)));
     CHECK(nReplacements == 2);
 #endif // ___OMWi_REGION_string_char
 
 #ifndef ___OMWi_REGION_string_string
     s = str;
-    s.replaceAll("a ", "XYZ ", 0, &nReplacements);
+    omw::replaceAll(s, "a ", "XYZ ", 0, &nReplacements);
     CHECK(s == "XYZ boy with XYZ hat");
     CHECK(nReplacements == 2);
 
     s = str;
-    s.replaceAll("a ", "XYZ ", 5, &nReplacements);
+    omw::replaceAll(s, "a ", "XYZ ", 5, &nReplacements);
     CHECK(s == "a boy with XYZ hat");
     CHECK(nReplacements == 1);
 
     s = str;
-    s.replaceAll("ABCDEFGHI", "#", 1, &nReplacements);
+    omw::replaceAll(s, "ABCDEFGHI", "#", 1, &nReplacements);
     CHECK(s == str);
     CHECK(nReplacements == 0);
 
     s = str;
-    s.replaceAll(omw::StringReplacePair('a', "XYZ"), 11, &nReplacements);
+    omw::replaceAll(s, omw::StringReplacePair('a', "XYZ"), 11, &nReplacements);
     CHECK(s == "a boy with XYZ hXYZt");
     CHECK(nReplacements == 2);
 
 
     s = str;
-    s.replaceAll("", "$", 0, &nReplacements);
+    omw::replaceAll(s, "", "$", 0, &nReplacements);
     CHECK(s == str);
-    CHECK(nReplacements == omw::string::npos);
+    CHECK(nReplacements == std::string::npos);
 
     s = str;
-    s.replaceAll("t", "", 0, &nReplacements);
+    omw::replaceAll(s, "t", "", 0, &nReplacements);
     CHECK(s == "a boy wih a ha");
     CHECK(nReplacements == 2);
 
     s = str;
-    s.replaceAll("", "", 0, &nReplacements);
+    omw::replaceAll(s, "", "", 0, &nReplacements);
     CHECK(s == str);
-    CHECK(nReplacements == omw::string::npos);
+    CHECK(nReplacements == std::string::npos);
 
     s = str;
-    s.replaceAll("", "", 3, &nReplacements);
+    omw::replaceAll(s, "", "", 3, &nReplacements);
     CHECK(s == str);
-    CHECK(nReplacements == omw::string::npos);
+    CHECK(nReplacements == std::string::npos);
 #endif // ___OMWi_REGION_string_string
 
 
@@ -311,28 +284,28 @@ TEST_CASE("string.h omw::string::replaceAll()")
     rpv = { rp1, rp2, rp3 };
 
     s = str;
-    s.replaceAll(rpv);
+    omw::replaceAll(s, rpv);
     CHECK(s == "$ $ boy wi# #h $ $ h$ $# #");
 
     s = str;
-    s.replaceAll(rpv, 0, &nReplacements, &nrv);
+    omw::replaceAll(s, rpv, 0, &nReplacements, &nrv);
     CHECK(s == "$ $ boy wi# #h $ $ h$ $# #");
     CHECK(nReplacements == 14);
     CHECK(nrv == std::vector<size_t>({ 3, 5, 6 }));
 
     s = str;
-    s.replaceAll(rpv, 10, &nReplacements, &nrv);
+    omw::replaceAll(s, rpv, 10, &nReplacements, &nrv);
     CHECK(s == "a boy with $ $ h$ $# #");
     CHECK(nReplacements == 9);
     CHECK(nrv == std::vector<size_t>({ 2, 3, 4 }));
 
     s = str;
-    s.replaceAll(rpv, 10, &nReplacements);
+    omw::replaceAll(s, rpv, 10, &nReplacements);
     CHECK(s == "a boy with $ $ h$ $# #");
     CHECK(nReplacements == 9);
 
     s = str;
-    s.replaceAll(rpv, 0, nullptr, &nrv);
+    omw::replaceAll(s, rpv, 0, nullptr, &nrv);
     CHECK(s == "$ $ boy wi# #h $ $ h$ $# #");
     CHECK(nrv == std::vector<size_t>({ 3, 5, 6 }));
 
@@ -340,65 +313,65 @@ TEST_CASE("string.h omw::string::replaceAll()")
 
     rpv = { rp3, rp2, rp1 };
     s = str;
-    s.replaceAll(rpv, 10);
+    omw::replaceAll(s, rpv, 10);
     CHECK(s == "a boy with #t# h#t## #");
 
 
 
     rpv = { rp3, omw::StringReplacePair("ABCDEFGHI", "#"), omw::StringReplacePair("XYZ", "@") };
     s = str;
-    s.replaceAll(rpv, 0, &nReplacements, &nrv);
+    omw::replaceAll(s, rpv, 0, &nReplacements, &nrv);
     CHECK(s == str);
     CHECK(nReplacements == 0);
     CHECK(nrv == std::vector<size_t>({ 0, 0, 0 }));
 
     rpv = { rp3, omw::StringReplacePair("", "#"), omw::StringReplacePair("", "@") };
     s = str;
-    s.replaceAll(rpv, 0, &nReplacements, &nrv);
+    omw::replaceAll(s, rpv, 0, &nReplacements, &nrv);
     CHECK(s == str);
     CHECK(nReplacements == 0);
-    CHECK(nrv == std::vector<size_t>({ 0, omw::string::npos, omw::string::npos }));
+    CHECK(nrv == std::vector<size_t>({ 0, std::string::npos, std::string::npos }));
 
     rpv = { omw::StringReplacePair("", "#"), omw::StringReplacePair("", "@"), omw::StringReplacePair("", "$") };
     s = str;
-    s.replaceAll(rpv, 0, &nReplacements, &nrv);
+    omw::replaceAll(s, rpv, 0, &nReplacements, &nrv);
     CHECK(s == str);
-    CHECK(nReplacements == omw::string::npos);
-    CHECK(nrv == std::vector<size_t>({ omw::string::npos, omw::string::npos, omw::string::npos }));
+    CHECK(nReplacements == std::string::npos);
+    CHECK(nrv == std::vector<size_t>({ std::string::npos, std::string::npos, std::string::npos }));
 }
 
-TEST_CASE("string.h omw::string::reverse()")
+TEST_CASE("string.h omw::reverse()")
 {
-    omw::string s;
+    std::string s;
 
     s = "abcd";
-    s.reverse();
+    omw::reverse(s);
     CHECK(s == "dcba");
 
     s = "QWERT";
-    s.reverse();
+    omw::reverse(s);
     CHECK(s == "TREWQ");
 }
 
-TEST_CASE("string.h omw::string::reversed()")
+TEST_CASE("string.h omw::toReversed()")
 {
-    omw::string s;
-    const omw::string& cr = s;
+    std::string s;
+    const std::string& cr = s;
 
     s = "abcd";
-    CHECK(cr.reversed() == "dcba");
+    CHECK(omw::toReversed(cr) == "dcba");
 
     s = "QWERT";
-    CHECK(s.reversed() == "TREWQ");
+    CHECK(omw::toReversed(cr) == "TREWQ");
 }
 
-TEST_CASE("string.h omw::string::split()")
+TEST_CASE("string.h omw::split()")
 {
-    const omw::string s("The quick brown fox jumps over the lazy dog");
-    omw::stringVector_t t;
+    const std::string s("The quick brown fox jumps over the lazy dog");
+    omw::StringVector t;
     size_t n;
 
-    t = s.split(' ');
+    t = omw::split(s, ' ');
     n = 9;
     REQUIRE(t.size() == n);
     CHECK(t[0] == "The");
@@ -411,11 +384,11 @@ TEST_CASE("string.h omw::string::split()")
     CHECK(t[7] == "lazy");
     CHECK(t[8] == "dog");
 
-    t = s.split(' ', 0);
+    t = omw::split(s, ' ', 0);
     n = 0;
     REQUIRE(t.size() == n);
 
-    t = s.split(' ', 5);
+    t = omw::split(s, ' ', 5);
     n = 5;
     REQUIRE(t.size() == n);
     CHECK(t[0] == "The");
@@ -424,7 +397,7 @@ TEST_CASE("string.h omw::string::split()")
     CHECK(t[3] == "fox");
     CHECK(t[4] == "jumps over the lazy dog");
 
-    t = s.split('o');
+    t = omw::split(s, 'o');
     n = 5;
     REQUIRE(t.size() == n);
     CHECK(t[0] == "The quick br");
@@ -433,28 +406,28 @@ TEST_CASE("string.h omw::string::split()")
     CHECK(t[3] == "ver the lazy d");
     CHECK(t[4] == "g");
 
-    t = s.split('T');
+    t = omw::split(s, 'T');
     n = 2;
     REQUIRE(t.size() == n);
     CHECK(t[0] == "");
     CHECK(t[1] == "he quick brown fox jumps over the lazy dog");
 }
 
-TEST_CASE("string.h omw::string::splitLen()")
+TEST_CASE("string.h omw::splitLen()")
 {
-    const omw::string s("The quick brown fox jumps over the lazy dog");
-    std::vector<omw::string> t;
+    const std::string s("The quick brown fox jumps over the lazy dog");
+    std::vector<std::string> t;
     size_t n;
     size_t tokenLen;
 
     n = 0;
     tokenLen = 3;
-    t = s.splitLen(tokenLen, 0);
+    t = omw::splitLen(s, tokenLen, 0);
     CHECK(t.size() == n);
 
     n = 43;
     tokenLen = 1;
-    t = s.splitLen(tokenLen);
+    t = omw::splitLen(s, tokenLen);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < n; ++i)
     {
@@ -464,7 +437,7 @@ TEST_CASE("string.h omw::string::splitLen()")
 
     n = 43;
     tokenLen = 1;
-    t = s.splitLen(tokenLen, n);
+    t = omw::splitLen(s, tokenLen, n);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < (n - 1); ++i)
     {
@@ -475,7 +448,7 @@ TEST_CASE("string.h omw::string::splitLen()")
 
     n = 38;
     tokenLen = 1;
-    t = s.splitLen(tokenLen, n);
+    t = omw::splitLen(s, tokenLen, n);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < (n - 1); ++i)
     {
@@ -486,7 +459,7 @@ TEST_CASE("string.h omw::string::splitLen()")
 
     n = 5;
     tokenLen = 2;
-    t = s.splitLen(tokenLen, n);
+    t = omw::splitLen(s, tokenLen, n);
     REQUIRE(t.size() == n);
     for (size_t i = 0; i < (n - 1); ++i)
     {
@@ -497,34 +470,37 @@ TEST_CASE("string.h omw::string::splitLen()")
     CHECK(t[(n - 1)] == "k brown fox jumps over the lazy dog");
 }
 
-TEST_CASE("string.h omw::string case conversion")
+TEST_CASE("string.h case conversion")
 {
-    const omw::string mixed = "0123 ThE QuIcK BrOwN FoX JuMpS OvEr tHe lAzY DoG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
-    const omw::string lower = "0123 the quick brown fox jumps over the lazy dog. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
-    const omw::string lowerExt = "0123 the quick brown fox jumps over the lazy dog. 456 =\xC3\xA4-\xC3\xB6 * \xC3\xBC 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
-    const omw::string upper = "0123 THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
-    const omw::string upperExt = "0123 THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\x84\xC3\x96\xC3\x9C#";
+    const std::string mixed = "0123 ThE QuIcK BrOwN FoX JuMpS OvEr tHe lAzY DoG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
+    const std::string lower = "0123 the quick brown fox jumps over the lazy dog. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
+    const std::string lowerExt = "0123 the quick brown fox jumps over the lazy dog. 456 =\xC3\xA4-\xC3\xB6 * \xC3\xBC 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
+    const std::string upper = "0123 THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
+    const std::string upperExt = "0123 THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\x84\xC3\x96\xC3\x9C#";
 
-    CHECK(mixed.toLower_ascii() == lower);
-    CHECK(mixed.toLower_asciiExt() == lowerExt);
-    CHECK(mixed.toUpper_ascii() == upper);
-    CHECK(mixed.toUpper_asciiExt() == upperExt);
+    CHECK(omw::toLower_ascii(mixed) == lower);
+    CHECK(omw::toLower_asciiExt(mixed) == lowerExt);
+    CHECK(omw::toUpper_ascii(mixed) == upper);
+    CHECK(omw::toUpper_asciiExt(mixed) == upperExt);
 
-    omw::string s = mixed;
-    s.lower_ascii();
+    std::string s = mixed;
+    omw::lower_ascii(s);
     CHECK(s == lower);
+
     s = mixed;
-    s.lower_asciiExt();
+    omw::lower_asciiExt(s);
     CHECK(s == lowerExt);
+
     s = mixed;
-    s.upper_ascii();
+    omw::upper_ascii(s);
     CHECK(s == upper);
+
     s = mixed;
-    s.upper_asciiExt();
+    omw::upper_asciiExt(s);
     CHECK(s == upperExt);
 }
 
-TEST_CASE("string.h to_string()")
+TEST_CASE("string.h toString()")
 {
     const int32_t i32 = -1234567890;
     const uint32_t ui32 = 1234567890;
@@ -534,54 +510,54 @@ TEST_CASE("string.h to_string()")
     const double d = 2.71828;
     const long double ld = 3.14159l;
 
-    CHECK(omw::to_string(i32) == std::to_string(i32));
-    CHECK(omw::to_string(ui32) == std::to_string(ui32));
-    CHECK(omw::to_string(i64) == std::to_string(i64));
-    CHECK(omw::to_string(ui64) == std::to_string(ui64));
-    CHECK(omw::to_string(0xFFFFFFFFFFFFFFFF) == std::to_string(0xFFFFFFFFFFFFFFFF));
-    CHECK(omw::to_string(f) == std::to_string(f));
-    CHECK(omw::to_string(d) == std::to_string(d));
-    CHECK(omw::to_string(ld) == std::to_string(ld));
+    CHECK(omw::toString(i32) == std::to_string(i32));
+    CHECK(omw::toString(ui32) == std::to_string(ui32));
+    CHECK(omw::toString(i64) == std::to_string(i64));
+    CHECK(omw::toString(ui64) == std::to_string(ui64));
+    CHECK(omw::toString(0xFFFFFFFFFFFFFFFF) == std::to_string(0xFFFFFFFFFFFFFFFF));
+    CHECK(omw::toString(f) == std::to_string(f));
+    CHECK(omw::toString(d) == std::to_string(d));
+    CHECK(omw::toString(ld) == std::to_string(ld));
 
 
 
-    CHECK(omw::to_string(omw::int128_t(0)) == "0");
-    CHECK(omw::to_string(omw::uint128_t(0)) == "0");
-    CHECK(omw::to_string(omw::int128_t(i32)) == std::to_string(i32));
-    CHECK(omw::to_string(omw::uint128_t(ui32)) == std::to_string(ui32));
-    CHECK(omw::to_string(omw::int128_t(i64)) == std::to_string(i64));
-    CHECK(omw::to_string(omw::uint128_t(ui64)) == std::to_string(ui64));
-    CHECK(omw::to_string(omw::int128_t(0xFFFFFFFFFFFFFFFF)) == "-1");
-    CHECK(omw::to_string(omw::uint128_t(0xFFFFFFFFFFFFFFFF)) == "340282366920938463463374607431768211455");
+    CHECK(omw::toString(omw::int128_t(0)) == "0");
+    CHECK(omw::toString(omw::uint128_t(0)) == "0");
+    CHECK(omw::toString(omw::int128_t(i32)) == std::to_string(i32));
+    CHECK(omw::toString(omw::uint128_t(ui32)) == std::to_string(ui32));
+    CHECK(omw::toString(omw::int128_t(i64)) == std::to_string(i64));
+    CHECK(omw::toString(omw::uint128_t(ui64)) == std::to_string(ui64));
+    CHECK(omw::toString(omw::int128_t(0xFFFFFFFFFFFFFFFF)) == "-1");
+    CHECK(omw::toString(omw::uint128_t(0xFFFFFFFFFFFFFFFF)) == "340282366920938463463374607431768211455");
 
-    CHECK(omw::to_string(omw::int128_t(1, 0)) == "18446744073709551616");
-    CHECK(omw::to_string(omw::int128_t(0, 0xFFFFFFFFFFFFFFFF)) == "18446744073709551615");
-    CHECK(omw::to_string(omw::int128_t(0x7FFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "170141183460469231731687303715884105727");
-    CHECK(omw::to_string(omw::int128_t(0x8000000000000000, 0)) == "-170141183460469231731687303715884105728");
-    CHECK(omw::to_string(omw::int128_t(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "-1");
+    CHECK(omw::toString(omw::int128_t(1, 0)) == "18446744073709551616");
+    CHECK(omw::toString(omw::int128_t(0, 0xFFFFFFFFFFFFFFFF)) == "18446744073709551615");
+    CHECK(omw::toString(omw::int128_t(0x7FFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "170141183460469231731687303715884105727");
+    CHECK(omw::toString(omw::int128_t(0x8000000000000000, 0)) == "-170141183460469231731687303715884105728");
+    CHECK(omw::toString(omw::int128_t(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "-1");
 
-    CHECK(omw::to_string(omw::uint128_t(1, 0)) == "18446744073709551616");
-    CHECK(omw::to_string(omw::uint128_t(0, 0xFFFFFFFFFFFFFFFF)) == "18446744073709551615");
-    CHECK(omw::to_string(omw::uint128_t(0x7FFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "170141183460469231731687303715884105727");
-    CHECK(omw::to_string(omw::uint128_t(0x8000000000000000, 0)) == "170141183460469231731687303715884105728");
-    CHECK(omw::to_string(omw::uint128_t(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "340282366920938463463374607431768211455");
+    CHECK(omw::toString(omw::uint128_t(1, 0)) == "18446744073709551616");
+    CHECK(omw::toString(omw::uint128_t(0, 0xFFFFFFFFFFFFFFFF)) == "18446744073709551615");
+    CHECK(omw::toString(omw::uint128_t(0x7FFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "170141183460469231731687303715884105727");
+    CHECK(omw::toString(omw::uint128_t(0x8000000000000000, 0)) == "170141183460469231731687303715884105728");
+    CHECK(omw::toString(omw::uint128_t(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)) == "340282366920938463463374607431768211455");
 
 
 
-    CHECK(omw::to_string(false) == "false");
-    CHECK(omw::to_string(true) == "true");
-    CHECK(omw::to_string(false, false) == "0");
-    CHECK(omw::to_string(false, true) == "false");
-    CHECK(omw::to_string(true, false) == "1");
-    CHECK(omw::to_string(true, true) == "true");
+    CHECK(omw::toString(false) == "false");
+    CHECK(omw::toString(true) == "true");
+    CHECK(omw::toString(false, false) == "0");
+    CHECK(omw::toString(false, true) == "false");
+    CHECK(omw::toString(true, false) == "1");
+    CHECK(omw::toString(true, true) == "true");
 
 
 
     std::pair<int, int> pair1(-1, 123);
-    CHECK(omw::to_string(pair1) == "-1;123");
+    CHECK(omw::toString(pair1) == "-1;123");
 
     std::pair<double, double> pair2(3.14159265, 123);
-    CHECK(omw::to_string(pair2, '/') == "3.141593/123.000000");
+    CHECK(omw::toString(pair2, '/') == "3.141593/123.000000");
 }
 
 TEST_CASE("string.h stob()")
@@ -640,10 +616,7 @@ TEST_CASE("string.h stoz()")
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("18446744073709551616"), std::out_of_range);
         TESTUTIL_TRYCATCH_CHECK(omw::stoz("340282366920938463463374607431768211455"), std::out_of_range);
     }
-    else
-    {
-        CHECK(false);
-    }
+    else { CHECK(false); }
 }
 
 TEST_CASE("string.h stoipair()")
@@ -671,7 +644,7 @@ TEST_CASE("string.h stodpair()")
 
     // TODO check max integer in double (9007199254740991 ?)
 
-    
+
 
     const auto maxStr = std::to_string(std::stod("1.7976931348623157e+308")); // abs(min) = abs(max) so only max is needed
 
@@ -864,56 +837,41 @@ TEST_CASE("string.h sepHexStr()")
 
     const char* h_p;
     std::string h_std;
-    omw::string h_omw;
 
     h_p = "0123ab45cd67ef89";
     h_std = h_p;
-    h_omw = h_p;
     CHECK(omw::sepHexStr(h_p) == r_sp);
     CHECK(omw::sepHexStr(h_std) == r_sp);
-    CHECK(omw::sepHexStr(h_omw) == r_sp);
     CHECK(omw::sepHexStr(h_p, '-') == r_hy);
     CHECK(omw::sepHexStr(h_std, '-') == r_hy);
-    CHECK(omw::sepHexStr(h_omw, '-') == r_hy);
 
     h_p = "123ab45cd67ef89";
     h_std = h_p;
-    h_omw = h_p;
     CHECK(omw::sepHexStr(h_p) == r_sp);
     CHECK(omw::sepHexStr(h_std) == r_sp);
-    CHECK(omw::sepHexStr(h_omw) == r_sp);
     CHECK(omw::sepHexStr(h_p, '-') == r_hy);
     CHECK(omw::sepHexStr(h_std, '-') == r_hy);
-    CHECK(omw::sepHexStr(h_omw, '-') == r_hy);
 
     h_p = "012*3ab45cd67ef*8*9";
     h_std = h_p;
-    h_omw = h_p;
     CHECK(omw::sepHexStr(h_p, '*', omw::toHexStr_defaultDelimiter) == r_sp);
     CHECK(omw::sepHexStr(h_std, '*', omw::toHexStr_defaultDelimiter) == r_sp);
-    CHECK(omw::sepHexStr(h_omw, '*', omw::toHexStr_defaultDelimiter) == r_sp);
     CHECK(omw::sepHexStr(h_p, '*', '-') == r_hy);
     CHECK(omw::sepHexStr(h_std, '*', '-') == r_hy);
-    CHECK(omw::sepHexStr(h_omw, '*', '-') == r_hy);
 
     const char* const rmChars = "*-o";
     h_p = "0-12*3ab45-cdo67ef*8*9";
     h_std = h_p;
-    h_omw = h_p;
     CHECK(omw::sepHexStr(h_p, rmChars, 3) == r_sp);
     CHECK(omw::sepHexStr(h_std, rmChars, 3) == r_sp);
-    CHECK(omw::sepHexStr(h_omw, rmChars, 3) == r_sp);
     CHECK(omw::sepHexStr(h_p, rmChars, 3, '-') == r_hy);
     CHECK(omw::sepHexStr(h_std, rmChars, 3, '-') == r_hy);
-    CHECK(omw::sepHexStr(h_omw, rmChars, 3, '-') == r_hy);
 
     const std::vector<char> rmChrV(rmChars, rmChars + 3);
     CHECK(omw::sepHexStr(h_p, rmChrV) == r_sp);
     CHECK(omw::sepHexStr(h_std, rmChrV) == r_sp);
-    CHECK(omw::sepHexStr(h_omw, rmChrV) == r_sp);
     CHECK(omw::sepHexStr(h_p, rmChrV, '-') == r_hy);
     CHECK(omw::sepHexStr(h_std, rmChrV, '-') == r_hy);
-    CHECK(omw::sepHexStr(h_omw, rmChrV, '-') == r_hy);
 
     CHECK(omw::sepHexStr(h_p, "*-o/&%", 6) == r_sp);
     CHECK_FALSE(omw::sepHexStr(h_p, "*-oa", 4) == r_sp);
@@ -959,17 +917,12 @@ TEST_CASE("string.h rmNonHex()")
 TEST_CASE("string.h join()")
 {
     constexpr size_t count = 3;
-    const omw::string tokens[count] =
-    {
-        "asdf",
-        "456",
-        "%&/"
-    };
+    const std::string tokens[count] = { "asdf", "456", "%&/" };
 
-    std::vector<omw::string> t(tokens, tokens + count);
+    std::vector<std::string> t(tokens, tokens + count);
     CHECK(omw::join(t) == "asdf456%&/");
     CHECK(omw::join(t, '-') == "asdf-456-%&/");
-    CHECK(omw::join(std::vector<omw::string>()) == "");
+    CHECK(omw::join(std::vector<std::string>()) == "");
 }
 
 TEST_CASE("string.h String Vectors")
@@ -977,20 +930,15 @@ TEST_CASE("string.h String Vectors")
     constexpr size_t count = 3;
     const char* t_p[count] = { "asdf", "456", "%&/" };
     const std::string t_std[count] = { t_p[0], t_p[1], t_p[2] };
-    const omw::string t_omw[count] = { t_p[0], t_p[1], t_p[2] };
 
     const std::vector<std::string> v_std = { t_p[0], t_p[1], t_p[2] };
-    const std::vector<omw::string> v_omw = { t_p[0], t_p[1], t_p[2] };
+    const omw::StringVector v_omw = { t_p[0], t_p[1], t_p[2] };
 
     CHECK(omw::stringVector(t_p, count) == v_omw);
     CHECK(omw::stringVector(t_std, count) == v_omw);
-    CHECK(omw::stringVector(t_omw, count) == v_omw);
-    CHECK(omw::stringVector(v_std) == v_omw);
 
-    CHECK(omw::stdStringVector(t_p, count) == v_std);
-    CHECK(omw::stdStringVector(t_std, count) == v_std);
-    CHECK(omw::stdStringVector(t_omw, count) == v_std);
-    CHECK(omw::stdStringVector(v_omw) == v_std);
+    CHECK(omw::stringVector(t_p, count) == v_std);
+    CHECK(omw::stringVector(t_std, count) == v_std);
 }
 
 TEST_CASE("string.h Character Classification")
@@ -1016,12 +964,6 @@ TEST_CASE("string.h Character Classification")
         CHECK(omw::isUpper(c) == (0 != std::isupper(static_cast<unsigned char>(i))));
     }
 }
-
-
-
-
-
-
 
 
 
@@ -1102,12 +1044,7 @@ TEST_CASE("string.h isHex()")
         const char hexStr[] = { '5', 'a', chr, 0 };
         bool expectedResult;
 
-        if (((chr >= '0') && (chr <= '9')) ||
-            ((chr >= 'A') && (chr <= 'F')) ||
-            ((chr >= 'a') && (chr <= 'f')))
-        {
-            expectedResult = true;
-        }
+        if (((chr >= '0') && (chr <= '9')) || ((chr >= 'A') && (chr <= 'F')) || ((chr >= 'a') && (chr <= 'f'))) { expectedResult = true; }
         else expectedResult = false;
 
         CHECK(omw::isHex(chr) == expectedResult);
@@ -1172,7 +1109,7 @@ TEST_CASE("string.h peekNewLine()")
     CHECK(omw::peekNewLine(str + pos) == 1);
     CHECK(omw::peekNewLine(str + pos, end) == 1);
     pos = 14;
-    //CHECK(omw::peekNewLine(str + pos) == 0); // access violation
+    // CHECK(omw::peekNewLine(str + pos) == 0); // access violation
     CHECK(omw::peekNewLine(str + pos, end) == 0);
 
 
@@ -1196,7 +1133,7 @@ TEST_CASE("string.h peekNewLine()")
     CHECK(omw::peekNewLine(str + pos) == 1);
     CHECK(omw::peekNewLine(str + pos, end) == 1);
     pos = 15;
-    //CHECK(omw::peekNewLine(str + pos) == 1); // access violation
+    // CHECK(omw::peekNewLine(str + pos) == 1); // access violation
     CHECK(omw::peekNewLine(str + pos, end) == 1);
 
 
@@ -1220,7 +1157,7 @@ TEST_CASE("string.h peekNewLine()")
     CHECK(omw::peekNewLine(str + pos) == 1);
     CHECK(omw::peekNewLine(str + pos, end) == 1);
     pos = 14;
-    //CHECK(omw::peekNewLine(str + pos) == 0); // access violation
+    // CHECK(omw::peekNewLine(str + pos) == 0); // access violation
     CHECK(omw::peekNewLine(str + pos, end) == 0);
 
 
@@ -1243,7 +1180,7 @@ TEST_CASE("string.h peekNewLine()")
     CHECK(omw::peekNewLine(str + pos) == 1);
     CHECK(omw::peekNewLine(str + pos, end) == 1);
     pos = 15;
-    //CHECK(omw::peekNewLine(str + pos) == 1); // access violation
+    // CHECK(omw::peekNewLine(str + pos) == 1); // access violation
     CHECK(omw::peekNewLine(str + pos, end) == 1);
 
 
@@ -1276,7 +1213,7 @@ TEST_CASE("string.h peekNewLine()")
     CHECK(omw::peekNewLine(str + pos) == 1);
     CHECK(omw::peekNewLine(str + pos, end) == 1);
     pos = 17;
-    //CHECK(omw::peekNewLine(str + pos) == 0); // access violation
+    // CHECK(omw::peekNewLine(str + pos) == 0); // access violation
     CHECK(omw::peekNewLine(str + pos, end) == 0);
 
 
@@ -1312,7 +1249,7 @@ TEST_CASE("string.h peekNewLine()")
     CHECK(omw::peekNewLine(str + pos) == 2);
     CHECK(omw::peekNewLine(str + pos, end) == 2);
     pos = 19;
-    //CHECK(omw::peekNewLine(str + pos) == 1); // access violation
+    // CHECK(omw::peekNewLine(str + pos) == 1); // access violation
     CHECK(omw::peekNewLine(str + pos, end) == 1);
 }
 
@@ -1322,15 +1259,9 @@ TEST_CASE("string.h readString()")
 {
     // "The quick brown fox jumps over the lazy dog."
     constexpr size_t size = 44;
-    const uint8_t data[size] =
-    {
-        0x54, 0x68, 0x65, 0x20, 0x71, 0x75, 0x69, 0x63,
-        0x6b, 0x20, 0x62, 0x72, 0x6f, 0x77, 0x6e, 0x20,
-        0x66, 0x6f, 0x78, 0x20, 0x6a, 0x75, 0x6d, 0x70,
-        0x73, 0x20, 0x6f, 0x76, 0x65, 0x72, 0x20, 0x74,
-        0x68, 0x65, 0x20, 0x6c, 0x61, 0x7a, 0x79, 0x20,
-        0x64, 0x6f, 0x67, 0x2e
-    };
+    const uint8_t data[size] = { 0x54, 0x68, 0x65, 0x20, 0x71, 0x75, 0x69, 0x63, 0x6b, 0x20, 0x62, 0x72, 0x6f, 0x77, 0x6e,
+                                 0x20, 0x66, 0x6f, 0x78, 0x20, 0x6a, 0x75, 0x6d, 0x70, 0x73, 0x20, 0x6f, 0x76, 0x65, 0x72,
+                                 0x20, 0x74, 0x68, 0x65, 0x20, 0x6c, 0x61, 0x7a, 0x79, 0x20, 0x64, 0x6f, 0x67, 0x2e };
     const std::vector<uint8_t> vec(data, data + size);
 
     CHECK(omw::readString(data, 5) == "The q");
@@ -1345,7 +1276,7 @@ TEST_CASE("string.h readString()")
     CHECK(omw::readString(data + size, 0) == "");
     CHECK(omw::readString(vec, size, 0) == "");
 
-    TESTUTIL_TRYCATCH_OPEN_DECLARE_VAL(omw::string, "abcd");
+    TESTUTIL_TRYCATCH_OPEN_DECLARE_VAL(std::string, "abcd");
     TESTUTIL_TRYCATCH_CHECK(omw::readString(nullptr, 3), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::readString(vec, size - 1, 2), std::invalid_argument);
     TESTUTIL_TRYCATCH_CHECK(omw::readString(vec, size + 1, 0), std::invalid_argument);

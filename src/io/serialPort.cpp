@@ -31,12 +31,12 @@ namespace {
 #if defined(OMW_PLAT_WIN)
 bool isCom0com(const std::string& device)
 {
-    const omw::string tmpDevice = (omw::string(device)).toLower_asciiExt();
-    const std::vector<omw::string> info = omw::windows::queryDosDevice(device);
+    const std::string tmpDevice = (std::string(device)).toLower_asciiExt();
+    const std::vector<std::string> info = omw::windows::queryDosDevice(device);
 
     for (size_t i = 0; i < info.size(); ++i)
     {
-        const omw::string tmpInfo = info[i].toLower_asciiExt();
+        const std::string tmpInfo = info[i].toLower_asciiExt();
 
         if (tmpInfo.contains("com0com") && !tmpDevice.contains("com0com#port#")) { return true; }
     }
@@ -494,13 +494,13 @@ int omw::io::SerialPort::write(const uint8_t* data, size_t count, size_t* nBytes
 
 
 
-omw::vector<omw::string> omw::preview::getSerialPortList(bool onlyCOMx)
+omw::vector<std::string> omw::preview::getSerialPortList(bool onlyCOMx)
 {
-    std::vector<omw::string> serialPorts;
+    std::vector<std::string> serialPorts;
 
 #if OMW_PLAT_WIN
 
-    const std::vector<omw::string> devices = omw::windows::getAllDosDevices();
+    const std::vector<std::string> devices = omw::windows::getAllDosDevices();
 
     for (size_t i = 0; i < devices.size(); ++i)
     {
@@ -523,7 +523,7 @@ omw::vector<omw::string> omw::preview::getSerialPortList(bool onlyCOMx)
     return serialPorts;
 }
 
-void omw::preview::sortSerialPortList(std::vector<omw::string>& ports)
+void omw::preview::sortSerialPortList(std::vector<std::string>& ports)
 {
 #ifdef OMW_PLAT_WIN
 
@@ -532,17 +532,17 @@ void omw::preview::sortSerialPortList(std::vector<omw::string>& ports)
 #else
     const char* const comStr = "COM";
     std::vector<int> comPorts;
-    std::vector<omw::string> otherPorts;
+    std::vector<std::string> otherPorts;
 
     for (size_t i = 0; i < ports.size(); ++i)
     {
         try
         {
-            omw::string port = ports[i];
+            std::string port = ports[i];
 
             if (port.compare(0, 3, comStr) == 0)
             {
-                const omw::string intStr = port.substr(3);
+                const std::string intStr = port.substr(3);
 
                 if (omw::isUInteger(intStr)) { comPorts.push_back(std::stoi(intStr)); }
                 else { throw(-1); }
@@ -571,11 +571,4 @@ void omw::preview::sortSerialPortList(std::vector<omw::string>& ports)
     std::sort(ports.begin(), ports.end());
 
 #endif // OMW_PLAT_WIN
-}
-
-void omw::preview::sortSerialPortList(std::vector<std::string>& ports)
-{
-    omw::stringVector_t tmpPorts = omw::stringVector(ports);
-    omw::preview::sortSerialPortList(tmpPorts);
-    ports = omw::stdStringVector(tmpPorts);
 }

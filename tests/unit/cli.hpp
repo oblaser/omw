@@ -14,6 +14,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #include "testUtil.h"
 
 #include <omw/cli.h>
+#include <omw/string.h>
 
 
 
@@ -147,7 +148,7 @@ TEST_CASE("cli.h SGR parameters and arguments")
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::font9), "\033[19m") == 0);
 
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fraktur), "\033[20m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[21m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[21m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::boldFaintOff), "\033[22m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::boldOff), "\033[22m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::faintOff), "\033[22m") == 0);
@@ -156,7 +157,7 @@ TEST_CASE("cli.h SGR parameters and arguments")
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::frakturOff), "\033[23m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::underlineOff), "\033[24m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::blinkOff), "\033[25m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[26m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[26m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::reverseVideoOff), "\033[27m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::concealOff), "\033[28m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::reveal), "\033[28m") == 0);
@@ -171,7 +172,8 @@ TEST_CASE("cli.h SGR parameters and arguments")
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorCyan), "\033[36m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorWhite), "\033[37m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setForeColor, omw::ansiesc::csi::sgr::setColor_8bit, 40), "\033[38;5;40m") == 0);
-    CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setForeColor, omw::ansiesc::csi::sgr::setColor_rgb, 1, 2, 3), "\033[38;2;1;2;3m") == 0);
+    CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setForeColor, omw::ansiesc::csi::sgr::setColor_rgb, 1, 2, 3), "\033[38;2;1;2;3m") ==
+          0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultForeColor), "\033[39m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorDefault), "\033[39m") == 0);
 
@@ -184,11 +186,12 @@ TEST_CASE("cli.h SGR parameters and arguments")
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorCyan), "\033[46m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorWhite), "\033[47m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setBackColor, omw::ansiesc::csi::sgr::setColor_8bit, 36), "\033[48;5;36m") == 0);
-    CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setBackColor, omw::ansiesc::csi::sgr::setColor_rgb, 9, 8, 7), "\033[48;2;9;8;7m") == 0);
+    CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setBackColor, omw::ansiesc::csi::sgr::setColor_rgb, 9, 8, 7), "\033[48;2;9;8;7m") ==
+          0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultBackColor), "\033[49m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorDefault), "\033[49m") == 0);
 
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[50m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[50m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::framed), "\033[51m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::encircled), "\033[52m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::overlined), "\033[53m") == 0);
@@ -196,24 +199,25 @@ TEST_CASE("cli.h SGR parameters and arguments")
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::framedOff), "\033[54m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::encircledOff), "\033[54m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::overlinedOff), "\033[55m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[56m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[57m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[56m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[57m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setUnderlineColor, omw::ansiesc::csi::sgr::setColor_8bit, 60), "\033[58;5;60m") == 0);
-    CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setUnderlineColor, omw::ansiesc::csi::sgr::setColor_rgb, 5, 4, 2), "\033[58;2;5;4;2m") == 0);
+    CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::setUnderlineColor, omw::ansiesc::csi::sgr::setColor_rgb, 5, 4, 2),
+                     "\033[58;2;5;4;2m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::defaultUnderlineColor), "\033[59m") == 0);
 
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[70m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[71m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[72m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[70m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[71m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[72m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::super), "\033[73m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::sub), "\033[74m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::superSubOff), "\033[75m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::superOff), "\033[75m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::subOff), "\033[75m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[76m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[77m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[78m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[79m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[76m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[77m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[78m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[79m") == 0);
 
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightBlack), "\033[90m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightRed), "\033[91m") == 0);
@@ -223,8 +227,8 @@ TEST_CASE("cli.h SGR parameters and arguments")
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightMagenta), "\033[95m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightCyan), "\033[96m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::fgColorBrightWhite), "\033[97m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[98m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[99m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[98m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[99m") == 0);
 
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightBlack), "\033[100m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightRed), "\033[101m") == 0);
@@ -234,16 +238,13 @@ TEST_CASE("cli.h SGR parameters and arguments")
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightMagenta), "\033[105m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightCyan), "\033[106m") == 0);
     CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::bgColorBrightWhite), "\033[107m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[108m") == 0);
-    //CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[109m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[108m") == 0);
+    // CHECK(tu::strcmp(omw::ansiesc::csi::sgr::seq(omw::ansiesc::csi::sgr::), "\033[109m") == 0);
 }
 
 TEST_CASE("cli.h SGR")
 {
-    for (size_t i = 0; i < 10; ++i)
-    {
-        CHECK(tu::strcmp(omw::font(i).arg(), "\033[" + omw::to_string(omw::ansiesc::csi::sgr::font_base + i) + "m") == 0);
-    }
+    for (size_t i = 0; i < 10; ++i) { CHECK(tu::strcmp(omw::font(i).arg(), "\033[" + omw::toString(omw::ansiesc::csi::sgr::font_base + i) + "m") == 0); }
 }
 
 #ifdef OMW_PLAT_WIN

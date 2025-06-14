@@ -14,45 +14,33 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include "omw/string.h"
 
 
-#define OMWi_CONVERT_STRING_VECTOR(out_t, in_t, stringVector)                                                              \
-    out_t r;                                                                                                               \
-    r.reserve((out_t::size_type)stringVector.size());                                                                      \
-    for (in_t::size_type i = 0; i < stringVector.size(); ++i) { r.push_back(out_t::value_type(stringVector[i].c_str())); } \
-    return r
-
-#define OMWi_CREATE_STRING_VECTOR(out_t, strings, count)                               \
-    out_t r;                                                                           \
-    r.reserve(count);                                                                  \
-    for (size_t i = 0; i < count; ++i) { r.push_back(out_t::value_type(strings[i])); } \
-    return r
-
 
 namespace {
 
-template <typename T1, typename T2> omw::string pair_to_string(const std::pair<T1, T2>& value, char delimiter)
+template <typename T1, typename T2> std::string pair_to_string(const std::pair<T1, T2>& value, char delimiter)
 {
     return (std::to_string(value.first) + delimiter + std::to_string(value.second));
 }
 
 // T has to be an integer type
-template <typename T> T hexstointeger(const omw::string& str, const std::string& fnName)
+template <typename T> T hexstointeger(const std::string& str, const std::string& fnName)
 {
     const std::string exMsg_notHex(OMWi_DISPSTR(fnName + ": not a hex string"));
-    const omw::string hexDigits(omw::hexStrDigitsLower);
+    const std::string hexDigits(omw::hexStrDigitsLower);
 
-    const omw::string hexStr = str.toLower_ascii();
-    const omw::string::size_type hexStrLen = hexStr.length();
-    const omw::string::size_type maxLen = 2 * sizeof(T);
+    const std::string hexStr = omw::toLower_ascii(str);
+    const std::string::size_type hexStrLen = hexStr.length();
+    const std::string::size_type maxLen = 2 * sizeof(T);
 
     T r = 0;
 
     if ((hexStrLen <= maxLen) && (hexStrLen > 0))
     {
-        for (omw::string::size_type i = 0; i < hexStrLen; ++i)
+        for (std::string::size_type i = 0; i < hexStrLen; ++i)
         {
-            const omw::string::size_type digitIdx = hexDigits.find(hexStr[hexStrLen - i - 1]);
+            const std::string::size_type digitIdx = hexDigits.find(hexStr[hexStrLen - i - 1]);
 
-            if (digitIdx == omw::string::npos) throw std::invalid_argument(exMsg_notHex);
+            if (digitIdx == std::string::npos) throw std::invalid_argument(exMsg_notHex);
 
             T digitValue = (T)digitIdx;
             digitValue <<= (4 * (T)i);
@@ -68,13 +56,13 @@ template <typename T> T hexstointeger(const omw::string& str, const std::string&
     return r;
 }
 
-omw::Base_Int128 hexstointeger128(const omw::string& str, const std::string& fnName)
+omw::Base_Int128 hexstointeger128(const std::string& str, const std::string& fnName)
 {
     const std::string exMsg_notHex(OMWi_DISPSTR(fnName + ": not a hex string"));
 
-    const omw::string& hexStr = str;
-    const omw::string::size_type hexStrLen = hexStr.length();
-    const omw::string::size_type maxLen = 32;
+    const std::string& hexStr = str;
+    const std::string::size_type hexStrLen = hexStr.length();
+    const std::string::size_type maxLen = 32;
 
     omw::Base_Int128 r = 0;
 
@@ -88,8 +76,8 @@ omw::Base_Int128 hexstointeger128(const omw::string& str, const std::string& fnN
         }
         else
         {
-            const omw::string hiStr = hexStr.substr(0, hexStrLen - 16);
-            const omw::string loStr = hexStr.substr(hexStrLen - 16);
+            const std::string hiStr = hexStr.substr(0, hexStrLen - 16);
+            const std::string loStr = hexStr.substr(hexStrLen - 16);
             const uint64_t hi = ::hexstointeger<uint64_t>(hiStr, fnName);
             const uint64_t lo = ::hexstointeger<uint64_t>(loStr, fnName);
             r = omw::Base_Int128(hi, lo);
@@ -138,357 +126,122 @@ omw::Base_Int128 hexstointeger128(const omw::string& str, const std::string& fnN
 
 
 
+omw::StringVector omw::stringVector(const char* const * strings, omw::StringVector::size_type count)
+{
+    omw::StringVector r;
+    r.reserve(count);
+    for (omw::StringVector::size_type i = 0; i < count; ++i) { r.push_back(omw::StringVector::value_type(strings[i])); }
+    return r;
+}
+
+omw::StringVector omw::stringVector(const std::string* strings, omw::StringVector::size_type count) { return omw::StringVector(strings, strings + count); }
+
+
+
 /*!
  * \class omw::StringReplacePair
  *
  * Container that holds information for search and replace methods.
  *
- * Used by `omw::string::replaceFirst()` and `omw::string::replaceAll()`.
+ * Used by `omw::replaceFirst()` and `omw::replaceAll()`.
  */
 
 
 
-omw::stringVector_t omw::split(const std::string& str, char delimiter, omw::stringVector_t::size_type maxTokenCount)
+std::string& omw::reverse(std::string& str)
 {
-    omw::stringVector_t r(0);
+    const std::string::size_type n = str.size();
+    const std::string::size_type i_end = (n / 2);
 
-    if (maxTokenCount > 0)
+    for (std::string::size_type i = 0; i < i_end; ++i)
     {
-        const omw::stringVector_t::size_type n = maxTokenCount - 1;
-        std::string::size_type pos = 0;
-
-        while (pos < std::string::npos)
-        {
-            if (r.size() < n)
-            {
-                const std::string::size_type end = str.find(delimiter, pos);
-                r.push_back(str.substr(pos, end - pos));
-                pos = end;
-                if (pos < std::string::npos) ++pos;
-            }
-            else
-            {
-                r.push_back(str.substr(pos));
-                pos = std::string::npos;
-            }
-        }
+        const std::string::value_type tmp = str.at(i);
+        str.at(i) = str.at(n - 1 - i);
+        str.at(n - 1 - i) = tmp;
     }
 
-    return r;
+    return str;
 }
 
-omw::stringVector_t omw::splitLen(const std::string& str, std::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount)
+std::string omw::toReversed(const std::string& str)
 {
-    omw::stringVector_t r(0);
+    std::string res(str.length(), '\0');
 
-    if (maxTokenCount > 0)
+    for (std::string::size_type i = 0; i < str.length(); ++i) { res[i] = str[str.length() - 1 - i]; }
+
+    return res;
+}
+
+
+
+std::string& omw::lower_ascii(std::string& str)
+{
+    for (std::string::size_type i = 0; i < str.length(); ++i)
     {
-        const std::string::size_type len = str.length();
-        std::string::size_type pos = 0;
+        auto& c = str.at(i);
 
-        for (omw::stringVector_t::size_type iToken = 0; (iToken < maxTokenCount) && (pos < len); ++iToken)
-        {
-            r.push_back(str.substr(pos, tokenLength));
-            pos += tokenLength;
-        }
-
-        if (pos < len) { r.back() += str.substr(pos); }
+        if ((c >= 'A') && (c <= 'Z')) { c += 32; }
     }
 
-    return r;
+    return str;
 }
 
-
-
-/*!
- * \class omw::string
- *
- * A with `std::string` interchangeable class to add more functionalities.
- * This class does not override/implement any (virtual) methods of the base class and has no attributes. It's basically a `std::string` with some more methods.
- * However the two constructors which take the other string as a `char` pointer behave defined if a _null_ pointer is passed.
- */
-
-// bool omw::string::isValidUTF8(const omw::string& str)
-//{
-//     return str.isValidUTF8();
-// }
-
-omw::string::string()
-    : std::string()
-{}
-
-omw::string::string(omw::string::size_type count, char c)
-    : std::string(count, c)
-{}
-
-omw::string::string(const char* str)
-    : std::string(str ? str : "")
-{}
-
-omw::string::string(const char* str, omw::string::size_type count)
-    : std::string(str ? str : "", str ? count : 0)
-{}
-
-omw::string::string(const std::string& other)
-    : std::string(other)
-{}
-
-omw::string::string(const std::string& other, std::string::size_type pos, std::string::size_type count)
-    : std::string(other, pos, count)
-{}
-
-omw::string::string(const char* first, const char* last)
-    : std::string(first, last)
-{}
-
-//!
-//! Used if an implicit conversion to `std::string` is not possible (e.g. passing an `omw::string` to a function parameter of type `std::filesystem::path`).
-//!
-std::string& omw::string::std() { return *this; }
-
-const std::string& omw::string::std() const { return *this; }
-
-#ifdef OMWi_DOXYGEN_PREDEFINE
-/*!
- * \fn omw::string::contains(char ch) const
- * _until C++23_<br/>_since C++23_ Defined in std::string
- *
- * Defined in the header.
- */
-
-/*!
- * \fn omw::string::contains(const char* str) const
- * _until C++23_<br/>_since C++23_ Defined in std::string
- *
- * Defined in the header.
- */
-
-/*!
- * \fn omw::string::contains(const std::string& str) const
- * _until C++17_
- *
- * Defined in the header.
- */
-
-/*!
- * \fn omw::string::contains(std::string_view sv) const
- * _since C++17_<br/>_until C++23_<br/>_since C++23_ Defined in std::string
- *
- * Defined in the header.
- */
-#endif // OMWi_DOXYGEN_PREDEFINE
-
-//! @param search Substring to be replaced
-//! @param replace String for replacement
-//! @param startPos From where to start searching
-//! @return `*this`
-omw::string& omw::string::replaceFirst(const std::string& search, const std::string& replace, size_type startPos)
+std::string& omw::lower_asciiExt(std::string& str)
 {
-    omw::replaceFirst(*this, search, replace, startPos);
-    return *this;
-}
-
-//! @param pair Search and replace string pair
-//! @param startPos From where to start searching
-//! @return `*this`
-omw::string& omw::string::replaceFirst(const omw::StringReplacePair& pair, size_type startPos) { return replaceFirst(pair.search(), pair.replace(), startPos); }
-
-//! @param search Character to be replaced
-//! @param replace Character for replacement
-//! @param startPos From where to start searching
-//! @param [out] nReplacements Number of occurrences
-//! @return `*this`
-omw::string& omw::string::replaceAll(char search, char replace, size_type startPos, size_t* nReplacements)
-{
-    omw::replaceAll(*this, search, replace, startPos, nReplacements);
-    return *this;
-}
-
-//! @param search Character to be replaced
-//! @param replace String for replacement
-//! @param startPos From where to start searching
-//! @param [out] nReplacements Number of occurrences
-//! @return `*this`
-omw::string& omw::string::replaceAll(char search, const std::string& replace, size_type startPos, size_t* nReplacements)
-{
-    return replaceAll(omw::StringReplacePair(search, replace), startPos, nReplacements);
-}
-
-//! @param search Substring to be replaced
-//! @param replace Character for replacement
-//! @param startPos From where to start searching
-//! @param [out] nReplacements Number of occurrences
-//! @return `*this`
-omw::string& omw::string::replaceAll(const std::string& search, char replace, size_type startPos, size_t* nReplacements)
-{
-    return replaceAll(omw::StringReplacePair(search, replace), startPos, nReplacements);
-}
-
-//! @param search Substring to be replaced
-//! @param replace String for replacement
-//! @param startPos From where to start searching
-//! @param [out] nReplacements Number of occurrences
-//! @return `*this`
-omw::string& omw::string::replaceAll(const std::string& search, const std::string& replace, size_type startPos, size_t* nReplacements)
-{
-    omw::replaceAll(*this, search, replace, startPos, nReplacements);
-    return *this;
-}
-
-//! @param pair Search and replace string pair
-//! @param startPos From where to start searching
-//! @param [out] nReplacements Number of occurrences
-//! @return `*this`
-omw::string& omw::string::replaceAll(const omw::StringReplacePair& pair, size_type startPos, size_t* nReplacements)
-{
-    return replaceAll(pair.search(), pair.replace(), startPos, nReplacements);
-}
-
-//! @param pairs Search and replace string pair vector
-//! @param startPos From where to start searching
-//! @param [out] nReplacementsTotal Total number of occurrences
-//! @param [out] nReplacements Number of occurrences of specific replace pair
-//! @return `*this`
-omw::string& omw::string::replaceAll(const std::vector<omw::StringReplacePair>& pairs, size_type startPos, size_t* nReplacementsTotal,
-                                     std::vector<size_t>* nReplacements)
-{
-    omw::replaceAll(*this, pairs, startPos, nReplacementsTotal, nReplacements);
-    return *this;
-}
-
-//! @param pairs Pointer to a replace pair array
-//! @param count
-//! @param startPos From where to start searching
-//! @param [out] nReplacementsTotal Total number of occurrences
-//! @param [out] nReplacements Number of occurrences of specific replace pair
-//! @return `*this`
-omw::string& omw::string::replaceAll(const omw::StringReplacePair* pairs, size_t count, size_type startPos, size_t* nReplacementsTotal,
-                                     std::vector<size_t>* nReplacements)
-{
-    return replaceAll(std::vector<omw::StringReplacePair>(pairs, pairs + count), startPos, nReplacementsTotal, nReplacements);
-}
-
-//!
-//! Reverses (swaps) the content of the string.
-//!
-//! `abcd` will turn in to `dcba`, and `xyz` to `zyx`.
-//!
-omw::string& omw::string::reverse()
-{
-#if 0
-    omw::string tmp(*this);
-
-    const omw::string::size_type n = tmp.size();
-
-    for (omw::string::size_type i = 0; i < n; ++i)
-    {
-        this->at(i) = tmp.at(n - 1 - i);
-    }
-#else
-    const omw::string::size_type n = this->size();
-    const omw::string::size_type i_end = (n / 2);
-    omw::string::value_type tmp;
-
-    for (omw::string::size_type i = 0; i < i_end; ++i)
-    {
-        tmp = this->at(i);
-        this->at(i) = this->at(n - 1 - i);
-        this->at(n - 1 - i) = tmp;
-        ;
-    }
-#endif
-
-    return *this;
-}
-
-//!
-//! Returns the reversed string.
-//!
-//! See also `omw::string::reverse()`.
-//!
-omw::string omw::string::reversed() const
-{
-    omw::string r(*this);
-    r.reverse();
-    return r;
-}
-
-omw::stringVector_t omw::string::split(char delimiter, omw::stringVector_t::size_type maxTokenCount) const
-{
-    return omw::split(*this, delimiter, maxTokenCount);
-}
-
-omw::stringVector_t omw::string::splitLen(omw::string::size_type tokenLength, omw::stringVector_t::size_type maxTokenCount) const
-{
-    return omw::splitLen(*this, tokenLength, maxTokenCount);
-}
-
-omw::string& omw::string::lower_ascii()
-{
-    for (size_type i = 0; i < length(); ++i)
-    {
-        value_type& c = this->at(i);
-        if ((c >= 'A') && (c <= 'Z')) c += 32;
-    }
-
-    return *this;
-}
-
-omw::string& omw::string::lower_asciiExt()
-{
-    lower_ascii();
+    omw::lower_ascii(str);
 
     const omw::StringReplacePair rp[] = { omw::StringReplacePair(omw::UTF8CP_Auml, omw::UTF8CP_auml),
                                           omw::StringReplacePair(omw::UTF8CP_Ouml, omw::UTF8CP_ouml),
                                           omw::StringReplacePair(omw::UTF8CP_Uuml, omw::UTF8CP_uuml) };
 
-    return replaceAll(rp, (sizeof(rp) / sizeof(rp[0])));
+    return omw::replaceAll(str, rp, (sizeof(rp) / sizeof(rp[0])));
 }
 
-omw::string& omw::string::upper_ascii()
+std::string& omw::upper_ascii(std::string& str)
 {
-    for (size_type i = 0; i < length(); ++i)
+    for (std::string::size_type i = 0; i < str.length(); ++i)
     {
-        value_type& c = this->at(i);
+        auto& c = str.at(i);
+
         if ((c >= 'a') && (c <= 'z')) c -= 32;
     }
 
-    return *this;
+    return str;
 }
 
-omw::string& omw::string::upper_asciiExt()
+std::string& omw::upper_asciiExt(std::string& str)
 {
-    upper_ascii();
+    omw::upper_ascii(str);
 
     const omw::StringReplacePair rp[] = { omw::StringReplacePair(omw::UTF8CP_auml, omw::UTF8CP_Auml),
                                           omw::StringReplacePair(omw::UTF8CP_ouml, omw::UTF8CP_Ouml),
                                           omw::StringReplacePair(omw::UTF8CP_uuml, omw::UTF8CP_Uuml) };
 
-    return replaceAll(rp, (sizeof(rp) / sizeof(rp[0])));
+    return omw::replaceAll(str, rp, (sizeof(rp) / sizeof(rp[0])));
 }
 
-omw::string omw::string::toLower_ascii() const
+std::string omw::toLower_ascii(const std::string& str)
 {
-    omw::string s(this->c_str());
-    return s.lower_ascii();
+    std::string res = str;
+    return omw::lower_ascii(res);
 }
 
-omw::string omw::string::toLower_asciiExt() const
+std::string omw::toLower_asciiExt(const std::string& str)
 {
-    omw::string s(this->c_str());
-    return s.lower_asciiExt();
+    std::string res = str;
+    return omw::lower_asciiExt(res);
 }
 
-omw::string omw::string::toUpper_ascii() const
+std::string omw::toUpper_ascii(const std::string& str)
 {
-    omw::string s(this->c_str());
-    return s.upper_ascii();
+    std::string res = str;
+    return omw::upper_ascii(res);
 }
 
-omw::string omw::string::toUpper_asciiExt() const
+std::string omw::toUpper_asciiExt(const std::string& str)
 {
-    omw::string s(this->c_str());
-    return s.upper_asciiExt();
+    std::string res = str;
+    return omw::upper_asciiExt(res);
 }
 
 
@@ -636,39 +389,36 @@ std::string& omw::replaceAll(std::string& str, const omw::StringReplacePair* pai
 
 
 
-omw::string omw::to_string(bool value, bool asText)
+std::string omw::toString(bool value, bool asText)
 {
-    if (asText) return (value ? "true" : "false");
+    if (asText) { return (value ? "true" : "false"); }
+
     return (value ? "1" : "0");
 }
 
-omw::string omw::to_string(const omw::int128_t& value)
+std::string omw::toString(const omw::int128_t& value)
 {
     const omw::uint128_t tmp(value);
-    return (value.isNegative() ? "-" + omw::to_string(-tmp) : omw::to_string(tmp));
+    return (value.isNegative() ? "-" + omw::toString(-tmp) : omw::toString(tmp));
 }
 
-omw::string omw::to_string(const omw::uint128_t& value)
+std::string omw::toString(const omw::uint128_t& value)
 {
-    omw::string str = omw::toHexStr(omw::doubleDabble(value), 0);
+    const std::string str = omw::toHexStr(omw::doubleDabble(value), 0);
     size_t startPos = 0;
-    while ((str[startPos] == '0') && (startPos < (str.length() - 1))) ++startPos;
-    return omw::string(str, startPos);
+
+    while ((str[startPos] == '0') && (startPos < (str.length() - 1))) { ++startPos; }
+
+    return std::string(str, startPos);
 }
 
-omw::string omw::to_string(const std::pair<int32_t, int32_t>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
-
-omw::string omw::to_string(const std::pair<uint32_t, uint32_t>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
-
-omw::string omw::to_string(const std::pair<int64_t, int64_t>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
-
-omw::string omw::to_string(const std::pair<uint64_t, uint64_t>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
-
-omw::string omw::to_string(const std::pair<float, float>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
-
-omw::string omw::to_string(const std::pair<double, double>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
-
-omw::string omw::to_string(const std::pair<long double, long double>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
+std::string omw::toString(const std::pair<int32_t, int32_t>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
+std::string omw::toString(const std::pair<uint32_t, uint32_t>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
+std::string omw::toString(const std::pair<int64_t, int64_t>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
+std::string omw::toString(const std::pair<uint64_t, uint64_t>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
+std::string omw::toString(const std::pair<float, float>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
+std::string omw::toString(const std::pair<double, double>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
+std::string omw::toString(const std::pair<long double, long double>& value, char delimiter) { return ::pair_to_string(value, delimiter); }
 
 
 
@@ -684,13 +434,13 @@ omw::string omw::to_string(const std::pair<long double, long double>& value, cha
 //!
 bool omw::stob(const std::string& str)
 {
-    const omw::string tmpStr = str;
-    if (tmpStr.toLower_ascii() == "true") return true;
-    if (tmpStr.toLower_ascii() == "false") return false;
+    const std::string lowerStr = omw::toLower_ascii(str);
+    if (lowerStr == "true") { return true; }
+    if (lowerStr == "false") { return false; }
 
     const int boolInt = std::stoi(str);
-    if (boolInt == 1) return true;
-    if (boolInt == 0) return false;
+    if (boolInt == 1) { return true; }
+    if (boolInt == 0) { return false; }
 
     throw std::out_of_range("omw::stob");
 }
@@ -716,8 +466,8 @@ size_t omw::stoz(const std::string& str, size_t* pos, int base)
     //     r = std::stoull(str, pos, base);
     // #else
 
-    if (sizeof(size_t) == sizeof(unsigned long)) r = (size_t)std::stoul(str, pos, base);
-    else if (sizeof(size_t) == sizeof(unsigned long long)) r = (size_t)std::stoull(str, pos, base);
+    if (sizeof(size_t) == sizeof(unsigned long)) { r = (size_t)std::stoul(str, pos, base); }
+    else if (sizeof(size_t) == sizeof(unsigned long long)) { r = (size_t)std::stoull(str, pos, base); }
 
     static_assert(((sizeof(size_t) == sizeof(unsigned long)) || (sizeof(size_t) == sizeof(unsigned long long))), "weired platform!?");
     // else // some weired platform
@@ -730,8 +480,8 @@ size_t omw::stoz(const std::string& str, size_t* pos, int base)
     // }
 
     const char* p = str.c_str();
-    while (std::isspace(*p)) ++p;
-    if (*p == '-') throw std::out_of_range("omw::stoz");
+    while (std::isspace(*p)) { ++p; }
+    if (*p == '-') { throw std::out_of_range("omw::stoz"); }
 
     // #endif
 
@@ -754,13 +504,15 @@ std::pair<int32_t, int32_t> omw::stoipair(const std::string& str, char delimiter
     std::string::size_type sp = str.find(delimiter);
 
     if ((sp == 0) || (sp >= (str.length() - 1)) || (sp == std::string::npos))
+    {
         throw std::invalid_argument(OMWi_DISPSTR(fnName + ": invalid separator char pos"));
+    }
 
     const std::string first = str.substr(0, sp);
     const std::string second = str.substr(sp + 1);
 
-    if (!isInteger(first)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": first is not an integer"));
-    if (!isInteger(second)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": second is not an integer"));
+    if (!isInteger(first)) { throw std::invalid_argument(OMWi_DISPSTR(fnName + ": first is not an integer")); }
+    if (!isInteger(second)) { throw std::invalid_argument(OMWi_DISPSTR(fnName + ": second is not an integer")); }
 
     return std::pair<int32_t, int32_t>(std::stoi(first), std::stoi(second));
 }
@@ -772,13 +524,15 @@ std::pair<double, double> omw::stodpair(const std::string& str, char delimiter)
     std::string::size_type sp = str.find(delimiter);
 
     if ((sp == 0) || (sp >= (str.length() - 1)) || (sp == std::string::npos))
+    {
         throw std::invalid_argument(OMWi_DISPSTR(fnName + ": invalid separator char pos"));
+    }
 
     const std::string first = str.substr(0, sp);
     const std::string second = str.substr(sp + 1);
 
-    if (!isFloat(first)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": first is not a double"));
-    if (!isFloat(second)) throw std::invalid_argument(OMWi_DISPSTR(fnName + ": second is not a double"));
+    if (!isFloat(first)) { throw std::invalid_argument(OMWi_DISPSTR(fnName + ": first is not a double")); }
+    if (!isFloat(second)) { throw std::invalid_argument(OMWi_DISPSTR(fnName + ": second is not a double")); }
 
     return std::pair<double, double>(std::stod(first), std::stod(second));
 }
@@ -795,70 +549,51 @@ std::pair<double, double> omw::stodpair(const std::string& str, char delimiter)
 
 
 
-omw::string omw::toHexStr(int8_t value) { return omw::toHexStr((uint8_t)value); }
-
-omw::string omw::toHexStr(uint8_t value)
+std::string omw::toHexStr(int8_t value) { return omw::toHexStr((uint8_t)value); }
+std::string omw::toHexStr(uint8_t value)
 {
     const char r[] = { omw::hexStrDigits[(value >> 4) & 0x0F], omw::hexStrDigits[value & 0x0F], 0 };
     return r;
 }
-
-omw::string omw::toHexStr(int16_t value) { return toHexStr((uint16_t)value); }
-
-omw::string omw::toHexStr(uint16_t value) { return toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value); }
-
-omw::string omw::toHexStr(int32_t value) { return toHexStr((uint32_t)value); }
-
-omw::string omw::toHexStr(uint32_t value)
+std::string omw::toHexStr(int16_t value) { return toHexStr((uint16_t)value); }
+std::string omw::toHexStr(uint16_t value) { return toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value); }
+std::string omw::toHexStr(int32_t value) { return toHexStr((uint32_t)value); }
+std::string omw::toHexStr(uint32_t value)
 {
     return toHexStr((uint8_t)(value >> 24)) + toHexStr((uint8_t)(value >> 16)) + toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value);
 }
-
-omw::string omw::toHexStr(int64_t value) { return toHexStr((uint64_t)value); }
-
-omw::string omw::toHexStr(uint64_t value)
+std::string omw::toHexStr(int64_t value) { return toHexStr((uint64_t)value); }
+std::string omw::toHexStr(uint64_t value)
 {
     return toHexStr((uint8_t)(value >> 56)) + toHexStr((uint8_t)(value >> 48)) + toHexStr((uint8_t)(value >> 40)) + toHexStr((uint8_t)(value >> 32)) +
            toHexStr((uint8_t)(value >> 24)) + toHexStr((uint8_t)(value >> 16)) + toHexStr((uint8_t)(value >> 8)) + toHexStr((uint8_t)value);
 }
-
-omw::string omw::toHexStr(const omw::Base_Int128& value) { return omw::toHexStr(value.hi()) + omw::toHexStr(value.lo()); }
-
-omw::string omw::toHexStr(int16_t value, char delimiter) { return toHexStr((uint16_t)value, delimiter); }
-
-omw::string omw::toHexStr(uint16_t value, char delimiter) { return toHexStr((uint8_t)(value >> 8)) + delimiter + toHexStr((uint8_t)value); }
-
-omw::string omw::toHexStr(int32_t value, char delimiter) { return toHexStr((uint32_t)value, delimiter); }
-
-omw::string omw::toHexStr(uint32_t value, char delimiter)
+std::string omw::toHexStr(const omw::Base_Int128& value) { return omw::toHexStr(value.hi()) + omw::toHexStr(value.lo()); }
+std::string omw::toHexStr(int16_t value, char delimiter) { return toHexStr((uint16_t)value, delimiter); }
+std::string omw::toHexStr(uint16_t value, char delimiter) { return toHexStr((uint8_t)(value >> 8)) + delimiter + toHexStr((uint8_t)value); }
+std::string omw::toHexStr(int32_t value, char delimiter) { return toHexStr((uint32_t)value, delimiter); }
+std::string omw::toHexStr(uint32_t value, char delimiter)
 {
     return toHexStr((uint8_t)(value >> 24)) + delimiter + toHexStr((uint8_t)(value >> 16)) + delimiter + toHexStr((uint8_t)(value >> 8)) + delimiter +
            toHexStr((uint8_t)value);
 }
-
-omw::string omw::toHexStr(int64_t value, char delimiter) { return toHexStr((uint64_t)value, delimiter); }
-
-omw::string omw::toHexStr(uint64_t value, char delimiter)
+std::string omw::toHexStr(int64_t value, char delimiter) { return toHexStr((uint64_t)value, delimiter); }
+std::string omw::toHexStr(uint64_t value, char delimiter)
 {
     return toHexStr((uint8_t)(value >> 56)) + delimiter + toHexStr((uint8_t)(value >> 48)) + delimiter + toHexStr((uint8_t)(value >> 40)) + delimiter +
            toHexStr((uint8_t)(value >> 32)) + delimiter + toHexStr((uint8_t)(value >> 24)) + delimiter + toHexStr((uint8_t)(value >> 16)) + delimiter +
            toHexStr((uint8_t)(value >> 8)) + delimiter + toHexStr((uint8_t)value);
 }
-
-omw::string omw::toHexStr(const omw::Base_Int128& value, char delimiter)
+std::string omw::toHexStr(const omw::Base_Int128& value, char delimiter)
 {
     return omw::toHexStr(value.hi(), delimiter) + delimiter + omw::toHexStr(value.lo(), delimiter);
 }
-
-omw::string omw::toHexStr(const std::vector<char>& data, char delimiter) { return toHexStr(data.data(), data.size(), delimiter); }
-
-omw::string omw::toHexStr(const std::vector<uint8_t>& data, char delimiter) { return toHexStr(data.data(), data.size(), delimiter); }
-
-omw::string omw::toHexStr(const char* data, size_t count, char delimiter) { return toHexStr((const uint8_t*)data, count, delimiter); }
-
-omw::string omw::toHexStr(const uint8_t* data, size_t count, char delimiter)
+std::string omw::toHexStr(const std::vector<char>& data, char delimiter) { return toHexStr(data.data(), data.size(), delimiter); }
+std::string omw::toHexStr(const std::vector<uint8_t>& data, char delimiter) { return toHexStr(data.data(), data.size(), delimiter); }
+std::string omw::toHexStr(const char* data, size_t count, char delimiter) { return toHexStr((const uint8_t*)data, count, delimiter); }
+std::string omw::toHexStr(const uint8_t* data, size_t count, char delimiter)
 {
-    omw::string str;
+    std::string str;
 
     for (size_t i = 0; i < count; ++i)
     {
@@ -937,7 +672,7 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
     {
         const std::string fnName = "omw::hexstovector";
 
-        omw::string tmpStr;
+        std::string tmpStr;
 
         if (delimiter == 0)
         {
@@ -946,7 +681,7 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
         }
         else tmpStr = str;
 
-        const std::vector<omw::string> hexStrings = tmpStr.split(delimiter);
+        const std::vector<std::string> hexStrings = omw::split(tmpStr, delimiter);
 
         r.resize(hexStrings.size(), 0);
         for (size_t i = 0; i < hexStrings.size(); ++i)
@@ -963,7 +698,7 @@ std::vector<uint8_t> omw::hexstovector(const std::string& str, char delimiter)
 //!
 //! Same as `omw::sepHexStr(const std::string&, char)` with `omw::toHexStr_defaultdelimiter`.
 //!
-omw::string omw::sepHexStr(const std::string& str) { return omw::sepHexStr(str, omw::toHexStr_defaultDelimiter); }
+std::string omw::sepHexStr(const std::string& str) { return omw::sepHexStr(str, omw::toHexStr_defaultDelimiter); }
 
 //!
 //! Separates a concatonated hex string by adding a delimiter between the bytes.
@@ -976,36 +711,35 @@ omw::string omw::sepHexStr(const std::string& str) { return omw::sepHexStr(str, 
 //! 1223344 => 01-22-33-44
 //! ```
 //!
-omw::string omw::sepHexStr(const std::string& str, char delimiter)
+std::string omw::sepHexStr(const std::string& str, char delimiter)
 {
-    omw::string tmp(str);
-    if (tmp.length() & 0x01) tmp = '0' + tmp;
-    return omw::join(tmp.splitLen(2), delimiter);
+    std::string tmp(str);
+    if (tmp.length() & 0x01) { tmp = '0' + tmp; }
+    return omw::join(omw::splitLen(tmp, 2), delimiter);
 }
 
 //!
 //! Removes all `rmChar` from the string and returns `omw::sepHexStr(const std::string&, char)`.
 //!
-omw::string omw::sepHexStr(const std::string& str, char rmChar, char delimiter)
+std::string omw::sepHexStr(const std::string& str, char rmChar, char delimiter)
 {
-    omw::string hexstr = str;
-    hexstr.replaceAll(omw::StringReplacePair(rmChar, ""));
-
+    std::string hexstr = str;
+    omw::replaceAll(hexstr, omw::StringReplacePair(rmChar, ""));
     return omw::sepHexStr(hexstr, delimiter);
 }
 
 //!
 //! Removes all characters pointed to by `rmChars` from the string and returns `omw::sepHexStr(const std::string&, char)`.
 //!
-omw::string omw::sepHexStr(const std::string& str, const char* rmChars, size_t count, char delimiter)
+std::string omw::sepHexStr(const std::string& str, const char* rmChars, size_t count, char delimiter)
 {
     std::vector<omw::StringReplacePair> replPairs;
     replPairs.reserve(count);
 
     for (size_t i = 0; i < count; ++i) { replPairs.push_back(omw::StringReplacePair(rmChars[i], "")); }
 
-    omw::string hexstr = str;
-    hexstr.replaceAll(replPairs);
+    std::string hexstr = str;
+    omw::replaceAll(hexstr, replPairs);
 
     return omw::sepHexStr(hexstr, delimiter);
 }
@@ -1013,7 +747,7 @@ omw::string omw::sepHexStr(const std::string& str, const char* rmChars, size_t c
 //!
 //! Removes all characters in `rmChars` from the string and returns `omw::sepHexStr(const std::string&, char)`.
 //!
-omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmChars, char delimiter)
+std::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmChars, char delimiter)
 {
     return omw::sepHexStr(str, rmChars.data(), rmChars.size(), delimiter);
 }
@@ -1059,9 +793,9 @@ omw::string omw::sepHexStr(const std::string& str, const std::vector<char>& rmCh
 //    return omw::sepHexStr(str, rmStrings.data(), rmStrings.size(), delimiter);
 //}
 
-omw::string omw::rmNonHex(const std::string& str)
+std::string omw::rmNonHex(const std::string& str)
 {
-    omw::string r = str;
+    std::string r = str;
     omw::rmNonHex(r);
     return r;
 }
@@ -1087,84 +821,76 @@ void omw::rmNonHex(std::string& str)
 
 
 
-omw::string omw::join(const omw::stringVector_t& strings)
+omw::StringVector omw::split(const std::string& str, char delimiter, omw::StringVector::size_type maxTokenCount)
 {
-    omw::string r = "";
+    omw::StringVector r(0);
 
-    for (omw::stringVector_t::size_type i = 0; i < strings.size(); ++i) { r += strings[i]; }
-
-    return r;
-}
-
-omw::string omw::join(const omw::stringVector_t& strings, char delimiter)
-{
-    omw::string r = "";
-
-    for (omw::stringVector_t::size_type i = 0; i < strings.size(); ++i)
+    if (maxTokenCount > 0)
     {
-        if (i > 0) r += omw::string(1, delimiter);
-        r += strings[i];
+        const omw::StringVector::size_type n = maxTokenCount - 1;
+        std::string::size_type pos = 0;
+
+        while (pos < std::string::npos)
+        {
+            if (r.size() < n)
+            {
+                const std::string::size_type end = str.find(delimiter, pos);
+                r.push_back(str.substr(pos, end - pos));
+                pos = end;
+                if (pos < std::string::npos) ++pos;
+            }
+            else
+            {
+                r.push_back(str.substr(pos));
+                pos = std::string::npos;
+            }
+        }
     }
 
     return r;
 }
 
-
-
-omw::stringVector_t omw::stringVector(const char* const * strings, size_t count)
+omw::StringVector omw::splitLen(const std::string& str, std::string::size_type tokenLength, omw::StringVector::size_type maxTokenCount)
 {
-    // return ::stringVector<omw::stringVector_t>(strings, count);
+    omw::StringVector r(0);
 
-    OMWi_CREATE_STRING_VECTOR(omw::stringVector_t, strings, count);
+    if (maxTokenCount > 0)
+    {
+        const std::string::size_type len = str.length();
+        std::string::size_type pos = 0;
+
+        for (omw::StringVector::size_type iToken = 0; (iToken < maxTokenCount) && (pos < len); ++iToken)
+        {
+            r.push_back(str.substr(pos, tokenLength));
+            pos += tokenLength;
+        }
+
+        if (pos < len) { r.back() += str.substr(pos); }
+    }
+
+    return r;
 }
 
-omw::stringVector_t omw::stringVector(const std::string* strings, size_t count)
+std::string omw::join(const omw::StringVector& strings)
 {
-    std::vector<const char*> v;
-    v.reserve(count);
+    std::string r = "";
 
-    for (size_t i = 0; i < count; ++i) { v.push_back((strings + i)->c_str()); }
+    for (omw::StringVector::size_type i = 0; i < strings.size(); ++i) { r += strings[i]; }
 
-    // return ::stringVector<omw::stringVector_t>(v.data(), count);
-
-    OMWi_CREATE_STRING_VECTOR(omw::stringVector_t, v.data(), count);
+    return r;
 }
 
-omw::stringVector_t omw::stringVector(const omw::string* strings, size_t count) { return omw::stringVector_t(strings, strings + count); }
-
-omw::stringVector_t omw::stringVector(const omw::stdStringVector_t& strvec)
+std::string omw::join(const omw::StringVector& strings, char delimiter)
 {
-    // return convertStringVector<omw::stringVector_t, omw::stdStringVector_t>(strvec);
+    std::string r = "";
 
-    OMWi_CONVERT_STRING_VECTOR(omw::stringVector_t, omw::stdStringVector_t, strvec);
-}
+    for (omw::StringVector::size_type i = 0; i < strings.size(); ++i)
+    {
+        if (i > 0) r += std::string(1, delimiter);
+        r += strings[i];
+    }
 
-omw::stdStringVector_t omw::stdStringVector(const char* const * strings, size_t count)
-{
-    // return ::stringVector<omw::stdStringVector_t>(strings, count);
-
-    OMWi_CREATE_STRING_VECTOR(omw::stdStringVector_t, strings, count);
-}
-
-omw::stdStringVector_t omw::stdStringVector(const std::string* strings, size_t count) { return omw::stdStringVector_t(strings, strings + count); }
-
-omw::stdStringVector_t omw::stdStringVector(const omw::string* strings, size_t count)
-{
-    std::vector<const char*> v;
-    v.reserve(count);
-
-    for (size_t i = 0; i < count; ++i) { v.push_back((strings + i)->c_str()); }
-
-    // return ::stringVector<omw::stdStringVector_t>(v.data(), count);
-
-    OMWi_CREATE_STRING_VECTOR(omw::stdStringVector_t, v.data(), count);
-}
-
-omw::stdStringVector_t omw::stdStringVector(const omw::stringVector_t& strvec)
-{
-    // return convertStringVector<omw::stdStringVector_t, omw::stringVector_t>(strvec);
-
-    OMWi_CONVERT_STRING_VECTOR(omw::stdStringVector_t, omw::stringVector_t, strvec);
+    return r;
 }
 
 
@@ -1347,9 +1073,9 @@ size_t omw::peekNewLine(const char* p, const char* end)
 //! \b Exceptions
 //! - `std::invalid_argument` if the data pointer is _null_
 //!
-omw::string omw::readString(const uint8_t* data, size_t count)
+std::string omw::readString(const uint8_t* data, size_t count)
 {
-    omw::string str(count, '#');
+    std::string str(count, '#');
 
     if (data)
     {
@@ -1366,7 +1092,7 @@ omw::string omw::readString(const uint8_t* data, size_t count)
 //! \b Exceptions
 //! - `std::invalid_argument` if count is greater than `data.size() - pos` or if `pos` is greater than `data.size()`
 //!
-omw::string omw::readString(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos, std::vector<uint8_t>::size_type count)
+std::string omw::readString(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos, std::vector<uint8_t>::size_type count)
 {
     if (((data.size() - pos) < count) || (pos > data.size())) throw std::invalid_argument("omw::readString");
     return omw::readString(data.data() + pos, count);

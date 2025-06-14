@@ -15,6 +15,8 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 
+// clang-format off
+
 #define TESTUTIL_TRYCATCH_OPEN_DECLARE_VAL(valueType, initialValue) \
 {bool tu_trycatch_correctCatch = false;                         \
 const valueType tu_trycatch_initVal = initialValue;             \
@@ -65,13 +67,16 @@ REQUIRE(tu_trycatch_val == tu_trycatch_initVal)                                 
 
 #define TESTUTIL_TRYCATCH_SE_CLOSE() }
 
+// clang-format on
 
 
-namespace tu
-{
-    int strcmp(const omw::string& a, const char* b) { return std::strcmp(a.c_str(), b); }
-    int strcmp(const char* a, const omw::string& b) { return std::strcmp(a, b.c_str()); }
-    int strcmp(const omw::string& a, const omw::string& b) { return std::strcmp(a.c_str(), b.c_str()); }
-}
+
+namespace tu {
+
+int strcmp(const std::string& a, const char* b) { return std::strcmp(a.c_str(), b); }
+int strcmp(const char* a, const std::string& b) { return std::strcmp(a, b.c_str()); }
+int strcmp(const std::string& a, const std::string& b) { return std::strcmp(a.c_str(), b.c_str()); }
+
+} // namespace tu
 
 #endif // IG_TESTUTIL_H

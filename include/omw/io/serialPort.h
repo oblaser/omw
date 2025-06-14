@@ -13,7 +13,6 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include <vector>
 
 #include "../../omw/defs.h"
-#include "../../omw/string.h"
 #include "../../omw/vector.h"
 
 
@@ -88,9 +87,8 @@ namespace preview {
     /**
      * `onlyCOMx` has an effect only on Windows systems.
      */
-    omw::vector<omw::string> getSerialPortList(bool onlyCOMx = true);
+    omw::vector<std::string> getSerialPortList(bool onlyCOMx = true);
 
-    void sortSerialPortList(std::vector<omw::string>& ports);
     void sortSerialPortList(std::vector<std::string>& ports);
 
     /*! @} */

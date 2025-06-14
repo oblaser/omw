@@ -19,51 +19,16 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 TEST_CASE("serialPort.h sortSerialPortList()")
 {
-    std::vector<omw::string> ports =
-    {
-        "COM23",
-        "vCOM43",
-        "vCOM4",
-        "AVC2",
-        "COM4",
-        "vCOM6",
-        "COM1",
-        "com0com3"
-    };
-    std::vector<std::string> stdPorts = omw::stdStringVector(ports);
+    std::vector<std::string> ports = { "COM23", "vCOM43", "vCOM4", "AVC2", "COM4", "vCOM6", "COM1", "com0com3" };
 
 #ifdef OMW_PLAT_WIN
-    const std::vector<omw::string> expectedResult =
-    {
-        "COM1",
-        "COM4",
-        "COM23",
-        "AVC2",
-        "com0com3",
-        "vCOM4",
-        "vCOM43",
-        "vCOM6"
-    };
-#else // OMW_PLAT_WIN
-    const std::vector<omw::string> expectedResult =
-    {
-        "AVC2",
-        "COM1",
-        "COM23",
-        "COM4",
-        "com0com3",
-        "vCOM4",
-        "vCOM43",
-        "vCOM6"
-    };
+    const std::vector<std::string> expectedResult = { "COM1", "COM4", "COM23", "AVC2", "com0com3", "vCOM4", "vCOM43", "vCOM6" };
+#else  // OMW_PLAT_WIN
+    const std::vector<std::string> expectedResult = { "AVC2", "COM1", "COM23", "COM4", "com0com3", "vCOM4", "vCOM43", "vCOM6" };
 #endif // OMW_PLAT_WIN
-    const std::vector<std::string> stdExpectedResult = omw::stdStringVector(expectedResult);
 
     omw::preview::sortSerialPortList(ports);
     CHECK(ports == expectedResult);
-
-    omw::preview::sortSerialPortList(stdPorts);
-    CHECK(stdPorts == stdExpectedResult);
 }
 
 

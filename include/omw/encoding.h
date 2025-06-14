@@ -13,7 +13,6 @@ copyright       MIT - Copyright (c) 2024 Oliver Blaser
 
 #include "../omw/defs.h"
 #include "../omw/int.h"
-#include "../omw/string.h"
 
 
 namespace omw {
@@ -57,8 +56,8 @@ namespace bigEndian {
 
 namespace url {
 
-    // omw::string decode();
-    omw::string encode(const std::string& str);
+    // std::string decode();
+    std::string encode(const std::string& str);
 
 }
 

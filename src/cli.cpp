@@ -8,6 +8,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include "omw/cli.h"
 #include "omw/defs.h"
+#include "omw/string.h"
 
 
 #ifdef OMW_PLAT_WIN
@@ -54,10 +55,10 @@ void OMWi_set_ansiescSeqBuildEn()
 //!
 //! As the root sequence builder, it takes care of the \ref ns_omw_ansiesc_section_ansiEscMode.
 //!
-omw::string omw::ansiesc::seq(char type, const omw::string& argstr)
+std::string omw::ansiesc::seq(char type, const std::string& argstr)
 {
-    if (omw::ansiesc::isEnabled()) { return (omw::string(1, omw::ansiesc::escChar) + type + argstr); }
-    else return omw::string();
+    if (omw::ansiesc::isEnabled()) { return (std::string(1, omw::ansiesc::escChar) + type + argstr); }
+    else { return std::string(); }
 }
 
 //! @param mode One of `omw::ansiesc::MODE`
@@ -101,14 +102,14 @@ bool omw::ansiesc::isEnabled() { return OMWi_ansiescSeqBuildEn; }
 //!
 //! Builds a CSI escape sequence: <b><tt>ESC [ \<argstr\> \<ctrlSeqType\></tt></b>.
 //!
-omw::string omw::ansiesc::csi::seq(char ctrlSeqType, const omw::string& argstr) { return omw::ansiesc::seq(omw::ansiesc::CSI, argstr + ctrlSeqType); }
+std::string omw::ansiesc::csi::seq(char ctrlSeqType, const std::string& argstr) { return omw::ansiesc::seq(omw::ansiesc::CSI, argstr + ctrlSeqType); }
 
 //! @param ctrlSeqType Control sequence type
 //! @param arg The argument of the sequence
 //!
 //! Builds a CSI escape sequence with one argument: <b><tt>ESC [ \<arg\> \<ctrlSeqType\></tt></b>.
 //!
-omw::string omw::ansiesc::csi::seq(char ctrlSeqType, int arg) { return omw::ansiesc::csi::seq(ctrlSeqType, omw::to_string(arg)); }
+std::string omw::ansiesc::csi::seq(char ctrlSeqType, int arg) { return omw::ansiesc::csi::seq(ctrlSeqType, omw::toString(arg)); }
 
 //! @param ctrlSeqType Control sequence type
 //! @param arg0 The 1st argument of the sequence
@@ -116,9 +117,9 @@ omw::string omw::ansiesc::csi::seq(char ctrlSeqType, int arg) { return omw::ansi
 //!
 //! Builds a CSI escape sequence with two argument: <b><tt>ESC [ \<arg0\> ; \<arg1\> \<ctrlSeqType\></tt></b>.
 //!
-omw::string omw::ansiesc::csi::seq(char ctrlSeqType, int arg0, int arg1)
+std::string omw::ansiesc::csi::seq(char ctrlSeqType, int arg0, int arg1)
 {
-    return omw::ansiesc::csi::seq(ctrlSeqType, omw::to_string(arg0) + omw::ansiesc::argDelimiter + omw::to_string(arg1));
+    return omw::ansiesc::csi::seq(ctrlSeqType, omw::toString(arg0) + omw::ansiesc::argDelimiter + omw::toString(arg1));
 }
 
 
@@ -129,13 +130,13 @@ omw::string omw::ansiesc::csi::seq(char ctrlSeqType, int arg0, int arg1)
 //!
 //! An empty argument string is allowed, it is treated as the reset sequence by the terminal.
 //!
-omw::string omw::ansiesc::csi::sgr::seq(const omw::string& argstr) { return omw::ansiesc::csi::seq(omw::ansiesc::csi::SGR, argstr); }
+std::string omw::ansiesc::csi::sgr::seq(const std::string& argstr) { return omw::ansiesc::csi::seq(omw::ansiesc::csi::SGR, argstr); }
 
 //! @param param The SGR parameter
 //!
 //! Builds a SGR escape sequence: <b><tt>ESC [ \<param\> m</tt></b>.
 //!
-omw::string omw::ansiesc::csi::sgr::seq(int param) { return omw::ansiesc::csi::sgr::seq(omw::to_string(param)); }
+std::string omw::ansiesc::csi::sgr::seq(int param) { return omw::ansiesc::csi::sgr::seq(omw::toString(param)); }
 
 //! @param param The SGR parameter
 //! @param arg0 The 1st argument of the sequence
@@ -143,10 +144,10 @@ omw::string omw::ansiesc::csi::sgr::seq(int param) { return omw::ansiesc::csi::s
 //!
 //! Builds a SGR escape sequence: <b><tt>ESC [ \<param\> ; \<arg0\> ; \<arg1\> m</tt></b>.
 //!
-omw::string omw::ansiesc::csi::sgr::seq(int param, int arg0, int arg1)
+std::string omw::ansiesc::csi::sgr::seq(int param, int arg0, int arg1)
 {
-    return omw::ansiesc::csi::sgr::seq(omw::to_string(param) + omw::ansiesc::argDelimiter + omw::to_string(arg0) + omw::ansiesc::argDelimiter +
-                                       omw::to_string(arg1));
+    return omw::ansiesc::csi::sgr::seq(omw::toString(param) + omw::ansiesc::argDelimiter + omw::toString(arg0) + omw::ansiesc::argDelimiter +
+                                       omw::toString(arg1));
 }
 
 //! @param param The SGR parameter
@@ -157,11 +158,11 @@ omw::string omw::ansiesc::csi::sgr::seq(int param, int arg0, int arg1)
 //!
 //! Builds a SGR escape sequence: <b><tt>ESC [ \<param\> ; \<arg0\> ; \<arg1\> ; \<arg2\> ; \<arg3\> m</tt></b>.
 //!
-omw::string omw::ansiesc::csi::sgr::seq(int param, int arg0, int arg1, int arg2, int arg3)
+std::string omw::ansiesc::csi::sgr::seq(int param, int arg0, int arg1, int arg2, int arg3)
 {
-    return omw::ansiesc::csi::sgr::seq(omw::to_string(param) + omw::ansiesc::argDelimiter + omw::to_string(arg0) + omw::ansiesc::argDelimiter +
-                                       omw::to_string(arg1) + omw::ansiesc::argDelimiter + omw::to_string(arg2) + omw::ansiesc::argDelimiter +
-                                       omw::to_string(arg3));
+    return omw::ansiesc::csi::sgr::seq(omw::toString(param) + omw::ansiesc::argDelimiter + omw::toString(arg0) + omw::ansiesc::argDelimiter +
+                                       omw::toString(arg1) + omw::ansiesc::argDelimiter + omw::toString(arg2) + omw::ansiesc::argDelimiter +
+                                       omw::toString(arg3));
 }
 
 //! @param argv Parameters and arguments of the sequence
@@ -178,16 +179,16 @@ omw::string omw::ansiesc::csi::sgr::seq(int param, int arg0, int arg1, int arg2,
 //! std::cout << omw::ansiesc::csi::sgr::seq(sgr2, 3) << "this text will be black on bright cyan" << omw::normal << std::endl;
 //! ```
 //!
-omw::string omw::ansiesc::csi::sgr::seq(const int* argv, size_t argc)
+std::string omw::ansiesc::csi::sgr::seq(const int* argv, size_t argc)
 {
-    omw::string args = "";
+    std::string args = "";
 
     if (argv && argc)
     {
         for (size_t i = 0; i < argc; ++i)
         {
             if (i > 0) args += omw::ansiesc::argDelimiter;
-            args += omw::to_string(argv[i]);
+            args += omw::toString(argv[i]);
         }
     }
 
@@ -200,7 +201,7 @@ omw::string omw::ansiesc::csi::sgr::seq(const int* argv, size_t argc)
 //!
 //! See seq(const int*, size_t).
 //!
-omw::string omw::ansiesc::csi::sgr::seq(const std::vector<int>& args) { return omw::ansiesc::csi::sgr::seq(args.data(), args.size()); }
+std::string omw::ansiesc::csi::sgr::seq(const std::vector<int>& args) { return omw::ansiesc::csi::sgr::seq(args.data(), args.size()); }
 
 
 

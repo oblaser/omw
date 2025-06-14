@@ -24,7 +24,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 class DoubleDabbleTestRecord
 {
 public:
-    DoubleDabbleTestRecord(const omw::string& expectedResult, uint64_t valueH, uint64_t valueL)
+    DoubleDabbleTestRecord(const std::string& expectedResult, uint64_t valueH, uint64_t valueL)
         : value128(valueH, valueL), value64H(valueH), value64L(valueL), expResult(expectedResult)
     {
         value32H = (uint32_t)((valueH >> 32) & (uint64_t)0xFFFFFFFF);
@@ -42,19 +42,18 @@ public:
     uint64_t value64H;
     uint64_t value64L;
 
-    omw::string expResult;
+    std::string expResult;
 };
 
 TEST_CASE("algorithm.h doubleDabble() 128 bit")
 {
     // https://www.convzone.com/hex-to-decimal/
 
-    std::vector<DoubleDabbleTestRecord> testRecords =
-    {
+    std::vector<DoubleDabbleTestRecord> testRecords = {
         DoubleDabbleTestRecord("0000000000000000000000000000000000000001", 0x00, 0x01),
         DoubleDabbleTestRecord("0000000000000000000009223372036854775808", 0x00, INT64_MIN),
-        DoubleDabbleTestRecord("00000000000000000000000000000000000" + omw::to_string(0xFFFF), 0x00, 0xFFFF),
-        DoubleDabbleTestRecord("000000000000000000000000000000" + omw::to_string(INT32_MAX), 0x00, INT32_MAX),
+        DoubleDabbleTestRecord("00000000000000000000000000000000000" + omw::toString(0xFFFF), 0x00, 0xFFFF),
+        DoubleDabbleTestRecord("000000000000000000000000000000" + omw::toString(INT32_MAX), 0x00, INT32_MAX),
         DoubleDabbleTestRecord("0000000000000001208925819614629174706175", 0xFFFF, 0xFFFFFFFFFFFFFFFF),
         DoubleDabbleTestRecord("0000000000000000604462909807314587354597", 0x8000, 0x00000000000005E5),
         DoubleDabbleTestRecord("0340282366920938463463374607431768211455", 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF),
@@ -68,14 +67,12 @@ TEST_CASE("algorithm.h doubleDabble() 128 bit")
     {
         const DoubleDabbleTestRecord& tr = testRecords[i];
 
-        const omw::string ovrld_a = omw::toHexStr(omw::doubleDabble128(tr.value32H, tr.value32HM, tr.value32LM, tr.value32L), 0);
-        const omw::string ovrld_b = omw::toHexStr(omw::doubleDabble128(tr.value64H, tr.value64L), 0);
-        const omw::string ovrld_c = omw::toHexStr(omw::doubleDabble(tr.value128), 0);
+        const std::string ovrld_a = omw::toHexStr(omw::doubleDabble128(tr.value32H, tr.value32HM, tr.value32LM, tr.value32L), 0);
+        const std::string ovrld_b = omw::toHexStr(omw::doubleDabble128(tr.value64H, tr.value64L), 0);
+        const std::string ovrld_c = omw::toHexStr(omw::doubleDabble(tr.value128), 0);
 
         const bool resEqExpres = (ovrld_a == tr.expResult);
-        const bool allOverloadsEq = (
-            (ovrld_a == ovrld_b) &&
-            (ovrld_a == ovrld_c));
+        const bool allOverloadsEq = ((ovrld_a == ovrld_b) && (ovrld_a == ovrld_c));
 
         CHECK(ovrld_a == tr.expResult);
         CHECK(allOverloadsEq);
@@ -95,8 +92,12 @@ TEST_CASE("algorithm.h doubleDabble() 128 bit")
 class LevenshteinStrTestRecord
 {
 public:
-    LevenshteinStrTestRecord() : m_a(""), m_b("-"), m_r(-1) {}
-    LevenshteinStrTestRecord(const char* a, const char* b, size_t r) : m_a(a), m_b(b), m_r(r) {}
+    LevenshteinStrTestRecord()
+        : m_a(""), m_b("-"), m_r(-1)
+    {}
+    LevenshteinStrTestRecord(const char* a, const char* b, size_t r)
+        : m_a(a), m_b(b), m_r(r)
+    {}
 
     const char* a() const { return m_a; }
     const char* b() const { return m_b; }
@@ -113,12 +114,15 @@ private:
     size_t m_r;
 };
 
-template <typename T>
-class LevenshteinTestRecord
+template <typename T> class LevenshteinTestRecord
 {
 public:
-    LevenshteinTestRecord() : m_a(), m_b(), m_r(-1) {}
-    LevenshteinTestRecord(const std::vector<T>& a, const std::vector<T>& b, size_t r) : m_a(a), m_b(b), m_r(r) {}
+    LevenshteinTestRecord()
+        : m_a(), m_b(), m_r(-1)
+    {}
+    LevenshteinTestRecord(const std::vector<T>& a, const std::vector<T>& b, size_t r)
+        : m_a(a), m_b(b), m_r(r)
+    {}
 
     const std::vector<T>& a() const { return m_a; }
     const std::vector<T>& b() const { return m_b; }
@@ -147,30 +151,27 @@ TEST_CASE("algorithm.h levenshteinDistance() strings")
 {
     CHECK(omw::levenshteinDistance("kitten", 6, "sitting", 7) == 3);
     CHECK(omw::levenshteinDistance("kitten", "sitting") == 3);
-    
-    std::vector<LevenshteinStrTestRecord> testRecords =
-    {
-        LevenshteinStrTestRecord("Levenshtein", "Levenshtein", 0),
-        LevenshteinStrTestRecord("asdf", "asdf", 0),
-        LevenshteinStrTestRecord("", "", 0),
-        LevenshteinStrTestRecord("Lewenstein", "Levenshtein", 2),
-        LevenshteinStrTestRecord("kitten", "sitting", 3),
-        LevenshteinStrTestRecord("sitting", "kitten", 3),
-        LevenshteinStrTestRecord("Sunday", "Saturday", 3),
-        LevenshteinStrTestRecord("Meilenstein", "Levenshtein", 4),
-        LevenshteinStrTestRecord("Tier", "Tor", 2),
-        LevenshteinStrTestRecord("Fest", "Test", 1),
-        LevenshteinStrTestRecord("Apfel", "Pferd", 4),
-        LevenshteinStrTestRecord("apfel", "pferd", 3),
-        LevenshteinStrTestRecord("asdf", "qwertz", 6),
-        LevenshteinStrTestRecord("", "abcd", 4),
-        LevenshteinStrTestRecord("Abcd", "abcd", 1)
-    };
+
+    std::vector<LevenshteinStrTestRecord> testRecords = { LevenshteinStrTestRecord("Levenshtein", "Levenshtein", 0),
+                                                          LevenshteinStrTestRecord("asdf", "asdf", 0),
+                                                          LevenshteinStrTestRecord("", "", 0),
+                                                          LevenshteinStrTestRecord("Lewenstein", "Levenshtein", 2),
+                                                          LevenshteinStrTestRecord("kitten", "sitting", 3),
+                                                          LevenshteinStrTestRecord("sitting", "kitten", 3),
+                                                          LevenshteinStrTestRecord("Sunday", "Saturday", 3),
+                                                          LevenshteinStrTestRecord("Meilenstein", "Levenshtein", 4),
+                                                          LevenshteinStrTestRecord("Tier", "Tor", 2),
+                                                          LevenshteinStrTestRecord("Fest", "Test", 1),
+                                                          LevenshteinStrTestRecord("Apfel", "Pferd", 4),
+                                                          LevenshteinStrTestRecord("apfel", "pferd", 3),
+                                                          LevenshteinStrTestRecord("asdf", "qwertz", 6),
+                                                          LevenshteinStrTestRecord("", "abcd", 4),
+                                                          LevenshteinStrTestRecord("Abcd", "abcd", 1) };
 
     for (size_t i = 0; i < testRecords.size(); ++i)
     {
         const auto& x = testRecords[i];
-        //std::cout << x.a() << " " << x.b() << " " << x.r() << " - " << omw::levenshteinDistance(x.a(), x.b()) << std::endl;
+        // std::cout << x.a() << " " << x.b() << " " << x.r() << " - " << omw::levenshteinDistance(x.a(), x.b()) << std::endl;
         CHECK(omw::levenshteinDistance(x.a(), x.aLen(), x.b(), x.bLen()) == x.r());
         CHECK(omw::levenshteinDistance(x.a(), x.b()) == x.r());
         CHECK(omw::levenshteinDistance(x.aStr(), x.bStr()) == x.r());
@@ -179,12 +180,8 @@ TEST_CASE("algorithm.h levenshteinDistance() strings")
 
 TEST_CASE("algorithm.h levenshteinDistance() empty vector")
 {
-    std::vector<LevenshteinTestRecord<int>> testRecords =
-    {
-        LevenshteinTestRecord<int>({}, {}, 0),
-        LevenshteinTestRecord<int>({}, { 1, 2, 3 }, 3),
-        LevenshteinTestRecord<int>({ 1, 2, 3 }, {}, 3)
-    };
+    std::vector<LevenshteinTestRecord<int>> testRecords = { LevenshteinTestRecord<int>({}, {}, 0), LevenshteinTestRecord<int>({}, { 1, 2, 3 }, 3),
+                                                            LevenshteinTestRecord<int>({ 1, 2, 3 }, {}, 3) };
 
     for (size_t i = 0; i < testRecords.size(); ++i)
     {
@@ -195,14 +192,11 @@ TEST_CASE("algorithm.h levenshteinDistance() empty vector")
 
 TEST_CASE("algorithm.h levenshteinDistance() vector")
 {
-    std::vector<LevenshteinTestRecord<int>> testRecords =
-    {
-        LevenshteinTestRecord<int>({ 1, 2, 3 }, { 1, 2, 3 }, 0),
-        LevenshteinTestRecord<int>({ -2, 2, -123456, 1, 0, 3 }, { -2, 2, -123456, 1, 0, 3 }, 0),
-        LevenshteinTestRecord<int>({ 1, 2, 3 }, { 1, 2, 3, 4 }, 1),
-        LevenshteinTestRecord<int>({ 1, 2, 3 }, { 1, 2, 4 }, 1),
-        LevenshteinTestRecord<int>({ -2, 2, -123456, 1, 0, 3 }, { -2, 2, -123, 1, 5, 3 }, 2)
-    };
+    std::vector<LevenshteinTestRecord<int>> testRecords = { LevenshteinTestRecord<int>({ 1, 2, 3 }, { 1, 2, 3 }, 0),
+                                                            LevenshteinTestRecord<int>({ -2, 2, -123456, 1, 0, 3 }, { -2, 2, -123456, 1, 0, 3 }, 0),
+                                                            LevenshteinTestRecord<int>({ 1, 2, 3 }, { 1, 2, 3, 4 }, 1),
+                                                            LevenshteinTestRecord<int>({ 1, 2, 3 }, { 1, 2, 4 }, 1),
+                                                            LevenshteinTestRecord<int>({ -2, 2, -123456, 1, 0, 3 }, { -2, 2, -123, 1, 5, 3 }, 2) };
 
     for (size_t i = 0; i < testRecords.size(); ++i)
     {

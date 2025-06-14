@@ -13,7 +13,6 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include "../omw/color.h"
 #include "../omw/defs.h"
-#include "../omw/string.h"
 
 
 #ifndef OMWi_DOXYGEN_PREDEFINE
@@ -23,29 +22,29 @@ namespace omw {
 class ostream_manip_t
 {
 public:
-    ostream_manip_t(const omw::string& argument)
+    ostream_manip_t(const std::string& argument)
         : m_arg(argument)
     {}
     virtual ~ostream_manip_t() {}
 
-    const omw::string& arg() const { return m_arg; }
+    const std::string& arg() const { return m_arg; }
 
     template <class CharT, class Traits = std::char_traits<CharT>>
     inline friend std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, const omw::ostream_manip_t& manip)
     {
-        const omw::string& str = manip.arg();
+        const std::string& str = manip.arg();
         for (size_t i = 0; i < str.length(); ++i) { os.put(os.widen(str[i])); }
         return os;
     }
 
 protected:
-    omw::string m_arg;
+    std::string m_arg;
 };
 
 // template<class CharT, class Traits = std::char_traits<CharT>>
 // inline std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, const omw::ostream_manip_t& manip)
 //{
-//     const omw::string& str = manip.arg();
+//     const std::string& str = manip.arg();
 //     for (size_t i = 0; i < str.length(); ++i) { os.put(os.widen(str[i])); }
 //     return os;
 // }
@@ -59,7 +58,7 @@ namespace omw {
 class ansiesc_ostream_manip_t : public omw::ostream_manip_t
 {
 public:
-    ansiesc_ostream_manip_t(const omw::string& argument)
+    ansiesc_ostream_manip_t(const std::string& argument)
         : omw::ostream_manip_t(argument)
     {}
 
@@ -129,7 +128,7 @@ namespace ansiesc {
     constexpr char resetToInitialState = RIS;
     /// @}
 
-    omw::string seq(char type, const omw::string& argstr = "");
+    std::string seq(char type, const std::string& argstr = "");
 
     //! \name ANSI escape sequence builder mode
     /// @{
@@ -188,9 +187,9 @@ namespace ansiesc {
         constexpr int entireAndScrlBk = 3;
         /// @}
 
-        omw::string seq(char ctrlSeqType, const omw::string& argstr = "");
-        omw::string seq(char ctrlSeqType, int arg);
-        omw::string seq(char ctrlSeqType, int arg0, int arg1);
+        std::string seq(char ctrlSeqType, const std::string& argstr = "");
+        std::string seq(char ctrlSeqType, int arg);
+        std::string seq(char ctrlSeqType, int arg0, int arg1);
 
         //! @brief SGR (Select Graphic Rendition)
         namespace sgr {
@@ -307,12 +306,12 @@ namespace ansiesc {
             constexpr int setColor_rgb = 2;
             /// @}
 
-            omw::string seq(const omw::string& argstr = "");
-            omw::string seq(int param);
-            omw::string seq(int param, int arg0, int arg1);
-            omw::string seq(int param, int arg0, int arg1, int arg2, int arg3);
-            omw::string seq(const int* argv, size_t argc);
-            omw::string seq(const std::vector<int>& args);
+            std::string seq(const std::string& argstr = "");
+            std::string seq(int param);
+            std::string seq(int param, int arg0, int arg1);
+            std::string seq(int param, int arg0, int arg1, int arg2, int arg3);
+            std::string seq(const int* argv, size_t argc);
+            std::string seq(const std::vector<int>& args);
 
             //! \name 8-bit Colors
             //! See <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit" target="_blank">color table</a> on Wikipedia.
@@ -350,7 +349,7 @@ namespace ansiesc {
             /// @}
 
         } // namespace sgr
-    }     // namespace csi
+    } // namespace csi
 } // namespace ansiesc
 
 
