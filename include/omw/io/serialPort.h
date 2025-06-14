@@ -87,7 +87,7 @@ namespace preview {
     /**
      * `onlyCOMx` has an effect only on Windows systems.
      */
-    omw::vector<std::string> getSerialPortList(bool onlyCOMx = true);
+    std::vector<std::string> getSerialPortList(bool onlyCOMx = true);
 
     void sortSerialPortList(std::vector<std::string>& ports);
 

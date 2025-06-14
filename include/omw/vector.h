@@ -23,13 +23,13 @@ namespace omw {
 
 //! \name omw::vector Implementation Functions
 /// @{
-template <class T, class Allocator = std::allocator<T>> bool contains(const typename std::vector<T, Allocator>& v, const T& item)
+template <class T, class Allocator = std::allocator<T>> bool contains(const typename std::vector<T, Allocator>& vector, const T& item)
 {
     bool r = false;
 
-    for (typename std::vector<T, Allocator>::size_type i = 0; i < v.size(); ++i)
+    for (typename std::vector<T, Allocator>::size_type i = 0; i < vector.size(); ++i)
     {
-        if (v[i] == item)
+        if (vector[i] == item)
         {
             r = true;
             break;
@@ -49,48 +49,22 @@ template <class T, class Allocator = std::allocator<T>> bool contains(const type
 // template<> bool contains(const std::vector<std::string>&, const std::string::value_type*);
 /// @}
 
-template <class T, class Allocator = std::allocator<T>> class vector : public std::vector<T, Allocator>
+/**
+ * @brief Reserves additional memory.
+ *
+ * <tt>vector.<a href="https://en.cppreference.com/w/cpp/container/vector/reserve" target="_blank">reserve</a>(vector.<a
+ * href="https://en.cppreference.com/w/cpp/container/vector/size" target="_blank">size()</a> + additionalCapacity)</tt>
+ *
+ * @tparam T
+ * @tparam Allocator
+ * @param vector
+ * @param additionalCapacity
+ */
+template <class T, class Allocator = std::allocator<T>>
+void reserveAdditional(typename std::vector<T, Allocator>& vector, typename std::vector<T, Allocator>::size_type additionalCapacity)
 {
-#ifndef OMWi_DOXYGEN_PREDEFINE
-public:
-    using value_type = typename std::vector<T, Allocator>::value_type; /*!< \brief \b `T` */
-    using size_type = typename std::vector<T, Allocator>::size_type;   /*!< \brief Usually `std::size_t` */
-#endif                                                                 // OMWi_DOXYGEN_PREDEFINE
-
-public:
-    static constexpr size_type maxsz = static_cast<size_type>(-1);
-
-public:
-    vector()
-        : std::vector<T, Allocator>()
-    {}
-
-    explicit vector(size_type count)
-        : std::vector<T, Allocator>(count)
-    {}
-
-    vector(size_type count, const T& value)
-        : std::vector<T, Allocator>(count, value)
-    {}
-
-    vector(const T* first, const T* last)
-        : std::vector<T, Allocator>(first, last)
-    {}
-
-    vector(std::initializer_list<T> init)
-        : std::vector<T, Allocator>(init)
-    {}
-
-    vector(const std::vector<T, Allocator>& other)
-        : std::vector<T, Allocator>(other)
-    {}
-
-    ~vector() {}
-
-    bool contains(const T& item) const { return omw::contains(*this, item); }
-
-    void reserveAdd(size_type additionalCapacity) { this->reserve(this->size() + additionalCapacity); }
-};
+    vector.reserve(vector.size() + additionalCapacity);
+}
 
 /*! @} */
 

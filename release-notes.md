@@ -15,6 +15,7 @@ New
 Removed
 - `omw::Version`
 - `omw::string`
+- `omw::vector`
 
 
 

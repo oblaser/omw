@@ -494,7 +494,7 @@ int omw::io::SerialPort::write(const uint8_t* data, size_t count, size_t* nBytes
 
 
 
-omw::vector<std::string> omw::preview::getSerialPortList(bool onlyCOMx)
+std::vector<std::string> omw::preview::getSerialPortList(bool onlyCOMx)
 {
     std::vector<std::string> serialPorts;
 
