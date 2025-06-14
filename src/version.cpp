@@ -75,6 +75,61 @@ bool check(int32_t maj, int32_t min, int32_t pat)
 
 
 
+int omw::MajMinVer::compare(const omw::MajMinVer& other) const
+{
+    int r;
+
+    if (this->major() < other.major()) { r = -1; }
+    else if (this->major() == other.major())
+    {
+        if (this->minor() < other.minor()) { r = -1; }
+        else if (this->minor() == other.minor()) { r = 0; }
+        else { r = 1; }
+    }
+    else { r = 1; }
+
+    return r;
+}
+
+void omw::MajMinVer::m_parse(const std::string& str)
+{
+    try
+    {
+        const omw::StringVector data = omw::stdStringVector(omw::split(str, '.'));
+
+        if (data.size() == 2)
+        {
+            if (!(omw::isInteger(data[0]) && omw::isInteger(data[1]))) { throw -1; }
+
+            try
+            {
+                m_major = std::stol(data[0]);
+            }
+            catch (...)
+            {
+                m_major = -1;
+            }
+
+            try
+            {
+                m_minor = std::stol(data[1]);
+            }
+            catch (...)
+            {
+                m_minor = -1;
+            }
+        }
+        else { throw -1; }
+    }
+    catch (...)
+    {
+        m_major = -1;
+        m_minor = -1;
+    }
+}
+
+
+
 void omw::Semver::set(int32_t major, int32_t minor, int32_t patch, const char* preRelease, const char* build)
 {
     m_major = major;

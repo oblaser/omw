@@ -17,6 +17,196 @@ copyright      MIT - Copyright (c) 2022 Oliver Blaser
 
 
 
+TEST_CASE("omw::MajMinVer ctor")
+{
+    omw::MajMinVer v;
+
+    v = omw::MajMinVer();
+    CHECK(v.major() == 0);
+    CHECK(v.minor() == 0);
+    CHECK(v.toString() == "0.0");
+
+    v = omw::MajMinVer(1, 2);
+    CHECK(v.major() == 1);
+    CHECK(v.minor() == 2);
+    CHECK(v.toString() == "1.2");
+
+    v = omw::MajMinVer(-1, -2);
+    CHECK(v.major() == -1);
+    CHECK(v.minor() == -2);
+    CHECK(v.toString() == "-1.-2");
+
+    v = omw::MajMinVer(2, 4);
+    CHECK(v.major() == 2);
+    CHECK(v.minor() == 4);
+    CHECK(v.toString() == "2.4");
+
+    v = "5.9";
+    CHECK(v.major() == 5);
+    CHECK(v.minor() == 9);
+    CHECK(v.toString() == "5.9");
+}
+
+TEST_CASE("omw::MajMinVer::set()")
+{
+    omw::MajMinVer v;
+
+    v.set(1, 2);
+    CHECK(v.major() == 1);
+    CHECK(v.minor() == 2);
+    CHECK(v.toString() == "1.2");
+
+    v.set(-1, -2);
+    CHECK(v.major() == -1);
+    CHECK(v.minor() == -2);
+    CHECK(v.toString() == "-1.-2");
+
+    v.set(2, 4);
+    CHECK(v.major() == 2);
+    CHECK(v.minor() == 4);
+    CHECK(v.toString() == "2.4");
+
+    v.set("1.5");
+    CHECK(v.major() == 1);
+    CHECK(v.minor() == 5);
+    CHECK(v.toString() == "1.5");
+}
+
+TEST_CASE("omw::MajMinVer::isValid()")
+{
+    omw::MajMinVer v;
+
+    v = "2.3";
+    CHECK(v.isValid());
+
+    v = "-1.2";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.-2";
+    CHECK_FALSE(v.isValid());
+
+    v = "1a.2";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.a2";
+    CHECK_FALSE(v.isValid());
+
+    v = ".2";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.";
+    CHECK_FALSE(v.isValid());
+
+
+
+    v = "1.2.3";
+    CHECK_FALSE(v.isValid());
+
+    v = "-1.2.3";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.-2.3";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2.-3";
+    CHECK_FALSE(v.isValid());
+
+    v = "1a.2.3";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.a2.3";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2.3y";
+    CHECK_FALSE(v.isValid());
+
+    v = ".2.3";
+    CHECK_FALSE(v.isValid());
+
+    v = "1..3";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2.";
+    CHECK_FALSE(v.isValid());
+
+
+
+    v = "1.2-beta.5";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2--beta.5";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2-beta.05";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2-beta.-5";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2-beta$.5";
+    CHECK_FALSE(v.isValid());
+
+
+
+    v = "1.2+00123.bld";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2+-00123.bld";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2+00123.bl@d";
+    CHECK_FALSE(v.isValid());
+
+
+
+    v = "1.2-beta.5+00123.bld";
+    CHECK_FALSE(v.isValid());
+
+    v = "1.2+00123.bld-beta.5";
+    CHECK_FALSE(v.isValid());
+}
+
+TEST_CASE("omw::MajMinVer compare operators")
+{
+    const omw::MajMinVer v000(0, 0);
+    const omw::MajMinVer v001(0, 1);
+    const omw::MajMinVer v010(1, 0);
+    const omw::MajMinVer v011(1, 1);
+    const omw::MajMinVer v011_2(1, 1);
+
+    CHECK_FALSE(v011 == v000);
+    CHECK_FALSE(v011 == v001);
+    CHECK_FALSE(v011 == v010);
+    CHECK(v011 == v011_2);
+
+    CHECK(v011 != v000);
+    CHECK(v011 != v001);
+    CHECK(v011 != v010);
+    CHECK_FALSE(v011 != v011_2);
+
+    CHECK_FALSE(v011 < v000);
+    CHECK_FALSE(v011 < v001);
+    CHECK_FALSE(v011 < v010);
+    CHECK_FALSE(v011 < v011_2);
+
+    CHECK_FALSE(v011 <= v000);
+    CHECK_FALSE(v011 <= v001);
+    CHECK_FALSE(v011 <= v010);
+    CHECK(v011 <= v011_2);
+
+    CHECK(v011 > v000);
+    CHECK(v011 > v001);
+    CHECK(v011 > v010);
+    CHECK_FALSE(v011 > v011_2);
+
+    CHECK(v011 >= v000);
+    CHECK(v011 >= v001);
+    CHECK(v011 >= v010);
+    CHECK(v011 >= v011_2);
+}
+
+
+
 TEST_CASE("omw::Semver ctor")
 {
     omw::Semver v;

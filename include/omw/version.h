@@ -21,8 +21,65 @@ namespace omw {
 
 class MajMinVer
 {
-    // TODO implement
-    // TODO unit tests
+public:
+    /**
+     * Creates an object with version `0.0`.
+     */
+    MajMinVer()
+        : m_major(0), m_minor(0)
+    {}
+
+    MajMinVer(int32_t major, int32_t minor)
+        : m_major(major), m_minor(minor)
+    {}
+
+    MajMinVer(const char* str)
+        : m_major(-1), m_minor(-1)
+    {
+        m_parse(str);
+    }
+
+    MajMinVer(const std::string& str)
+        : m_major(-1), m_minor(-1)
+    {
+        m_parse(str);
+    }
+
+    virtual ~MajMinVer() {}
+
+    virtual void set(const char* str) { m_parse(str); }
+    virtual void set(const std::string& str) { m_parse(str); }
+    void set(int32_t major, int32_t minor)
+    {
+        m_major = major;
+        m_minor = minor;
+    }
+
+    int32_t major() const { return m_major; }
+    int32_t minor() const { return m_minor; }
+
+    /**
+     * | Result             | Return Value |
+     * |:------------------:|:------------:|
+     * | `*this` < `other`  |     <0       |
+     * | `*this` == `other` |      0       |
+     * | `*this` > `other`  |     >0       |
+     */
+    int compare(const omw::MajMinVer& other) const;
+
+    virtual std::string toString() const { return std::to_string(m_major) + '.' + std::to_string(m_minor); }
+
+    /**
+     * Checks if the member values are not negative.
+     */
+    virtual bool isValid() const { return ((m_major >= 0) && (m_minor >= 0)); }
+
+protected:
+    int32_t m_major;
+    int32_t m_minor;
+
+    virtual void m_parse(const char* str) { m_parse(std::string(str ? str : "")); };
+    virtual void m_parse(const std::string& str);
 };
 
 /**
@@ -58,13 +115,13 @@ public:
     }
 
     Semver(const char* str)
-        : m_major(0), m_minor(0), m_patch(0), m_preRelease(), m_build()
+        : m_major(-1), m_minor(-1), m_patch(-1), m_preRelease(), m_build()
     {
         m_parse(str);
     }
 
     Semver(const std::string& str)
-        : m_major(0), m_minor(0), m_patch(0), m_preRelease(), m_build()
+        : m_major(-1), m_minor(-1), m_patch(-1), m_preRelease(), m_build()
     {
         m_parse(str);
     }
@@ -126,15 +183,26 @@ protected:
     virtual void m_parseVersion(const std::string& identifiers);
 };
 
+
 //! \name Operators
 /// @{
+
+static inline bool operator==(const omw::MajMinVer& a, const omw::MajMinVer& b) { return (a.compare(b) == 0); }
+static inline bool operator!=(const omw::MajMinVer& a, const omw::MajMinVer& b) { return !(a == b); }
+static inline bool operator<(const omw::MajMinVer& a, const omw::MajMinVer& b) { return (a.compare(b) < 0); }
+static inline bool operator>(const omw::MajMinVer& a, const omw::MajMinVer& b) { return (b < a); }
+static inline bool operator<=(const omw::MajMinVer& a, const omw::MajMinVer& b) { return !(a > b); }
+static inline bool operator>=(const omw::MajMinVer& a, const omw::MajMinVer& b) { return !(a < b); }
+
 static inline bool operator==(const omw::Semver& a, const omw::Semver& b) { return (a.compare(b) == 0); }
 static inline bool operator!=(const omw::Semver& a, const omw::Semver& b) { return !(a == b); }
 static inline bool operator<(const omw::Semver& a, const omw::Semver& b) { return (a.compare(b) < 0); }
 static inline bool operator>(const omw::Semver& a, const omw::Semver& b) { return (b < a); }
 static inline bool operator<=(const omw::Semver& a, const omw::Semver& b) { return !(a > b); }
 static inline bool operator>=(const omw::Semver& a, const omw::Semver& b) { return !(a < b); }
+
 /// @}
+
 
 /*! @} */
 
