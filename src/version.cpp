@@ -185,7 +185,7 @@ int omw::Semver::compare(const omw::Semver& other) const
 
                     if (isnuma && isnumb)
                     {
-                        static_assert(sizeof(uint64_t) == sizeof(unsigned long long));
+                        static_assert(sizeof(uint64_t) == sizeof(unsigned long long), "weired!?");
                         const uint64_t vala = std::stoull(tmpIdentifier_a);
                         const uint64_t valb = std::stoull(tmpIdentifier_b);
 

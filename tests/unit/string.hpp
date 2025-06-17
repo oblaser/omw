@@ -23,7 +23,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 
 TEST_CASE("string.h omw::StringVector")
 {
-    static_assert(sizeof(omw::StringVector_npos) == sizeof(size_t));
+    static_assert(sizeof(omw::StringVector_npos) == sizeof(size_t), "weired!?");
     CHECK(omw::StringVector_npos == SIZE_MAX);
 }
 

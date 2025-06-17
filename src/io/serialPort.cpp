@@ -31,14 +31,14 @@ namespace {
 #if defined(OMW_PLAT_WIN)
 bool isCom0com(const std::string& device)
 {
-    const std::string tmpDevice = (std::string(device)).toLower_asciiExt();
+    const std::string tmpDevice = omw::toLower_asciiExt(device);
     const std::vector<std::string> info = omw::windows::queryDosDevice(device);
 
     for (size_t i = 0; i < info.size(); ++i)
     {
-        const std::string tmpInfo = info[i].toLower_asciiExt();
+        const std::string tmpInfo = omw::toLower_asciiExt(info[i]);
 
-        if (tmpInfo.contains("com0com") && !tmpDevice.contains("com0com#port#")) { return true; }
+        if (omw::contains(tmpInfo, "com0com") && !omw::contains(tmpDevice, "com0com#port#")) { return true; }
     }
 
     return false;
