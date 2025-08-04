@@ -28,8 +28,7 @@ in future edits, wich may support multiple languages.
 ## Versioning
 ### Scheme
 Since `v0.2.0-alpha`: [semver 2.0.0](https://semver.org/)
-
-Before: Something else. Revision (patch) > 999 have been pre-releases.
+> __old:__ Something else. Revision (patch) > 999 have been pre-releases.
 
 ### Major Version 0
 In development. May not be backwards compatible.
