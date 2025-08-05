@@ -1,0 +1,204 @@
+/*
+author          Oliver Blaser
+date            09.06.2025
+copyright       MIT - Copyright (c) 2025 Oliver Blaser
+*/
+
+#ifndef TEST_OMW_URI_H
+#define TEST_OMW_URI_H
+
+#include <cctype>
+#include <cstddef>
+#include <cstdint>
+
+#include "catch2/catch.hpp"
+
+#include <omw/string.h>
+#include <omw/uri.h>
+
+
+
+TEST_CASE("uri.h percent-encoding")
+{
+    std::string message;
+    std::string encoded;
+    std::string fullyEncoded;
+
+    for (int i = 1; i < 256; ++i)
+    {
+        message.push_back((char)i);
+
+        if (std::isalnum(i) || (i == '-') || (i == '_') || (i == '~') || (i == '.')) { encoded.push_back((char)i); }
+        else { encoded += '%' + omw::toHexStr((uint8_t)i); }
+
+        fullyEncoded += '%' + omw::toHexStr((uint8_t)i);
+    }
+
+    CHECK(omw::URI::encode(message) == encoded);
+    CHECK(omw::URI::decode(encoded) == message);
+    CHECK(omw::URI::decode(fullyEncoded) == message);
+
+
+
+    CHECK(omw::URI::encode("") == "");
+    CHECK(omw::URI::decode("") == "");
+
+
+
+    message = "0123 ThE QuIcK BrOwN FoX JuMpS OvEr tHe lAzY DoG. 456 =\xC3\x84-\xC3\x96 * \xC3\x9C 789 \xC3\xA4\xC3\xB6\xC3\xBC#";
+    encoded = "0123%20ThE%20QuIcK%20BrOwN%20FoX%20JuMpS%20OvEr%20tHe%20lAzY%20DoG.%20456%20%3D%C3%84-%C3%96%20%2A%20%C3%9C%20789%20%C3%A4%C3%B6%C3%BC%23";
+
+    CHECK(omw::URI::encode(message) == encoded);
+    CHECK(omw::URI::decode(encoded) == message);
+    CHECK(omw::URI::decode("%30%31%32%33%20ThE%20QuIcK%20BrOwN%20FoX%20JuMpS%20OvEr%20tHe%20lAzY%20DoG.%20456%20%3D%C3%84-%C3%96%20%2A%20%C3%9C%20789%20%C3%A4%"
+                           "C3%B6%C3%BC%23") == message);
+
+
+
+    message = "+\"*%&/()=asdf(fdsf)";
+    encoded = "%2B%22%2A%25%26%2F%28%29%3Dasdf%28fdsf%29";
+
+    CHECK(omw::URI::encode(message) == encoded);
+    CHECK(omw::URI::encode(omw::URI::encode(message)) == "%252B%2522%252A%2525%2526%252F%2528%2529%253Dasdf%2528fdsf%2529");
+    CHECK(omw::URI::decode(encoded) == message);
+}
+
+
+
+/*
+
+These tests are very basic. The constructor uses the `set()` function directly, which uses `clear()`. So these two are
+not explicitly tested. Getters are implicitly tested.
+Also could the existing test cases be more thorough.
+
+*/
+
+TEST_CASE("uri.h parsing")
+{
+    std::string str;
+    omw::URI uri;
+
+    uri = "";
+    CHECK(uri.isValid() == false);
+    CHECK(uri.scheme() == "");
+    CHECK(uri.authority() == "");
+    CHECK(uri.path() == "");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+
+    str = "http://example.com/path/to/index.php";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "http");
+    CHECK(uri.authority() == "example.com");
+    CHECK(uri.path() == "/path/to/index.php");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+    CHECK(uri.string() == str);
+
+    str = "https://hans.meier@www.example.com:8080/view/system-b/?value=123&tag=test#overview";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "https");
+    CHECK(uri.authority() == "hans.meier@www.example.com:8080");
+    CHECK(uri.path() == "/view/system-b/");
+    CHECK(uri.query() == "value=123&tag=test");
+    CHECK(uri.fragment() == "overview");
+    // CHECK(uri.string() == str); TODO implement authority class
+
+    str = "htTps://annek\xC3\xA4thi:geheim23@api.example.com/colour/today?token=%23j734bol";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "https");
+    CHECK(uri.authority() == "annek\xC3\xA4thi:geheim23@api.example.com");
+    CHECK(uri.path() == "/colour/today");
+    CHECK(uri.query() == "token=#j734bol");
+    CHECK(uri.fragment() == "");
+    // CHECK(uri.string() == "https://annek%C3%A4thi:geheim23@api.example.com/colour/today?token=%23j734bol"); TODO implement authority class
+
+    str = "mailto:flip@example.com";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "mailto");
+    CHECK(uri.authority() == "");
+    CHECK(uri.path() == "flip@example.com");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+    CHECK(uri.string() == str);
+
+    str = "ftp://vreni.hubacher:br-bue@[2600:1406:3a00:21::173e:2e65]:1234/path/to/file.txt";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "ftp");
+    CHECK(uri.authority() == "vreni.hubacher:br-bue@[2600:1406:3a00:21::173e:2e65]:1234");
+    CHECK(uri.path() == "/path/to/file.txt");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+    // CHECK(uri.string() == str); TODO implement authority class
+
+    str = "tel:+41441234567";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "tel");
+    CHECK(uri.authority() == "");
+    CHECK(uri.path() == "+41441234567");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+    CHECK(uri.string() == str);
+
+    str = "news:comp.lang.c";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "news");
+    CHECK(uri.authority() == "");
+    CHECK(uri.path() == "comp.lang.c");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+    CHECK(uri.string() == str);
+
+    str = "urn:ietf:rfc:9226";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "urn");
+    CHECK(uri.authority() == "");
+    CHECK(uri.path() == "ietf:rfc:9226");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+    CHECK(uri.string() == str);
+
+    str = "doi:10.3390/ani11010145";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "doi");
+    CHECK(uri.authority() == "");
+    CHECK(uri.path() == "10.3390/ani11010145");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+    CHECK(uri.string() == str);
+
+    str = "file:///home/martha/Downloads/Bestellschein%20Knabber Knack.pdf";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "file");
+    CHECK(uri.authority() == "");
+    CHECK(uri.path() == "/home/martha/Downloads/Bestellschein Knabber Knack.pdf");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+    CHECK(uri.string() == "file:///home/martha/Downloads/Bestellschein%20Knabber%20Knack.pdf");
+
+    /*
+    str = "";
+    uri = str;
+    CHECK(uri.isValid() == );
+    CHECK(uri.scheme() == "");
+    CHECK(uri.authority() == "");
+    CHECK(uri.path() == "");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+    CHECK(uri.string() == str);
+    */
+}
+
+
+
+#endif // TEST_OMW_URI_H

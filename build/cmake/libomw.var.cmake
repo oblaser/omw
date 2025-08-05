@@ -24,6 +24,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../../src/int.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/math.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/omw.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/string.cpp
+${CMAKE_CURRENT_LIST_DIR}/../../src/uri.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/utility.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/vector.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/version.cpp

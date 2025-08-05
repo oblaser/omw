@@ -41,7 +41,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
  * | v0.2.1-alpha      |  2  |
  * | v0.2.0            |  1  |
  */
-#define OMW_VERSION_ID (250601)
+#define OMW_VERSION_ID (250804)
 
 #define OMW_VERSION_MAJ   (0)
 #define OMW_VERSION_MIN   (3)

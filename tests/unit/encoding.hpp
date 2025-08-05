@@ -270,14 +270,5 @@ TEST_CASE("encoding.h omw::bigEndian encode_128()")
 }
 
 
-TEST_CASE("encoding.h omw::url")
-{
-    const std::string str = "+\"*%&/()=asdf(fdsf)";
-    const std::string enc = "%2B%22%2A%25%26%2F%28%29%3Dasdf%28fdsf%29";
-
-    CHECK(omw::url::encode(str) == enc);
-    CHECK(omw::url::encode(omw::url::encode(str)) == "%252B%2522%252A%2525%2526%252F%2528%2529%253Dasdf%2528fdsf%2529");
-}
-
 
 #endif // TEST_OMW_ENCODING_H

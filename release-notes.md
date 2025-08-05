@@ -10,7 +10,11 @@
 
 New
 - `omw::Semver` and `omw::MajMinVer`
+- `omw::URI`
+
+Changed
 - Moved `omw::string` member functions to `omw` namespace
+- Moved `omw::url::encode()` to `omw::URI::encode()`
 
 Removed
 - `omw::Version`

@@ -54,13 +54,6 @@ namespace bigEndian {
 
 } // namespace bigEndian
 
-namespace url {
-
-    // std::string decode();
-    std::string encode(const std::string& str);
-
-}
-
 /*! @} */
 
 } // namespace omw

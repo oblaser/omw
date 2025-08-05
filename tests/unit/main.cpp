@@ -20,7 +20,7 @@ TEST_CASE("omw lib")
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 
     CHECK(omw::info::version() == omw::Semver(0, 3, 0, "alpha"));
-    CHECK(OMW_VERSION_ID == 250601);
+    CHECK(OMW_VERSION_ID == 250804);
 
     CHECK(omw::info::version() == omw::Semver(OMW_VERSION_MAJ, OMW_VERSION_MIN, OMW_VERSION_PAT, OMW_VERSION_PRSTR));
 }
@@ -38,6 +38,7 @@ TEST_CASE("omw lib")
 #include "io_serialPort.hpp"
 #include "math.hpp"
 #include "string.hpp"
+#include "uri.hpp"
 #include "utility.hpp"
 #include "vector.hpp"
 #include "version.hpp"

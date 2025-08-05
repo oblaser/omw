@@ -30,6 +30,7 @@ set(SOURCES
 ../../../src/math.cpp
 ../../../src/omw.cpp
 ../../../src/string.cpp
+../../../src/uri.cpp
 ../../../src/utility.cpp
 ../../../src/vector.cpp
 ../../../src/version.cpp
