@@ -51,12 +51,10 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 static bool isSchemeChar(char c) { return (omw::isAlnum(c) || (c == '+') || (c == '.') || (c == '-')); }
+static inline bool isIPv6(const std::string& host) { return ((host.front() == '[') && (host.back() == ']')); }
 
 static std::string encodeScheme(const std::string& str) { IMPL_PERCENT_ENCODE(PERCENT_ENCODE_BASE_FILTER || (*p == '+')); }
-static std::string encodeAuthority(const std::string& str)
-{
-    IMPL_PERCENT_ENCODE(PERCENT_ENCODE_BASE_FILTER || PERCENT_ENCODE_FILTER_GRP0 || (*p == ':') /* ':' only if authority is not implemented as class */);
-}
+static std::string encodeAuthority(const std::string& str) { IMPL_PERCENT_ENCODE(PERCENT_ENCODE_BASE_FILTER || PERCENT_ENCODE_FILTER_GRP0); }
 static std::string encodePath(const std::string& str)
 {
     IMPL_PERCENT_ENCODE(PERCENT_ENCODE_BASE_FILTER || PERCENT_ENCODE_FILTER_GRP0 || PERCENT_ENCODE_FILTER_GRP1);
@@ -99,7 +97,152 @@ std::string omw::URI::decode(const std::string& str)
 
 std::string omw::URI::encode(const std::string& str) { IMPL_PERCENT_ENCODE(PERCENT_ENCODE_BASE_FILTER); }
 
-void omw::URI::set(const std::string& uri)
+
+
+void omw::URI::Authority::parse(const std::string& str)
+{
+    const char* p = str.c_str();
+    const char* const pEnd = p + str.length();
+
+    clear();
+    m_validity = true;
+
+    if (omw::contains(str, '@'))
+    {
+        // copy username
+        while (p < pEnd)
+        {
+            if ((*p != ':') && (*p != '@'))
+            {
+                m_user.push_back(*p);
+                ++p;
+            }
+            else { break; }
+        }
+
+        // if present, copy password
+        if (*p == ':')
+        {
+            ++p; // skip password delimiter
+
+            while (p < pEnd)
+            {
+                if (*p != '@')
+                {
+                    m_pass.push_back(*p);
+                    ++p;
+                }
+                else { break; }
+            }
+        }
+
+        ++p; // skip userinfo delimiter
+    }
+
+    // copy host
+    if (*p != '[') // not IPv6
+    {
+        while (p < pEnd)
+        {
+            if (*p != ':')
+            {
+                m_host.push_back(*p);
+                ++p;
+            }
+            else { break; }
+        }
+
+        m_isIPv6 = false;
+    }
+    else // IPv6
+    {
+        while (p < pEnd)
+        {
+            if (*p != ']')
+            {
+                m_host.push_back(*p);
+                ++p;
+            }
+            else { break; }
+        }
+
+        if (*p == ']')
+        {
+            m_host.push_back(*p);
+            ++p;
+
+            m_isIPv6 = true;
+        }
+        else { m_validity = false; }
+    }
+
+    // if present, parse port
+    if (*p == ':')
+    {
+        ++p; // skip port delimiter
+
+        std::string portStr;
+
+        while (p < pEnd)
+        {
+            portStr.push_back(*p);
+            ++p;
+        }
+
+        try
+        {
+            m_port = std::stoi(portStr);
+            if (!omw::isUInteger(portStr) || (m_port > UINT16_MAX)) { throw -(__LINE__); }
+        }
+        catch (...)
+        {
+            m_validity = false;
+            m_port = -1;
+        }
+    }
+
+    // could be implemented inline above, would improve readability of the results because special cases can be covered better
+    m_user = URI::decode(m_user);
+    m_pass = URI::decode(m_pass);
+    m_host = URI::decode(m_host);
+}
+
+void omw::URI::Authority::clear()
+{
+    m_validity = false;
+    m_isIPv6 = false;
+
+    m_user.clear();
+    m_pass.clear();
+    m_host.clear();
+    m_port = -1;
+}
+
+void omw::URI::Authority::setHost(const std::string& host)
+{
+    m_isIPv6 = isIPv6(host);
+    m_host = host;
+}
+
+std::string omw::URI::Authority::string() const
+{
+    std::string r;
+
+    if (!m_user.empty()) { r += encodeAuthority(m_user); }
+    if (!m_pass.empty()) { r += ':' + encodeAuthority(m_pass); }
+    if (!r.empty()) { r += '@'; }
+
+    if (m_isIPv6) { r += m_host; }
+    else { r += encodeAuthority(m_host); }
+
+    if (m_port >= 0) { r += ':' + omw::toString(m_port); }
+
+    return r;
+}
+
+
+
+void omw::URI::parse(const std::string& uri)
 {
     const char* p = uri.c_str();
     const char* const pEnd = p + uri.length();
@@ -128,15 +271,19 @@ void omw::URI::set(const std::string& uri)
     {
         p += 2; // skip authority delimiter
 
+        std::string authorityStr;
+
         while (p < pEnd)
         {
             if (*p != '/')
             {
-                m_authority.push_back(*p);
+                authorityStr.push_back(*p);
                 ++p;
             }
             else { break; }
         }
+
+        m_authority = authorityStr;
     }
 
     // copy path, skip if empty
@@ -180,7 +327,6 @@ void omw::URI::set(const std::string& uri)
 
     // could be implemented inline above, would improve readability of the results because special cases can be covered better
     m_scheme = URI::decode(m_scheme);
-    m_authority = URI::decode(m_authority);
     m_path = URI::decode(m_path);
     m_query = URI::decode(m_query);
     m_fragment = URI::decode(m_fragment);
@@ -203,11 +349,11 @@ std::string omw::URI::string() const
 {
     std::string r;
 
-    r = ::encodeScheme(m_scheme) + ':';
-    if (!m_authority.empty() || (m_scheme == "file")) { r += "//" + ::encodeAuthority(m_authority); }
-    r += ::encodePath(m_path);
-    if (!m_query.empty()) { r += '?' + ::encodeQuery(m_query); }
-    if (!m_fragment.empty()) { r += '#' + ::encodeFragment(m_fragment); }
+    r = encodeScheme(m_scheme) + ':';
+    if (!m_authority.empty() || (m_scheme == "file")) { r += "//" + m_authority.string(); }
+    r += encodePath(m_path);
+    if (!m_query.empty()) { r += '?' + encodeQuery(m_query); }
+    if (!m_fragment.empty()) { r += '#' + encodeFragment(m_fragment); }
 
     return r;
 }

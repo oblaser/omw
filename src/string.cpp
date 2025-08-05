@@ -19,7 +19,7 @@ namespace {
 
 template <typename T1, typename T2> std::string pair_to_string(const std::pair<T1, T2>& value, char delimiter)
 {
-    return (std::to_string(value.first) + delimiter + std::to_string(value.second));
+    return (omw::toString(value.first) + delimiter + omw::toString(value.second));
 }
 
 // T has to be an integer type

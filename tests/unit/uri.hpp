@@ -81,7 +81,11 @@ TEST_CASE("uri.h parsing")
     uri = "";
     CHECK(uri.isValid() == false);
     CHECK(uri.scheme() == "");
-    CHECK(uri.authority() == "");
+    CHECK(uri.authority().empty() == true);
+    CHECK(uri.authority().user() == "");
+    CHECK(uri.authority().pass() == "");
+    CHECK(uri.authority().host() == "");
+    CHECK(uri.authority().hasPort() == false);
     CHECK(uri.path() == "");
     CHECK(uri.query() == "");
     CHECK(uri.fragment() == "");
@@ -90,7 +94,10 @@ TEST_CASE("uri.h parsing")
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "http");
-    CHECK(uri.authority() == "example.com");
+    CHECK(uri.authority().user() == "");
+    CHECK(uri.authority().pass() == "");
+    CHECK(uri.authority().host() == "example.com");
+    CHECK(uri.authority().hasPort() == false);
     CHECK(uri.path() == "/path/to/index.php");
     CHECK(uri.query() == "");
     CHECK(uri.fragment() == "");
@@ -100,27 +107,33 @@ TEST_CASE("uri.h parsing")
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "https");
-    CHECK(uri.authority() == "hans.meier@www.example.com:8080");
+    CHECK(uri.authority().user() == "hans.meier");
+    CHECK(uri.authority().pass() == "");
+    CHECK(uri.authority().host() == "www.example.com");
+    CHECK(uri.authority().port() == 8080);
     CHECK(uri.path() == "/view/system-b/");
     CHECK(uri.query() == "value=123&tag=test");
     CHECK(uri.fragment() == "overview");
-    // CHECK(uri.string() == str); TODO implement authority class
+    CHECK(uri.string() == str);
 
     str = "htTps://annek\xC3\xA4thi:geheim23@api.example.com/colour/today?token=%23j734bol";
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "https");
-    CHECK(uri.authority() == "annek\xC3\xA4thi:geheim23@api.example.com");
+    CHECK(uri.authority().user() == "annek\xC3\xA4thi");
+    CHECK(uri.authority().pass() == "geheim23");
+    CHECK(uri.authority().host() == "api.example.com");
+    CHECK(uri.authority().hasPort() == false);
     CHECK(uri.path() == "/colour/today");
     CHECK(uri.query() == "token=#j734bol");
     CHECK(uri.fragment() == "");
-    // CHECK(uri.string() == "https://annek%C3%A4thi:geheim23@api.example.com/colour/today?token=%23j734bol"); TODO implement authority class
+    CHECK(uri.string() == "https://annek%C3%A4thi:geheim23@api.example.com/colour/today?token=%23j734bol");
 
     str = "mailto:flip@example.com";
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "mailto");
-    CHECK(uri.authority() == "");
+    CHECK(uri.authority().empty() == true);
     CHECK(uri.path() == "flip@example.com");
     CHECK(uri.query() == "");
     CHECK(uri.fragment() == "");
@@ -130,17 +143,20 @@ TEST_CASE("uri.h parsing")
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "ftp");
-    CHECK(uri.authority() == "vreni.hubacher:br-bue@[2600:1406:3a00:21::173e:2e65]:1234");
+    CHECK(uri.authority().user() == "vreni.hubacher");
+    CHECK(uri.authority().pass() == "br-bue");
+    CHECK(uri.authority().host() == "[2600:1406:3a00:21::173e:2e65]");
+    CHECK(uri.authority().port() == 1234);
     CHECK(uri.path() == "/path/to/file.txt");
     CHECK(uri.query() == "");
     CHECK(uri.fragment() == "");
-    // CHECK(uri.string() == str); TODO implement authority class
+    CHECK(uri.string() == str);
 
     str = "tel:+41441234567";
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "tel");
-    CHECK(uri.authority() == "");
+    CHECK(uri.authority().empty() == true);
     CHECK(uri.path() == "+41441234567");
     CHECK(uri.query() == "");
     CHECK(uri.fragment() == "");
@@ -150,7 +166,7 @@ TEST_CASE("uri.h parsing")
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "news");
-    CHECK(uri.authority() == "");
+    CHECK(uri.authority().empty() == true);
     CHECK(uri.path() == "comp.lang.c");
     CHECK(uri.query() == "");
     CHECK(uri.fragment() == "");
@@ -160,7 +176,7 @@ TEST_CASE("uri.h parsing")
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "urn");
-    CHECK(uri.authority() == "");
+    CHECK(uri.authority().empty() == true);
     CHECK(uri.path() == "ietf:rfc:9226");
     CHECK(uri.query() == "");
     CHECK(uri.fragment() == "");
@@ -170,7 +186,7 @@ TEST_CASE("uri.h parsing")
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "doi");
-    CHECK(uri.authority() == "");
+    CHECK(uri.authority().empty() == true);
     CHECK(uri.path() == "10.3390/ani11010145");
     CHECK(uri.query() == "");
     CHECK(uri.fragment() == "");
@@ -180,11 +196,40 @@ TEST_CASE("uri.h parsing")
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "file");
-    CHECK(uri.authority() == "");
+    CHECK(uri.authority().empty() == true);
     CHECK(uri.path() == "/home/martha/Downloads/Bestellschein Knabber Knack.pdf");
     CHECK(uri.query() == "");
     CHECK(uri.fragment() == "");
     CHECK(uri.string() == "file:///home/martha/Downloads/Bestellschein%20Knabber%20Knack.pdf");
+
+
+
+    uri = "http://example.com/as%2Fdf/";
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "http");
+    CHECK(uri.authority().user() == "");
+    CHECK(uri.authority().pass() == "");
+    CHECK(uri.authority().host() == "example.com");
+    CHECK(uri.authority().hasPort() == false);
+    CHECK(uri.path() == "/as/df/");
+    CHECK(uri.query() == "");
+    CHECK(uri.fragment() == "");
+
+    uri.setHost("\xC3\xB6.example.com");
+    uri.setQuery("val0=1234&val1=a&b=c"); // where val1 is the string "a&b=c"
+    CHECK(uri.isValid() == true);
+    CHECK(uri.scheme() == "http");
+    CHECK(uri.authority().user() == "");
+    CHECK(uri.authority().pass() == "");
+    CHECK(uri.authority().host() == "\xC3\xB6.example.com");
+    CHECK(uri.authority().hasPort() == false);
+    CHECK(uri.path() == "/as/df/");
+    CHECK(uri.query() == "val0=1234&val1=a&b=c");
+    CHECK(uri.fragment() == "");
+    WARN("`omw::URI` is not fully implemented, see doc");
+    // CHECK(uri.string() == "http://%C3%B6.exmple.com/as%2Fdf/?val0=1234&val1=a%26b%3Dc"); // path and query classes needed as described in doc of `omw::URI`
+
+
 
     /*
     str = "";
