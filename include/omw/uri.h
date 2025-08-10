@@ -27,8 +27,7 @@ namespace omw {
  * Basic URI implementation. Performs percent-decoding after parsing components, and percent-encoding while serializing.
  * Some cases are not properly handled:
  * - detection IPv6 in authority is done by simply checking front and back for the brackets without the actual IP string
- * - path segments containing `/` or `%2F`, path class needed similar to `URI::Authority`
- * - querry keys or values containing reserved characters, querry class needed similar to `URI::Authority`
+ * - querry only supports delimiter `&`, not `;`
  *
  * Getters and setters operate in decoded mode.
  *
@@ -54,6 +53,7 @@ public:
     static std::string encodePath(const std::string& str);
     static std::string encodePathSegment(const std::string& str);
     static std::string encodeQuery(const std::string& str);
+    static std::string encodeQueryField(const std::string& str);
     static std::string encodeFragment(const std::string& str);
 
 public:
@@ -64,21 +64,21 @@ public:
             : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(-1)
         {}
 
-        Authority(const char* str)
+        explicit Authority(const char* str_encoded)
             : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(-1)
         {
-            this->parse(str);
+            this->parse(str_encoded);
         }
 
-        Authority(const std::string& str)
+        explicit Authority(const std::string& str_encoded)
             : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(-1)
         {
-            this->parse(str);
+            this->parse(str_encoded);
         }
 
         virtual ~Authority() {}
 
-        void parse(const std::string& str);
+        void parse(const std::string& str_encoded);
         void clear();
 
         const std::string& user() const { return m_user; }
@@ -90,13 +90,13 @@ public:
         bool hasPort() const { return (m_port >= 0); }
         bool empty() const { return (!hasUserinfo() && m_host.empty() && !hasPort()); }
 
-        void setUser(const std::string& user) { m_user = user; }
-        void setPass(const std::string& pass) { m_pass = pass; }
-        void setHost(const std::string& host);
+        void setUser(const std::string& user_decoded) { m_user = user_decoded; }
+        void setPass(const std::string& pass_decoded) { m_pass = pass_decoded; }
+        void setHost(const std::string& host_decoded);
         void setPort(int port) { m_port = port; }
 
         /**
-         * Serialise the percent encoded URI.
+         * Serialise the percent encoded authority string.
          */
         std::string serialise() const;
 
@@ -118,35 +118,34 @@ public:
             : m_data()
         {}
 
-        PathSegment(const char* str)
+        explicit PathSegment(const char* str_encoded)
             : m_data()
         {
-            this->parse(str);
+            this->parse(str_encoded);
         }
 
-        PathSegment(const std::string& str)
+        explicit PathSegment(const std::string& str_encoded)
             : m_data()
         {
-            this->parse(str);
+            this->parse(str_encoded);
         }
 
         virtual ~PathSegment() {}
 
-        void parse(const std::string& str) { m_data = omw::URI::decode(str); }
+        void parse(const std::string& str_encoded) { m_data = omw::URI::decode(str_encoded); }
         void clear() { m_data.clear(); }
 
         const std::string& data() const { return m_data; }
+        std::string& data() { return m_data; }
 
         bool empty() const { return m_data.empty(); }
 
-        void set(const std::string& data) { m_data = data; }
+        void set(const std::string& data_decoded) { m_data = data_decoded; }
 
         /**
-         * Serialise the percent encoded URI.
+         * Serialise the percent encoded path segment.
          */
         std::string serialise() const { return omw::URI::encodePathSegment(m_data); }
-
-        // ? operator const std::string &() const { return this->data(); }
 
     private:
         std::string m_data;
@@ -159,21 +158,21 @@ public:
             : m_isAbs(false), m_segments()
         {}
 
-        Path(const char* str)
+        explicit Path(const char* str_encoded)
             : m_isAbs(false), m_segments()
         {
-            this->parse(str);
+            this->parse(str_encoded);
         }
 
-        Path(const std::string& str)
+        explicit Path(const std::string& str_encoded)
             : m_isAbs(false), m_segments()
         {
-            this->parse(str);
+            this->parse(str_encoded);
         }
 
         virtual ~Path() {}
 
-        void parse(const std::string& str);
+        void parse(const std::string& str_encoded);
 
         void clear()
         {
@@ -182,11 +181,12 @@ public:
         }
 
         const std::vector<omw::URI::PathSegment>& segments() const { return m_segments; }
+        std::vector<omw::URI::PathSegment>& segments() { return m_segments; }
 
         bool empty() const { return (m_segments.empty() || ((m_segments.size() == 1) && (m_segments[0].empty()))); }
 
         /**
-         * Serialise the percent encoded URI.
+         * Serialise the percent encoded path.
          */
         std::string serialise() const;
 
@@ -195,37 +195,106 @@ public:
         std::vector<omw::URI::PathSegment> m_segments;
     };
 
-    class Query
+    class QueryParameter
     {
     public:
-        Query() {}
+        QueryParameter()
+            : m_key(), m_value()
+        {}
 
-        Query(const char* str)
-            : m_validity(false)
+        explicit QueryParameter(const char* str_encoded)
+            : m_key(), m_value()
         {
-            this->parse(str);
+            this->parse(str_encoded);
         }
 
-        Query(const std::string& str)
-            : m_validity(false)
+        explicit QueryParameter(const std::string& str_encoded)
+            : m_key(), m_value()
         {
-            this->parse(str);
+            this->parse(str_encoded);
         }
 
-        virtual ~Query() {}
+        QueryParameter(const std::string& key_decoded, const std::string& value_decoded)
+            : m_key(key_decoded), m_value(value_decoded)
+        {}
 
-        void parse(const std::string& str);
-        void clear();
+        virtual ~QueryParameter() {}
+
+        void parse(const std::string& str_encoded);
+        void clear()
+        {
+            m_key.clear();
+            m_value.clear();
+        }
+
+        const std::string& key() const { return m_key; }
+        const std::string& value() const { return m_value; }
+
+        void setKey(const std::string& key_decoded) { m_key = key_decoded; }
+        void setValue(const std::string& value_decoded) { m_value = value_decoded; }
+        void set(const std::string& key_decoded, const std::string& value_decoded)
+        {
+            m_key = key_decoded;
+            m_value = value_decoded;
+        }
 
         /**
-         * Serialise the percent encoded URI.
+         * Serialise the percent encoded key value pair.
          */
         std::string serialise() const;
 
-        bool isValid() const { return m_validity; }
+    private:
+        std::string m_key;
+        std::string m_value;
+    };
+
+    class Query
+    {
+    public:
+        Query()
+            : m_parameters()
+        {}
+
+        explicit Query(const char* str_encoded)
+            : m_parameters()
+        {
+            this->parse(str_encoded);
+        }
+
+        explicit Query(const std::string& str_encoded)
+            : m_parameters()
+        {
+            this->parse(str_encoded);
+        }
+
+        Query(const std::vector<omw::URI::QueryParameter>& parameters)
+            : m_parameters(parameters)
+        {}
+
+        virtual ~Query() {}
+
+        void parse(const std::string& str_encoded);
+        void clear() { m_parameters.clear(); }
+
+        void set(const std::vector<omw::URI::QueryParameter>& parameters) { m_parameters = parameters; }
+        void set(const omw::URI::QueryParameter& parameter) { m_parameters = { parameter }; }
+        void set(const std::string& key, const std::string& value) { m_parameters = { omw::URI::QueryParameter(key, value) }; }
+
+        void add(const omw::URI::QueryParameter& parameter) { m_parameters.push_back(parameter); }
+        void add(const std::string& key, const std::string& value) { m_parameters.push_back(omw::URI::QueryParameter(key, value)); }
+
+        const std::vector<omw::URI::QueryParameter>& parameters() const { return m_parameters; }
+        std::vector<omw::URI::QueryParameter>& parameters() { return m_parameters; }
+
+        bool empty() const { return m_parameters.empty(); }
+
+        /**
+         * Serialise the percent encoded query string.
+         */
+        std::string serialise() const;
 
     private:
-        bool m_validity;
+        std::vector<omw::URI::QueryParameter> m_parameters;
     };
 
 
@@ -235,40 +304,44 @@ public:
         : m_validity(false), m_scheme(), m_authority(), m_path(), m_query(), m_fragment()
     {}
 
-    URI(const char* uri)
+    URI(const char* uri_encoded)
         : m_validity(false), m_scheme(), m_authority(), m_path(), m_query(), m_fragment()
     {
-        parse(uri);
+        parse(uri_encoded);
     }
 
-    URI(const std::string& uri)
+    URI(const std::string& uri_encoded)
         : m_validity(false), m_scheme(), m_authority(), m_path(), m_query(), m_fragment()
     {
-        parse(uri);
+        parse(uri_encoded);
     }
 
     virtual ~URI() {}
 
-    void parse(const std::string& uri);
+    void parse(const std::string& uri_encoded);
     void clear();
 
     const std::string& scheme() const { return m_scheme; }
+    void setScheme(const std::string& scheme_decoded);
+
+    omw::URI::Authority& authority() { return m_authority; }
     const omw::URI::Authority& authority() const { return m_authority; }
-    const omw::URI::Path& path() const { return m_path; }
-    const std::string& query() const { return m_query; }
-    const std::string& fragment() const { return m_fragment; }
-
-    void setScheme(const std::string& scheme);
-
     void setAuthority(const omw::URI::Authority& authority) { m_authority = authority; }
     void setUser(const std::string& user) { m_authority.setUser(user); }
     void setPass(const std::string& pass) { m_authority.setPass(pass); }
     void setHost(const std::string& host) { m_authority.setHost(host); }
     void setPort(int port) { m_authority.setPort(port); }
 
+    omw::URI::Path& path() { return m_path; }
+    const omw::URI::Path& path() const { return m_path; }
     void setPath(const omw::URI::Path& path) { m_path = path; }
-    void setQuery(const std::string& query) { m_query = query; }
-    void setFragment(const std::string& fragment) { m_fragment = fragment; }
+
+    omw::URI::Query& query() { return m_query; }
+    const omw::URI::Query& query() const { return m_query; }
+    void setQuery(const omw::URI::Query& query) { m_query = query; }
+
+    const std::string& fragment() const { return m_fragment; }
+    void setFragment(const std::string& fragment_decoded) { m_fragment = fragment_decoded; }
 
     /**
      * Serialise the percent encoded URI.
@@ -282,7 +355,7 @@ private:
     std::string m_scheme;
     omw::URI::Authority m_authority;
     omw::URI::Path m_path;
-    std::string m_query;
+    omw::URI::Query m_query;
     std::string m_fragment;
 };
 

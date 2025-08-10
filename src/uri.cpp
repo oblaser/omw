@@ -23,6 +23,9 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
     (*p == '+') || (*p == '!') || (*p == '$') || (*p == '&') || (*p == '\'') || (*p == '(') || (*p == ')') || (*p == '*') || (*p == ',') || (*p == ';') || \
         (*p == '=')
 
+// ok in query key and value (and authority, path and fragment)
+#define PERCENT_ENCODE_FILTER_GRP0A (*p == '!') || (*p == '$') || (*p == '\'') || (*p == '(') || (*p == ')') || (*p == '*') || (*p == ',') || (*p == ';')
+
 // ok in path, query and fragment
 #define PERCENT_ENCODE_FILTER_GRP1 (*p == ':') || (*p == '@') || (*p == '/')
 
@@ -98,6 +101,10 @@ std::string omw::URI::encodeQuery(const std::string& str)
 {
     IMPL_PERCENT_ENCODE(PERCENT_ENCODE_BASE_FILTER || PERCENT_ENCODE_FILTER_GRP0 || PERCENT_ENCODE_FILTER_GRP1 || (*p == '?'));
 }
+std::string omw::URI::encodeQueryField(const std::string& str)
+{
+    IMPL_PERCENT_ENCODE(PERCENT_ENCODE_BASE_FILTER || PERCENT_ENCODE_FILTER_GRP0A || PERCENT_ENCODE_FILTER_GRP1 || (*p == '?'));
+}
 std::string omw::URI::encodeFragment(const std::string& str)
 {
     IMPL_PERCENT_ENCODE(PERCENT_ENCODE_BASE_FILTER || PERCENT_ENCODE_FILTER_GRP0 || PERCENT_ENCODE_FILTER_GRP1 || (*p == '?'));
@@ -105,15 +112,15 @@ std::string omw::URI::encodeFragment(const std::string& str)
 
 
 
-void omw::URI::Authority::parse(const std::string& str)
+void omw::URI::Authority::parse(const std::string& str_encoded)
 {
-    const char* p = str.c_str();
-    const char* const pEnd = p + str.length();
+    const char* p = str_encoded.c_str();
+    const char* const pEnd = p + str_encoded.length();
 
     clear();
     m_validity = true;
 
-    if (omw::contains(str, '@'))
+    if (omw::contains(str_encoded, '@'))
     {
         // copy username
         while (p < pEnd)
@@ -248,10 +255,10 @@ std::string omw::URI::Authority::serialise() const
 
 
 
-void omw::URI::Path::parse(const std::string& str)
+void omw::URI::Path::parse(const std::string& str_encoded)
 {
-    const char* p = str.c_str();
-    const char* const pEnd = p + str.length();
+    const char* p = str_encoded.c_str();
+    const char* const pEnd = p + str_encoded.length();
 
     clear();
 
@@ -269,14 +276,14 @@ void omw::URI::Path::parse(const std::string& str)
         if (*p != '/') { segmentStr.push_back(*p); }
         else
         {
-            m_segments.push_back(segmentStr);
+            m_segments.push_back(omw::URI::PathSegment(segmentStr));
             segmentStr.clear();
         }
 
         ++p;
     }
 
-    if (m_isAbs || !segmentStr.empty()) { m_segments.push_back(segmentStr); }
+    if (m_isAbs || !segmentStr.empty()) { m_segments.push_back(omw::URI::PathSegment(segmentStr)); }
 }
 
 std::string omw::URI::Path::serialise() const
@@ -296,10 +303,95 @@ std::string omw::URI::Path::serialise() const
 
 
 
-void omw::URI::parse(const std::string& uri)
+void omw::URI::QueryParameter::parse(const std::string& str_encoded)
 {
-    const char* p = uri.c_str();
-    const char* const pEnd = p + uri.length();
+    const char* p = str_encoded.c_str();
+    const char* const pEnd = p + str_encoded.length();
+
+    clear();
+
+    // copy key
+    while (p < pEnd)
+    {
+        if (*p != '=')
+        {
+            m_key.push_back(*p == '+' ? 0x20 : *p);
+            ++p;
+        }
+        else { break; }
+    }
+
+    // if present, copy value
+    if (*p == '=')
+    {
+        ++p; // skip fragment delimiter
+
+        while (p < pEnd)
+        {
+            m_value.push_back(*p == '+' ? 0x20 : *p);
+            ++p;
+        }
+    }
+
+    // could be implemented inline above
+    m_key = omw::URI::decode(m_key);
+    m_value = omw::URI::decode(m_value);
+}
+
+std::string omw::URI::QueryParameter::serialise() const
+{
+    std::string r = omw::URI::encodeQueryField(m_key);
+
+    if (!m_value.empty()) { r += '=' + omw::URI::encodeQueryField(m_value); }
+
+    return r;
+}
+
+
+
+void omw::URI::Query::parse(const std::string& str_encoded)
+{
+    const char* p = str_encoded.c_str();
+    const char* const pEnd = p + str_encoded.length();
+
+    clear();
+
+    std::string parameterStr;
+
+    while (p < pEnd)
+    {
+        if (*p != '&') { parameterStr.push_back(*p); }
+        else
+        {
+            m_parameters.push_back(omw::URI::QueryParameter(parameterStr));
+            parameterStr.clear();
+        }
+
+        ++p;
+    }
+
+    if (!parameterStr.empty()) { m_parameters.push_back(omw::URI::QueryParameter(parameterStr)); }
+}
+
+std::string omw::URI::Query::serialise() const
+{
+    std::string r;
+
+    for (size_t i = 0; i < m_parameters.size(); ++i)
+    {
+        if (i != 0) { r += '&'; }
+        r += m_parameters[i].serialise();
+    }
+
+    return r;
+}
+
+
+
+void omw::URI::parse(const std::string& uri_encoded)
+{
+    const char* p = uri_encoded.c_str();
+    const char* const pEnd = p + uri_encoded.length();
 
     clear();
     m_validity = omw::isAlpha(*p); // scheme must start with a letter
@@ -337,7 +429,7 @@ void omw::URI::parse(const std::string& uri)
             else { break; }
         }
 
-        m_authority = authorityStr;
+        m_authority = omw::URI::Authority(authorityStr);
     }
 
     // copy path, skip if empty
@@ -354,7 +446,7 @@ void omw::URI::parse(const std::string& uri)
             else { break; }
         }
 
-        m_path = pathStr;
+        m_path = omw::URI::Path(pathStr);
     }
 
     // if present, copy querry
@@ -362,15 +454,19 @@ void omw::URI::parse(const std::string& uri)
     {
         ++p; // skip querry delimiter
 
+        std::string queryStr;
+
         while (p < pEnd)
         {
             if (*p != '#')
             {
-                m_query.push_back(*p);
+                queryStr.push_back(*p);
                 ++p;
             }
             else { break; }
         }
+
+        m_query = omw::URI::Query(queryStr);
     }
 
     // if present, copy fragment
@@ -387,7 +483,6 @@ void omw::URI::parse(const std::string& uri)
 
     // could be implemented inline above, would improve readability of the results because special cases can be covered better
     m_scheme = omw::URI::decode(m_scheme);
-    m_query = omw::URI::decode(m_query);
     m_fragment = omw::URI::decode(m_fragment);
 }
 
@@ -402,7 +497,7 @@ void omw::URI::clear()
     m_fragment.clear();
 }
 
-void omw::URI::setScheme(const std::string& scheme) { m_scheme = omw::toLower_ascii(scheme); }
+void omw::URI::setScheme(const std::string& scheme_decoded) { m_scheme = omw::toLower_ascii(scheme_decoded); }
 
 std::string omw::URI::serialise() const
 {
@@ -411,7 +506,7 @@ std::string omw::URI::serialise() const
     r = omw::URI::encodeScheme(m_scheme) + ':';
     if (!m_authority.empty() || (m_scheme == "file")) { r += "//" + m_authority.serialise(); }
     r += m_path.serialise();
-    if (!m_query.empty()) { r += '?' + omw::URI::encodeQuery(m_query); }
+    if (!m_query.empty()) { r += '?' + m_query.serialise(); }
     if (!m_fragment.empty()) { r += '#' + omw::URI::encodeFragment(m_fragment); }
 
     return r;

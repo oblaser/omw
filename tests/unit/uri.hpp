@@ -87,7 +87,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority().host() == "");
     CHECK(uri.authority().hasPort() == false);
     CHECK(uri.path().empty() == true);
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
 
     str = "http://example.com";
@@ -101,7 +101,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority().hasPort() == false);
     CHECK(uri.path().empty() == true);
     CHECK(uri.path().segments().size() == 0);
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
 
@@ -118,7 +118,7 @@ TEST_CASE("uri.h parsing")
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "");
     CHECK(uri.path().segments()[0].empty() == true);
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
 
@@ -134,7 +134,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.path().segments()[0] == "path");
     CHECK(uri.path().segments()[1] == "to");
     CHECK(uri.path().segments()[2] == "index.php");
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
 
@@ -150,11 +150,15 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.path().segments()[0] == "view");
     CHECK(uri.path().segments()[1] == "system-b");
     CHECK(uri.path().segments()[2] == "");
-    CHECK(uri.query() == "value=123&tag=test");
+    REQUIRE(uri.query().parameters().size() == 2);
+    CHECK(uri.query().parameters()[0].key() == "value");
+    CHECK(uri.query().parameters()[0].value() == "123");
+    CHECK(uri.query().parameters()[1].key() == "tag");
+    CHECK(uri.query().parameters()[1].value() == "test");
     CHECK(uri.fragment() == "overview");
     CHECK(uri.serialise() == str);
 
-    str = "htTps://annek\xC3\xA4thi:geheim23@api.example.com/colour/today?token=%23j734bol";
+    str = "htTps://annek\xC3\xA4thi:geheim23@api.example.com/colour/today?token=%23j734bol&name%20id=abcd+1234#top";
     uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "https");
@@ -165,9 +169,13 @@ TEST_CASE("uri.h parsing")
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "colour");
     CHECK(uri.path().segments()[1] == "today");
-    CHECK(uri.query() == "token=#j734bol");
-    CHECK(uri.fragment() == "");
-    CHECK(uri.serialise() == "https://annek%C3%A4thi:geheim23@api.example.com/colour/today?token=%23j734bol");
+    REQUIRE(uri.query().parameters().size() == 2);
+    CHECK(uri.query().parameters()[0].key() == "token");
+    CHECK(uri.query().parameters()[0].value() == "#j734bol");
+    CHECK(uri.query().parameters()[1].key() == "name id");
+    CHECK(uri.query().parameters()[1].value() == "abcd 1234");
+    CHECK(uri.fragment() == "top");
+    CHECK(uri.serialise() == "https://annek%C3%A4thi:geheim23@api.example.com/colour/today?token=%23j734bol&name%20id=abcd%201234#top");
 
     str = "mailto:flip@example.com";
     uri = str;
@@ -176,7 +184,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "flip@example.com");
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
 
@@ -192,7 +200,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.path().segments()[0] == "path");
     CHECK(uri.path().segments()[1] == "to");
     CHECK(uri.path().segments()[2] == "file.txt");
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
 
@@ -203,7 +211,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "+41441234567");
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
 
@@ -214,7 +222,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "comp.lang.c");
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
 
@@ -225,7 +233,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "ietf:rfc:9226");
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
 
@@ -237,7 +245,7 @@ TEST_CASE("uri.h parsing")
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "10.3390");
     CHECK(uri.path().segments()[1] == "ani11010145");
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
 
@@ -251,14 +259,13 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.path().segments()[1] == "martha");
     CHECK(uri.path().segments()[2] == "Downloads");
     CHECK(uri.path().segments()[3] == "Bestellschein Knabber Knack.pdf");
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == "file:///home/martha/Downloads/Bestellschein%20Knabber%20Knack.pdf");
 
 
 
-    str = "http://example.com/as%2Fdf/";
-    uri = str;
+    uri = "http://example.com/as%2Fdf/?a%3Da=asdf&b=123+456";
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "http");
     CHECK(uri.authority().user() == "");
@@ -268,12 +275,19 @@ TEST_CASE("uri.h parsing")
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "as/df");
     CHECK(uri.path().segments()[1] == "");
-    CHECK(uri.query() == "");
+    REQUIRE(uri.query().parameters().size() == 2);
+    CHECK(uri.query().parameters()[0].key() == "a=a");
+    CHECK(uri.query().parameters()[0].value() == "asdf");
+    CHECK(uri.query().parameters()[1].key() == "b");
+    CHECK(uri.query().parameters()[1].value() == "123 456");
     CHECK(uri.fragment() == "");
-    CHECK(uri.serialise() == str);
+    CHECK(uri.serialise() == "http://example.com/as%2Fdf/?a%3Da=asdf&b=123%20456");
 
     uri.setHost("\xC3\xB6.example.com");
-    uri.setQuery("val0=1234&val1=a&b=c"); // where val1 is the string "a&b=c"
+    uri.setQuery(std::vector<omw::URI::QueryParameter>({
+        omw::URI::QueryParameter("val0", "12 34 ab"),
+        omw::URI::QueryParameter("val1", "a&b=c"),
+    }));
     CHECK(uri.isValid() == true);
     CHECK(uri.scheme() == "http");
     CHECK(uri.authority().user() == "");
@@ -283,11 +297,23 @@ TEST_CASE("uri.h parsing")
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "as/df");
     CHECK(uri.path().segments()[1] == "");
-    CHECK(uri.query() == "val0=1234&val1=a&b=c");
+    REQUIRE(uri.query().parameters().size() == 2);
+    CHECK(uri.query().parameters()[0].key() == "val0");
+    CHECK(uri.query().parameters()[0].value() == "12 34 ab");
+    CHECK(uri.query().parameters()[1].key() == "val1");
+    CHECK(uri.query().parameters()[1].value() == "a&b=c");
     CHECK(uri.fragment() == "");
-    WARN("`omw::URI` is not fully implemented, see doc");
-    // CHECK(uri.serialise() == "http://%C3%B6.example.com/as%2Fdf/?val0=1234&val1=a%26b%3Dc"); // path and query classes needed as described in doc of
-    // `omw::URI`
+    CHECK(uri.serialise() == "http://%C3%B6.example.com/as%2Fdf/?val0=12%2034%20ab&val1=a%26b%3Dc");
+
+    uri.query().add("val2", "1+2+3=6");
+    REQUIRE(uri.query().parameters().size() == 3);
+    CHECK(uri.query().parameters()[0].key() == "val0");
+    CHECK(uri.query().parameters()[0].value() == "12 34 ab");
+    CHECK(uri.query().parameters()[1].key() == "val1");
+    CHECK(uri.query().parameters()[1].value() == "a&b=c");
+    CHECK(uri.query().parameters()[2].key() == "val2");
+    CHECK(uri.query().parameters()[2].value() == "1+2+3=6");
+    CHECK(uri.serialise() == "http://%C3%B6.example.com/as%2Fdf/?val0=12%2034%20ab&val1=a%26b%3Dc&val2=1%2B2%2B3%3D6");
 
 
 
@@ -299,7 +325,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority() == "");
     REQUIRE(uri.path().segments().size() == );
     CHECK(uri.path().segments()[0] == "");
-    CHECK(uri.query() == "");
+    CHECK(uri.query().empty() == );
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
     */
