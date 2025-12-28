@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            09.06.2025
+date            28.12.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
@@ -10,11 +10,19 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #include <cctype>
 #include <cstddef>
 #include <cstdint>
+#include <string>
+#include <vector>
 
 #include "catch2/catch.hpp"
 
+#include <omw/defs.h>
 #include <omw/string.h>
 #include <omw/uri.h>
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17)
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 
 
@@ -67,13 +75,12 @@ TEST_CASE("uri.h percent-encoding")
 
 /*
 
-These tests are very basic. The constructor uses the `set()` function directly, which uses `clear()`. So these two are
-not explicitly tested. Getters are implicitly tested.
+These tests are very basic, not all functions are explicitly tested.
 Also could the existing test cases be more thorough.
 
 */
 
-TEST_CASE("uri.h parsing")
+TEST_CASE("uri.h parsing and serialising URI")
 {
     std::string str;
     omw::URI uri;
@@ -87,6 +94,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority().host() == "");
     CHECK(uri.authority().hasPort() == false);
     CHECK(uri.path().empty() == true);
+    CHECK(uri.path().serialise() == "");
     CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
 
@@ -101,9 +109,11 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority().hasPort() == false);
     CHECK(uri.path().empty() == true);
     CHECK(uri.path().segments().size() == 0);
+    CHECK(uri.path().serialise() == "");
     CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
+    // CHECK(omw::URI(uri.serialise()) == uri); TODO add this to all tests
 
     str = "http://example.com/";
     uri = str;
@@ -114,10 +124,11 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.authority().pass() == "");
     CHECK(uri.authority().host() == "example.com");
     CHECK(uri.authority().hasPort() == false);
-    CHECK(uri.path().empty() == true);
+    CHECK(uri.path().empty() == false);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "");
     CHECK(uri.path().segments()[0].empty() == true);
+    CHECK(uri.path().serialise() == "/");
     CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
@@ -134,6 +145,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.path().segments()[0] == "path");
     CHECK(uri.path().segments()[1] == "to");
     CHECK(uri.path().segments()[2] == "index.php");
+    CHECK(uri.path().serialise() == "/path/to/index.php");
     CHECK(uri.query().empty() == true);
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == str);
@@ -150,6 +162,7 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.path().segments()[0] == "view");
     CHECK(uri.path().segments()[1] == "system-b");
     CHECK(uri.path().segments()[2] == "");
+    CHECK(uri.path().serialise() == "/view/system-b/");
     REQUIRE(uri.query().parameters().size() == 2);
     CHECK(uri.query().parameters()[0].key() == "value");
     CHECK(uri.query().parameters()[0].value() == "123");
@@ -158,10 +171,14 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.fragment() == "overview");
     CHECK(uri.serialise() == str);
 
+    str = "https://hans.meier@www.example.com:3333invalid?value=123&tag=test#overview";
+    uri = str;
+    CHECK(uri.isValid() == false);
+
     str = "htTps://annek\xC3\xA4thi:geheim23@api.example.com/colour/today?token=%23j734bol&name%20id=abcd+1234#top";
     uri = str;
     CHECK(uri.isValid() == true);
-    CHECK(uri.scheme() == "https");
+    CHECK(uri.scheme() == "htTps");
     CHECK(uri.authority().user() == "annek\xC3\xA4thi");
     CHECK(uri.authority().pass() == "geheim23");
     CHECK(uri.authority().host() == "api.example.com");
@@ -169,13 +186,14 @@ TEST_CASE("uri.h parsing")
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "colour");
     CHECK(uri.path().segments()[1] == "today");
+    CHECK(uri.path().serialise() == "/colour/today");
     REQUIRE(uri.query().parameters().size() == 2);
     CHECK(uri.query().parameters()[0].key() == "token");
     CHECK(uri.query().parameters()[0].value() == "#j734bol");
     CHECK(uri.query().parameters()[1].key() == "name id");
     CHECK(uri.query().parameters()[1].value() == "abcd 1234");
     CHECK(uri.fragment() == "top");
-    CHECK(uri.serialise() == "https://annek%C3%A4thi:geheim23@api.example.com/colour/today?token=%23j734bol&name%20id=abcd%201234#top");
+    CHECK(uri.serialise() == "htTps://annek%C3%A4thi:geheim23@api.example.com/colour/today?token=%23j734bol&name%20id=abcd%201234#top");
 
     str = "mailto:flip@example.com";
     uri = str;
@@ -305,7 +323,8 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.fragment() == "");
     CHECK(uri.serialise() == "http://%C3%B6.example.com/as%2Fdf/?val0=12%2034%20ab&val1=a%26b%3Dc");
 
-    uri.query().add("val2", "1+2+3=6");
+    uri.addQueryParameter("val2", "1+2+3=6");
+    CHECK(uri.isValid() == true);
     REQUIRE(uri.query().parameters().size() == 3);
     CHECK(uri.query().parameters()[0].key() == "val0");
     CHECK(uri.query().parameters()[0].value() == "12 34 ab");
@@ -330,6 +349,168 @@ TEST_CASE("uri.h parsing")
     CHECK(uri.serialise() == str);
     */
 }
+
+TEST_CASE("uri.h validity after setter")
+{
+    // TODO
+}
+
+TEST_CASE("uri.h \\ in path segment")
+{
+    std::string str;
+    omw::URI uri;
+
+
+
+    str = "http://example.com/path/t%5Co/strange\\file.txt";
+    uri = str;
+    REQUIRE(uri.path().segments().size() == 3);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "t\\o");
+    CHECK(uri.path().segments()[2] == "strange\\file.txt");
+    CHECK(uri.serialise() == "http://example.com/path/t%5Co/strange%5Cfile.txt");
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17)
+    fs::path path;
+    path = fs::path("/") / "path" / "t\\o" / "strange\\file.txt";
+#if OMW_PLAT_WIN
+    fs::path winPath;
+    winPath = fs::path("/") / "path" / "t" / "o" / "strange" / "file.txt";
+    CHECK(/* TODO (uri.path().toStdPath() == path) || */ (uri.path().toStdPath() == winPath));
+#else
+    CHECK(uri.path().toStdPath() == path);
+#endif
+
+#endif // C++17
+}
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17)
+
+TEST_CASE("uri.h std::filesystem::path basics")
+{
+    fs::path stdPath;
+    omw::URI uri;
+
+    const omw::URI startUri = "https://hans.meier@www.example.com:8080/view/system-b/?value=123&tag=test#overview";
+
+    uri = startUri;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.path().segments().empty() == false);
+    REQUIRE(uri.path().segments().size() == 3);
+    CHECK(uri.path().segments()[0] == "view");
+    CHECK(uri.path().segments()[1] == "system-b");
+    CHECK(uri.path().segments()[2] == "");
+    CHECK(uri.path().serialise() == "/view/system-b/");
+    CHECK(uri.path().toStdPath().is_absolute() == true);
+    CHECK((fs::path)(uri.path()) == fs::path("/view/system-b/"));
+
+
+
+    stdPath = "";
+    uri = startUri;
+    uri.setPath(stdPath);
+    CHECK(uri.isValid() == true);
+    CHECK(uri.path().segments().empty() == true);
+    CHECK(uri.path().segments().size() == 0);
+    CHECK(uri.path().serialise() == "");
+    CHECK(uri.path().toStdPath().is_absolute() == false);
+    CHECK((fs::path)(uri.path()) == stdPath);
+    CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080?value=123&tag=test#overview");
+
+
+
+    stdPath = "/";
+    uri = startUri;
+    uri.setPath(stdPath);
+    CHECK(uri.isValid() == true);
+    CHECK(uri.path().segments().empty() == false);
+    REQUIRE(uri.path().segments().size() == 1);
+    CHECK(uri.path().segments()[0] == "");
+    CHECK(uri.path().serialise() == "/");
+    CHECK(uri.path().toStdPath().is_absolute() == true);
+    CHECK((fs::path)(uri.path()) == stdPath);
+    CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080/?value=123&tag=test#overview");
+
+
+
+    stdPath = "/asdf/qwertz";
+    uri = startUri;
+    uri.setPath(stdPath);
+    CHECK(uri.isValid() == true);
+    CHECK(uri.path().segments().empty() == false);
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "asdf");
+    CHECK(uri.path().segments()[1] == "qwertz");
+    CHECK(uri.path().serialise() == "/asdf/qwertz");
+    CHECK(uri.path().toStdPath().is_absolute() == true);
+    CHECK((fs::path)(uri.path()) == stdPath);
+    CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080/asdf/qwertz?value=123&tag=test#overview");
+
+
+
+    stdPath = "asdf";
+    uri = startUri;
+    uri.setPath(stdPath);
+    CHECK(uri.isValid() == false);
+    CHECK(uri.path().segments().empty() == false);
+    REQUIRE(uri.path().segments().size() == 1);
+    CHECK(uri.path().segments()[0] == "asdf");
+    CHECK(uri.path().serialise() == "asdf");
+    CHECK(uri.path().toStdPath().is_absolute() == false);
+    CHECK((fs::path)(uri.path()) == stdPath);
+    CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080asdf?value=123&tag=test#overview");
+}
+
+
+
+#define ___BASE_URI_PATH_CHECK(_pathStr, ...) \
+    stdPath = (_pathStr);                     \
+    uriPath = stdPath;                        \
+    CHECK(uriPath.segments() == std::vector<omw::URI::PathSegment>(__VA_ARGS__));
+
+#define URI_PATH_CHECK(_pathStr, ...)              \
+    ___BASE_URI_PATH_CHECK(_pathStr, __VA_ARGS__); \
+    CHECK(uriPath.serialise() == (_pathStr));
+
+#define URI_PATH_CHECK_WIN(_pathStr, _serialised, ...) \
+    ___BASE_URI_PATH_CHECK(_pathStr, __VA_ARGS__);     \
+    CHECK(uriPath.serialise() == (_serialised));
+
+TEST_CASE("uri.h omw::URI::Path specific std::filesystem::path")
+{
+    using Segment = omw::URI::PathSegment;
+
+    fs::path stdPath;
+    omw::URI::Path uriPath;
+
+#if OMW_PLAT_WIN
+    URI_PATH_CHECK_WIN("C:\\asdf\\qwer", "", {});
+    URI_PATH_CHECK_WIN("C:\\asdf\\qwer\\", "", {});
+    URI_PATH_CHECK_WIN("C:\\asdf\\file.txt", "", {});
+    URI_PATH_CHECK_WIN("C:\\file.txt", "", {});
+    URI_PATH_CHECK_WIN("C:file.txt", "", {});
+    URI_PATH_CHECK_WIN("C:\\", "", {});
+    URI_PATH_CHECK_WIN("C:", "", {});
+#endif // OMW_PLAT_WIN
+
+    URI_PATH_CHECK("C:/asdf/qwer", { Segment("C:"), Segment("asdf"), Segment("qwer") });
+    URI_PATH_CHECK("C:/asdf/qwer/", { Segment("C:"), Segment("asdf"), Segment("qwer"), Segment() });
+    URI_PATH_CHECK("C:/asdf/file.txt", { Segment("C:"), Segment("asdf"), Segment("file.txt") });
+    URI_PATH_CHECK("C:/file.txt", { Segment("C:"), Segment("file.txt") });
+    URI_PATH_CHECK("C:file.txt", { Segment("C:file.txt") });
+    URI_PATH_CHECK("C:/", { Segment("C:"), Segment() });
+    URI_PATH_CHECK("C:", { Segment("C:") });
+
+    URI_PATH_CHECK("/asdf/qwer", { Segment("asdf"), Segment("qwer") });
+    URI_PATH_CHECK("/asdf/qwer/", { Segment("asdf"), Segment("qwer"), Segment() });
+    URI_PATH_CHECK("/asdf/index.html", { Segment("asdf"), Segment("index.html") });
+    URI_PATH_CHECK("/index.html", { Segment("index.html") });
+    URI_PATH_CHECK("index.html", { Segment("index.html") });
+    URI_PATH_CHECK("/", { Segment() });
+    URI_PATH_CHECK("", {});
+}
+
+#endif // C++17
 
 
 

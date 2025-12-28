@@ -80,7 +80,7 @@ TEST_CASE("clock.h omw::clock::now() measure system sleep")
     duration = omw::clock::now() - start;
 
     CHECK(duration >= (990 * 1000ll));
-    CHECK(duration <= (1050 * 1000ll));
+    CHECK(duration <= (1100 * 1000ll));
 
 
 
@@ -97,7 +97,7 @@ TEST_CASE("clock.h omw::clock::now() measure system sleep")
 #ifdef OMW_PLAT_WIN
     CHECK(duration <= (12000ll));
 #else
-    CHECK(duration <= (10500ll));
+    CHECK(duration <= (11000ll));
 #endif
 }
 

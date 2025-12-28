@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            09.06.2025
+date            28.12.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
@@ -11,8 +11,14 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #include <string>
 #include <vector>
 
+#include "omw/defs.h"
 #include "omw/string.h"
 #include "omw/uri.h"
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17)
+#include <filesystem>
+#endif
+
 
 
 // explicitly unreserved characters
@@ -202,6 +208,8 @@ void omw::URI::Authority::parse(const std::string& str_encoded)
             ++p;
         }
 
+        static_assert(sizeof(m_port) >= 2, "port member type has to be at least 16bit wide");
+
         try
         {
             m_port = std::stoi(portStr);
@@ -286,6 +294,79 @@ void omw::URI::Path::parse(const std::string& str_encoded)
     if (m_isAbs || !segmentStr.empty()) { m_segments.push_back(omw::URI::PathSegment(segmentStr)); }
 }
 
+void omw::URI::Path::parse(const char* str_encoded)
+{
+    if (str_encoded) { this->parse(std::string(str_encoded)); }
+    else { this->clear(); }
+}
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17)
+
+void omw::URI::Path::set(const std::filesystem::path& path)
+{
+#if 1 // use omw::split()
+
+#if OMW_PLAT_WIN
+    constexpr char segmentDelimiter = '\\';
+#else
+    constexpr char segmentDelimiter = '/';
+#endif
+
+    clear();
+
+    std::string pathString = path.u8string();
+
+    m_isAbs = (!pathString.empty() && (pathString[0] == segmentDelimiter));
+
+    if (!pathString.empty())
+    {
+        const auto segments = omw::split(pathString.substr(m_isAbs ? 1 : 0), segmentDelimiter);
+
+        for (size_t i = 0; i < segments.size(); ++i)
+        {
+            PathSegment tmp;
+            tmp.set(segments[i]);
+
+            m_segments.push_back(tmp);
+        }
+    }
+
+#else // use fs::path utility
+
+    clear();
+
+    const bool hasRootName = path.has_root_name();
+    const std::string rootDir = path.root_directory();
+
+    m_isAbs = (((rootDir == "/") || (rootDir == "\\")) && // is effectively absolute
+               !hasRootName                               // but absolute paths with a root name are treated as relative
+    );                                                    // by the internal `m_isAbs` logic
+
+    auto consume = path;
+    while (!consume.empty())
+    {
+#error "not finished implementing"
+
+        PathSegment tmp;
+        tmp.set(consume.filename().u8string());
+
+        m_segments.insert(m_segments.begin(), tmp);
+
+        consume = consume.parent_path();
+    }
+
+    if (hasRootName)
+    {
+        PathSegment tmp;
+        tmp.set(path.root_name().u8string());
+
+        m_segments.insert(m_segments.begin(), tmp);
+    }
+#endif // implementation variant
+}
+
+#endif // C++17
+
 std::string omw::URI::Path::serialise() const
 {
     std::string r;
@@ -300,6 +381,30 @@ std::string omw::URI::Path::serialise() const
 
     return r;
 }
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17)
+
+std::filesystem::path omw::URI::Path::toStdPath() const
+{
+    std::filesystem::path path;
+
+    if (m_segments.empty())
+    {
+        if (m_isAbs) { path = "/"; }
+        // else nop
+    }
+    else
+    {
+        if (m_isAbs) { path = "/" + m_segments[0].data(); }
+        else { path = m_segments[0].data(); }
+
+        for (size_t i = 1; i < m_segments.size(); ++i) { path /= m_segments[i].data(); }
+    }
+
+    return path;
+}
+
+#endif // C++17
 
 
 
@@ -394,15 +499,13 @@ void omw::URI::parse(const std::string& uri_encoded)
     const char* const pEnd = p + uri_encoded.length();
 
     clear();
-    m_validity = omw::isAlpha(*p); // scheme must start with a letter
 
     // copy scheme and make canonical
     while (p < pEnd)
     {
         if (*p != ':')
         {
-            m_validity &= isSchemeChar(*p);
-            m_scheme.push_back(std::tolower((unsigned char)(*p)));
+            m_scheme.push_back(*p);
             ++p;
         }
         else
@@ -484,6 +587,14 @@ void omw::URI::parse(const std::string& uri_encoded)
     // could be implemented inline above, would improve readability of the results because special cases can be covered better
     m_scheme = omw::URI::decode(m_scheme);
     m_fragment = omw::URI::decode(m_fragment);
+
+    m_check();
+}
+
+void omw::URI::parse(const char* uri_encoded)
+{
+    if (uri_encoded) { this->parse(std::string(uri_encoded)); }
+    else { this->clear(); }
 }
 
 void omw::URI::clear()
@@ -497,7 +608,81 @@ void omw::URI::clear()
     m_fragment.clear();
 }
 
-void omw::URI::setScheme(const std::string& scheme_decoded) { m_scheme = omw::toLower_ascii(scheme_decoded); }
+void omw::URI::setScheme(const std::string& scheme_decoded)
+{
+    m_scheme = scheme_decoded;
+    m_check();
+}
+
+void omw::URI::setAuthority(const omw::URI::Authority& authority)
+{
+    m_authority = authority;
+    m_check();
+}
+
+void omw::URI::setUser(const std::string& user)
+{
+    m_authority.setUser(user);
+    m_check();
+}
+
+void omw::URI::setPass(const std::string& pass)
+{
+    m_authority.setPass(pass);
+    m_check();
+}
+
+void omw::URI::setHost(const std::string& host)
+{
+    m_authority.setHost(host);
+    m_check();
+}
+
+void omw::URI::setPort(int port)
+{
+    m_authority.setPort(port);
+    m_check();
+}
+
+void omw::URI::setPath(const omw::URI::Path& path)
+{
+    m_path = path;
+    m_check();
+}
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17) || defined(OMWi_DOXYGEN_PREDEFINE)
+
+void omw::URI::setPath(const std::filesystem::path& path)
+{
+    m_path = omw::URI::Path(path);
+    m_check();
+}
+
+#endif
+
+void omw::URI::setQuery(const omw::URI::Query& query)
+{
+    m_query = query;
+    m_check();
+}
+
+void omw::URI::setFragment(const std::string& fragment_decoded)
+{
+    m_fragment = fragment_decoded;
+    m_check();
+}
+
+void omw::URI::addQueryParameter(const omw::URI::QueryParameter& parameter)
+{
+    m_query.add(parameter);
+    m_check();
+}
+
+void omw::URI::addQueryParameter(const std::string& key, const std::string& value)
+{
+    m_query.add(key, value);
+    m_check();
+}
 
 std::string omw::URI::serialise() const
 {
@@ -510,4 +695,33 @@ std::string omw::URI::serialise() const
     if (!m_fragment.empty()) { r += '#' + omw::URI::encodeFragment(m_fragment); }
 
     return r;
+}
+
+void omw::URI::m_check()
+{
+    m_validity = true;
+
+
+
+    if (m_scheme.empty()) { m_validity = false; }
+    else
+    {
+        // scheme must start with a letter
+        if (!omw::isAlpha(m_scheme[0])) { m_validity = false; }
+
+        for (const auto& c : m_scheme)
+        {
+            if (!isSchemeChar(c)) { m_validity = false; }
+        }
+    }
+
+
+
+    const std::string path = m_path.serialise();
+
+    // if an authority is specified the path must start with `/`
+    if (!m_authority.empty() && !path.empty() && (path[0] != '/')) { m_validity = false; }
+
+    // if no authority is specified the path must not start with `//`
+    if (m_authority.empty() && !path.empty() && (path.substr(0, 2) == "//")) { m_validity = false; }
 }

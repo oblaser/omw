@@ -1,6 +1,6 @@
 /*
 author          Oliver Blaser
-date            09.06.2025
+date            28.12.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
@@ -10,6 +10,13 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #include <cstdint>
 #include <string>
 #include <vector>
+
+#include "../omw/defs.h"
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17)
+#include <filesystem>
+#endif
+
 
 
 namespace omw {
@@ -29,9 +36,7 @@ namespace omw {
  * - detection IPv6 in authority is done by simply checking front and back for the brackets without the actual IP string
  * - querry only supports delimiter `&`, not `;`
  *
- * Getters and setters operate in decoded mode.
- *
- * The parser makes the scheme canonical.
+ * Getters and setters are expecting and returning decoded strings.
  */
 class URI
 {
@@ -67,7 +72,7 @@ public:
         explicit Authority(const char* str_encoded)
             : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(-1)
         {
-            this->parse(str_encoded);
+            if (str_encoded) { this->parse(str_encoded); }
         }
 
         explicit Authority(const std::string& str_encoded)
@@ -121,7 +126,7 @@ public:
         explicit PathSegment(const char* str_encoded)
             : m_data()
         {
-            this->parse(str_encoded);
+            if (str_encoded) { this->parse(str_encoded); }
         }
 
         explicit PathSegment(const std::string& str_encoded)
@@ -161,7 +166,7 @@ public:
         explicit Path(const char* str_encoded)
             : m_isAbs(false), m_segments()
         {
-            this->parse(str_encoded);
+            if (str_encoded) { this->parse(str_encoded); }
         }
 
         explicit Path(const std::string& str_encoded)
@@ -170,9 +175,36 @@ public:
             this->parse(str_encoded);
         }
 
+#if (OMW_CPPSTD >= OMW_CPPSTD_17) || defined(OMWi_DOXYGEN_PREDEFINE)
+
+        /**
+         * This constructor is only available for C++ versions &ge;17.
+         *
+         * @param path `std::filesystem::path` in decoded string format
+         */
+        Path(const std::filesystem::path& path)
+            : m_isAbs(false), m_segments()
+        {
+            this->set(path);
+        }
+
+#endif
+
         virtual ~Path() {}
 
         void parse(const std::string& str_encoded);
+        void parse(const char* str_encoded);
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17) || defined(OMWi_DOXYGEN_PREDEFINE)
+
+        /**
+         * This function is only available for C++ versions &ge;17.
+         *
+         * @param path `std::filesystem::path` in decoded string format
+         */
+        void set(const std::filesystem::path& path);
+
+#endif
 
         void clear()
         {
@@ -183,16 +215,45 @@ public:
         const std::vector<omw::URI::PathSegment>& segments() const { return m_segments; }
         std::vector<omw::URI::PathSegment>& segments() { return m_segments; }
 
-        bool empty() const { return (m_segments.empty() || ((m_segments.size() == 1) && (m_segments[0].empty()))); }
+        bool empty() const { return (m_segments.empty() || ((m_segments.size() == 1) && (m_segments[0].empty()) && !m_isAbs)); }
 
         /**
          * Serialise the percent encoded path.
          */
         std::string serialise() const;
 
+#if (OMW_CPPSTD >= OMW_CPPSTD_17) || defined(OMWi_DOXYGEN_PREDEFINE)
+
+        /**
+         * This function is only available for C++ versions &ge;17.
+         *
+         * Altough it's verly unlikely that a path segment ever contains `\`, be aware that on Windows this function
+         * will return a path that differs from the original path if any path segment contains `\`.
+         *
+         * @return `std::filesystem::path` in decoded string format
+         */
+        std::filesystem::path toStdPath() const;
+
+        /**
+         * See `toStdPath()`!
+         */
+        explicit operator std::filesystem::path() const { return this->toStdPath(); }
+
+#endif
+
     private:
+        // Not publicly available, internal use only. Is invalid for paths with root names, but this is still ok for
+        // internal use (serialiser). E.g. the path `C:\asdf` is treated as relative.
         bool m_isAbs;
+
         std::vector<omw::URI::PathSegment> m_segments;
+
+    private:
+#if (OMW_CPPSTD >= OMW_CPPSTD_17)
+        // explicitly disable these overloads, use `set()`
+        void parse(const std::filesystem::path&) const;
+        void parse(const std::filesystem::path&);
+#endif
     };
 
     class QueryParameter
@@ -205,7 +266,7 @@ public:
         explicit QueryParameter(const char* str_encoded)
             : m_key(), m_value()
         {
-            this->parse(str_encoded);
+            if (str_encoded) { this->parse(str_encoded); }
         }
 
         explicit QueryParameter(const std::string& str_encoded)
@@ -258,7 +319,7 @@ public:
         explicit Query(const char* str_encoded)
             : m_parameters()
         {
-            this->parse(str_encoded);
+            if (str_encoded) { this->parse(str_encoded); }
         }
 
         explicit Query(const std::string& str_encoded)
@@ -319,36 +380,50 @@ public:
     virtual ~URI() {}
 
     void parse(const std::string& uri_encoded);
+    void parse(const char* uri_encoded);
     void clear();
 
     const std::string& scheme() const { return m_scheme; }
-    void setScheme(const std::string& scheme_decoded);
-
-    omw::URI::Authority& authority() { return m_authority; }
     const omw::URI::Authority& authority() const { return m_authority; }
-    void setAuthority(const omw::URI::Authority& authority) { m_authority = authority; }
-    void setUser(const std::string& user) { m_authority.setUser(user); }
-    void setPass(const std::string& pass) { m_authority.setPass(pass); }
-    void setHost(const std::string& host) { m_authority.setHost(host); }
-    void setPort(int port) { m_authority.setPort(port); }
-
-    omw::URI::Path& path() { return m_path; }
     const omw::URI::Path& path() const { return m_path; }
-    void setPath(const omw::URI::Path& path) { m_path = path; }
-
-    omw::URI::Query& query() { return m_query; }
     const omw::URI::Query& query() const { return m_query; }
-    void setQuery(const omw::URI::Query& query) { m_query = query; }
-
     const std::string& fragment() const { return m_fragment; }
-    void setFragment(const std::string& fragment_decoded) { m_fragment = fragment_decoded; }
+
+    void setScheme(const std::string& scheme_decoded);
+    void setAuthority(const omw::URI::Authority& authority);
+    void setUser(const std::string& user);
+    void setPass(const std::string& pass);
+    void setHost(const std::string& host);
+    void setPort(int port);
+    void setPath(const omw::URI::Path& path);
+
+#if (OMW_CPPSTD >= OMW_CPPSTD_17) || defined(OMWi_DOXYGEN_PREDEFINE)
 
     /**
-     * Serialise the percent encoded URI.
+     * This function is only available for C++ versions &ge;17.
+     *
+     * @param path `std::filesystem::path` in decoded string format
+     */
+    void setPath(const std::filesystem::path& path);
+
+#endif
+
+    void setQuery(const omw::URI::Query& query);
+    void setFragment(const std::string& fragment_decoded);
+
+    void addQueryParameter(const omw::URI::QueryParameter& parameter);
+    void addQueryParameter(const std::string& key, const std::string& value);
+
+    /**
+     * Serialise to the percent encoded string.
      */
     std::string serialise() const;
 
-    bool isValid() const { return (m_validity && (m_authority.isValid() || m_authority.empty())); }
+    bool isValid() const
+    {
+        // path, query and fragment can't be invalid on their own, they just get parsed
+        return (m_validity && (m_authority.isValid() || m_authority.empty()));
+    }
 
 private:
     bool m_validity;
@@ -357,6 +432,8 @@ private:
     omw::URI::Path m_path;
     omw::URI::Query m_query;
     std::string m_fragment;
+
+    void m_check();
 };
 
 

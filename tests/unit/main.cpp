@@ -9,13 +9,14 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define CATCH_CONFIG_MAIN
 #include "catch2/catch.hpp"
 
+#include <omw/defs.h>
 #include <omw/omw.h>
 #include <omw/windows/windows.h>
 
 
 TEST_CASE("omw lib")
 {
-    std::cout << std::endl << "Testing OMW ..." << std::endl;
+    std::cout << std::endl << "Testing OMW - std: " << std::to_string(OMW_CPPSTD).substr(2, 2) << " (" << OMW_CPPSTD << ')' << std::endl;
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 
