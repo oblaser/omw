@@ -35,8 +35,11 @@ namespace omw {
  * Some cases are not properly handled:
  * - detection IPv6 in authority is done by simply checking front and back for the brackets without the actual IP string
  * - querry only supports delimiter `&`, not `;`
+ * - present but empty userinfo in authority is valid but otherwise undefined
  *
  * Getters and setters are expecting and returning decoded strings.
+ *
+ * Constructors are `explicit` to rise the awareness of the (mis)use of encoded and decoded strings.
  */
 class URI
 {
@@ -62,21 +65,32 @@ public:
     static std::string encodeFragment(const std::string& str);
 
 public:
+    using Scheme = std::string; // TODO implement Scheme class
+
     class Authority
     {
+    private:
+        enum
+        {
+            portMin = 0,
+            portMax = UINT16_MAX,
+            portNone = (-1),
+            portInvalid = (-2),
+        };
+
     public:
         Authority()
-            : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(-1)
+            : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(portNone)
         {}
 
         explicit Authority(const char* str_encoded)
-            : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(-1)
+            : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(portNone)
         {
             if (str_encoded) { this->parse(str_encoded); }
         }
 
         explicit Authority(const std::string& str_encoded)
-            : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(-1)
+            : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(portNone)
         {
             this->parse(str_encoded);
         }
@@ -92,13 +106,14 @@ public:
         uint16_t port() const { return (uint16_t)m_port; }
 
         bool hasUserinfo() const { return (!m_user.empty() || !m_pass.empty()); }
-        bool hasPort() const { return (m_port >= 0); }
+        bool hasPort() const { return ((m_port >= portMin) && (m_port <= portMax)); }
         bool empty() const { return (!hasUserinfo() && m_host.empty() && !hasPort()); }
 
-        void setUser(const std::string& user_decoded) { m_user = user_decoded; }
-        void setPass(const std::string& pass_decoded) { m_pass = pass_decoded; }
+        void setUser(const std::string& user_decoded);
+        void setPass(const std::string& pass_decoded);
         void setHost(const std::string& host_decoded);
-        void setPort(int port) { m_port = port; }
+        void setPort(uint16_t port);
+        void clearPort() { m_port = portNone; }
 
         /**
          * Serialise the percent encoded authority string.
@@ -113,7 +128,9 @@ public:
         std::string m_user;
         std::string m_pass;
         std::string m_host;
-        int m_port; // negative to denote not set
+        int m_port; // see private enum for special values
+
+        void m_check();
     };
 
     class PathSegment
@@ -182,7 +199,7 @@ public:
          *
          * @param path `std::filesystem::path` in decoded string format
          */
-        Path(const std::filesystem::path& path)
+        explicit Path(const std::filesystem::path& path)
             : m_isAbs(false), m_segments()
         {
             this->set(path);
@@ -227,15 +244,19 @@ public:
         /**
          * This function is only available for C++ versions &ge;17.
          *
-         * Altough it's verly unlikely that a path segment ever contains `\`, be aware that on Windows this function
-         * will return a path that differs from the original path if any path segment contains `\`.
+         * CAUTION:
+         * If any path segment contains `/` this function will return a path that differs from the original path.
+         *
+         * CAUTION:
+         * If any path segment contains `\`, on Windows this function will return a path that differs from the original
+         * path. Other platforms should be fine since they allow `\` in directory enry names.
          *
          * @return `std::filesystem::path` in decoded string format
          */
         std::filesystem::path toStdPath() const;
 
         /**
-         * See `toStdPath()`!
+         * IMPORTANT: See `toStdPath()`!
          */
         explicit operator std::filesystem::path() const { return this->toStdPath(); }
 
@@ -259,24 +280,36 @@ public:
     class QueryParameter
     {
     public:
+        /**
+         * @brief Creates a flag type `QueryParameter`.
+         *
+         * Creates a flag type `QueryParameter`  but is explicitly not a constructor.
+         *
+         * See also `omw::URI::QueryParameter::isFlag()`.
+         *
+         * @param key_decoded Decoded key name
+         */
+        static QueryParameter flag(const std::string& key_decoded);
+
+    public:
         QueryParameter()
-            : m_key(), m_value()
+            : m_isFlag(false), m_key(), m_value()
         {}
 
         explicit QueryParameter(const char* str_encoded)
-            : m_key(), m_value()
+            : m_isFlag(false), m_key(), m_value()
         {
             if (str_encoded) { this->parse(str_encoded); }
         }
 
         explicit QueryParameter(const std::string& str_encoded)
-            : m_key(), m_value()
+            : m_isFlag(false), m_key(), m_value()
         {
             this->parse(str_encoded);
         }
 
         QueryParameter(const std::string& key_decoded, const std::string& value_decoded)
-            : m_key(key_decoded), m_value(value_decoded)
+            : m_isFlag(false), m_key(key_decoded), m_value(value_decoded)
         {}
 
         virtual ~QueryParameter() {}
@@ -284,6 +317,7 @@ public:
         void parse(const std::string& str_encoded);
         void clear()
         {
+            m_isFlag = false;
             m_key.clear();
             m_value.clear();
         }
@@ -291,12 +325,35 @@ public:
         const std::string& key() const { return m_key; }
         const std::string& value() const { return m_value; }
 
-        void setKey(const std::string& key_decoded) { m_key = key_decoded; }
-        void setValue(const std::string& value_decoded) { m_value = value_decoded; }
+        void setKey(const std::string& key_decoded)
+        {
+            m_isFlag = false;
+            m_key = key_decoded;
+        }
+
+        void setValue(const std::string& value_decoded)
+        {
+            m_isFlag = false;
+            m_value = value_decoded;
+        }
+
         void set(const std::string& key_decoded, const std::string& value_decoded)
         {
+            m_isFlag = false;
             m_key = key_decoded;
             m_value = value_decoded;
+        }
+
+        /**
+         * @brief Converts the parameter to a flag.
+         *
+         * @param key_decoded Decoded flag name
+         */
+        void makeFlag(const std::string& key_decoded)
+        {
+            m_isFlag = true;
+            m_key = key_decoded;
+            m_value.clear();
         }
 
         /**
@@ -304,7 +361,20 @@ public:
          */
         std::string serialise() const;
 
+        /**
+         * - normal parameter: `...?key=value&...`
+         * - normal parameter with no/empty value: `...?key=&...`
+         * - flag parameter: `...?flag&...`
+         */
+        bool isFlag() const { return m_isFlag; }
+
+        bool equals(const omw::URI::QueryParameter& other) const
+        {
+            return ((m_isFlag == other.isFlag()) && (m_key == other.key()) && (m_value == other.value()));
+        }
+
     private:
+        bool m_isFlag;
         std::string m_key;
         std::string m_value;
     };
@@ -354,6 +424,13 @@ public:
          */
         std::string serialise() const;
 
+        bool equals(const omw::URI::Query& other) const { return (m_parameters == other.parameters()); }
+
+        /**
+         * Same as `omw::URI::Query::equals(const omw::URI::Query&) const` but the order of the parameters is ignored.
+         */
+        bool equivalent(const omw::URI::Query& other) const;
+
     private:
         std::vector<omw::URI::QueryParameter> m_parameters;
     };
@@ -362,17 +439,17 @@ public:
 
 public:
     URI()
-        : m_validity(false), m_scheme(), m_authority(), m_path(), m_query(), m_fragment()
+        : m_validity(false), m_scheme(), m_authority(), m_path(), m_query(), m_hasFragment(false), m_fragment()
     {}
 
     URI(const char* uri_encoded)
-        : m_validity(false), m_scheme(), m_authority(), m_path(), m_query(), m_fragment()
+        : m_validity(false), m_scheme(), m_authority(), m_path(), m_query(), m_hasFragment(false), m_fragment()
     {
         parse(uri_encoded);
     }
 
     URI(const std::string& uri_encoded)
-        : m_validity(false), m_scheme(), m_authority(), m_path(), m_query(), m_fragment()
+        : m_validity(false), m_scheme(), m_authority(), m_path(), m_query(), m_hasFragment(false), m_fragment()
     {
         parse(uri_encoded);
     }
@@ -411,6 +488,12 @@ public:
     void setQuery(const omw::URI::Query& query);
     void setFragment(const std::string& fragment_decoded);
 
+    /**
+     * Removes the fragment, `hasFragment()` returns `false` after this call. To set an empty fragament use
+     * `setFragment("")`.
+     */
+    void clearFragment();
+
     void addQueryParameter(const omw::URI::QueryParameter& parameter);
     void addQueryParameter(const std::string& key, const std::string& value);
 
@@ -418,6 +501,17 @@ public:
      * Serialise to the percent encoded string.
      */
     std::string serialise() const;
+
+    /**
+     * Compares the canonical schemes, ignores the validity. The path has to be exatly the same, no canonicalisation is
+     * performed prior to the comparsion.
+     *
+     * The query is compared by `omw::URI::Query::equivalent()` for `http[s]`, and with `omw::URI::Query::equals()` for
+     * all other schemes.
+     */
+    bool equals(const omw::URI& other) const;
+
+    bool hasFragment() const { return m_hasFragment; }
 
     bool isValid() const
     {
@@ -427,14 +521,26 @@ public:
 
 private:
     bool m_validity;
-    std::string m_scheme;
+    omw::URI::Scheme m_scheme;
     omw::URI::Authority m_authority;
     omw::URI::Path m_path;
     omw::URI::Query m_query;
+    bool m_hasFragment;
     std::string m_fragment;
 
     void m_check();
+
+private:
+    // explicitly disable these overloads, so that calls don't wrongly fall back to
+    // `void setPath(const std::filesystem::path&)`.
+    void setPath(const char*);
+    void setPath(const std::string&);
 };
+
+
+
+omw::URI::Scheme canonical(const omw::URI::Scheme& scheme);
+
 
 
 //! \name Operators
@@ -474,6 +580,23 @@ static inline bool operator<(const char* a, const omw::URI::PathSegment& b) { re
 static inline bool operator>(const char* a, const omw::URI::PathSegment& b) { return (a > b.data()); }
 static inline bool operator<=(const char* a, const omw::URI::PathSegment& b) { return (a <= b.data()); }
 static inline bool operator>=(const char* a, const omw::URI::PathSegment& b) { return (a >= b.data()); }
+
+
+
+static inline bool operator==(const omw::URI::QueryParameter& a, const omw::URI::QueryParameter& b) { return a.equals(b); }
+static inline bool operator!=(const omw::URI::QueryParameter& a, const omw::URI::QueryParameter& b) { return !(a == b); }
+
+
+
+/**
+ * see `omw::URI::equals()`
+ */
+static inline bool operator==(const omw::URI& a, const omw::URI& b) { return a.equals(b); }
+
+/**
+ * see `omw::URI::equals()`
+ */
+static inline bool operator!=(const omw::URI& a, const omw::URI& b) { return !(a == b); }
 
 /// @}
 

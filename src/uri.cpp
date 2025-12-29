@@ -124,7 +124,6 @@ void omw::URI::Authority::parse(const std::string& str_encoded)
     const char* const pEnd = p + str_encoded.length();
 
     clear();
-    m_validity = true;
 
     if (omw::contains(str_encoded, '@'))
     {
@@ -159,22 +158,10 @@ void omw::URI::Authority::parse(const std::string& str_encoded)
     }
 
     // copy host
-    if (*p != '[') // not IPv6
+    if (*p == '[') // IPv6
     {
-        while (p < pEnd)
-        {
-            if (*p != ':')
-            {
-                m_host.push_back(*p);
-                ++p;
-            }
-            else { break; }
-        }
+        m_isIPv6 = true;
 
-        m_isIPv6 = false;
-    }
-    else // IPv6
-    {
         while (p < pEnd)
         {
             if (*p != ']')
@@ -189,10 +176,21 @@ void omw::URI::Authority::parse(const std::string& str_encoded)
         {
             m_host.push_back(*p);
             ++p;
-
-            m_isIPv6 = true;
         }
-        else { m_validity = false; }
+    }
+    else
+    {
+        m_isIPv6 = false;
+
+        while (p < pEnd)
+        {
+            if (*p != ':')
+            {
+                m_host.push_back(*p);
+                ++p;
+            }
+            else { break; }
+        }
     }
 
     // if present, parse port
@@ -217,15 +215,16 @@ void omw::URI::Authority::parse(const std::string& str_encoded)
         }
         catch (...)
         {
-            m_validity = false;
-            m_port = -1;
+            m_port = portInvalid;
         }
     }
 
     // could be implemented inline above, would improve readability of the results because special cases can be covered better
     m_user = omw::URI::decode(m_user);
     m_pass = omw::URI::decode(m_pass);
-    m_host = omw::URI::decode(m_host);
+    if (!m_isIPv6) { m_host = omw::URI::decode(m_host); }
+
+    m_check();
 }
 
 void omw::URI::Authority::clear()
@@ -236,13 +235,32 @@ void omw::URI::Authority::clear()
     m_user.clear();
     m_pass.clear();
     m_host.clear();
-    m_port = -1;
+    m_port = portNone;
+}
+
+void omw::URI::Authority::setUser(const std::string& user_decoded)
+{
+    m_user = user_decoded;
+    m_check();
+}
+
+void omw::URI::Authority::setPass(const std::string& pass_decoded)
+{
+    m_pass = pass_decoded;
+    m_check();
 }
 
 void omw::URI::Authority::setHost(const std::string& host)
 {
     m_isIPv6 = isIPv6(host);
     m_host = host;
+    m_check();
+}
+
+void omw::URI::Authority::setPort(uint16_t port)
+{
+    m_port = port;
+    m_check();
 }
 
 std::string omw::URI::Authority::serialise() const
@@ -259,6 +277,36 @@ std::string omw::URI::Authority::serialise() const
     if (m_port >= 0) { r += ':' + omw::toString(m_port); }
 
     return r;
+}
+
+void omw::URI::Authority::m_check()
+{
+    m_validity = true;
+
+
+
+    // the userinfo is not hardly defined ("may consist") so no checks are done here
+
+
+
+    if (m_host.empty()) { m_validity = false; }
+
+    if ((omw::contains(m_host, '[') || omw::contains(m_host, ']')) && // contains IPv6 delimiters and
+        (!m_isIPv6 || !isIPv6(m_host)))                               // flag is not set or the string is not
+                                                                      // encapsulated by `[` and `]`
+    {
+        m_validity = false;
+    }
+
+    // proper IP string checks could be added here
+
+
+
+    if (!((m_port >= portMin) && (m_port <= portMax)) && // not in valid range and
+        (m_port != portNone))                            // not not-set
+    {
+        m_validity = false;
+    }
 }
 
 
@@ -408,12 +456,22 @@ std::filesystem::path omw::URI::Path::toStdPath() const
 
 
 
+omw::URI::QueryParameter omw::URI::QueryParameter::flag(const std::string& key_decoded)
+{
+    QueryParameter param;
+    param.makeFlag(key_decoded);
+    return param;
+}
+
+
 void omw::URI::QueryParameter::parse(const std::string& str_encoded)
 {
     const char* p = str_encoded.c_str();
     const char* const pEnd = p + str_encoded.length();
 
     clear();
+
+    m_isFlag = true;
 
     // copy key
     while (p < pEnd)
@@ -429,6 +487,7 @@ void omw::URI::QueryParameter::parse(const std::string& str_encoded)
     // if present, copy value
     if (*p == '=')
     {
+        m_isFlag = false;
         ++p; // skip fragment delimiter
 
         while (p < pEnd)
@@ -447,7 +506,7 @@ std::string omw::URI::QueryParameter::serialise() const
 {
     std::string r = omw::URI::encodeQueryField(m_key);
 
-    if (!m_value.empty()) { r += '=' + omw::URI::encodeQueryField(m_value); }
+    if (!m_isFlag) { r += '=' + omw::URI::encodeQueryField(m_value); }
 
     return r;
 }
@@ -491,6 +550,29 @@ std::string omw::URI::Query::serialise() const
     return r;
 }
 
+bool omw::URI::Query::equivalent(const omw::URI::Query& other) const
+{
+    if (m_parameters.size() != other.parameters().size()) { return false; }
+    else
+    {
+        std::vector<omw::URI::QueryParameter> cache = other.parameters();
+
+        for (const auto& thisParam : m_parameters)
+        {
+            for (size_t i = 0; i < cache.size(); ++i)
+            {
+                if (thisParam.equals(cache[i]))
+                {
+                    cache.erase(cache.begin() + i);
+                    break;
+                }
+            }
+        }
+
+        return cache.empty();
+    }
+}
+
 
 
 void omw::URI::parse(const std::string& uri_encoded)
@@ -500,7 +582,7 @@ void omw::URI::parse(const std::string& uri_encoded)
 
     clear();
 
-    // copy scheme and make canonical
+    // copy scheme
     while (p < pEnd)
     {
         if (*p != ':')
@@ -575,6 +657,7 @@ void omw::URI::parse(const std::string& uri_encoded)
     // if present, copy fragment
     if (*p == '#')
     {
+        m_hasFragment = true;
         ++p; // skip fragment delimiter
 
         while (p < pEnd)
@@ -605,6 +688,8 @@ void omw::URI::clear()
     m_authority.clear();
     m_path.clear();
     m_query.clear();
+
+    m_hasFragment = false;
     m_fragment.clear();
 }
 
@@ -663,25 +748,33 @@ void omw::URI::setPath(const std::filesystem::path& path)
 void omw::URI::setQuery(const omw::URI::Query& query)
 {
     m_query = query;
-    m_check();
+    // no check needed here
 }
 
 void omw::URI::setFragment(const std::string& fragment_decoded)
 {
+    m_hasFragment = true;
     m_fragment = fragment_decoded;
-    m_check();
+    // no check needed here
+}
+
+void omw::URI::clearFragment()
+{
+    m_hasFragment = false;
+    m_fragment.clear();
+    // no check needed here
 }
 
 void omw::URI::addQueryParameter(const omw::URI::QueryParameter& parameter)
 {
     m_query.add(parameter);
-    m_check();
+    // no check needed here
 }
 
 void omw::URI::addQueryParameter(const std::string& key, const std::string& value)
 {
     m_query.add(key, value);
-    m_check();
+    // no check needed here
 }
 
 std::string omw::URI::serialise() const
@@ -692,9 +785,36 @@ std::string omw::URI::serialise() const
     if (!m_authority.empty() || (m_scheme == "file")) { r += "//" + m_authority.serialise(); }
     r += m_path.serialise();
     if (!m_query.empty()) { r += '?' + m_query.serialise(); }
-    if (!m_fragment.empty()) { r += '#' + omw::URI::encodeFragment(m_fragment); }
+    if (m_hasFragment) { r += '#' + omw::URI::encodeFragment(m_fragment); }
 
     return r;
+}
+
+bool omw::URI::equals(const omw::URI& other) const
+{
+    // scheme
+    const auto thisScheme = canonical(m_scheme);
+    if (thisScheme != canonical(other.scheme())) { return false; }
+
+    // authority
+    if (m_authority.serialise() != other.authority().serialise()) { return false; }
+
+    // path
+    if (m_path.serialise() != other.path().serialise()) { return false; }
+
+    // query
+    bool qeq = false;
+    if ((thisScheme == "http") || (thisScheme == "https")) { qeq = m_query.equivalent(other.query()); }
+    else { qeq = m_query.equals(other.query()); }
+    if (!qeq) { return false; }
+
+    // fragment
+    if (m_hasFragment != other.hasFragment()) { return false; }
+    if (m_fragment != other.fragment()) { return false; }
+
+
+
+    return true;
 }
 
 void omw::URI::m_check()
@@ -717,6 +837,10 @@ void omw::URI::m_check()
 
 
 
+    if (!m_authority.isValid() && !m_authority.empty()) { m_validity = false; }
+
+
+
     const std::string path = m_path.serialise();
 
     // if an authority is specified the path must start with `/`
@@ -725,3 +849,7 @@ void omw::URI::m_check()
     // if no authority is specified the path must not start with `//`
     if (m_authority.empty() && !path.empty() && (path.substr(0, 2) == "//")) { m_validity = false; }
 }
+
+
+
+omw::URI::Scheme omw::canonical(const omw::URI::Scheme& scheme) { return omw::toLower_asciiExt(scheme); }

@@ -19,7 +19,6 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #include <Windows.h>
 #else
 #include <time.h>
-#include <unistd.h>
 #endif
 
 
@@ -88,7 +87,8 @@ TEST_CASE("clock.h omw::clock::now() measure system sleep")
 #ifdef OMW_PLAT_WIN
     Sleep(10);
 #else
-    usleep(10 * 1000);
+    const struct timespec ___ts = { .tv_sec = 0, .tv_nsec = (10 * 1000 * 1000) };
+    nanosleep(&___ts, NULL);
 #endif
     duration = omw::clock::now() - start;
 
