@@ -125,7 +125,7 @@ public:
          */
         std::string serialise() const;
 
-        bool isValid() const { return m_validity; }
+        bool valid() const { return m_validity; }
 
     private:
         bool m_validity;
@@ -523,7 +523,7 @@ public:
 
     bool hasFragment() const { return m_hasFragment; }
 
-    bool isValid() const { return m_validity; }
+    bool valid() const { return m_validity; }
 
 private:
     bool m_validity;

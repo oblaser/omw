@@ -84,7 +84,7 @@ TEST_CASE("uri.h parsing and serialising URI")
     omw::URI uri;
 
     uri = "";
-    CHECK(uri.isValid() == false);
+    CHECK(uri.valid() == false);
     CHECK(uri.scheme() == "");
     CHECK(uri.authority().empty() == true);
     CHECK(uri.authority().user() == "");
@@ -98,7 +98,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "http://example.com";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "http");
     CHECK(uri.authority().empty() == false);
     CHECK(uri.authority().user() == "");
@@ -115,7 +115,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "http://example.com/";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "http");
     CHECK(uri.authority().empty() == false);
     CHECK(uri.authority().user() == "");
@@ -134,7 +134,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "http://example.com/path/to/index.php";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "http");
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
@@ -152,7 +152,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "https://hans.meier@www.example.com:8080/view/system-b/?value=123&tag=test&u=&a&=98&b=#overview";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "https");
     CHECK(uri.authority().user() == "hans.meier");
     CHECK(uri.authority().pass() == "");
@@ -188,11 +188,11 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "https://hans.meier@www.example.com:3333invalid?value=123&tag=test#overview";
     uri = str;
-    CHECK(uri.isValid() == false);
+    CHECK(uri.valid() == false);
 
     str = "htTps://annek\xC3\xA4thi:geheim23@api.example.com/colour/today?token=%23j734bol&name%20id=abcd+1234#top";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "htTps");
     CHECK(uri.authority().user() == "annek\xC3\xA4thi");
     CHECK(uri.authority().pass() == "geheim23");
@@ -213,7 +213,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "mailto:flip@example.com";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "mailto");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
@@ -225,7 +225,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "FTP://vreni.hubacher:br-bue@[2600:1406:3a00:21::173e:2e65]:1234/path/to/file.txt";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "FTP");
     CHECK(uri.authority().user() == "vreni.hubacher");
     CHECK(uri.authority().pass() == "br-bue");
@@ -242,7 +242,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "Tel:+41441234567";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "Tel");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
@@ -254,7 +254,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "news:comp.lang.c";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "news");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
@@ -266,7 +266,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "urn:ietf:rfc:9226";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "urn");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
@@ -278,7 +278,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "doi:10.3390/ani11010145";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "doi");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 2);
@@ -291,7 +291,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     str = "file:///home/martha/Downloads/Bestellschein%20Knabber Knack.pdf";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "file");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 4);
@@ -307,7 +307,7 @@ TEST_CASE("uri.h parsing and serialising URI")
 
 
     uri = "http://example.com/as%2Fdf/?a%3Da=asdf&b=123+456";
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "http");
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
@@ -330,7 +330,7 @@ TEST_CASE("uri.h parsing and serialising URI")
         omw::URI::QueryParameter("val0", "12 34 ab"),
         omw::URI::QueryParameter("val1", "a&b=c"),
     }));
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.scheme() == "http");
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
@@ -349,7 +349,7 @@ TEST_CASE("uri.h parsing and serialising URI")
     CHECK(omw::URI(uri.serialise()) == uri);
 
     uri.addQueryParameter("val2", "1+2+3=6");
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     REQUIRE(uri.query().parameters().size() == 3);
     CHECK(uri.query().parameters()[0].key() == "val0");
     CHECK(uri.query().parameters()[0].value() == "12 34 ab");
@@ -388,7 +388,7 @@ TEST_CASE("uri.h validity after setter")
 
     str = "asdf:path/file.txt";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "path");
@@ -398,8 +398,8 @@ TEST_CASE("uri.h validity after setter")
     CHECK(omw::URI(uri.serialise()) == uri);
 
     uri.setHost("server");
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().serialise() == "server");
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "path");
@@ -410,8 +410,8 @@ TEST_CASE("uri.h validity after setter")
 
     str2 = uri.serialise();
     uri = str2;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().serialise() == "serverpath");
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "file.txt");
@@ -426,7 +426,7 @@ TEST_CASE("uri.h validity after setter")
 
     str = "asdf:/path/file.txt";
     uri = str;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "path");
@@ -436,8 +436,8 @@ TEST_CASE("uri.h validity after setter")
     CHECK(omw::URI(uri.serialise()) == uri);
 
     uri.setHost("server");
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().serialise() == "server");
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "path");
@@ -448,8 +448,8 @@ TEST_CASE("uri.h validity after setter")
 
     str2 = uri.serialise();
     uri = str2;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().serialise() == "server");
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "path");
@@ -465,8 +465,8 @@ TEST_CASE("uri.h validity after setter")
 
     str = "asdf://server//path/service";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().serialise() == "server");
     REQUIRE(uri.path().segments().size() == 3);
     CHECK(uri.path().segments()[0] == "");
@@ -477,7 +477,7 @@ TEST_CASE("uri.h validity after setter")
     CHECK(omw::URI(uri.serialise()) == uri);
 
     uri.setAuthority(omw::URI::Authority());
-    CHECK(uri.isValid() == false);
+    CHECK(uri.valid() == false);
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 3);
     CHECK(uri.path().segments()[0] == "");
@@ -489,8 +489,8 @@ TEST_CASE("uri.h validity after setter")
 
     str2 = uri.serialise();
     uri = str2;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().serialise() == "path");
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "service");
@@ -505,8 +505,8 @@ TEST_CASE("uri.h validity after setter")
 
     str = "asdf://server/path/service";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().serialise() == "server");
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "path");
@@ -516,7 +516,7 @@ TEST_CASE("uri.h validity after setter")
     CHECK(omw::URI(uri.serialise()) == uri);
 
     uri.setAuthority(omw::URI::Authority());
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "path");
@@ -527,7 +527,7 @@ TEST_CASE("uri.h validity after setter")
 
     str2 = uri.serialise();
     uri = str2;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "path");
@@ -547,8 +547,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://example.com/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().hasUserinfo() == false);
     CHECK(uri.authority().host() == "example.com");
     CHECK(uri.authority().hasPort() == false);
@@ -557,8 +557,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://example.com:80/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().hasUserinfo() == false);
     CHECK(uri.authority().host() == "example.com");
     CHECK(uri.authority().hasPort() == true);
@@ -568,8 +568,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://user:pass@[2600:1406:3a00:21::173e:2e65]:65535/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "pass");
@@ -581,8 +581,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://user:pass@t%5Bes%5Dt:3333/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "pass");
@@ -594,8 +594,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://user@host:8080/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "");
@@ -607,8 +607,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://user:@host:8080/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "");
@@ -623,8 +623,8 @@ TEST_CASE("uri.h authority")
     // viewpoint of the parser
     str = "http://user:1234/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().hasUserinfo() == false);
     CHECK(uri.authority().host() == "user");
     CHECK(uri.authority().hasPort() == true);
@@ -638,8 +638,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://:pass@host:8080/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "pass");
@@ -651,8 +651,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://:@host:8080/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     // CHECK(uri.authority().hasUserinfo() == ?); undefined
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
@@ -664,8 +664,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://@host:8080/";
     uri = str;
-    CHECK(uri.isValid() == true);
-    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.valid() == true);
+    CHECK(uri.authority().valid() == true);
     // CHECK(uri.authority().hasUserinfo() == ?); undefined
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
@@ -681,8 +681,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://user:pass@:8080/";
     uri = str;
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == false);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == false);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "pass");
@@ -691,8 +691,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://user:pass@/";
     uri = str;
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == false);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == false);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "pass");
@@ -700,8 +700,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://:8080/";
     uri = str;
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == false);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == false);
     CHECK(uri.authority().hasUserinfo() == false);
     CHECK(uri.authority().hasPort() == true);
     CHECK(uri.authority().port() == 8080);
@@ -712,16 +712,16 @@ TEST_CASE("uri.h authority")
 
     str = "http://user:pass@[2600:1406:3a00:21::173e:2e65:65535/";
     uri = str;
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == false);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == false);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "pass");
 
     str = "http://user:pass@2600:1406:3a00:21::173e:2e65]/";
     uri = str;
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == false);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == false);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "pass");
@@ -730,8 +730,8 @@ TEST_CASE("uri.h authority")
 
     str = "http://user:pass@2600:1406:3a00:21::173e:2e65]:65535/";
     uri = str;
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == false);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == false);
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "pass");
@@ -744,24 +744,24 @@ TEST_CASE("uri.h authority")
 
     str = "http://example.com:-80/";
     uri = str;
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == false);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == false);
     CHECK(uri.authority().hasUserinfo() == false);
     CHECK(uri.authority().host() == "example.com");
     CHECK(uri.authority().hasPort() == false);
 
     str = "http://example.com:8080a/";
     uri = str;
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == false);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == false);
     CHECK(uri.authority().hasUserinfo() == false);
     CHECK(uri.authority().host() == "example.com");
     CHECK(uri.authority().hasPort() == false);
 
     str = "http://example.com:65536/";
     uri = str;
-    CHECK(uri.isValid() == false);
-    CHECK(uri.authority().isValid() == false);
+    CHECK(uri.valid() == false);
+    CHECK(uri.authority().valid() == false);
     CHECK(uri.authority().hasUserinfo() == false);
     CHECK(uri.authority().host() == "example.com");
     CHECK(uri.authority().hasPort() == false);
@@ -827,7 +827,7 @@ TEST_CASE("uri.h std::filesystem::path basics")
     const omw::URI startUri = "https://hans.meier@www.example.com:8080/view/system-b/?value=123&tag=test#overview";
 
     uri = startUri;
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.path().segments().empty() == false);
     REQUIRE(uri.path().segments().size() == 3);
     CHECK(uri.path().segments()[0] == "view");
@@ -844,7 +844,7 @@ TEST_CASE("uri.h std::filesystem::path basics")
     stdPath = "";
     uri = startUri;
     uri.setPath(stdPath);
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.path().segments().empty() == true);
     CHECK(uri.path().segments().size() == 0);
     CHECK(uri.path().serialise() == "");
@@ -859,7 +859,7 @@ TEST_CASE("uri.h std::filesystem::path basics")
     stdPath = "/";
     uri = startUri;
     uri.setPath(stdPath);
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.path().segments().empty() == false);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "");
@@ -875,7 +875,7 @@ TEST_CASE("uri.h std::filesystem::path basics")
     stdPath = "/asdf/qwertz";
     uri = startUri;
     uri.setPath(stdPath);
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.path().segments().empty() == false);
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "asdf");
@@ -894,7 +894,7 @@ TEST_CASE("uri.h std::filesystem::path basics")
     stdPath = "\\";
     uri = startUri;
     uri.setPath(stdPath);
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.path().segments().empty() == false);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "");
@@ -905,7 +905,7 @@ TEST_CASE("uri.h std::filesystem::path basics")
     stdPath = "\\asdf\\qwertz";
     uri = startUri;
     uri.setPath(stdPath);
-    CHECK(uri.isValid() == true);
+    CHECK(uri.valid() == true);
     CHECK(uri.path().segments().empty() == false);
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "asdf");
@@ -921,7 +921,7 @@ TEST_CASE("uri.h std::filesystem::path basics")
     stdPath = "asdf";
     uri = startUri;
     uri.setPath(stdPath);
-    CHECK(uri.isValid() == false);
+    CHECK(uri.valid() == false);
     CHECK(uri.path().segments().empty() == false);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "asdf");

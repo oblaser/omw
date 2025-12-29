@@ -856,7 +856,7 @@ void omw::URI::m_check()
 
 
 
-    if (!m_authority.isValid() && !m_authority.empty()) { m_validity = false; }
+    if (!m_authority.valid() && !m_authority.empty()) { m_validity = false; }
 
 
 
