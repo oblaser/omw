@@ -10,7 +10,7 @@
 
 New
 - `omw::Semver` and `omw::MajMinVer`
-- `omw::URI`
+- URI parser and serialiser in `uri.h`
 
 Changed
 - Moved `omw::string` member functions to `omw` namespace

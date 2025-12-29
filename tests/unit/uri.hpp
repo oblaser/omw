@@ -229,7 +229,7 @@ TEST_CASE("uri.h parsing and serialising URI")
     CHECK(uri.scheme() == "FTP");
     CHECK(uri.authority().user() == "vreni.hubacher");
     CHECK(uri.authority().pass() == "br-bue");
-    CHECK(uri.authority().host() == "[2600:1406:3a00:21::173e:2e65]");
+    CHECK(uri.authority().host() == "2600:1406:3a00:21::173e:2e65");
     CHECK(uri.authority().port() == 1234);
     REQUIRE(uri.path().segments().size() == 3);
     CHECK(uri.path().segments()[0] == "path");
@@ -427,9 +427,22 @@ TEST_CASE("uri.h authority")
     CHECK(uri.authority().hasUserinfo() == true);
     CHECK(uri.authority().user() == "user");
     CHECK(uri.authority().pass() == "pass");
-    CHECK(uri.authority().host() == "[2600:1406:3a00:21::173e:2e65]");
+    CHECK(uri.authority().host() == "2600:1406:3a00:21::173e:2e65");
     CHECK(uri.authority().hasPort() == true);
     CHECK(uri.authority().port() == 0xFFFF);
+    CHECK(uri.serialise() == str);
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+    str = "http://user:pass@t%5Bes%5Dt:3333/";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.authority().hasUserinfo() == true);
+    CHECK(uri.authority().user() == "user");
+    CHECK(uri.authority().pass() == "pass");
+    CHECK(uri.authority().host() == "t[es]t");
+    CHECK(uri.authority().hasPort() == true);
+    CHECK(uri.authority().port() == 3333);
     CHECK(uri.serialise() == str);
     CHECK(omw::URI(uri.serialise()) == uri);
 

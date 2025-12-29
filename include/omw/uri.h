@@ -80,17 +80,17 @@ public:
 
     public:
         Authority()
-            : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(portNone)
+            : m_validity(false), m_isIPv6(false), m_validIPv6(false), m_user(), m_pass(), m_host(), m_port(portNone)
         {}
 
         explicit Authority(const char* str_encoded)
-            : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(portNone)
+            : m_validity(false), m_isIPv6(false), m_validIPv6(false), m_user(), m_pass(), m_host(), m_port(portNone)
         {
             if (str_encoded) { this->parse(str_encoded); }
         }
 
         explicit Authority(const std::string& str_encoded)
-            : m_validity(false), m_isIPv6(false), m_user(), m_pass(), m_host(), m_port(portNone)
+            : m_validity(false), m_isIPv6(false), m_validIPv6(false), m_user(), m_pass(), m_host(), m_port(portNone)
         {
             this->parse(str_encoded);
         }
@@ -112,6 +112,7 @@ public:
         void setUser(const std::string& user_decoded);
         void setPass(const std::string& pass_decoded);
         void setHost(const std::string& host_decoded);
+        void setHostIPv6(const std::string& ipv6);
         void setPort(uint16_t port);
         void clearPort() { m_port = portNone; }
 
@@ -125,6 +126,7 @@ public:
     private:
         bool m_validity;
         bool m_isIPv6;
+        bool m_validIPv6;
         std::string m_user;
         std::string m_pass;
         std::string m_host;

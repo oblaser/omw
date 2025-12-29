@@ -63,7 +63,6 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 
 
 static bool isSchemeChar(char c) { return (omw::isAlnum(c) || (c == '+') || (c == '.') || (c == '-')); }
-static inline bool isIPv6(const std::string& host) { return ((host.front() == '[') && (host.back() == ']')); }
 
 
 
@@ -161,6 +160,9 @@ void omw::URI::Authority::parse(const std::string& str_encoded)
     if (*p == '[') // IPv6
     {
         m_isIPv6 = true;
+        m_validIPv6 = false;
+
+        ++p; // skip IPv6 delimiter
 
         while (p < pEnd)
         {
@@ -174,8 +176,8 @@ void omw::URI::Authority::parse(const std::string& str_encoded)
 
         if (*p == ']')
         {
-            m_host.push_back(*p);
-            ++p;
+            m_validIPv6 = true;
+            ++p; // skip IPv6 delimiter
         }
     }
     else
@@ -231,6 +233,7 @@ void omw::URI::Authority::clear()
 {
     m_validity = false;
     m_isIPv6 = false;
+    m_validIPv6 = false;
 
     m_user.clear();
     m_pass.clear();
@@ -252,8 +255,31 @@ void omw::URI::Authority::setPass(const std::string& pass_decoded)
 
 void omw::URI::Authority::setHost(const std::string& host)
 {
-    m_isIPv6 = isIPv6(host);
+    m_isIPv6 = false;
+    m_validIPv6 = false;
     m_host = host;
+    m_check();
+}
+
+void omw::URI::Authority::setHostIPv6(const std::string& ipv6)
+{
+    m_isIPv6 = true;
+
+    const bool escFront = (ipv6.front() == '[');
+    const bool escBack = (ipv6.back() == ']');
+
+    if (escFront && escBack)
+    {
+        m_validIPv6 = true;
+        m_host = std::string(ipv6.begin() + 1, ipv6.end() - 1);
+    }
+    else if (escFront || escBack) { m_validIPv6 = false; }
+    else
+    {
+        m_validIPv6 = true;
+        m_host = ipv6;
+    }
+
     m_check();
 }
 
@@ -271,7 +297,7 @@ std::string omw::URI::Authority::serialise() const
     if (!m_pass.empty()) { r += ':' + omw::URI::encodeAuthority(m_pass); }
     if (!r.empty()) { r += '@'; }
 
-    if (m_isIPv6) { r += m_host; }
+    if (m_isIPv6) { r += '[' + m_host + ']'; }
     else { r += omw::URI::encodeAuthority(m_host); }
 
     if (m_port >= 0) { r += ':' + omw::toString(m_port); }
@@ -289,14 +315,7 @@ void omw::URI::Authority::m_check()
 
 
 
-    if (m_host.empty()) { m_validity = false; }
-
-    if ((omw::contains(m_host, '[') || omw::contains(m_host, ']')) && // contains IPv6 delimiters and
-        (!m_isIPv6 || !isIPv6(m_host)))                               // flag is not set or the string is not
-                                                                      // encapsulated by `[` and `]`
-    {
-        m_validity = false;
-    }
+    if (m_host.empty() || (m_isIPv6 && !m_validIPv6)) { m_validity = false; }
 
     // proper IP string checks could be added here
 
