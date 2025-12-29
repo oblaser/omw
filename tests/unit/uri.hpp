@@ -379,17 +379,163 @@ TEST_CASE("uri.h URI equals")
 
 TEST_CASE("uri.h validity after setter")
 {
+    std::string str, str2;
     omw::URI uri;
 
 
 
-    uri = "file:path/file.txt"; // relative path
+    // setting an authority on a relative path URI makes it invalid
+
+    str = "asdf:path/file.txt";
+    uri = str;
     CHECK(uri.isValid() == true);
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "path");
     CHECK(uri.path().segments()[1] == "file.txt");
     CHECK(uri.path().serialise() == "path/file.txt");
+    CHECK(uri.serialise() == str);
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+    uri.setHost("server");
+    CHECK(uri.isValid() == false);
+    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.authority().serialise() == "server");
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "file.txt");
+    CHECK(uri.path().serialise() == "path/file.txt");
+    CHECK(uri.serialise() == "asdf://serverpath/file.txt");
+    CHECK(omw::URI(uri.serialise()) != uri);
+
+    str2 = uri.serialise();
+    uri = str2;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.authority().serialise() == "serverpath");
+    REQUIRE(uri.path().segments().size() == 1);
+    CHECK(uri.path().segments()[0] == "file.txt");
+    CHECK(uri.path().serialise() == "/file.txt");
+    CHECK(uri.serialise() == str2);
+    CHECK(str != str2);
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+
+
+    // setting an authority on an absolute path URI is fine
+
+    str = "asdf:/path/file.txt";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().empty() == true);
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "file.txt");
+    CHECK(uri.path().serialise() == "/path/file.txt");
+    CHECK(uri.serialise() == str);
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+    uri.setHost("server");
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.authority().serialise() == "server");
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "file.txt");
+    CHECK(uri.path().serialise() == "/path/file.txt");
+    CHECK(uri.serialise() == "asdf://server/path/file.txt");
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+    str2 = uri.serialise();
+    uri = str2;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.authority().serialise() == "server");
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "file.txt");
+    CHECK(uri.path().serialise() == "/path/file.txt");
+    CHECK(uri.serialise() == str2);
+    CHECK(str != str2);
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+
+
+    // clearing an authority on an URI with a path starting with `//` makes it invalid
+
+    str = "asdf://server//path/service";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.authority().serialise() == "server");
+    REQUIRE(uri.path().segments().size() == 3);
+    CHECK(uri.path().segments()[0] == "");
+    CHECK(uri.path().segments()[1] == "path");
+    CHECK(uri.path().segments()[2] == "service");
+    CHECK(uri.path().serialise() == "//path/service");
+    CHECK(uri.serialise() == str);
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+    uri.setAuthority(omw::URI::Authority());
+    CHECK(uri.isValid() == false);
+    CHECK(uri.authority().empty() == true);
+    REQUIRE(uri.path().segments().size() == 3);
+    CHECK(uri.path().segments()[0] == "");
+    CHECK(uri.path().segments()[1] == "path");
+    CHECK(uri.path().segments()[2] == "service");
+    CHECK(uri.path().serialise() == "//path/service");
+    CHECK(uri.serialise() == "asdf://path/service");
+    CHECK(omw::URI(uri.serialise()) != uri);
+
+    str2 = uri.serialise();
+    uri = str2;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.authority().serialise() == "path");
+    REQUIRE(uri.path().segments().size() == 1);
+    CHECK(uri.path().segments()[0] == "service");
+    CHECK(uri.path().serialise() == "/service");
+    CHECK(uri.serialise() == str2);
+    CHECK(str != str2);
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+
+
+    // clearing an authority on a valid URI with a path not starting with `//` is fine
+
+    str = "asdf://server/path/service";
+    uri = str;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().isValid() == true);
+    CHECK(uri.authority().serialise() == "server");
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "service");
+    CHECK(uri.path().serialise() == "/path/service");
+    CHECK(uri.serialise() == str);
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+    uri.setAuthority(omw::URI::Authority());
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().empty() == true);
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "service");
+    CHECK(uri.path().serialise() == "/path/service");
+    CHECK(uri.serialise() == "asdf:/path/service");
+    CHECK(omw::URI(uri.serialise()) == uri);
+
+    str2 = uri.serialise();
+    uri = str2;
+    CHECK(uri.isValid() == true);
+    CHECK(uri.authority().empty() == true);
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "service");
+    CHECK(uri.path().serialise() == "/path/service");
+    CHECK(uri.serialise() == str2);
+    CHECK(str != str2);
+    CHECK(omw::URI(uri.serialise()) == uri);
 }
 
 TEST_CASE("uri.h authority")
@@ -645,14 +791,13 @@ TEST_CASE("uri.h \\ and / in path segment")
     CHECK(omw::URI(uri.serialise()) == uri);
 
 #if (OMW_CPPSTD >= OMW_CPPSTD_17)
-    path = fs::path("/") / "path" / "t\\o" / "strange\\file.txt";
 #if OMW_PLAT_WIN
     winPath = fs::path("/") / "path" / "t" / "o" / "strange" / "file.txt";
     CHECK(uri.path().toStdPath() == winPath);
-#else  // platform
+#else  // OMW_PLAT_WIN
+    path = fs::path("/") / "path" / "t\\o" / "strange\\file.txt";
     CHECK(uri.path().toStdPath() == path);
-#endif // platform
-
+#endif // OMW_PLAT_WIN
 #endif // C++17
 
 

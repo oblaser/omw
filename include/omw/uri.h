@@ -31,15 +31,19 @@ namespace omw {
  *
  * `#include <omw/uri.h>`
  *
- * Basic URI implementation. Performs percent-decoding after parsing components, and percent-encoding while serializing.
+ * Basic URI implementation. Performs percent-decoding after separating components, and percent-encoding while
+ * serializing.
  * Some cases are not properly handled:
- * - detection IPv6 in authority is done by simply checking front and back for the brackets without the actual IP string
+ * - detection of IPv6 in authority is done by simply checking front and back for the brackets
  * - querry only supports delimiter `&`, not `;`
- * - present but empty userinfo in authority is valid but otherwise undefined
+ * - present but empty userinfo in authority is marked as valid but other return values are undefined
  *
- * Getters and setters are expecting and returning decoded strings.
+ * Getters and setters are returning and expecting decoded strings.
  *
  * Constructors are `explicit` to rise the awareness of the (mis)use of encoded and decoded strings.
+ *
+ * Serialisers just do their job. If an object is invalid, the serialised output will likely differ from the
+ * original/desired encoded string.
  */
 class URI
 {
@@ -519,11 +523,7 @@ public:
 
     bool hasFragment() const { return m_hasFragment; }
 
-    bool isValid() const
-    {
-        // path, query and fragment can't be invalid on their own, they just get parsed
-        return (m_validity && (m_authority.isValid() || m_authority.empty()));
-    }
+    bool isValid() const { return m_validity; }
 
 private:
     bool m_validity;

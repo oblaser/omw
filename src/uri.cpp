@@ -801,7 +801,7 @@ std::string omw::URI::serialise() const
     std::string r;
 
     r = omw::URI::encodeScheme(m_scheme) + ':';
-    if (!m_authority.empty() || (m_scheme == "file")) { r += "//" + m_authority.serialise(); }
+    if (!m_authority.empty() || (canonical(m_scheme) == "file")) { r += "//" + m_authority.serialise(); }
     r += m_path.serialise();
     if (!m_query.empty()) { r += '?' + m_query.serialise(); }
     if (m_hasFragment) { r += '#' + omw::URI::encodeFragment(m_fragment); }
@@ -867,6 +867,10 @@ void omw::URI::m_check()
 
     // if no authority is specified the path must not start with `//`
     if (m_authority.empty() && !path.empty() && (path.substr(0, 2) == "//")) { m_validity = false; }
+
+
+
+    // path, query and fragment can't be invalid, they get parsed strictly
 }
 
 
