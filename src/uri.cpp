@@ -362,7 +362,7 @@ void omw::URI::Path::set(const std::filesystem::path& path)
 
     clear();
 
-    std::string pathString = path.u8string();
+    std::string pathString = std::filesystem::path(path).make_preferred().u8string();
 
     m_isAbs = (!pathString.empty() && (pathString[0] == segmentDelimiter));
 
@@ -735,7 +735,7 @@ void omw::URI::setPath(const omw::URI::Path& path)
     m_check();
 }
 
-#if (OMW_CPPSTD >= OMW_CPPSTD_17) || defined(OMWi_DOXYGEN_PREDEFINE)
+#if (OMW_CPPSTD >= OMW_CPPSTD_17)
 
 void omw::URI::setPath(const std::filesystem::path& path)
 {
@@ -743,7 +743,7 @@ void omw::URI::setPath(const std::filesystem::path& path)
     m_check();
 }
 
-#endif
+#endif // C++17
 
 void omw::URI::setQuery(const omw::URI::Query& query)
 {

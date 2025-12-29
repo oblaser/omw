@@ -635,8 +635,7 @@ TEST_CASE("uri.h \\ and / in path segment")
     path = fs::path("/") / "path" / "t\\o" / "strange\\file.txt";
 #if OMW_PLAT_WIN
     winPath = fs::path("/") / "path" / "t" / "o" / "strange" / "file.txt";
-    CHECK(/* TODO (uri.path().toStdPath() == path) || */ (uri.path().toStdPath() == winPath));
-#error "experiment here"
+    CHECK(uri.path().toStdPath() == winPath);
 #else  // platform
     CHECK(uri.path().toStdPath() == path);
 #endif // platform
@@ -677,7 +676,9 @@ TEST_CASE("uri.h std::filesystem::path basics")
     CHECK(uri.path().segments()[1] == "system-b");
     CHECK(uri.path().segments()[2] == "");
     CHECK(uri.path().serialise() == "/view/system-b/");
+#if !OMW_PLAT_WIN
     CHECK(uri.path().toStdPath().is_absolute() == true);
+#endif
     CHECK((fs::path)(uri.path()) == fs::path("/view/system-b/"));
 
 
@@ -689,7 +690,9 @@ TEST_CASE("uri.h std::filesystem::path basics")
     CHECK(uri.path().segments().empty() == true);
     CHECK(uri.path().segments().size() == 0);
     CHECK(uri.path().serialise() == "");
+#if !OMW_PLAT_WIN
     CHECK(uri.path().toStdPath().is_absolute() == false);
+#endif
     CHECK((fs::path)(uri.path()) == stdPath);
     CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080?value=123&tag=test#overview");
 
@@ -703,7 +706,9 @@ TEST_CASE("uri.h std::filesystem::path basics")
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "");
     CHECK(uri.path().serialise() == "/");
+#if !OMW_PLAT_WIN
     CHECK(uri.path().toStdPath().is_absolute() == true);
+#endif
     CHECK((fs::path)(uri.path()) == stdPath);
     CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080/?value=123&tag=test#overview");
 
@@ -718,9 +723,40 @@ TEST_CASE("uri.h std::filesystem::path basics")
     CHECK(uri.path().segments()[0] == "asdf");
     CHECK(uri.path().segments()[1] == "qwertz");
     CHECK(uri.path().serialise() == "/asdf/qwertz");
+#if !OMW_PLAT_WIN
     CHECK(uri.path().toStdPath().is_absolute() == true);
+#endif
     CHECK((fs::path)(uri.path()) == stdPath);
     CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080/asdf/qwertz?value=123&tag=test#overview");
+
+
+
+#if OMW_PLAT_WIN
+
+    stdPath = "\\";
+    uri = startUri;
+    uri.setPath(stdPath);
+    CHECK(uri.isValid() == true);
+    CHECK(uri.path().segments().empty() == false);
+    REQUIRE(uri.path().segments().size() == 1);
+    CHECK(uri.path().segments()[0] == "");
+    CHECK(uri.path().serialise() == "/");
+    CHECK((fs::path)(uri.path()) == stdPath);
+    CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080/?value=123&tag=test#overview");
+
+    stdPath = "\\asdf\\qwertz";
+    uri = startUri;
+    uri.setPath(stdPath);
+    CHECK(uri.isValid() == true);
+    CHECK(uri.path().segments().empty() == false);
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "asdf");
+    CHECK(uri.path().segments()[1] == "qwertz");
+    CHECK(uri.path().serialise() == "/asdf/qwertz");
+    CHECK((fs::path)(uri.path()) == stdPath);
+    CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080/asdf/qwertz?value=123&tag=test#overview");
+
+#endif // OMW_PLAT_WIN
 
 
 
@@ -732,7 +768,9 @@ TEST_CASE("uri.h std::filesystem::path basics")
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "asdf");
     CHECK(uri.path().serialise() == "asdf");
+#if !OMW_PLAT_WIN
     CHECK(uri.path().toStdPath().is_absolute() == false);
+#endif
     CHECK((fs::path)(uri.path()) == stdPath);
     CHECK(uri.serialise() == "https://hans.meier@www.example.com:8080asdf?value=123&tag=test#overview");
 }
@@ -760,13 +798,13 @@ TEST_CASE("uri.h omw::URI::Path specific std::filesystem::path")
     omw::URI::Path uriPath;
 
 #if OMW_PLAT_WIN
-    URI_PATH_CHECK_WIN("C:\\asdf\\qwer", "", {});
-    URI_PATH_CHECK_WIN("C:\\asdf\\qwer\\", "", {});
-    URI_PATH_CHECK_WIN("C:\\asdf\\file.txt", "", {});
-    URI_PATH_CHECK_WIN("C:\\file.txt", "", {});
-    URI_PATH_CHECK_WIN("C:file.txt", "", {});
-    URI_PATH_CHECK_WIN("C:\\", "", {});
-    URI_PATH_CHECK_WIN("C:", "", {});
+    URI_PATH_CHECK_WIN("C:\\asdf\\qwer", "C:/asdf/qwer", { Segment("C:"), Segment("asdf"), Segment("qwer") });
+    URI_PATH_CHECK_WIN("C:\\asdf\\qwer\\", "C:/asdf/qwer/", { Segment("C:"), Segment("asdf"), Segment("qwer"), Segment() });
+    URI_PATH_CHECK_WIN("C:\\asdf\\file.txt", "C:/asdf/file.txt", { Segment("C:"), Segment("asdf"), Segment("file.txt") });
+    URI_PATH_CHECK_WIN("C:\\file.txt", "C:/file.txt", { Segment("C:"), Segment("file.txt") });
+    URI_PATH_CHECK_WIN("C:file.txt", "C:file.txt", { Segment("C:file.txt") });
+    URI_PATH_CHECK_WIN("C:\\", "C:/", { Segment("C:"), Segment() });
+    URI_PATH_CHECK_WIN("C:", "C:", { Segment("C:") });
 #endif // OMW_PLAT_WIN
 
     URI_PATH_CHECK("C:/asdf/qwer", { Segment("C:"), Segment("asdf"), Segment("qwer") });

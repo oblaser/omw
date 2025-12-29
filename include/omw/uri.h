@@ -205,7 +205,7 @@ public:
             this->set(path);
         }
 
-#endif
+#endif // C++17
 
         virtual ~Path() {}
 
@@ -221,7 +221,7 @@ public:
          */
         void set(const std::filesystem::path& path);
 
-#endif
+#endif // C++17
 
         void clear()
         {
@@ -251,6 +251,10 @@ public:
          * If any path segment contains `\`, on Windows this function will return a path that differs from the original
          * path. Other platforms should be fine since they allow `\` in directory enry names.
          *
+         * Seeing any slash in the path is not as absurd as it might seem (although rarely seen). On *nix systems, `\`
+         * is allowed in directory entry names. Since, depending on the server application, the path is not necessarily
+         * a filesystem path, a `/` encoded as `%2F` could be possible within a path segment.
+         *
          * @return `std::filesystem::path` in decoded string format
          */
         std::filesystem::path toStdPath() const;
@@ -260,7 +264,7 @@ public:
          */
         explicit operator std::filesystem::path() const { return this->toStdPath(); }
 
-#endif
+#endif // C++17
 
     private:
         // Not publicly available, internal use only. Is invalid for paths with root names, but this is still ok for
@@ -483,7 +487,7 @@ public:
      */
     void setPath(const std::filesystem::path& path);
 
-#endif
+#endif // C++17
 
     void setQuery(const omw::URI::Query& query);
     void setFragment(const std::string& fragment_decoded);
