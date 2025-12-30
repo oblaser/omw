@@ -7,12 +7,18 @@ setlocal
 call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
 
 set ERR=0
+set NO_ARGS=0
 set RUN_ONE=0
 set BUILD_ALL=0
 
 
 
-if "%1"=="" ( goto L_BUILD_ALL_RUN_ONE ) else ( goto L_PROC_NEXT_ARG )
+if "%1"=="" (
+    set NO_ARGS=1
+    goto L_BUILD_ALL_RUN_ONE
+) else (
+    goto L_PROC_NEXT_ARG
+)
 
 
 
@@ -224,6 +230,6 @@ goto L_PROC_NEXT_ARG
 
 
 :L_END
-if %RUN_ONE% neq 0 ( pause )
+if %NO_ARGS% neq 0 ( pause )
 
 endlocal
