@@ -2,13 +2,18 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
-    "tasks":
-    [
+    "tasks": [
         {
             "label": "build & run",
             "type": "shell",
-            "command": "cd build ; ./build.sh make run ; cd ..",
-            "problemMatcher": [ "$gcc" ],
+            "linux": {
+                "command": "cd build ; ./build.sh make run ; cd ..",
+                "problemMatcher": [ "$gcc" ],
+            },
+            "windows": {
+                "command": "cd build ; ./build.bat buildAll run86 ; cd ..",
+                "problemMatcher": [ "$msCompile" ],
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -17,13 +22,61 @@
                 "echo": true,
                 "reveal": "always",
                 "focus": false,
-                "panel": "dedicated",
+                "panel": "shared",
                 "showReuseMessage": false,
                 "clear": false
             }
         },
         {
-            "label": "deploy src",
+            "label": "build",
+            "type": "shell",
+            "linux": {
+                "command": "cd build ; ./build.sh make ; cd ..",
+                "problemMatcher": [ "$gcc" ],
+            },
+            "windows": {
+                "command": "cd build ; ./build.bat buildAll ; cd ..",
+                "problemMatcher": [ "$msCompile" ],
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "linux": {
+                "command": "cd build ; ./build.sh cleanAll cmake ; cd ..",
+                "problemMatcher": [ "$gcc" ],
+            },
+            "windows": {
+                "command": "cd build ; ./build.bat cleanAll ; cd ..",
+                "problemMatcher": [ "$msCompile" ],
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        },
+        {
+            "label": "[web] deploy",
             "type": "shell",
             "command": "potoroo -jf ./web/potorooJobs",
             "problemMatcher": [],
