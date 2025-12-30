@@ -1,3 +1,5 @@
+#if 0
+
 namespace colors
 {
 constexpr int32_t transparent_argb = 0x00FFFFFF;
@@ -355,3 +357,5 @@ namespace windows
     const omw::Color windowText = omw::Color(windowText_argb);
 }
 }
+
+#endif

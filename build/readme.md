@@ -8,7 +8,7 @@ The scripts must have this directory as working directory.
 ### `*.sh` Scripts
 
 They return __0__ on success and __1__ on error.
-Eexcept the `pack_*` scripts, they are stupid.
+Eexcept the `pack_*` scripts, they don't return error codes.
 
 
 ## Build
@@ -28,10 +28,32 @@ Required software: `Visual Studio 2019`
     0. Batch build `Debug | x86` and `Release | x86`
     0. Run the debug and release executables from the command line
 
+Or simply run `build.bat` in this directory.
+
 
 
 ---
 
-### files to edit on release
 
-See [Contributing > Versioning > Files](../contributing.md#files)
+
+## Versioning
+### Scheme
+Since `v0.2.0-alpha`: [semver 2.0.0](https://semver.org/)
+> __old:__ Something else. Revision (patch) > 999 have been pre-releases.
+
+### Major Version 0
+In development. May not be backwards compatible.
+
+### Files
+The version must be consistent in the following files:
+- `build/dep_vstr.txt`
+- `doc/Doxyfile`
+- `include/omw/omw.h`
+- `tests/unit/main.cpp`
+- `web/doc/index.html`
+- `release-notes.md`
+
+Copyright year showing up in binaries or packages:
+- `build/dep_globals.sh`
+- `src/omw.cpp`
+- `license.txt`

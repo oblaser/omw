@@ -1,6 +1,5 @@
 # omw
 
-C++ middleware/library with my often used units.
+C++ middleware/utility library and platform abstraction to provide an unified API.
 
-Find the documentation at the
-[project's webpage](https://static.oblaser.ch/omw/).
+[Online Documentation](https://static.oblaser.ch/omw/doc/)
