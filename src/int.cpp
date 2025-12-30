@@ -59,7 +59,7 @@ omw::Base_Int128::Base_Int128()
 omw::Base_Int128::Base_Int128(const omw::Base_Int128& other)
     : m_h(0), m_l(0)
 {
-    copy(other);
+    m_copy(other);
 }
 
 //!
@@ -133,7 +133,7 @@ void omw::Base_Int128::sets(const uint8_t* data, size_t count)
         if (data[0] & 0x80) set(baseTypeAllBits, baseTypeAllBits);
         else setu(0);
 
-        readBuffer(data, count);
+        m_readBuffer(data, count);
     }
 }
 
@@ -162,19 +162,20 @@ void omw::Base_Int128::setu(const uint8_t* data, size_t count)
     {
         if (count > nBytes128) throw std::overflow_error("omw::Base_Int128::setu");
         setu(0);
-        readBuffer(data, count);
+        m_readBuffer(data, count);
     }
 }
 
 int64_t omw::Base_Int128::highs() const { return ::to_i64(m_h); }
 
-void omw::Base_Int128::copy(const omw::Base_Int128& other)
+omw::Base_Int128& omw::Base_Int128::m_copy(const omw::Base_Int128& other)
 {
     m_h = other.hi();
     m_l = other.lo();
+    return *this;
 }
 
-void omw::Base_Int128::readBuffer(const uint8_t* data, size_t count)
+void omw::Base_Int128::m_readBuffer(const uint8_t* data, size_t count)
 {
     for (size_t i = 0; i < count; ++i)
     {
@@ -324,7 +325,7 @@ int omw::SignedInt128::sign() const { return (isNegative() ? -1 : 1); }
 
 omw::SignedInt128& omw::SignedInt128::operator=(const omw::SignedInt128& b)
 {
-    copy(b);
+    m_copy(b);
     return *this;
 }
 
@@ -427,7 +428,7 @@ omw::UnsignedInt128::UnsignedInt128(const omw::Base_Int128& other)
 
 omw::UnsignedInt128& omw::UnsignedInt128::operator=(const omw::UnsignedInt128& b)
 {
-    copy(b);
+    m_copy(b);
     return *this;
 }
 

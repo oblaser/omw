@@ -10,6 +10,8 @@ project(omw-unit-tests)
 set(UNIT_TEST_EXE_SHARED ${BINNAME}-unit-test-shared)
 set(UNIT_TEST_EXE_STATIC ${BINNAME}-unit-test-static)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../flags.var.cmake)
+
 include_directories(../../../include/)
 
 link_directories(../)
@@ -38,7 +40,9 @@ set(SOURCES_UNIT_TEST
 #add_executable(${UNIT_TEST_EXE_SHARED} ${SOURCES_UNIT_TEST})
 #target_link_libraries(${UNIT_TEST_EXE_SHARED} lib${BINSHARED}.so)
 #set_target_properties(${UNIT_TEST_EXE_SHARED} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
+#target_compile_options(${UNIT_TEST_EXE_SHARED} PRIVATE ${OMW_COMPILE_OPTIONS})
 
 add_executable(${UNIT_TEST_EXE_STATIC} ${SOURCES_UNIT_TEST})
 target_link_libraries(${UNIT_TEST_EXE_STATIC} lib${BINSTATIC}.a)
 set_target_properties(${UNIT_TEST_EXE_STATIC} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
+#target_compile_options(${UNIT_TEST_EXE_STATIC} PRIVATE ${OMW_COMPILE_OPTIONS}) TODO enable and fix source

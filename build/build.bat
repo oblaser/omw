@@ -224,5 +224,6 @@ goto L_PROC_NEXT_ARG
 
 
 :L_END
+if %RUN_ONE% neq 0 ( pause )
 
 endlocal

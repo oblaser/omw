@@ -4,6 +4,7 @@
 
 /build/cmake/*
 !/build/cmake/CMakeLists.txt
+!/build/cmake/flags.var.cmake
 !/build/cmake/libomw.var.cmake
 
 !/build/cmake/lib

@@ -466,8 +466,20 @@ size_t omw::stoz(const std::string& str, size_t* pos, int base)
     //     r = std::stoull(str, pos, base);
     // #else
 
-    if (sizeof(size_t) == sizeof(unsigned long)) { r = (size_t)std::stoul(str, pos, base); }
-    else if (sizeof(size_t) == sizeof(unsigned long long)) { r = (size_t)std::stoull(str, pos, base); }
+    if (sizeof(size_t) == sizeof(unsigned long))
+    {
+#if !OMW_CXX_MSVC
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#endif
+        r = (size_t)std::stoul(str, pos, base);
+    }
+    else if (sizeof(size_t) == sizeof(unsigned long long))
+    {
+#if !OMW_CXX_MSVC
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#endif
+        r = (size_t)std::stoull(str, pos, base);
+    }
 
     static_assert(((sizeof(size_t) == sizeof(unsigned long)) || (sizeof(size_t) == sizeof(unsigned long long))), "weired platform!?");
     // else // some weired platform

@@ -17,7 +17,9 @@ project(omw)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../../../include/)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../flags.var.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/../libomw.var.cmake)
 
 add_library(${BINNAME} SHARED ${SOURCES})
 set_target_properties(${BINNAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../../../lib/)
+target_compile_options(${BINNAME} PRIVATE ${OMW_COMPILE_OPTIONS})

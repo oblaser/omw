@@ -233,16 +233,13 @@ void omw::io::SerialPort::initDcb(void* DCB_customDcb, baud_type baud /*, nDataB
 #endif
 
 omw::io::SerialPort::SerialPort()
-    :
+    : m_isOpen(false),
+      m_good(true),
 #if defined(OMW_PLAT_WIN)
-      m_handle(INVALID_HANDLE_VALUE),
+      m_handle(INVALID_HANDLE_VALUE)
 #elif defined(OMW_PLAT_UNIX)
-      m_fd(-1),
+      m_fd(-1)
 #endif
-      // m_port(),
-      // m_baud(-1),
-      m_isOpen(false),
-      m_good(true)
 {}
 
 int omw::io::SerialPort::open(const std::string& port, baud_type baud /*, nDataBits, parity, nStopBits*/)
@@ -515,6 +512,8 @@ std::vector<std::string> omw::preview::getSerialPortList(bool onlyCOMx)
 
     // ls -al /dev | grep -iE "dialout|usb" # Ubuntu
     // ls -al /dev | grep -iE "uucp|usb" # Manjaro
+
+    (void)onlyCOMx;
 
 #else  // OMW_PLAT_..
 // nop, empty list

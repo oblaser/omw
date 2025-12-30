@@ -62,26 +62,27 @@ public:
     uint64_t low() const { return m_l; }
     uint64_t lo() const { return low(); }
 
-    explicit operator bool() const { return (m_h || m_l); } /*!< If the value is 0, `false` is returned. `true` for any other value. */
+    explicit operator bool() const { return (m_h || m_l); } ///< If the value is 0, `false` is returned. `true` for any other value.
 
 protected:
     uint64_t m_h;
     uint64_t m_l;
 
-    void copy(const omw::Base_Int128& other);
+    omw::Base_Int128& m_copy(const omw::Base_Int128& other);
 
 private:
-    void readBuffer(const uint8_t* data, size_t count);
+    void m_readBuffer(const uint8_t* data, size_t count);
 
 public:
     //! \name Operators
     /// @{
+    omw::Base_Int128& operator=(const omw::Base_Int128& b) { return m_copy(b); }
     omw::Base_Int128& operator+=(const omw::Base_Int128& b);
     omw::Base_Int128& operator-=(const omw::Base_Int128& b);
     omw::Base_Int128& operator&=(const omw::Base_Int128& b);
     omw::Base_Int128& operator|=(const omw::Base_Int128& b);
     omw::Base_Int128& operator^=(const omw::Base_Int128& b);
-    omw::Base_Int128& operator<<=(unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
+    omw::Base_Int128& operator<<=(unsigned int count); ///< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport.
 
     omw::Base_Int128& operator++();
     omw::Base_Int128& operator--();
@@ -108,8 +109,8 @@ public:
     //! \name Operators
     /// @{
     omw::SignedInt128& operator=(const omw::SignedInt128& b);
-    omw::SignedInt128& operator>>=(unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
-                                                        /// @}
+    omw::SignedInt128& operator>>=(unsigned int count); ///< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport.
+    /// @}
 
 #ifdef OMWi_INT_RIGHTSHIFT_DEBUG
     uint64_t oldValue_h, oldValue_l;
@@ -132,7 +133,7 @@ public:
     //! \name Operators
     /// @{
     omw::UnsignedInt128& operator=(const omw::UnsignedInt128& b);
-    omw::UnsignedInt128& operator>>=(unsigned int count); /*!< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport. */
+    omw::UnsignedInt128& operator>>=(unsigned int count); ///< See \ref grp_utility_langSupport_section_bitShiftOp in \ref grp_utility_langSupport.
     /// @}
 };
 

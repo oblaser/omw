@@ -6,6 +6,8 @@ cmake_minimum_required(VERSION 3.13)
 
 project(omw)
 
+include(${CMAKE_CURRENT_LIST_DIR}/../flags.var.cmake)
+
 
 
 include_directories(../../../include/)
@@ -38,6 +40,8 @@ set(SOURCES
 
 add_library(${BINSHARED} SHARED ${SOURCES})
 set_target_properties(${BINSHARED} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../)
+target_compile_options(${BINSHARED} PRIVATE ${OMW_COMPILE_OPTIONS})
 
 add_library(${BINSTATIC} STATIC ${SOURCES})
 set_target_properties(${BINSTATIC} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../)
+target_compile_options(${BINSTATIC} PRIVATE ${OMW_COMPILE_OPTIONS})
