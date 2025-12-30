@@ -33,17 +33,15 @@ namespace omw {
  *
  * Basic URI implementation. Performs percent-decoding after separating components, and percent-encoding while
  * serializing.
+ * - Getters and setters are returning and expecting decoded strings.
+ * - Constructors are `explicit` to rise the awareness of the (mis)use of encoded and decoded strings.
+ * - Serialisers just do their job. If an object is invalid, the serialised output will likely differ from the
+ *   original/desired encoded string (`omw::URI(uri.serialise()) != uri`).
+ *
  * Some cases are not properly handled:
  * - detection of IPv6 in authority is done by simply checking front and back for the brackets
  * - querry only supports delimiter `&`, not `;`
  * - present but empty userinfo in authority is marked as valid but other return values are undefined
- *
- * Getters and setters are returning and expecting decoded strings.
- *
- * Constructors are `explicit` to rise the awareness of the (mis)use of encoded and decoded strings.
- *
- * Serialisers just do their job. If an object is invalid, the serialised output will likely differ from the
- * original/desired encoded string.
  */
 class URI
 {
