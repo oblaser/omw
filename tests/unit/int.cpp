@@ -26,17 +26,17 @@ TEST_CASE("int.h macros")
     CHECK(OMW_8BIT_LSB == 1);
     CHECK(OMW_8BIT_MSB == 128);
 
-    CHECK(OMW_16BIT_ALL == static_cast<uint16_t>(UINT16_MAX));
-    CHECK(OMW_16BIT_LSB == static_cast<uint16_t>(1));
-    CHECK(OMW_16BIT_MSB == static_cast<uint16_t>(INT16_MIN));
+    CHECK(OMW_16BIT_ALL == UINT16_MAX);
+    CHECK(OMW_16BIT_LSB == (uint16_t)(1));
+    CHECK(OMW_16BIT_MSB == (uint16_t)(INT16_MIN));
 
     CHECK(OMW_32BIT_ALL == UINT32_MAX);
-    CHECK(OMW_32BIT_LSB == 1);
-    CHECK(OMW_32BIT_MSB == INT32_MIN);
+    CHECK(OMW_32BIT_LSB == (uint32_t)(1));
+    CHECK(OMW_32BIT_MSB == (uint32_t)(INT32_MIN));
 
     CHECK(OMW_64BIT_ALL == UINT64_MAX);
-    CHECK(OMW_64BIT_LSB == 1);
-    CHECK(OMW_64BIT_MSB == INT64_MIN);
+    CHECK(OMW_64BIT_LSB == (uint64_t)(1));
+    CHECK(OMW_64BIT_MSB == (uint64_t)(INT64_MIN));
 
     CHECK(base_int128_eq(OMW_128BIT_ALL, UINT64_MAX, UINT64_MAX));
     CHECK(base_int128_eq(OMW_128BIT_LSB, 0, 1));
@@ -208,7 +208,7 @@ TEST_CASE("int.h omw::Base_Int128 sets")
     }
     catch (std::overflow_error& ex)
     {
-        const char* const msg = ex.what();
+        (void)ex;
         CHECK(1 == 1);
     }
     catch (...)
@@ -222,7 +222,7 @@ TEST_CASE("int.h omw::Base_Int128 sets")
     }
     catch (std::overflow_error& ex)
     {
-        const char* const msg = ex.what();
+        (void)ex;
         CHECK(1 == 1);
     }
     catch (...)
@@ -305,7 +305,7 @@ TEST_CASE("int.h omw::Base_Int128 setu")
     }
     catch (std::overflow_error& ex)
     {
-        const char* const msg = ex.what();
+        (void)ex;
         CHECK(1 == 1);
     }
     catch (...)
@@ -319,7 +319,7 @@ TEST_CASE("int.h omw::Base_Int128 setu")
     }
     catch (std::overflow_error& ex)
     {
-        const char* const msg = ex.what();
+        (void)ex;
         CHECK(1 == 1);
     }
     catch (...)
@@ -737,13 +737,8 @@ TEST_CASE("int.h omw::SignedInt128 right shift operator")
     // std::cout << "\033[99m" << omw::toHexStr(r.oldValue_h, '-') + "  " + omw::toHexStr(r.oldValue_l, '-') << "\033[39m" << std::endl;
     // std::cout << "\033[95m" << omw::toHexStr(r.lastMask_h, '-') + "  " + omw::toHexStr(r.lastMask_l, '-') << "\033[39m\n\n" << std::endl;
 
-    std::cout << "\n\n\033[99m"
-              << "oldValue"
-              << "\033[39m" << std::endl;
-    std::cout << "\033[95m"
-              << "lastMask"
-              << "\033[39m\n\n"
-              << std::endl;
+    std::cout << "\n\n\033[99m" << "oldValue" << "\033[39m" << std::endl;
+    std::cout << "\033[95m" << "lastMask" << "\033[39m\n\n" << std::endl;
 #endif
 
     x.set(0x8000000000000000, 0x8003);

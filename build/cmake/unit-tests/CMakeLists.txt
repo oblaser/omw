@@ -45,4 +45,4 @@ set(SOURCES_UNIT_TEST
 add_executable(${UNIT_TEST_EXE_STATIC} ${SOURCES_UNIT_TEST})
 target_link_libraries(${UNIT_TEST_EXE_STATIC} lib${BINSTATIC}.a)
 set_target_properties(${UNIT_TEST_EXE_STATIC} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
-#target_compile_options(${UNIT_TEST_EXE_STATIC} PRIVATE ${OMW_COMPILE_OPTIONS}) TODO enable and fix source
+target_compile_options(${UNIT_TEST_EXE_STATIC} PRIVATE ${OMW_COMPILE_OPTIONS})

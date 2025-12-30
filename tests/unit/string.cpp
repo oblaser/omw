@@ -663,6 +663,11 @@ TEST_CASE("string.h stodpair()")
 
 TEST_CASE("string.h toHexStr()")
 {
+#if !OMW_CXX_MSVC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#endif
+
     CHECK(omw::toHexStr((int8_t)0xBC) == "BC");
     CHECK(omw::toHexStr((uint8_t)0xBC) == "BC");
     CHECK(omw::toHexStr((int16_t)0x5678) == "5678");
@@ -682,6 +687,10 @@ TEST_CASE("string.h toHexStr()")
     CHECK(omw::toHexStr((uint64_t)0x0123456789ABCDEF, '-') == "01-23-45-67-89-AB-CD-EF");
     CHECK(omw::toHexStr(omw::int128_t(0x987654321015157A, 0x0123456789ABCDEF), '-') == "98-76-54-32-10-15-15-7A-01-23-45-67-89-AB-CD-EF");
     CHECK(omw::toHexStr(omw::uint128_t(0x987654321015157A, 0x0123456789ABCDEF), '-') == "98-76-54-32-10-15-15-7A-01-23-45-67-89-AB-CD-EF");
+
+#if !OMW_CXX_MSVC
+#pragma GCC diagnostic pop
+#endif
 
     std::vector<char> vecC = { 0x30, 0x35, 'A', 'b' };
     CHECK(omw::toHexStr(vecC) == "30 35 41 62");

@@ -84,8 +84,10 @@ TEST_CASE("clock.h omw::clock::now() measure system sleep")
 #ifdef OMW_PLAT_WIN
     Sleep(10);
 #else
-    const struct timespec ___ts = { .tv_sec = 0, .tv_nsec = (10 * 1000 * 1000) };
-    nanosleep(&___ts, NULL);
+    struct timespec ts;
+    ts.tv_sec = 0;
+    ts.tv_nsec = (10 * 1000 * 1000);
+    nanosleep(&ts, NULL);
 #endif
     duration = omw::clock::now() - start;
 

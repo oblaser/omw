@@ -258,7 +258,7 @@ TEST_CASE("color.h omw::Color to integer")
 
     col.set(0xAB, 0xCD, 0xEF);
     CHECK(col.toRGB() == 0x00ABCDEF);
-    CHECK(col.toARGB() == 0xFFABCDEF);
+    CHECK((uint32_t)(col.toARGB()) == 0xFFABCDEF);
 }
 
 TEST_CASE("color.h omw::Color to string")

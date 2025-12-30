@@ -378,10 +378,8 @@ TEST_CASE("uri.h parsing and serialising URI")
 TEST_CASE("uri.h assemble new URI")
 {
     using Scheme = omw::URI::Scheme;
-    using Authority = omw::URI::Authority;
     using Path = omw::URI::Path;
     using QueryParameter = omw::URI::QueryParameter;
-    using Query = omw::URI::Query;
 
 
 

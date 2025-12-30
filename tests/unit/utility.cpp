@@ -72,15 +72,15 @@ TEST_CASE("utility.h shiftLeftAssign() 8-bit")
     int8_t ir;
 
     n = 0;
-    iv = 0x81;
-    ir = 0x81;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0x81;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41;
     ir = 0x41;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 2;
-    iv = 0x81;
+    iv = (int8_t)0x81;
     ir = 0x04;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41;
@@ -88,7 +88,7 @@ TEST_CASE("utility.h shiftLeftAssign() 8-bit")
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 6;
-    iv = 0x81;
+    iv = (int8_t)0x81;
     ir = 0x40;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41;
@@ -96,15 +96,15 @@ TEST_CASE("utility.h shiftLeftAssign() 8-bit")
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 7;
-    iv = 0x81;
-    ir = 0x80;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0x80;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41;
-    ir = 0x80;
+    ir = (int8_t)0x80;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 8;
-    iv = 0x81;
+    iv = (int8_t)0x81;
     ir = 0x00;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41;
@@ -112,7 +112,7 @@ TEST_CASE("utility.h shiftLeftAssign() 8-bit")
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 9;
-    iv = 0x81;
+    iv = (int8_t)0x81;
     ir = 0x00;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x41;
@@ -183,15 +183,15 @@ TEST_CASE("utility.h shiftLeftAssign() 16-bit")
     int16_t ir;
 
     n = 0;
-    iv = 0x8001;
-    ir = 0x8001;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0x8001;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001;
     ir = 0x4001;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 2;
-    iv = 0x8001;
+    iv = (int16_t)0x8001;
     ir = 0x0004;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001;
@@ -199,7 +199,7 @@ TEST_CASE("utility.h shiftLeftAssign() 16-bit")
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 14;
-    iv = 0x8001;
+    iv = (int16_t)0x8001;
     ir = 0x4000;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001;
@@ -207,15 +207,15 @@ TEST_CASE("utility.h shiftLeftAssign() 16-bit")
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 15;
-    iv = 0x8001;
-    ir = 0x8000;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0x8000;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001;
-    ir = 0x8000;
+    ir = (int16_t)0x8000;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 16;
-    iv = 0x8001;
+    iv = (int16_t)0x8001;
     ir = 0x0000;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001;
@@ -223,7 +223,7 @@ TEST_CASE("utility.h shiftLeftAssign() 16-bit")
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
 
     n = 17;
-    iv = 0x8001;
+    iv = (int16_t)0x8001;
     ir = 0x0000;
     UTILITY_CHECK_SHIFTLEFTASSIGN_S();
     iv = 0x4001;
@@ -517,48 +517,48 @@ TEST_CASE("utility.h shiftRightAssign() 8-bit")
     int8_t ir;
 
     n = 0;
-    iv = 0x81;
-    ir = 0x81;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0x81;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41;
     ir = 0x41;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 2;
-    iv = 0x81;
-    ir = 0xE0;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xE0;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41;
     ir = 0x10;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 6;
-    iv = 0x81;
-    ir = 0xFE;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xFE;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41;
     ir = 0x01;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 7;
-    iv = 0x81;
-    ir = 0xFF;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xFF;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41;
     ir = 0x00;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 8;
-    iv = 0x81;
-    ir = 0xFF;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xFF;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41;
     ir = 0x00;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 9;
-    iv = 0x81;
-    ir = 0xFF;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xFF;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x41;
     ir = 0x00;
@@ -628,48 +628,48 @@ TEST_CASE("utility.h shiftRightAssign() 16-bit")
     int16_t ir;
 
     n = 0;
-    iv = 0x8001;
-    ir = 0x8001;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0x8001;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001;
     ir = 0x4001;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 2;
-    iv = 0x8001;
-    ir = 0xE000;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xE000;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001;
     ir = 0x1000;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 14;
-    iv = 0x8001;
-    ir = 0xFFFE;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xFFFE;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001;
     ir = 0x0001;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 15;
-    iv = 0x8001;
-    ir = 0xFFFF;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xFFFF;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001;
     ir = 0x0000;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 16;
-    iv = 0x8001;
-    ir = 0xFFFF;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xFFFF;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001;
     ir = 0x0000;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
 
     n = 17;
-    iv = 0x8001;
-    ir = 0xFFFF;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xFFFF;
     UTILITY_CHECK_SHIFTRIGHTASSIGN_S();
     iv = 0x4001;
     ir = 0x0000;
@@ -962,15 +962,15 @@ TEST_CASE("utility.h shiftLeft() 8-bit")
     int8_t ir;
 
     n = 0;
-    iv = 0x81;
-    ir = 0x81;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0x81;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x41;
     ir = 0x41;
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 2;
-    iv = 0x81;
+    iv = (int8_t)0x81;
     ir = 0x04;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x41;
@@ -978,7 +978,7 @@ TEST_CASE("utility.h shiftLeft() 8-bit")
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 6;
-    iv = 0x81;
+    iv = (int8_t)0x81;
     ir = 0x40;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x41;
@@ -986,15 +986,15 @@ TEST_CASE("utility.h shiftLeft() 8-bit")
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 7;
-    iv = 0x81;
-    ir = 0x80;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0x80;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x41;
-    ir = 0x80;
+    ir = (int8_t)0x80;
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 8;
-    iv = 0x81;
+    iv = (int8_t)0x81;
     ir = 0x00;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x41;
@@ -1002,7 +1002,7 @@ TEST_CASE("utility.h shiftLeft() 8-bit")
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 9;
-    iv = 0x81;
+    iv = (int8_t)0x81;
     ir = 0x00;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x41;
@@ -1073,15 +1073,15 @@ TEST_CASE("utility.h shiftLeft() 16-bit")
     int16_t ir;
 
     n = 0;
-    iv = 0x8001;
-    ir = 0x8001;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0x8001;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x4001;
     ir = 0x4001;
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 2;
-    iv = 0x8001;
+    iv = (int16_t)0x8001;
     ir = 0x0004;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x4001;
@@ -1089,7 +1089,7 @@ TEST_CASE("utility.h shiftLeft() 16-bit")
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 14;
-    iv = 0x8001;
+    iv = (int16_t)0x8001;
     ir = 0x4000;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x4001;
@@ -1097,15 +1097,15 @@ TEST_CASE("utility.h shiftLeft() 16-bit")
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 15;
-    iv = 0x8001;
-    ir = 0x8000;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0x8000;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x4001;
-    ir = 0x8000;
+    ir = (int16_t)0x8000;
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 16;
-    iv = 0x8001;
+    iv = (int16_t)0x8001;
     ir = 0x0000;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x4001;
@@ -1113,7 +1113,7 @@ TEST_CASE("utility.h shiftLeft() 16-bit")
     UTILITY_CHECK_SHIFTLEFT_S();
 
     n = 17;
-    iv = 0x8001;
+    iv = (int16_t)0x8001;
     ir = 0x0000;
     UTILITY_CHECK_SHIFTLEFT_S();
     iv = 0x4001;
@@ -1407,48 +1407,48 @@ TEST_CASE("utility.h shiftRight() 8-bit")
     int8_t ir;
 
     n = 0;
-    iv = 0x81;
-    ir = 0x81;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0x81;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x41;
     ir = 0x41;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 2;
-    iv = 0x81;
-    ir = 0xE0;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xE0;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x41;
     ir = 0x10;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 6;
-    iv = 0x81;
-    ir = 0xFE;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xFE;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x41;
     ir = 0x01;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 7;
-    iv = 0x81;
-    ir = 0xFF;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xFF;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x41;
     ir = 0x00;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 8;
-    iv = 0x81;
-    ir = 0xFF;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xFF;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x41;
     ir = 0x00;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 9;
-    iv = 0x81;
-    ir = 0xFF;
+    iv = (int8_t)0x81;
+    ir = (int8_t)0xFF;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x41;
     ir = 0x00;
@@ -1518,48 +1518,48 @@ TEST_CASE("utility.h shiftRight() 16-bit")
     int16_t ir;
 
     n = 0;
-    iv = 0x8001;
-    ir = 0x8001;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0x8001;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x4001;
     ir = 0x4001;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 2;
-    iv = 0x8001;
-    ir = 0xE000;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xE000;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x4001;
     ir = 0x1000;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 14;
-    iv = 0x8001;
-    ir = 0xFFFE;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xFFFE;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x4001;
     ir = 0x0001;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 15;
-    iv = 0x8001;
-    ir = 0xFFFF;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xFFFF;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x4001;
     ir = 0x0000;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 16;
-    iv = 0x8001;
-    ir = 0xFFFF;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xFFFF;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x4001;
     ir = 0x0000;
     UTILITY_CHECK_SHIFTRIGHT_S();
 
     n = 17;
-    iv = 0x8001;
-    ir = 0xFFFF;
+    iv = (int16_t)0x8001;
+    ir = (int16_t)0xFFFF;
     UTILITY_CHECK_SHIFTRIGHT_S();
     iv = 0x4001;
     ir = 0x0000;
