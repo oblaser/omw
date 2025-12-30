@@ -1,29 +1,36 @@
 /*
 author          Oliver Blaser
-date            05.03.2023
-copyright       MIT - Copyright (c) 2023 Oliver Blaser
+date            30.12.2025
+copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
 /*!
 
 \mainpage C++ Middleware Library
 
+C++ middleware/utility library and platform abstraction to provide a unified API.
+
+- <a href="https://github.com/oblaser/omw/blob/main/release-notes.md">Release Notes</a>
+- <a href="https://github.com/oblaser/omw">GitHub</a>
+- <a href="https://static.oblaser.ch/omw/doc/">Documentation</a>
+
+
 
 \internal
-\endinternal
+
 \section mainpage_preReleaseNotes Pre-Release Notes
 The Following objects are in a pre-release and/or untested state.
 
 \b Alpha
 - `omw::io::SerialPort`
-\internal
+
 \endinternal
+
 
 
 \section mainpage_guidelines Guidelines
 
-Names like `OMWi_...` or similar are for library internal use only. There is no need to
-call or read them.
+The symbol prefix `OMWi_...` is used for internaly, do not use them.
 
 \subsection mainpage_guidelines_include Including Files
 It is not necessary to explicitly not include the windows headers on other platforms.
@@ -31,11 +38,5 @@ The contents of the headers in the `omw/windows` directory are hidden on every o
 
 \subsection mainpage_guidelines_callWinAPI Calling the Windows API
 - \ref omw_windows_callWinAPI
-
-
-
-\section mainpage_links Links
-- <a href="https://static.oblaser.ch/omw/">Project Website</a>
-- <a href="https://github.com/oblaser/omw">GitHub</a>
 
 */

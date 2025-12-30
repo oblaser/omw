@@ -337,8 +337,8 @@ const constexpr char* OMWi_file_to_filename(const char* p)
  * \def OMW__FILENAME__
  * _since C++14_
  *
- * Returns the filename of the current file as `const char*`.
- * Similar to `__FILE__`, but does not contain the full path.
+ * Returns the filename of the current file as `const char* const` similar to `__FILE__`, but does not contain the full
+ * path. Note that the files full path is still added to the binary.
  */
 
 

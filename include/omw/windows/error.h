@@ -23,19 +23,19 @@ namespace windows {
 
     enum ERRORCODE
     {
-        EC_OK = 0,      /*!< No error occured */
-        EC_ERROR,       /*!< General error */
-        EC_INV_ARG,     /*!< Invalid arguments */
-        EC_INV_UNICODE, /*!< Invalid unicode codepoints are present */
-        EC_INTERNAL,    /*!< A linbrary internal error occured (bugfix in source needed) */
-        EC_UNKNOWN_WIN, /*!< An unspecified Windows API error occurred */
+        EC_OK = 0,      ///< No error occured
+        EC_ERROR,       ///< General error
+        EC_INV_ARG,     ///< Invalid arguments
+        EC_INV_UNICODE, ///< Invalid unicode codepoints are present
+        EC_INTERNAL,    ///< A linbrary internal error occured (bugfix in source needed)
+        EC_UNKNOWN_WIN, ///< An unspecified Windows API error occurred
 
-        EC_ENVVAR_NOT_FOUND, /*!< The specified environment variable could not be found */
+        EC_ENVVAR_NOT_FOUND, ///< The specified environment variable could not be found
 
-        EC_RESOURCE_NOT_FOUND,  /*!< The specified resource could not be found */
-        EC_RESOURCE_NOT_LOADED, /*!< The resource could not be loaded */
+        EC_RESOURCE_NOT_FOUND,  ///< The specified resource could not be found
+        EC_RESOURCE_NOT_LOADED, ///< The resource could not be loaded
 
-        EC_STRCONV_DEST_BUFFER_SIZE /*!< `dest` buffer is too small */
+        EC_STRCONV_DEST_BUFFER_SIZE ///< `dest` buffer is too small
     };
 
     class ErrorCode

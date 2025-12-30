@@ -507,10 +507,13 @@ public:
          */
         std::string serialise() const;
 
+        /**
+         * Tests if `other` is an exact match.
+         */
         bool equals(const omw::URI::Query& other) const { return (m_parameters == other.parameters()); }
 
         /**
-         * Same as `omw::URI::Query::equals(const omw::URI::Query&) const` but the order of the parameters is ignored.
+         * Same as `omw::URI::Query::equals()` but the order of the parameters is ignored.
          */
         bool equivalent(const omw::URI::Query& other) const;
 

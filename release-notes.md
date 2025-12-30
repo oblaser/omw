@@ -1,16 +1,12 @@
 # Release Notes
 
-> _Pre-Releases_
-> The main page of the documentation describes which parts are in
-> a pre-release (maybe not tested) state.
-
 
 
 ### v0.3.0
 
 New
 - `omw::Semver` and `omw::MajMinVer`
-- URI parser and serialiser in `uri.h`
+- URI parser and serialiser in `omw/uri.h`
 
 Changed
 - Moved `omw::string` member functions to `omw` namespace
@@ -20,10 +16,6 @@ Removed
 - `omw::Version`
 - `omw::string`
 - `omw::vector`
-
-
-
-### v0.2.2
 
 
 
