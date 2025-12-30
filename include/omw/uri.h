@@ -68,8 +68,83 @@ public:
     static std::string encodeQueryField(const std::string& str);
     static std::string encodeFragment(const std::string& str);
 
+
+
 public:
-    using Scheme = std::string; // TODO implement Scheme class
+    class Scheme;
+
+    static inline omw::URI::Scheme canonical(const omw::URI::Scheme& scheme) { return omw::URI::Scheme(scheme).makeCanonical(); }
+
+
+
+public:
+    class Scheme
+    {
+    public:
+        Scheme()
+            : m_validity(false), m_value()
+        {}
+
+        explicit Scheme(const char* str_encoded)
+            : m_validity(false), m_value()
+        {
+            if (str_encoded) { this->parse(str_encoded); }
+        }
+
+        explicit Scheme(const std::string& str_encoded)
+            : m_validity(false), m_value()
+        {
+            this->parse(str_encoded);
+        }
+
+        virtual ~Scheme() {}
+
+        void parse(const std::string& str_encoded);
+        void clear();
+        omw::URI::Scheme& makeCanonical();
+
+        const std::string& value() const { return m_value; }
+
+        void set(const std::string& value_decoded)
+        {
+            m_value = value_decoded;
+            m_check();
+        }
+
+        /**
+         * Serialise the percent encoded path segment.
+         */
+        std::string serialise() const { return omw::URI::encodeScheme(m_value); }
+
+        bool empty() const { return m_value.empty(); }
+        bool valid() const { return m_validity; }
+
+        bool isFtp() const { return (canonical(*this).value() == "ftp"); }
+        bool isFile() const { return (canonical(*this).value() == "file"); }
+        bool isHttp() const { return (canonical(*this).value() == "http"); }
+        bool isHttps() const { return (canonical(*this).value() == "https"); }
+        bool isAnyHttp() const { return (isHttp() || isHttps()); }
+        bool isIrc() const { return (canonical(*this).value() == "irc"); }
+        bool isMailto() const { return (canonical(*this).value() == "mailto"); }
+        bool isNews() const { return (canonical(*this).value() == "news"); }
+        bool isUrn() const { return (canonical(*this).value() == "urn"); }
+
+        /**
+         * Case sensitive comparsion.
+         */
+        bool equals(const omw::URI::Scheme& other) const { return (m_value == other.value()); }
+
+        /**
+         * Canonical comparsion.
+         */
+        bool equivalent(const omw::URI::Scheme& other) const { return canonical(*this).equals(canonical(other)); }
+
+    private:
+        bool m_validity;
+        std::string m_value;
+
+        void m_check();
+    };
 
     class Authority
     {
@@ -143,40 +218,39 @@ public:
     {
     public:
         PathSegment()
-            : m_data()
+            : m_value()
         {}
 
         explicit PathSegment(const char* str_encoded)
-            : m_data()
+            : m_value()
         {
             if (str_encoded) { this->parse(str_encoded); }
         }
 
         explicit PathSegment(const std::string& str_encoded)
-            : m_data()
+            : m_value()
         {
             this->parse(str_encoded);
         }
 
         virtual ~PathSegment() {}
 
-        void parse(const std::string& str_encoded) { m_data = omw::URI::decode(str_encoded); }
-        void clear() { m_data.clear(); }
+        void parse(const std::string& str_encoded) { m_value = omw::URI::decode(str_encoded); }
+        void clear() { m_value.clear(); }
 
-        const std::string& data() const { return m_data; }
-        std::string& data() { return m_data; }
+        const std::string& value() const { return m_value; }
 
-        bool empty() const { return m_data.empty(); }
+        bool empty() const { return m_value.empty(); }
 
-        void set(const std::string& data_decoded) { m_data = data_decoded; }
+        void set(const std::string& value_decoded) { m_value = value_decoded; }
 
         /**
          * Serialise the percent encoded path segment.
          */
-        std::string serialise() const { return omw::URI::encodePathSegment(m_data); }
+        std::string serialise() const { return omw::URI::encodePathSegment(m_value); }
 
     private:
-        std::string m_data;
+        std::string m_value;
     };
 
     class Path
@@ -236,7 +310,6 @@ public:
         }
 
         const std::vector<omw::URI::PathSegment>& segments() const { return m_segments; }
-        std::vector<omw::URI::PathSegment>& segments() { return m_segments; }
 
         bool empty() const { return (m_segments.empty() || ((m_segments.size() == 1) && (m_segments[0].empty()) && !m_isAbs)); }
 
@@ -470,18 +543,19 @@ public:
     void parse(const char* uri_encoded);
     void clear();
 
-    const std::string& scheme() const { return m_scheme; }
+    const omw::URI::Scheme& scheme() const { return m_scheme; }
     const omw::URI::Authority& authority() const { return m_authority; }
     const omw::URI::Path& path() const { return m_path; }
     const omw::URI::Query& query() const { return m_query; }
     const std::string& fragment() const { return m_fragment; }
 
+    void setScheme(const omw::URI::Scheme& scheme);
     void setScheme(const std::string& scheme_decoded);
     void setAuthority(const omw::URI::Authority& authority);
-    void setUser(const std::string& user);
-    void setPass(const std::string& pass);
-    void setHost(const std::string& host);
-    void setPort(int port);
+    void setUser(const std::string& user_decoded);
+    void setPass(const std::string& pass_decoded);
+    void setHost(const std::string& host_decoded);
+    void setPort(uint16_t port);
     void setPath(const omw::URI::Path& path);
 
 #if (OMW_CPPSTD >= OMW_CPPSTD_17) || defined(OMWi_DOXYGEN_PREDEFINE)
@@ -545,52 +619,68 @@ private:
 
 
 
-omw::URI::Scheme canonical(const omw::URI::Scheme& scheme);
+static inline omw::URI::Scheme canonical(const omw::URI::Scheme& scheme) { return omw::URI::canonical(scheme); }
+
+static inline bool equals(const omw::URI::Scheme& a, const omw::URI::Scheme& b) { return a.equals(b); }
+static inline bool equals(const omw::URI::Query& a, const omw::URI::Query& b) { return a.equals(b); }
+
+static inline bool equivalent(const omw::URI::Scheme& a, const omw::URI::Scheme& b) { return a.equivalent(b); }
+static inline bool equivalent(const omw::URI::Query& a, const omw::URI::Query& b) { return a.equivalent(b); }
 
 
 
 //! \name Operators
 /// @{
 
-static inline bool operator==(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.data() == b.data()); }
-static inline bool operator!=(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.data() != b.data()); }
-static inline bool operator<(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.data() < b.data()); }
-static inline bool operator>(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.data() > b.data()); }
-static inline bool operator<=(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.data() <= b.data()); }
-static inline bool operator>=(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.data() >= b.data()); }
+// Operators `==` and `!=` are not declared for `omw::URI::Scheme` to omit confusion. Most likely `equivalent()` will be
+// prefered over `equals()`.
 
-static inline bool operator==(const omw::URI::PathSegment& a, const std::string& b) { return (a.data() == b); }
-static inline bool operator!=(const omw::URI::PathSegment& a, const std::string& b) { return (a.data() != b); }
-static inline bool operator<(const omw::URI::PathSegment& a, const std::string& b) { return (a.data() < b); }
-static inline bool operator>(const omw::URI::PathSegment& a, const std::string& b) { return (a.data() > b); }
-static inline bool operator<=(const omw::URI::PathSegment& a, const std::string& b) { return (a.data() <= b); }
-static inline bool operator>=(const omw::URI::PathSegment& a, const std::string& b) { return (a.data() >= b); }
 
-static inline bool operator==(const omw::URI::PathSegment& a, const char* b) { return (a.data() == b); }
-static inline bool operator!=(const omw::URI::PathSegment& a, const char* b) { return (a.data() != b); }
-static inline bool operator<(const omw::URI::PathSegment& a, const char* b) { return (a.data() < b); }
-static inline bool operator>(const omw::URI::PathSegment& a, const char* b) { return (a.data() > b); }
-static inline bool operator<=(const omw::URI::PathSegment& a, const char* b) { return (a.data() <= b); }
-static inline bool operator>=(const omw::URI::PathSegment& a, const char* b) { return (a.data() >= b); }
 
-static inline bool operator==(const std::string& a, const omw::URI::PathSegment& b) { return (a == b.data()); }
-static inline bool operator!=(const std::string& a, const omw::URI::PathSegment& b) { return (a != b.data()); }
-static inline bool operator<(const std::string& a, const omw::URI::PathSegment& b) { return (a < b.data()); }
-static inline bool operator>(const std::string& a, const omw::URI::PathSegment& b) { return (a > b.data()); }
-static inline bool operator<=(const std::string& a, const omw::URI::PathSegment& b) { return (a <= b.data()); }
-static inline bool operator>=(const std::string& a, const omw::URI::PathSegment& b) { return (a >= b.data()); }
+static inline bool operator==(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.value() == b.value()); }
+static inline bool operator!=(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.value() != b.value()); }
+static inline bool operator<(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.value() < b.value()); }
+static inline bool operator>(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.value() > b.value()); }
+static inline bool operator<=(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.value() <= b.value()); }
+static inline bool operator>=(const omw::URI::PathSegment& a, const omw::URI::PathSegment& b) { return (a.value() >= b.value()); }
 
-static inline bool operator==(const char* a, const omw::URI::PathSegment& b) { return (a == b.data()); }
-static inline bool operator!=(const char* a, const omw::URI::PathSegment& b) { return (a != b.data()); }
-static inline bool operator<(const char* a, const omw::URI::PathSegment& b) { return (a < b.data()); }
-static inline bool operator>(const char* a, const omw::URI::PathSegment& b) { return (a > b.data()); }
-static inline bool operator<=(const char* a, const omw::URI::PathSegment& b) { return (a <= b.data()); }
-static inline bool operator>=(const char* a, const omw::URI::PathSegment& b) { return (a >= b.data()); }
+static inline bool operator==(const omw::URI::PathSegment& a, const std::string& b) { return (a.value() == b); }
+static inline bool operator!=(const omw::URI::PathSegment& a, const std::string& b) { return (a.value() != b); }
+static inline bool operator<(const omw::URI::PathSegment& a, const std::string& b) { return (a.value() < b); }
+static inline bool operator>(const omw::URI::PathSegment& a, const std::string& b) { return (a.value() > b); }
+static inline bool operator<=(const omw::URI::PathSegment& a, const std::string& b) { return (a.value() <= b); }
+static inline bool operator>=(const omw::URI::PathSegment& a, const std::string& b) { return (a.value() >= b); }
+
+static inline bool operator==(const omw::URI::PathSegment& a, const char* b) { return (a.value() == b); }
+static inline bool operator!=(const omw::URI::PathSegment& a, const char* b) { return (a.value() != b); }
+static inline bool operator<(const omw::URI::PathSegment& a, const char* b) { return (a.value() < b); }
+static inline bool operator>(const omw::URI::PathSegment& a, const char* b) { return (a.value() > b); }
+static inline bool operator<=(const omw::URI::PathSegment& a, const char* b) { return (a.value() <= b); }
+static inline bool operator>=(const omw::URI::PathSegment& a, const char* b) { return (a.value() >= b); }
+
+static inline bool operator==(const std::string& a, const omw::URI::PathSegment& b) { return (a == b.value()); }
+static inline bool operator!=(const std::string& a, const omw::URI::PathSegment& b) { return (a != b.value()); }
+static inline bool operator<(const std::string& a, const omw::URI::PathSegment& b) { return (a < b.value()); }
+static inline bool operator>(const std::string& a, const omw::URI::PathSegment& b) { return (a > b.value()); }
+static inline bool operator<=(const std::string& a, const omw::URI::PathSegment& b) { return (a <= b.value()); }
+static inline bool operator>=(const std::string& a, const omw::URI::PathSegment& b) { return (a >= b.value()); }
+
+static inline bool operator==(const char* a, const omw::URI::PathSegment& b) { return (a == b.value()); }
+static inline bool operator!=(const char* a, const omw::URI::PathSegment& b) { return (a != b.value()); }
+static inline bool operator<(const char* a, const omw::URI::PathSegment& b) { return (a < b.value()); }
+static inline bool operator>(const char* a, const omw::URI::PathSegment& b) { return (a > b.value()); }
+static inline bool operator<=(const char* a, const omw::URI::PathSegment& b) { return (a <= b.value()); }
+static inline bool operator>=(const char* a, const omw::URI::PathSegment& b) { return (a >= b.value()); }
 
 
 
 static inline bool operator==(const omw::URI::QueryParameter& a, const omw::URI::QueryParameter& b) { return a.equals(b); }
 static inline bool operator!=(const omw::URI::QueryParameter& a, const omw::URI::QueryParameter& b) { return !(a == b); }
+
+
+
+// Operators `==` and `!=` are not declared for `omw::URI::Query` to omit confusion. Depending on the context,
+// `equivalent()` is prefered over `equals()`.
 
 
 
@@ -605,6 +695,7 @@ static inline bool operator==(const omw::URI& a, const omw::URI& b) { return a.e
 static inline bool operator!=(const omw::URI& a, const omw::URI& b) { return !(a == b); }
 
 /// @}
+
 
 
 /*! @} */

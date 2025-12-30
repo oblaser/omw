@@ -85,7 +85,8 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     uri = "";
     CHECK(uri.valid() == false);
-    CHECK(uri.scheme() == "");
+    CHECK(uri.scheme().valid() == false);
+    CHECK(uri.scheme().empty() == true);
     CHECK(uri.authority().empty() == true);
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
@@ -99,7 +100,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "http://example.com";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "http");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "http");
     CHECK(uri.authority().empty() == false);
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
@@ -116,7 +118,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "http://example.com/";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "http");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "http");
     CHECK(uri.authority().empty() == false);
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
@@ -135,7 +138,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "http://example.com/path/to/index.php";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "http");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "http");
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
     CHECK(uri.authority().host() == "example.com");
@@ -153,7 +157,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "https://hans.meier@www.example.com:8080/view/system-b/?value=123&tag=test&u=&a&=98&b=#overview";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "https");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "https");
     CHECK(uri.authority().user() == "hans.meier");
     CHECK(uri.authority().pass() == "");
     CHECK(uri.authority().host() == "www.example.com");
@@ -193,7 +198,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "htTps://annek\xC3\xA4thi:geheim23@api.example.com/colour/today?token=%23j734bol&name%20id=abcd+1234#top";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "htTps");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "htTps");
     CHECK(uri.authority().user() == "annek\xC3\xA4thi");
     CHECK(uri.authority().pass() == "geheim23");
     CHECK(uri.authority().host() == "api.example.com");
@@ -214,7 +220,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "mailto:flip@example.com";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "mailto");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "mailto");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "flip@example.com");
@@ -226,7 +233,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "FTP://vreni.hubacher:br-bue@[2600:1406:3a00:21::173e:2e65]:1234/path/to/file.txt";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "FTP");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "FTP");
     CHECK(uri.authority().user() == "vreni.hubacher");
     CHECK(uri.authority().pass() == "br-bue");
     CHECK(uri.authority().host() == "2600:1406:3a00:21::173e:2e65");
@@ -243,7 +251,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "Tel:+41441234567";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "Tel");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "Tel");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "+41441234567");
@@ -255,7 +264,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "news:comp.lang.c";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "news");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "news");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "comp.lang.c");
@@ -267,7 +277,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "urn:ietf:rfc:9226";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "urn");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "urn");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 1);
     CHECK(uri.path().segments()[0] == "ietf:rfc:9226");
@@ -279,7 +290,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "doi:10.3390/ani11010145";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "doi");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "doi");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 2);
     CHECK(uri.path().segments()[0] == "10.3390");
@@ -292,7 +304,8 @@ TEST_CASE("uri.h parsing and serialising URI")
     str = "file:///home/martha/Downloads/Bestellschein%20Knabber Knack.pdf";
     uri = str;
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "file");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "file");
     CHECK(uri.authority().empty() == true);
     REQUIRE(uri.path().segments().size() == 4);
     CHECK(uri.path().segments()[0] == "home");
@@ -308,7 +321,8 @@ TEST_CASE("uri.h parsing and serialising URI")
 
     uri = "http://example.com/as%2Fdf/?a%3Da=asdf&b=123+456";
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "http");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "http");
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
     CHECK(uri.authority().host() == "example.com");
@@ -331,7 +345,8 @@ TEST_CASE("uri.h parsing and serialising URI")
         omw::URI::QueryParameter("val1", "a&b=c"),
     }));
     CHECK(uri.valid() == true);
-    CHECK(uri.scheme() == "http");
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "http");
     CHECK(uri.authority().user() == "");
     CHECK(uri.authority().pass() == "");
     CHECK(uri.authority().host() == "\xC3\xB6.example.com");
@@ -361,6 +376,246 @@ TEST_CASE("uri.h parsing and serialising URI")
     CHECK(omw::URI(uri.serialise()) == uri);
 }
 
+TEST_CASE("uri.h assemble new URI")
+{
+    using Scheme = omw::URI::Scheme;
+    using Authority = omw::URI::Authority;
+    using Path = omw::URI::Path;
+    using QueryParameter = omw::URI::QueryParameter;
+    using Query = omw::URI::Query;
+
+
+
+    // default constructor
+
+    omw::URI uri;
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == true);
+    CHECK(uri.scheme().valid() == false);
+    CHECK(uri.authority().empty() == true);
+    CHECK(uri.authority().valid() == false);
+    CHECK(uri.path().empty() == true);
+    CHECK(uri.query().empty() == true);
+    CHECK(uri.hasFragment() == false);
+    CHECK(uri.fragment().empty() == true);
+
+
+
+    // add query
+
+    std::vector<QueryParameter> queryParams = {
+        QueryParameter("a", ""),
+        QueryParameter::flag("b"),
+        QueryParameter("c", "5"),
+    };
+    uri.setQuery(queryParams);
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == true);
+    CHECK(uri.scheme().valid() == false);
+    CHECK(uri.authority().empty() == true);
+    CHECK(uri.authority().valid() == false);
+    CHECK(uri.path().empty() == true);
+    CHECK(uri.query().empty() == false);
+    REQUIRE(uri.query().parameters().size() == 3);
+    CHECK(uri.query().parameters()[0].key() == "a");
+    CHECK(uri.query().parameters()[0].value() == "");
+    CHECK(uri.query().parameters()[0].isFlag() == false);
+    CHECK(uri.query().parameters()[1].key() == "b");
+    CHECK(uri.query().parameters()[1].isFlag() == true);
+    CHECK(uri.query().parameters()[2].key() == "c");
+    CHECK(uri.query().parameters()[2].value() == "5");
+    CHECK(uri.query().parameters()[2].isFlag() == false);
+    CHECK(uri.query().serialise() == "a=&b&c=5");
+    CHECK(uri.query().equals(std::vector<QueryParameter>({
+              QueryParameter("a", ""),
+              QueryParameter::flag("b"),
+              QueryParameter("c", "5"),
+          })) == true);
+    CHECK(uri.query().equals(std::vector<QueryParameter>({
+              QueryParameter("a", ""),
+              QueryParameter("c", "5"),
+              QueryParameter::flag("b"),
+          })) == false);
+    CHECK(uri.query().equivalent(std::vector<QueryParameter>({
+              QueryParameter("a", ""),
+              QueryParameter("c", "5"),
+              QueryParameter::flag("b"),
+          })) == true);
+    CHECK(uri.hasFragment() == false);
+    CHECK(uri.fragment().empty() == true);
+
+
+
+    // add path
+
+    uri.setPath(Path("/path/file.txt"));
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == true);
+    CHECK(uri.scheme().valid() == false);
+    CHECK(uri.authority().empty() == true);
+    CHECK(uri.authority().valid() == false);
+    CHECK(uri.path().empty() == false);
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "file.txt");
+    CHECK(uri.path().serialise() == "/path/file.txt");
+    CHECK(uri.query().serialise() == "a=&b&c=5");
+    CHECK(uri.hasFragment() == false);
+    CHECK(uri.fragment().empty() == true);
+
+
+
+    // add fragment
+
+    uri.setFragment("test[0]");
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == true);
+    CHECK(uri.scheme().valid() == false);
+    CHECK(uri.authority().empty() == true);
+    CHECK(uri.authority().valid() == false);
+    CHECK(uri.path().serialise() == "/path/file.txt");
+    CHECK(uri.query().serialise() == "a=&b&c=5");
+    CHECK(uri.hasFragment() == true);
+    CHECK(uri.fragment().empty() == false);
+    CHECK(uri.fragment() == "test[0]");
+
+
+
+    // add user and port
+
+    CHECK(uri.authority().hasUserinfo() == false);
+    CHECK(uri.authority().host() == "");
+    CHECK(uri.authority().hasPort() == false);
+
+    volatile const int port = 85535; // % 65536 = 19999
+
+    uri.setUser("john");
+    uri.setPort(port);
+
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == true);
+    CHECK(uri.scheme().valid() == false);
+    CHECK(uri.authority().empty() == false);
+    CHECK(uri.authority().valid() == false);
+    CHECK(uri.authority().hasUserinfo() == true);
+    CHECK(uri.authority().user() == "john");
+    CHECK(uri.authority().pass() == "");
+    CHECK(uri.authority().host() == "");
+    CHECK(uri.authority().hasPort() == true);
+    CHECK(uri.authority().port() == 19999);
+    CHECK(uri.path().serialise() == "/path/file.txt");
+    CHECK(uri.query().serialise() == "a=&b&c=5");
+    CHECK(uri.hasFragment() == true);
+    CHECK(uri.fragment().empty() == false);
+    CHECK(uri.fragment() == "test[0]");
+
+
+
+    // add scheme
+
+    uri.setScheme("m-M");
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == false);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "m-M");
+    CHECK(uri.scheme().serialise() == "m-M");
+
+    auto scheme = uri.scheme();
+    scheme.makeCanonical();
+    CHECK(omw::equals(omw::canonical(uri.scheme()), scheme) == true);
+    CHECK(omw::equivalent(scheme, Scheme("M-M")) == true);
+
+    uri.setScheme(scheme);
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == false);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "m-m");
+    CHECK(uri.scheme().serialise() == "m-m");
+    CHECK(uri.authority().empty() == false);
+    CHECK(uri.authority().valid() == false);
+    CHECK(uri.authority().hasUserinfo() == true);
+    CHECK(uri.authority().user() == "john");
+    CHECK(uri.authority().pass() == "");
+    CHECK(uri.authority().host() == "");
+    CHECK(uri.authority().hasPort() == true);
+    CHECK(uri.authority().port() == 19999);
+    CHECK(uri.path().serialise() == "/path/file.txt");
+    CHECK(uri.query().serialise() == "a=&b&c=5");
+    CHECK(uri.hasFragment() == true);
+    CHECK(uri.fragment().empty() == false);
+    CHECK(uri.fragment() == "test[0]");
+
+
+
+    // add host
+
+    uri.setHost("server");
+    CHECK(uri.valid() == true);
+    CHECK(uri.scheme().empty() == false);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "m-m");
+    CHECK(uri.scheme().serialise() == "m-m");
+    CHECK(uri.authority().empty() == false);
+    CHECK(uri.authority().valid() == true);
+    CHECK(uri.authority().hasUserinfo() == true);
+    CHECK(uri.authority().user() == "john");
+    CHECK(uri.authority().pass() == "");
+    CHECK(uri.authority().host() == "server");
+    CHECK(uri.authority().hasPort() == true);
+    CHECK(uri.authority().port() == 19999);
+    CHECK(uri.authority().serialise() == "john@server:19999");
+    CHECK(uri.path().serialise() == "/path/file.txt");
+    CHECK(uri.query().serialise() == "a=&b&c=5");
+    CHECK(uri.hasFragment() == true);
+    CHECK(uri.fragment().empty() == false);
+    CHECK(uri.fragment() == "test[0]");
+
+
+
+    // result
+
+    CHECK(uri.valid() == true);
+
+    CHECK(uri.scheme().empty() == false);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().value() == "m-m");
+    CHECK(uri.scheme().serialise() == "m-m");
+
+    CHECK(uri.authority().empty() == false);
+    CHECK(uri.authority().valid() == true);
+    CHECK(uri.authority().hasUserinfo() == true);
+    CHECK(uri.authority().user() == "john");
+    CHECK(uri.authority().pass() == "");
+    CHECK(uri.authority().host() == "server");
+    CHECK(uri.authority().hasPort() == true);
+    CHECK(uri.authority().port() == 19999);
+    CHECK(uri.authority().serialise() == "john@server:19999");
+
+    CHECK(uri.path().empty() == false);
+    REQUIRE(uri.path().segments().size() == 2);
+    CHECK(uri.path().segments()[0] == "path");
+    CHECK(uri.path().segments()[1] == "file.txt");
+    CHECK(uri.path().serialise() == "/path/file.txt");
+
+    CHECK(uri.query().empty() == false);
+    REQUIRE(uri.query().parameters().size() == 3);
+    CHECK(uri.query().parameters()[0].key() == "a");
+    CHECK(uri.query().parameters()[0].value() == "");
+    CHECK(uri.query().parameters()[0].isFlag() == false);
+    CHECK(uri.query().parameters()[1].key() == "b");
+    CHECK(uri.query().parameters()[1].isFlag() == true);
+    CHECK(uri.query().parameters()[2].key() == "c");
+    CHECK(uri.query().parameters()[2].value() == "5");
+    CHECK(uri.query().parameters()[2].isFlag() == false);
+    CHECK(uri.query().serialise() == "a=&b&c=5");
+
+    CHECK(uri.fragment().empty() == false);
+    CHECK(uri.fragment() == "test[0]");
+
+    CHECK(uri.serialise() == "m-m://john@server:19999/path/file.txt?a=&b&c=5#test%5B0%5D");
+    CHECK(omw::URI(uri.serialise()) == uri);
+}
+
 TEST_CASE("uri.h URI equals")
 {
     CHECK(omw::URI("http://example.com/") == omw::URI("hTtP://example.com/"));
@@ -377,7 +632,149 @@ TEST_CASE("uri.h URI equals")
     CHECK(omw::URI("asdf://example.com/asdf?a=0&b=&c") != omw::URI("asdf://example.com/asdf?a=0&b=&c#"));
 }
 
-TEST_CASE("uri.h validity after setter")
+TEST_CASE("uri.h validity after setter (scheme, authority)")
+{
+    omw::URI uri;
+    omw::URI::Authority auth;
+
+    const std::string initScheme = "ftp";
+    const std::string initUser = "mike";
+    const std::string initPass = "m1";
+    const std::string initHost = "example.com";
+    const int initPort = 1234;
+    const std::string initAuth = initUser + ":" + initPass + "@" + initHost + ":" + std::to_string(initPort);
+    const std::string initPath = "/path/to/file.txt";
+    const std::string init = initScheme + "://" + initAuth + initPath;
+
+
+
+    // sequence #1
+
+    uri = init;
+    CHECK(uri.valid() == true);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().isFtp() == true);
+    CHECK(uri.scheme().serialise() == initScheme);
+    CHECK(uri.authority().valid() == true);
+    CHECK(uri.authority().user() == initUser);
+    CHECK(uri.authority().pass() == initPass);
+    CHECK(uri.authority().host() == initHost);
+    CHECK(uri.authority().port() == initPort);
+    CHECK(uri.authority().serialise() == initAuth);
+    CHECK(uri.path().serialise() == initPath);
+    CHECK(uri.serialise() == init);
+
+    auth = uri.authority();
+    auth.setPass("");
+    auth.setUser("");
+    auth.clearPort();
+    uri.setAuthority(auth);
+    CHECK(uri.valid() == true);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().isFtp() == true);
+    CHECK(uri.scheme().serialise() == initScheme);
+    CHECK(uri.authority().valid() == true);
+    CHECK(uri.authority().hasUserinfo() == false);
+    CHECK(uri.authority().host() == initHost);
+    CHECK(uri.authority().hasPort() == false);
+    CHECK(uri.authority().serialise() == initHost);
+    CHECK(uri.path().serialise() == initPath);
+    CHECK(uri.serialise() == (initScheme + "://" + initHost + initPath));
+
+    auth = uri.authority();
+    auth.setHost("");
+    auth.setPort(3);
+    uri.setAuthority(auth);
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().isFtp() == true);
+    CHECK(uri.scheme().serialise() == initScheme);
+    CHECK(uri.authority().valid() == false);
+    CHECK(uri.authority().hasUserinfo() == false);
+    CHECK(uri.authority().host() == "");
+    CHECK(uri.authority().port() == 3);
+    CHECK(uri.path().serialise() == initPath);
+
+    uri.setAuthority(omw::URI::Authority());
+    CHECK(uri.valid() == true);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().isFtp() == true);
+    CHECK(uri.scheme().serialise() == initScheme);
+    CHECK(uri.authority().empty() == true);
+    CHECK(uri.authority().valid() == false);
+    CHECK(uri.path().serialise() == initPath);
+    CHECK(uri.serialise() == (initScheme + ":" + initPath));
+
+    uri.setScheme("-");
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == false);
+    CHECK(uri.scheme().valid() == false);
+    CHECK(uri.authority().empty() == true);
+    CHECK(uri.authority().valid() == false);
+    CHECK(uri.path().serialise() == initPath);
+
+
+
+    // sequence #2
+
+    uri = init;
+    CHECK(uri.valid() == true);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().isFtp() == true);
+    CHECK(uri.scheme().serialise() == initScheme);
+    CHECK(uri.authority().valid() == true);
+    CHECK(uri.authority().user() == initUser);
+    CHECK(uri.authority().pass() == initPass);
+    CHECK(uri.authority().host() == initHost);
+    CHECK(uri.authority().port() == initPort);
+    CHECK(uri.authority().serialise() == initAuth);
+    CHECK(uri.path().serialise() == initPath);
+    CHECK(uri.serialise() == init);
+
+    uri.setScheme("");
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == true);
+    CHECK(uri.scheme().valid() == false);
+    CHECK(uri.authority().valid() == true);
+    CHECK(uri.authority().user() == initUser);
+    CHECK(uri.authority().pass() == initPass);
+    CHECK(uri.authority().host() == initHost);
+    CHECK(uri.authority().port() == initPort);
+    CHECK(uri.authority().serialise() == initAuth);
+    CHECK(uri.path().serialise() == initPath);
+
+
+
+    // sequence #3
+
+    uri = init;
+    CHECK(uri.valid() == true);
+    CHECK(uri.scheme().valid() == true);
+    CHECK(uri.scheme().isFtp() == true);
+    CHECK(uri.scheme().serialise() == initScheme);
+    CHECK(uri.authority().valid() == true);
+    CHECK(uri.authority().user() == initUser);
+    CHECK(uri.authority().pass() == initPass);
+    CHECK(uri.authority().host() == initHost);
+    CHECK(uri.authority().port() == initPort);
+    CHECK(uri.authority().serialise() == initAuth);
+    CHECK(uri.path().serialise() == initPath);
+    CHECK(uri.serialise() == init);
+
+    uri.setScheme("asd#f");
+    CHECK(uri.valid() == false);
+    CHECK(uri.scheme().empty() == false);
+    CHECK(uri.scheme().valid() == false);
+    CHECK(uri.authority().valid() == true);
+    CHECK(uri.authority().user() == initUser);
+    CHECK(uri.authority().pass() == initPass);
+    CHECK(uri.authority().host() == initHost);
+    CHECK(uri.authority().port() == initPort);
+    CHECK(uri.authority().serialise() == initAuth);
+    CHECK(uri.path().serialise() == initPath);
+}
+
+TEST_CASE("uri.h validity after setter (authority + path)")
 {
     std::string str, str2;
     omw::URI uri;
