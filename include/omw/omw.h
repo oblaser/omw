@@ -29,17 +29,18 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 /**
  * Uniqe version ID, always greater than the ID of the previous version.
+ * Might get increased in steps due to relevant changes before the next release.
  *
- * Can be compared to `OMW_VERSION_ID_..`
+ * Can be compared to `OMW_VERSION_ID_..` constants.
  *
  * | Version           | Version ID |
- * |:-----------------:|:---:|
- * | v0.2.1            |  6  |
- * | v0.2.1-beta       |  5  |
- * | v0.2.1-alpha.2    |  4  |
- * | v0.2.1-alpha.1    |  3  |
- * | v0.2.1-alpha      |  2  |
- * | v0.2.0            |  1  |
+ * |:-----------------:|:----------:|
+ * | v0.2.1            |      6     |
+ * | v0.2.1-beta       |      5     |
+ * | v0.2.1-alpha.2    |      4     |
+ * | v0.2.1-alpha.1    |      3     |
+ * | v0.2.1-alpha      |      2     |
+ * | v0.2.0            |      1     |
  */
 #define OMW_VERSION_ID (250804)
 
@@ -54,7 +55,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define OMW_VERSION_ID_0_2_1_ALPHA_2 (4)
 #define OMW_VERSION_ID_0_2_1_BETA    (5)
 #define OMW_VERSION_ID_0_2_1         (6)
-// new format: `YYMMnn`
+// new format: `YYMMnn` where `nn` is mostly the day of the month but not limited to that, hence _n_ and not _D_
 
 /// @}
 

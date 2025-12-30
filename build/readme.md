@@ -49,9 +49,9 @@ The version must be consistent in the following files:
 - `build/dep_vstr.txt`
 - `doc/Doxyfile`
 - `include/omw/omw.h`
+- `release-notes.md`
 - `tests/unit/main.cpp`
 - `web/doc/index.html`
-- `release-notes.md`
 
 Copyright year showing up in binaries or packages:
 - `build/dep_globals.sh`
