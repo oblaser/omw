@@ -35,6 +35,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
  *
  * | Version           | Version ID |
  * |:-----------------:|:----------:|
+ * | v0.3.0            |   251230   |
  * | v0.2.1            |      6     |
  * | v0.2.1-beta       |      5     |
  * | v0.2.1-alpha.2    |      4     |
@@ -42,12 +43,12 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
  * | v0.2.1-alpha      |      2     |
  * | v0.2.0            |      1     |
  */
-#define OMW_VERSION_ID (250804)
+#define OMW_VERSION_ID (251230)
 
 #define OMW_VERSION_MAJ   (0)
 #define OMW_VERSION_MIN   (3)
 #define OMW_VERSION_PAT   (0)
-#define OMW_VERSION_PRSTR ("alpha")
+#define OMW_VERSION_PRSTR ("")
 
 #define OMW_VERSION_ID_0_2_0         (1)
 #define OMW_VERSION_ID_0_2_1_ALPHA   (2)
@@ -56,6 +57,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define OMW_VERSION_ID_0_2_1_BETA    (5)
 #define OMW_VERSION_ID_0_2_1         (6)
 // new format: `YYMMnn` where `nn` is mostly the day of the month but not limited to that, hence _n_ and not _D_
+#define OMW_VERSION_ID_0_3_0         (251230)
 
 /// @}
 

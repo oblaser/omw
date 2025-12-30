@@ -2,7 +2,7 @@
 
 
 
-### v0.3.0
+### v0.3.0 - 2025-12-30
 
 New
 - `omw::Semver` and `omw::MajMinVer`
