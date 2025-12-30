@@ -20,8 +20,8 @@ TEST_CASE("omw lib")
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 
-    CHECK(omw::info::version() == omw::Semver(0, 3, 0));
-    CHECK(OMW_VERSION_ID == 251230);
+    CHECK(omw::info::version() == omw::Semver(0, 3, 1, "alpha"));
+    CHECK(OMW_VERSION_ID == 251231);
 
     CHECK(omw::info::version() == omw::Semver(OMW_VERSION_MAJ, OMW_VERSION_MIN, OMW_VERSION_PAT, OMW_VERSION_PRSTR));
 }
