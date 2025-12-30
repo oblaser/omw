@@ -1,11 +1,8 @@
 /*
-author         Oliver Blaser
-date           23.01.2022
-copyright      MIT - Copyright (c) 2022 Oliver Blaser
+author          Oliver Blaser
+date            14.06.2025
+copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
-
-#ifndef TEST_OMW_VERSION_H
-#define TEST_OMW_VERSION_H
 
 #include <cstdint>
 #include <string>
@@ -681,7 +678,3 @@ TEST_CASE("omw::Semver compare operators pre-release")
     CHECK((!(v <= v00) && !(v <= v01) && !(v <= v02) && !(v <= v03) && !(v <= v04) && !(v <= v05) && !(v <= v06) && !(v <= v07) && !(v <= v08) && (v <= vMax)));
     CHECK(((v >= v00) && (v >= v01) && (v >= v02) && (v >= v03) && (v >= v04) && (v >= v05) && (v >= v06) && (v >= v07) && (v >= v08) && (v >= vMax)));
 }
-
-
-
-#endif // TEST_OMW_VERSION_H

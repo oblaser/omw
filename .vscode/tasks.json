@@ -11,7 +11,7 @@
                 "problemMatcher": [ "$gcc" ],
             },
             "windows": {
-                "command": "cd build ; ./build.bat buildAll run86 ; cd ..",
+                "command": "cd build ; ./build.bat buildAll run64 ; cd ..",
                 "problemMatcher": [ "$msCompile" ],
             },
             "group": {

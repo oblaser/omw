@@ -4,9 +4,6 @@ date            05.03.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
-#ifndef TEST_OMW_ALGORITHM_H
-#define TEST_OMW_ALGORITHM_H
-
 #include <cstdint>
 #include <iostream>
 #include <string>
@@ -205,6 +202,3 @@ TEST_CASE("algorithm.h levenshteinDistance() vector")
         CHECK(omw::levenshteinDistance(x.a(), x.b()) == x.r());
     }
 }
-
-
-#endif // TEST_OMW_ALGORITHM_H

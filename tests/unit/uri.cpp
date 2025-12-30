@@ -4,9 +4,6 @@ date            28.12.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
-#ifndef TEST_OMW_URI_H
-#define TEST_OMW_URI_H
-
 #include <cctype>
 #include <cstddef>
 #include <cstdint>
@@ -22,6 +19,8 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #if (OMW_CPPSTD >= OMW_CPPSTD_17)
 #include <filesystem>
 namespace fs = std::filesystem;
+#else
+static void print_cpp17_warning();
 #endif
 
 
@@ -1174,6 +1173,8 @@ TEST_CASE("uri.h \\ and / in path segment")
 #if OMW_PLAT_WIN
     fs::path winPath;
 #endif
+#else  // C++17
+    print_cpp17_warning();
 #endif // C++17
 
 
@@ -1383,4 +1384,21 @@ TEST_CASE("uri.h omw::URI::Path specific std::filesystem::path")
 
 
 
-#endif // TEST_OMW_URI_H
+#if (OMW_CPPSTD < OMW_CPPSTD_17)
+
+#include <iostream>
+
+#include <omw/cli.h>
+
+void print_cpp17_warning()
+{
+    std::cout << std::endl;
+    std::cout << omw::fgBrightYellow << "warning: " << omw::fgDefault;
+
+    std::cout << "URI functions using `std::filesystem::path` are not availabe when using C++";
+    std::cout << std::to_string(OMW_CPPSTD).substr(2, 2) << " (" << OMW_CPPSTD << ')';
+
+    std::cout << std::endl;
+}
+
+#endif // C++17

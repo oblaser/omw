@@ -7,6 +7,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #ifndef IG_TESTUTIL_H
 #define IG_TESTUTIL_H
 
+#include <cstring>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -73,10 +74,12 @@ REQUIRE(tu_trycatch_val == tu_trycatch_initVal)                                 
 
 namespace tu {
 
-int strcmp(const std::string& a, const char* b) { return std::strcmp(a.c_str(), b); }
-int strcmp(const char* a, const std::string& b) { return std::strcmp(a, b.c_str()); }
-int strcmp(const std::string& a, const std::string& b) { return std::strcmp(a.c_str(), b.c_str()); }
+static inline int strcmp(const std::string& a, const char* b) { return std::strcmp(a.c_str(), b); }
+static inline int strcmp(const char* a, const std::string& b) { return std::strcmp(a, b.c_str()); }
+static inline int strcmp(const std::string& a, const std::string& b) { return std::strcmp(a.c_str(), b.c_str()); }
 
 } // namespace tu
+
+
 
 #endif // IG_TESTUTIL_H

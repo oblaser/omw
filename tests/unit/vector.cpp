@@ -4,9 +4,6 @@ date            13.03.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
-#ifndef TEST_OMW_VECTOR_H
-#define TEST_OMW_VECTOR_H
-
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
@@ -90,7 +87,3 @@ TEST_CASE("vector.h omw::reserveAdditional()")
 #endif
     CHECK(v.capacity() >= (v.size() + 3));
 }
-
-
-
-#endif // TEST_OMW_VECTOR_H

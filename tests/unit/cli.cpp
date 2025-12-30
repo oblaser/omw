@@ -4,9 +4,6 @@ date            07.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
-#ifndef TEST_OMW_CLI_H
-#define TEST_OMW_CLI_H
-
 #include <string>
 #include <vector>
 
@@ -15,6 +12,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include <omw/cli.h>
 #include <omw/string.h>
+#include <omw/windows/windows.h>
 
 
 
@@ -254,6 +252,3 @@ TEST_CASE("set ansiesc mode")
     CHECK(1 == 1);
 }
 #endif
-
-
-#endif // TEST_OMW_CLI_H

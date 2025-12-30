@@ -4,9 +4,6 @@ date            24.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
-#ifndef TEST_OMW_ENCODING_H
-#define TEST_OMW_ENCODING_H
-
 #include <array>
 #include <cstdint>
 #include <stdexcept>
@@ -268,7 +265,3 @@ TEST_CASE("encoding.h omw::bigEndian encode_128()")
     TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(nullptr, sVal)), std::invalid_argument);
     TESTUTIL_TRYCATCH_SE_CHECK((omw::bigEndian::encode_128(nullptr, uVal)), std::invalid_argument);
 }
-
-
-
-#endif // TEST_OMW_ENCODING_H

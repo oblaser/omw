@@ -4,14 +4,12 @@ date            27.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
-#ifndef TEST_OMW_CHECKSUM_H
-#define TEST_OMW_CHECKSUM_H
-
 #include <cstddef>
 #include <cstdint>
 #include <vector>
 
 #include "catch2/catch.hpp"
+#include "testUtil.h"
 
 #include <omw/checksum.h>
 
@@ -80,7 +78,3 @@ TEST_CASE("checksum.h omw::preview::crc16_kermit()")
           0x42, 0x5D, 0x0C, 0x66, 0xA8, 0x53, 0xE5, 0xFF, 0xF1, 0x89, 0x1A, 0x3A, 0xF4, 0x96, 0x33, 0x39 };
     CHECK(omw::preview::crc16_kermit(v.data(), v.size()) == 0xA75E);
 }
-
-
-
-#endif // TEST_OMW_CHECKSUM_H

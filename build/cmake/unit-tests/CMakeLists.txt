@@ -16,6 +16,23 @@ link_directories(../)
 
 set(SOURCES_UNIT_TEST
 ../../../tests/unit/main.cpp
+
+../../../tests/unit/algorithm.cpp
+../../../tests/unit/checksum.cpp
+../../../tests/unit/cli.cpp
+../../../tests/unit/clock.cpp
+../../../tests/unit/color.cpp
+../../../tests/unit/encoding.cpp
+../../../tests/unit/int.cpp
+../../../tests/unit/io_serialPort.cpp
+../../../tests/unit/math.cpp
+../../../tests/unit/string.cpp
+../../../tests/unit/uri.cpp
+../../../tests/unit/utility.cpp
+../../../tests/unit/vector.cpp
+../../../tests/unit/version.cpp
+../../../tests/unit/windows_envVar.cpp
+../../../tests/unit/windows_string.cpp
 )
 
 #add_executable(${UNIT_TEST_EXE_SHARED} ${SOURCES_UNIT_TEST})

@@ -4,9 +4,6 @@ date            11.12.2021
 copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
 
-#ifndef TEST_OMW_MATH_H
-#define TEST_OMW_MATH_H
-
 #include <string>
 #include <vector>
 
@@ -89,10 +86,4 @@ TEST_CASE("math.h max() min() uint128_t")
     CHECK(min4 == omw::uint128_t(0, 1));
 }
 
-TEST_CASE("math.h sign() sgn()")
-{
-}
-
-
-
-#endif // TEST_OMW_MATH_H
+TEST_CASE("math.h sign() sgn()") {}

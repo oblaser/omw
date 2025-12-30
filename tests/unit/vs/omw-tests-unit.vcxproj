@@ -18,6 +18,25 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\algorithm.cpp" />
+    <ClCompile Include="..\checksum.cpp" />
+    <ClCompile Include="..\cli.cpp" />
+    <ClCompile Include="..\clock.cpp" />
+    <ClCompile Include="..\color.cpp" />
+    <ClCompile Include="..\encoding.cpp" />
+    <ClCompile Include="..\int.cpp" />
+    <ClCompile Include="..\io_serialPort.cpp" />
+    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\math.cpp" />
+    <ClCompile Include="..\string.cpp" />
+    <ClCompile Include="..\uri.cpp" />
+    <ClCompile Include="..\utility.cpp" />
+    <ClCompile Include="..\vector.cpp" />
+    <ClCompile Include="..\version.cpp" />
+    <ClCompile Include="..\windows_envVar.cpp" />
+    <ClCompile Include="..\windows_string.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{66E25ECD-E839-429E-BB72-7E9817BA9C1C}</ProjectGuid>
@@ -123,27 +142,6 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\algorithm.hpp" />
-    <ClInclude Include="..\checksum.hpp" />
-    <ClInclude Include="..\cli.hpp" />
-    <ClInclude Include="..\clock.hpp" />
-    <ClInclude Include="..\color.hpp" />
-    <ClInclude Include="..\encoding.hpp" />
-    <ClInclude Include="..\int.hpp" />
-    <ClInclude Include="..\io_serialPort.hpp" />
-    <ClInclude Include="..\math.hpp" />
-    <ClInclude Include="..\string.hpp" />
-    <ClInclude Include="..\testUtil.h" />
-    <ClInclude Include="..\utility.hpp" />
-    <ClInclude Include="..\vector.hpp" />
-    <ClInclude Include="..\version.hpp" />
-    <ClInclude Include="..\windows_envVar.hpp" />
-    <ClInclude Include="..\windows_string.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

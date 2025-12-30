@@ -4,9 +4,6 @@ date            11.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
-#ifndef TEST_OMW_OMWINT_H
-#define TEST_OMW_OMWINT_H
-
 #include <cstdint>
 #include <stdexcept>
 #include <string>
@@ -17,11 +14,10 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 #include <omw/int.h>
 
-namespace
-{
-    bool base_int128_eq(const omw::Base_Int128& val, uint64_t h, uint64_t l) { return ((val.hi() == h) && (val.lo() == l)); }
-    bool base_int128_eqs(const omw::Base_Int128& val, int64_t h, uint64_t l) { return ((val.his() == h) && (val.lo() == l)); }
-}
+namespace {
+bool base_int128_eq(const omw::Base_Int128& val, uint64_t h, uint64_t l) { return ((val.hi() == h) && (val.lo() == l)); }
+bool base_int128_eqs(const omw::Base_Int128& val, int64_t h, uint64_t l) { return ((val.his() == h) && (val.lo() == l)); }
+} // namespace
 
 
 TEST_CASE("int.h macros")
@@ -206,13 +202,33 @@ TEST_CASE("int.h omw::Base_Int128 sets")
     CHECK(base_int128_eq(x, UINT64_MAX, 0xFFFFFFFF9034ABCD));
 
     x.set(123, 456);
-    try { x.sets(data, 17); }
-    catch (std::overflow_error& ex) { const char* const msg = ex.what(); CHECK(1 == 1); }
-    catch (...) { CHECK(1 != 1); }
+    try
+    {
+        x.sets(data, 17);
+    }
+    catch (std::overflow_error& ex)
+    {
+        const char* const msg = ex.what();
+        CHECK(1 == 1);
+    }
+    catch (...)
+    {
+        CHECK(1 != 1);
+    }
     CHECK(base_int128_eq(x, 123, 456));
-    try { x.sets(data, -1); }
-    catch (std::overflow_error& ex) { const char* const msg = ex.what(); CHECK(1 == 1); }
-    catch (...) { CHECK(1 != 1); }
+    try
+    {
+        x.sets(data, -1);
+    }
+    catch (std::overflow_error& ex)
+    {
+        const char* const msg = ex.what();
+        CHECK(1 == 1);
+    }
+    catch (...)
+    {
+        CHECK(1 != 1);
+    }
     CHECK(base_int128_eq(x, 123, 456));
 }
 
@@ -283,13 +299,33 @@ TEST_CASE("int.h omw::Base_Int128 setu")
     CHECK(base_int128_eq(x, 0, 0x9034ABCD));
 
     x.set(123, 456);
-    try { x.setu(data, 17); }
-    catch (std::overflow_error& ex) { const char* const msg = ex.what(); CHECK(1 == 1); }
-    catch (...) { CHECK(1 != 1); }
+    try
+    {
+        x.setu(data, 17);
+    }
+    catch (std::overflow_error& ex)
+    {
+        const char* const msg = ex.what();
+        CHECK(1 == 1);
+    }
+    catch (...)
+    {
+        CHECK(1 != 1);
+    }
     CHECK(base_int128_eq(x, 123, 456));
-    try { x.setu(data, -1); }
-    catch (std::overflow_error& ex) { const char* const msg = ex.what(); CHECK(1 == 1); }
-    catch (...) { CHECK(1 != 1); }
+    try
+    {
+        x.setu(data, -1);
+    }
+    catch (std::overflow_error& ex)
+    {
+        const char* const msg = ex.what();
+        CHECK(1 == 1);
+    }
+    catch (...)
+    {
+        CHECK(1 != 1);
+    }
     CHECK(base_int128_eq(x, 123, 456));
 }
 
@@ -482,36 +518,35 @@ TEST_CASE("int.h omw::Base_Int128 left shift operator")
     x.set(1, 0);
     x <<= 3;
     CHECK(base_int128_eq(x, 8, 0));
-    
+
     x.set(0, 0xA5);
     x <<= 32;
     CHECK(base_int128_eq(x, 0, 0xA500000000));
-    
+
     x.set(0, 1);
     x <<= 65;
     CHECK(base_int128_eq(x, 2, 0));
-    
+
     x.set(UINT64_MAX, UINT64_MAX);
     x <<= 127;
     CHECK(base_int128_eq(x, 0x8000000000000000, 0));
-    
+
     x.set(0, 1);
     x <<= 128;
     CHECK(base_int128_eq(x, 0, 0));
-    
+
     x.set(UINT64_MAX, UINT64_MAX);
     x <<= 128;
     CHECK(base_int128_eq(x, 0, 0));
-    
+
     x.set(0, 0x12345678);
     x <<= 32;
     CHECK(base_int128_eq(x, 0, 0x1234567800000000));
-    
+
     x.set(0x1234567800000000, 0x12345678);
     x <<= 48;
     CHECK(base_int128_eq(x, 0x1234, 0x5678000000000000));
 }
-
 
 
 
@@ -696,14 +731,19 @@ TEST_CASE("int.h omw::SignedInt128 right shift operator")
 
 #ifdef OMWi_INT_RIGHTSHIFT_DEBUG
     omw::SignedInt128& r = x;
-    
-    //CHECK(r.hi() == 0xabcd);
-    //CHECK(r.lo() == 0xabcd);
-    //std::cout << "\033[99m" << omw::toHexStr(r.oldValue_h, '-') + "  " + omw::toHexStr(r.oldValue_l, '-') << "\033[39m" << std::endl;
-    //std::cout << "\033[95m" << omw::toHexStr(r.lastMask_h, '-') + "  " + omw::toHexStr(r.lastMask_l, '-') << "\033[39m\n\n" << std::endl;
 
-    std::cout << "\n\n\033[99m" << "oldValue" << "\033[39m" << std::endl;
-    std::cout << "\033[95m" << "lastMask" << "\033[39m\n\n" << std::endl;
+    // CHECK(r.hi() == 0xabcd);
+    // CHECK(r.lo() == 0xabcd);
+    // std::cout << "\033[99m" << omw::toHexStr(r.oldValue_h, '-') + "  " + omw::toHexStr(r.oldValue_l, '-') << "\033[39m" << std::endl;
+    // std::cout << "\033[95m" << omw::toHexStr(r.lastMask_h, '-') + "  " + omw::toHexStr(r.lastMask_l, '-') << "\033[39m\n\n" << std::endl;
+
+    std::cout << "\n\n\033[99m"
+              << "oldValue"
+              << "\033[39m" << std::endl;
+    std::cout << "\033[95m"
+              << "lastMask"
+              << "\033[39m\n\n"
+              << std::endl;
 #endif
 
     x.set(0x8000000000000000, 0x8003);
@@ -712,35 +752,35 @@ TEST_CASE("int.h omw::SignedInt128 right shift operator")
     x.set(0x4000000000000000, 0x8003);
     x >>= 0;
     CHECK(base_int128_eq(x, 0x4000000000000000, 0x8003));
-    
+
     x.set(0x8000000000000000, 0x8003);
     x >>= 3;
     CHECK(base_int128_eq(x, 0xF000000000000000, 0x1000));
     x.set(0x4000000000000000, 0x8003);
     x >>= 3;
     CHECK(base_int128_eq(x, 0x0800000000000000, 0x1000));
-    
+
     x.set(0x8000000000000000, 0x8003);
     x >>= 63;
     CHECK(base_int128_eq(x, OMW_64BIT_ALL, 0));
     x.set(0x4000000000000000, 0x8003);
     x >>= 63;
     CHECK(base_int128_eq(x, 0, 0x8000000000000000));
-    
+
     x.set(0x8000000000000000, 0x8003);
     x >>= 64;
     CHECK(base_int128_eq(x, OMW_64BIT_ALL, 0x8000000000000000));
     x.set(0x4000000000000000, 0x8003);
     x >>= 64;
     CHECK(base_int128_eq(x, 0, 0x4000000000000000));
-    
+
     x.set(0x8000000000000000, 0x8003);
     x >>= 65;
     CHECK(base_int128_eq(x, OMW_64BIT_ALL, 0xC000000000000000));
     x.set(0x4000000000000000, 0x8003);
     x >>= 65;
     CHECK(base_int128_eq(x, 0, 0x2000000000000000));
-    
+
     x.set(0x8000000000000000, 0x8003);
     x >>= 127;
     CHECK(base_int128_eq(x, OMW_64BIT_ALL, OMW_64BIT_ALL));
@@ -750,21 +790,21 @@ TEST_CASE("int.h omw::SignedInt128 right shift operator")
     x.set(0x4000000000000000, 0x8003);
     x >>= 126;
     CHECK(base_int128_eq(x, 0, 1));
-    
+
     x.set(0x8000000000000000, 0x8003);
     x >>= 128;
     CHECK(base_int128_eq(x, OMW_64BIT_ALL, OMW_64BIT_ALL));
     x.set(0x4000000000000000, 0x8003);
     x >>= 128;
     CHECK(base_int128_eq(x, 0, 0));
-    
+
     x.set(0x8000000000000000, 0x8003);
     x >>= 129;
     CHECK(base_int128_eq(x, OMW_64BIT_ALL, OMW_64BIT_ALL));
     x.set(0x4000000000000000, 0x8003);
     x >>= 129;
     CHECK(base_int128_eq(x, 0, 0));
-    
+
     x.set(0x8000000000000000, 0x8003);
     x >>= -1;
     CHECK(base_int128_eq(x, OMW_64BIT_ALL, OMW_64BIT_ALL));
@@ -1464,7 +1504,3 @@ TEST_CASE("int.h compairson operators mixed")
     CHECK_FALSE(s >= u);
     CHECK(u >= s);
 }
-
-
-
-#endif // TEST_OMW_OMWINT_H

@@ -1,10 +1,8 @@
 /*
 author          Oliver Blaser
-copyright       MIT - Copyright (c) 2023 Oliver Blaser
+date            14.06.2025
+copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
-
-#ifndef TEST_OMW_STRING_H
-#define TEST_OMW_STRING_H
 
 #include <cstddef>
 #include <cstdint>
@@ -1364,7 +1362,3 @@ TEST_CASE("string.h writeString() vector")
     TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(*p_tcv, p_tcv->size(), "a")), std::out_of_range);
     TESTUTIL_TRYCATCH_SE_CHECK((omw::writeString(*p_tcv, p_tcv->size() - 1, "ab")), std::out_of_range);
 }
-
-
-
-#endif // TEST_OMW_STRING_H

@@ -4,9 +4,6 @@ date            31.12.2023
 copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
-#ifndef TEST_OMW_WINDOWS_ENVVAR_H
-#define TEST_OMW_WINDOWS_ENVVAR_H
-
 #include <omw/defs.h>
 #ifdef OMW_PLAT_WIN
 
@@ -14,8 +11,10 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include <string>
 
 #include "catch2/catch.hpp"
+#include "testUtil.h"
 
 #include <omw/windows/envVar.h>
+#include <omw/windows/exception.h>
 
 
 
@@ -42,4 +41,3 @@ TEST_CASE("omw::windows::getEnvironmentVariable()")
 
 
 #endif // OMW_PLAT_WIN
-#endif // TEST_OMW_WINDOWS_ENVVAR_H

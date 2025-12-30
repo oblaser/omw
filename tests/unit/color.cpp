@@ -1,11 +1,8 @@
 /*
-author         Oliver Blaser
-date           30.12.2021
-copyright      MIT - Copyright (c) 2021 Oliver Blaser
+author          Oliver Blaser
+date            30.12.2021
+copyright       MIT - Copyright (c) 2021 Oliver Blaser
 */
-
-#ifndef TEST_OMW_COLOR_H
-#define TEST_OMW_COLOR_H
 
 #include <cstdint>
 #include <stdexcept>
@@ -439,6 +436,3 @@ TEST_CASE("color.h color namespace")
     CHECK(0x000080 == omw::colors::navy);
     CHECK(0xDA70D6 == omw::colors::orchid);
 }
-
-
-#endif // TEST_OMW_COLOR_H

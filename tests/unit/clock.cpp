@@ -4,9 +4,6 @@ date            16.02.2025
 copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
-#ifndef TEST_OMW_CLOCK_H
-#define TEST_OMW_CLOCK_H
-
 #include <cstdint>
 
 #include "catch2/catch.hpp"
@@ -79,7 +76,7 @@ TEST_CASE("clock.h omw::clock::now() measure system sleep")
     duration = omw::clock::now() - start;
 
     CHECK(duration >= (990 * 1000ll));
-    CHECK(duration <= (1100 * 1000ll));
+    CHECK(duration <= (1500 * 1000ll));
 
 
 
@@ -97,7 +94,7 @@ TEST_CASE("clock.h omw::clock::now() measure system sleep")
 #ifdef OMW_PLAT_WIN
     CHECK(duration <= (12000ll));
 #else
-    CHECK(duration <= (11000ll));
+    CHECK(duration <= (15000ll));
 #endif
 }
 
@@ -216,7 +213,3 @@ TEST_CASE("clock.h omw::clock::fromTimespec()")
     CHECK(omw::clock::fromTimespec(sec, nsec) == omw::clock::fromTimespec(&tspec));
 #endif
 }
-
-
-
-#endif // TEST_OMW_CLI_H

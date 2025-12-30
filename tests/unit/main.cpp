@@ -1,7 +1,7 @@
 /*
 author          Oliver Blaser
-date            28.01.2022
-copyright       MIT - Copyright (c) 2022 Oliver Blaser
+date            30.12.2025
+copyright       MIT - Copyright (c) 2025 Oliver Blaser
 */
 
 #include <iostream>
@@ -9,6 +9,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define CATCH_CONFIG_MAIN
 #include "catch2/catch.hpp"
 
+#include <omw/cli.h>
 #include <omw/defs.h>
 #include <omw/omw.h>
 #include <omw/windows/windows.h>
@@ -16,7 +17,7 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 TEST_CASE("omw lib")
 {
-    std::cout << std::endl << "Testing OMW - std: " << std::to_string(OMW_CPPSTD).substr(2, 2) << " (" << OMW_CPPSTD << ')' << std::endl;
+    std::cout << std::endl << "Testing OMW - C++" << std::to_string(OMW_CPPSTD).substr(2, 2) << " (" << OMW_CPPSTD << ')' << std::endl;
 
     std::cout << std::endl << omw::info::infoTxt() << std::endl;
 
@@ -25,26 +26,6 @@ TEST_CASE("omw lib")
 
     CHECK(omw::info::version() == omw::Semver(OMW_VERSION_MAJ, OMW_VERSION_MIN, OMW_VERSION_PAT, OMW_VERSION_PRSTR));
 }
-
-
-
-#include "cli.hpp"
-
-#include "algorithm.hpp"
-#include "checksum.hpp"
-#include "clock.hpp"
-#include "color.hpp"
-#include "encoding.hpp"
-#include "int.hpp"
-#include "io_serialPort.hpp"
-#include "math.hpp"
-#include "string.hpp"
-#include "uri.hpp"
-#include "utility.hpp"
-#include "vector.hpp"
-#include "version.hpp"
-#include "windows_envVar.hpp"
-#include "windows_string.hpp"
 
 
 

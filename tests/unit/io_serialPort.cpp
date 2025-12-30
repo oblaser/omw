@@ -4,9 +4,6 @@ date            27.01.2022
 copyright       MIT - Copyright (c) 2022 Oliver Blaser
 */
 
-#ifndef TEST_OMW_IO_SERIALPORT_H
-#define TEST_OMW_IO_SERIALPORT_H
-
 #include <string>
 #include <vector>
 
@@ -30,6 +27,3 @@ TEST_CASE("serialPort.h sortSerialPortList()")
     omw::preview::sortSerialPortList(ports);
     CHECK(ports == expectedResult);
 }
-
-
-#endif // TEST_OMW_IO_SERIALPORT_H

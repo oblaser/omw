@@ -27,6 +27,7 @@ std::string omw::info::infoTxt()
 #ifdef OMW_DEBUG
     s << OMWi_DISPSTR(" - DEBUG");
 #endif
+    if (omw::info::version().isPreRelease()) { s << " - #" << OMW_VERSION_ID; }
     s << std::endl;
 
     s << OMWi_DISPSTR("Copyright (c) 2025 Oliver Blaser.") << std::endl;
