@@ -363,7 +363,7 @@ TEST_CASE("string.h omw::toReversed()")
     CHECK(omw::toReversed(cr) == "TREWQ");
 }
 
-TEST_CASE("string.h omw::split()")
+TEST_CASE("string.h omw::split() by char")
 {
     const std::string s("The quick brown fox jumps over the lazy dog");
     omw::StringVector t;
@@ -409,6 +409,64 @@ TEST_CASE("string.h omw::split()")
     REQUIRE(t.size() == n);
     CHECK(t[0] == "");
     CHECK(t[1] == "he quick brown fox jumps over the lazy dog");
+
+    t = omw::split(s, 'g');
+    n = 2;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "The quick brown fox jumps over the lazy do");
+    CHECK(t[1] == "");
+}
+
+TEST_CASE("string.h omw::split() by string")
+{
+    const std::string s("The, quick, brown, fox, jumps, over, the, lazy, dog");
+    omw::StringVector t;
+    size_t n;
+
+    t = omw::split(s, ", ");
+    n = 9;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "The");
+    CHECK(t[1] == "quick");
+    CHECK(t[2] == "brown");
+    CHECK(t[3] == "fox");
+    CHECK(t[4] == "jumps");
+    CHECK(t[5] == "over");
+    CHECK(t[6] == "the");
+    CHECK(t[7] == "lazy");
+    CHECK(t[8] == "dog");
+
+    t = omw::split(s, ", ", 0);
+    n = 0;
+    REQUIRE(t.size() == n);
+
+    t = omw::split(s, ", ", 5);
+    n = 5;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "The");
+    CHECK(t[1] == "quick");
+    CHECK(t[2] == "brown");
+    CHECK(t[3] == "fox");
+    CHECK(t[4] == "jumps, over, the, lazy, dog");
+
+    t = omw::split(s, "e, ");
+    n = 3;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "Th");
+    CHECK(t[1] == "quick, brown, fox, jumps, over, th");
+    CHECK(t[2] == "lazy, dog");
+
+    t = omw::split(s, "The");
+    n = 2;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "");
+    CHECK(t[1] == ", quick, brown, fox, jumps, over, the, lazy, dog");
+
+    t = omw::split(s, "dog");
+    n = 2;
+    REQUIRE(t.size() == n);
+    CHECK(t[0] == "The, quick, brown, fox, jumps, over, the, lazy, ");
+    CHECK(t[1] == "");
 }
 
 TEST_CASE("string.h omw::splitLen()")

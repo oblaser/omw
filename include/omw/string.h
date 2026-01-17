@@ -312,6 +312,27 @@ static inline omw::StringVector split(const char* str, char delimiter, omw::Stri
     return (str ? omw::split(std::string(str), delimiter, maxTokenCount) : omw::StringVector());
 }
 
+
+
+omw::StringVector split(const std::string& str, const std::string& delimiter, omw::StringVector::size_type maxTokenCount = omw::StringVector_npos);
+
+static inline omw::StringVector split(const std::string& str, const char* delimiter, omw::StringVector::size_type maxTokenCount = omw::StringVector_npos)
+{
+    return (delimiter ? omw::split(str, std::string(delimiter), maxTokenCount) : omw::StringVector(1, str));
+}
+
+static inline omw::StringVector split(const char* str, const std::string& delimiter, omw::StringVector::size_type maxTokenCount = omw::StringVector_npos)
+{
+    return (str ? omw::split(std::string(str), delimiter, maxTokenCount) : omw::StringVector());
+}
+
+static inline omw::StringVector split(const char* str, const char* delimiter, omw::StringVector::size_type maxTokenCount = omw::StringVector_npos)
+{
+    return (str ? omw::split(std::string(str), delimiter, maxTokenCount) : omw::StringVector());
+}
+
+
+
 omw::StringVector splitLen(const std::string& str, std::string::size_type tokenLength, omw::StringVector::size_type maxTokenCount = omw::StringVector_npos);
 
 static inline omw::StringVector splitLen(const char* str, std::string::size_type tokenLength,
@@ -319,6 +340,8 @@ static inline omw::StringVector splitLen(const char* str, std::string::size_type
 {
     return (str ? omw::splitLen(std::string(str), tokenLength, maxTokenCount) : omw::StringVector());
 }
+
+
 
 // TODO check overloads
 // omw::string join(const std::string* strings, size_t count, char delimiter = '\0');

@@ -826,8 +826,8 @@ void omw::rmNonHex(std::string& str)
 {
     for (std::string::size_type i = 0; i < str.length();)
     {
-        if (omw::isHex(str[i])) ++i;
-        else str.erase(i, 1);
+        if (omw::isHex(str[i])) { ++i; }
+        else { str.erase(i, 1); }
     }
 }
 
@@ -849,7 +849,7 @@ omw::StringVector omw::split(const std::string& str, char delimiter, omw::String
                 const std::string::size_type end = str.find(delimiter, pos);
                 r.push_back(str.substr(pos, end - pos));
                 pos = end;
-                if (pos < std::string::npos) ++pos;
+                if (pos < std::string::npos) { ++pos; }
             }
             else
             {
@@ -861,6 +861,39 @@ omw::StringVector omw::split(const std::string& str, char delimiter, omw::String
 
     return r;
 }
+
+
+
+omw::StringVector omw::split(const std::string& str, const std::string& delimiter, omw::StringVector::size_type maxTokenCount)
+{
+    omw::StringVector r(0);
+
+    if (maxTokenCount > 0)
+    {
+        const omw::StringVector::size_type n = maxTokenCount - 1;
+        std::string::size_type pos = 0;
+
+        while (pos < std::string::npos)
+        {
+            if (r.size() < n)
+            {
+                const std::string::size_type end = str.find(delimiter, pos);
+                r.push_back(str.substr(pos, end - pos));
+                pos = end;
+                if (pos < std::string::npos) { pos += delimiter.length(); }
+            }
+            else
+            {
+                r.push_back(str.substr(pos));
+                pos = std::string::npos;
+            }
+        }
+    }
+
+    return r;
+}
+
+
 
 omw::StringVector omw::splitLen(const std::string& str, std::string::size_type tokenLength, omw::StringVector::size_type maxTokenCount)
 {
@@ -883,6 +916,8 @@ omw::StringVector omw::splitLen(const std::string& str, std::string::size_type t
     return r;
 }
 
+
+
 std::string omw::join(const omw::StringVector& strings)
 {
     std::string r = "";
@@ -898,7 +933,7 @@ std::string omw::join(const omw::StringVector& strings, char delimiter)
 
     for (omw::StringVector::size_type i = 0; i < strings.size(); ++i)
     {
-        if (i > 0) r += std::string(1, delimiter);
+        if (i > 0) { r += std::string(1, delimiter); }
         r += strings[i];
     }
 
@@ -916,7 +951,7 @@ bool omw::isInteger(const std::string& str)
 
     if (str.length() > 1)
     {
-        if (str[0] == '-') startPos = 1;
+        if (str[0] == '-') { startPos = 1; }
     }
 
     return omw::isUInteger(std::string(str, startPos));
@@ -936,7 +971,7 @@ bool omw::isUInteger(const std::string& str)
         r = true;
         for (std::string::size_type i = 0; (i < str.length()) && r; ++i)
         {
-            if ((str[i] < '0') || (str[i] > '9')) r = false;
+            if ((str[i] < '0') || (str[i] > '9')) { r = false; }
         }
     }
     else r = false;
@@ -956,7 +991,7 @@ bool omw::isFloat(const std::string& str, char decimalPoint)
     if (str.length() > 0)
     {
         std::string::size_type startPos = 0;
-        if (str[0] == '-') startPos = 1;
+        if (str[0] == '-') { startPos = 1; }
 
         unsigned cntDp = 0;
         r = (str.length() > startPos);
@@ -983,7 +1018,7 @@ bool omw::isFloat(const std::string& str, char decimalPoint)
             }
         }
     }
-    else r = false;
+    else { r = false; }
 
     return r;
 }
@@ -1032,12 +1067,12 @@ size_t omw::peekNewLine(const char* p)
 
     if (p)
     {
-        if (*p == 0x0A) r = 1;                              // LF
-        else if ((*p == 0x0D) && (*(p + 1) != 0x0A)) r = 1; // CR
-        else if ((*p == 0x0D) && (*(p + 1) == 0x0A)) r = 2; // CR+LF
-        else r = 0;
+        if (*p == 0x0A) { r = 1; }                              // LF
+        else if ((*p == 0x0D) && (*(p + 1) != 0x0A)) { r = 1; } // CR
+        else if ((*p == 0x0D) && (*(p + 1) == 0x0A)) { r = 2; } // CR+LF
+        else { r = 0; }
     }
-    else r = 0;
+    else { r = 0; }
 
     return r;
 }
@@ -1058,21 +1093,21 @@ size_t omw::peekNewLine(const char* p, const char* end)
     {
         if (p && ((end - p) > 0))
         {
-            if (*p == 0x0A) r = 1; // LF
+            if (*p == 0x0A) { r = 1; } // LF
             else if (*p == 0x0D)
             {
                 if ((end - p) > 1)
                 {
-                    if (*(p + 1) == 0x0A) r = 2; // CR+LF
-                    else r = 1;                  // CR
+                    if (*(p + 1) == 0x0A) { r = 2; } // CR+LF
+                    else { r = 1; }                  // CR
                 }
-                else r = 1; // CR
+                else { r = 1; } // CR
             }
-            else r = 0;
+            else { r = 0; }
         }
-        else r = 0;
+        else { r = 0; }
     }
-    else r = peekNewLine(p);
+    else { r = peekNewLine(p); }
 
     return r;
 }
@@ -1091,9 +1126,9 @@ std::string omw::readString(const uint8_t* data, size_t count)
 
     if (data)
     {
-        for (size_t i = 0; i < count; ++i) str[i] = static_cast<char>(data[i]);
+        for (size_t i = 0; i < count; ++i) { str[i] = static_cast<char>(data[i]); }
     }
-    else throw std::invalid_argument("omw::readString");
+    else { throw std::invalid_argument("omw::readString"); }
 
     return str;
 }
@@ -1106,7 +1141,7 @@ std::string omw::readString(const uint8_t* data, size_t count)
 //!
 std::string omw::readString(const std::vector<uint8_t>& data, std::vector<uint8_t>::size_type pos, std::vector<uint8_t>::size_type count)
 {
-    if (((data.size() - pos) < count) || (pos > data.size())) throw std::invalid_argument("omw::readString");
+    if (((data.size() - pos) < count) || (pos > data.size())) { throw std::invalid_argument("omw::readString"); }
     return omw::readString(data.data() + pos, count);
 }
 
@@ -1123,11 +1158,11 @@ void omw::writeString(uint8_t* buffer, const uint8_t* end, const std::string& st
     {
         if (static_cast<std::string::size_type>(end - buffer) >= str.length())
         {
-            for (std::string::size_type i = 0; i < str.length(); ++i) buffer[i] = static_cast<uint8_t>(str[i]);
+            for (std::string::size_type i = 0; i < str.length(); ++i) { buffer[i] = static_cast<uint8_t>(str[i]); }
         }
-        else throw std::out_of_range("omw::writeString");
+        else { throw std::out_of_range("omw::writeString"); }
     }
-    else throw std::invalid_argument("omw::writeString");
+    else { throw std::invalid_argument("omw::writeString"); }
 }
 
 //!
