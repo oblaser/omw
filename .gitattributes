@@ -2,8 +2,12 @@
 *.bat       text eol=crlf
 *.sh        text eol=lf
 
+*.sln               text eol=crlf
+*.vcxproj           text eol=crlf
+*.vcxproj.filters   text eol=crlf
+
+
+
 # *           text=auto
 # *.txt       text
-# *.vcproj    text eol=crlf
-# *.sh        text eol=lf
 # *.jpg       -text
