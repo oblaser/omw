@@ -3,12 +3,15 @@
 # copyright     MIT - Copyright (c) 2025 Oliver Blaser
 
 set(OMW_COMPILE_OPTIONS
+    -pedantic
     -Wall
     -Wextra
     -Wpedantic
     -Werror=format
     -Werror=overflow
     -Werror=return-type
+    -Werror=array-bounds
+    -Werror=unused-parameter
     -Wdouble-promotion
 
     $<$<COMPILE_LANGUAGE:C>:
@@ -22,8 +25,6 @@ set(OMW_COMPILE_OPTIONS
     $<$<COMPILE_LANGUAGE:CXX>:
         -Werror=reorder
         -Werror=switch
-        # -Wno-psabi
-        -Wuseless-cast
         -Wsuggest-override
     >
 )

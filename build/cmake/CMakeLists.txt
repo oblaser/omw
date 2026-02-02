@@ -13,8 +13,8 @@ set(BINNAME omw)
 set(BINSHARED ${BINNAME}-shared)
 set(BINSTATIC ${BINNAME}-static)
 
-#set(CMAKE_CXX_STANDARD 17)
-#set(CMAKE_CXX_STANDARD_REQUIRED true)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 add_subdirectory(lib)
 add_subdirectory(unit-tests)

@@ -30,7 +30,7 @@ std::string omw::info::infoTxt()
     if (omw::info::version().isPreRelease()) { s << " - #" << OMW_VERSION_ID; }
     s << std::endl;
 
-    s << OMWi_DISPSTR("Copyright (c) 2025 Oliver Blaser.") << std::endl;
+    s << OMWi_DISPSTR("Copyright (c) 2026 Oliver Blaser.") << std::endl;
     s << OMWi_DISPSTR("License: MIT <https://opensource.org/licenses/MIT>.") << std::endl;
     s << OMWi_DISPSTR("This is free software. There is NO WARRANTY.") << std::endl;
     s << OMWi_DISPSTR("See <https://github.com/oblaser/omw> for further information.");

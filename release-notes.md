@@ -4,6 +4,10 @@
 
 ### v0.3.1 - _WIP_
 
+New
+- Added string split overloads
+- Unified aliases for function name and signature identifiers
+
 
 
 ### v0.3.0 - 2025-12-30

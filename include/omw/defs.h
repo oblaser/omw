@@ -204,9 +204,9 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #ifndef OMWi_DOXYGEN_PREDEFINE
 
 #ifdef OMW_CXX_MSVC
-#define OMW_CPPSTD (_MSVC_LANG)
+#define OMW_CPPSTD _MSVC_LANG
 #else // _MSC_VER
-#define OMW_CPPSTD (__cplusplus)
+#define OMW_CPPSTD __cplusplus
 #endif // _MSC_VER
 
 #else // OMWi_DOXYGEN_PREDEFINE
@@ -215,18 +215,12 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 
 
 
-#define OMW_CPPSTD_98 (199711L)
-#define OMW_CPPSTD_11 (201103L)
-#define OMW_CPPSTD_14 (201402L)
-#define OMW_CPPSTD_17 (201703L)
-#define OMW_CPPSTD_20 (202002L)
-
-//!
-//! C++23 isn't released yet. Thus the value may change in the future!
-//!
-//! The current value is from GCC 11.1.0
-//!
-#define OMW_CPPSTD_23 (202100L)
+#define OMW_CPPSTD_98 199711L
+#define OMW_CPPSTD_11 201103L
+#define OMW_CPPSTD_14 201402L
+#define OMW_CPPSTD_17 201703L
+#define OMW_CPPSTD_20 202002L
+#define OMW_CPPSTD_23 202302L
 
 /// @}
 
@@ -235,9 +229,9 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 //! `#include <omw/defs.h>`
 /// @{
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 #define OMW_DEBUG (1)
-#endif // _DEBUG
+#endif // DEBUG
 
 #if (OMW_CPPSTD >= OMW_CPPSTD_14)
 #define OMW__FILENAME__ (OMWi_file_to_filename(__FILE__))
@@ -247,6 +241,15 @@ copyright       MIT - Copyright (c) 2022 Oliver Blaser
 #define OMW_DEBUG (1)
 #define OMW__FILENAME__
 #endif // OMWi_DOXYGEN_PREDEFINE
+
+// see https://github.com/oblaser/c-cpp-util/blob/020253b/doc/__func__.cpp
+#if OMW_CXX_MSVC
+#define OMW__FUNCNAME__ __func__
+#define OMW__FUNCSIG__  __FUNCSIG__
+#else
+#define OMW__FUNCNAME__ __func__
+#define OMW__FUNCSIG__  __PRETTY_FUNCTION__
+#endif
 
 /// @}
 
@@ -339,6 +342,11 @@ const constexpr char* OMWi_file_to_filename(const char* p)
  *
  * Returns the filename of the current file as `const char* const` similar to `__FILE__`, but does not contain the full
  * path. Note that the files full path is still added to the binary.
+ */
+
+/**
+ * @def OMW__FUNCSIG__
+ * `__FUNCSIG__` on Windows, else `__PRETTY_FUNCTION__`.
  */
 
 
