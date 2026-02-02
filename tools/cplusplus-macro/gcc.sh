@@ -20,10 +20,19 @@ echo "$(g++ -dM -E -std=c++$std -x c++ /dev/null | grep -F __cplusplus)  C++$std
 std=17
 echo "$(g++ -dM -E -std=c++$std -x c++ /dev/null | grep -F __cplusplus)  C++$std"
 
+std=2a
+echo "$(g++ -dM -E -std=c++$std -x c++ /dev/null | grep -F __cplusplus)  C++$std"
+
 std=20
 echo "$(g++ -dM -E -std=c++$std -x c++ /dev/null | grep -F __cplusplus)  C++$std"
 
+std=2b
+echo "$(g++ -dM -E -std=c++$std -x c++ /dev/null | grep -F __cplusplus)  C++$std"
+
 std=23
+echo "$(g++ -dM -E -std=c++$std -x c++ /dev/null | grep -F __cplusplus)  C++$std"
+
+std=2c
 echo "$(g++ -dM -E -std=c++$std -x c++ /dev/null | grep -F __cplusplus)  C++$std"
 
 std=26
