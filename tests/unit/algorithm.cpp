@@ -12,7 +12,7 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 #include "catch2/catch.hpp"
 
 #include <omw/algorithm.h>
-#include <omw/cli.h>
+#include <omw/ansi-esc.h>
 #include <omw/int.h>
 #include <omw/string.h>
 

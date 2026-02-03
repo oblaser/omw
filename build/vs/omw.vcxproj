@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\algorithm.cpp" />
+    <ClCompile Include="..\..\src\ansi-esc.cpp" />
     <ClCompile Include="..\..\src\checksum.cpp" />
     <ClCompile Include="..\..\src\cli.cpp" />
     <ClCompile Include="..\..\src\clock.cpp" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\omw\algorithm.h" />
+    <ClInclude Include="..\..\include\omw\ansi-esc.h" />
     <ClInclude Include="..\..\include\omw\checksum.h" />
     <ClInclude Include="..\..\include\omw\cli.h" />
     <ClInclude Include="..\..\include\omw\clock.h" />

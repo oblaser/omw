@@ -9,7 +9,7 @@ copyright       MIT - Copyright (c) 2025 Oliver Blaser
 #define CATCH_CONFIG_MAIN
 #include "catch2/catch.hpp"
 
-#include <omw/cli.h>
+#include <omw/ansi-esc.h>
 #include <omw/defs.h>
 #include <omw/omw.h>
 #include <omw/windows/windows.h>

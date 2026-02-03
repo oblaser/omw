@@ -23,10 +23,10 @@ copyright       MIT - Copyright (c) 2023 Oliver Blaser
 */
 
 /*!
-\defgroup grp_cli Command Line Interface Library
-`#include <omw/cli.h>`
+\defgroup grp_ansiEsc ANSI Escape Codes
+`#include <omw/ansi-esc.h>`
 
-\section grp_cli_section_ansiEscWin ANSI escape on Windows
+\section grp_ansiEsc_section_ansiEscWin ANSI escape on Windows
 The parsing of ANSI escape sequences (VT100) has to be enabled. Depending of the result, the mode of the omw library can be set:
 ```
 #include <iostream>
@@ -67,6 +67,11 @@ Clock for measuring process time (not to be used as wall clock time).
 
 /*!
 \defgroup grp_containersLib Containers Library
+*/
+
+/*!
+\defgroup grp_ansiEsc Command Line Interface Library
+`#include <omw/ansi-esc.h>`
 */
 
 /*!

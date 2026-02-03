@@ -1,6 +1,6 @@
 # author        Oliver Blaser
-# date          16.12.2023
-# copyright     MIT - Copyright (c) 2023 Oliver Blaser
+# date          02.02.2026
+# copyright     MIT - Copyright (c) 2026 Oliver Blaser
 
 cmake_minimum_required(VERSION 3.13)
 
@@ -23,6 +23,7 @@ set(SOURCES
 ../../../src/windows/string.cpp
 ../../../src/windows/windows.cpp
 ../../../src/algorithm.cpp
+../../../src/ansi-esc.cpp
 ../../../src/checksum.cpp
 ../../../src/cli.cpp
 ../../../src/clock.cpp

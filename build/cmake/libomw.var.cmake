@@ -1,6 +1,6 @@
 # author        Oliver Blaser
-# date          21.05.2024
-# copyright     MIT - Copyright (c) 2024 Oliver Blaser
+# date          02.02.2026
+# copyright     MIT - Copyright (c) 2026 Oliver Blaser
 
 set(BINNAME omw)
 
@@ -15,6 +15,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../../src/windows/resources.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/windows/string.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/windows/windows.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/algorithm.cpp
+${CMAKE_CURRENT_LIST_DIR}/../../src/ansi-esc.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/checksum.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/cli.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../../src/clock.cpp

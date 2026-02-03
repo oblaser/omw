@@ -20,6 +20,7 @@ set(SOURCES_UNIT_TEST
 ../../../tests/unit/main.cpp
 
 ../../../tests/unit/algorithm.cpp
+../../../src/ansi-esc.cpp
 ../../../tests/unit/checksum.cpp
 ../../../tests/unit/cli.cpp
 ../../../tests/unit/clock.cpp

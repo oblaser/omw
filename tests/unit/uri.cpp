@@ -1386,7 +1386,7 @@ TEST_CASE("uri.h omw::URI::Path specific std::filesystem::path")
 
 #include <iostream>
 
-#include <omw/cli.h>
+#include <omw/ansi-esc.h>
 
 void print_cpp17_warning()
 {

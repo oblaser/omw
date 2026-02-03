@@ -1,13 +1,14 @@
 /*
 author          Oliver Blaser
-date            08.12.2021
-copyright       MIT - Copyright (c) 2021 Oliver Blaser
+date            02.02.2026
+copyright       MIT - Copyright (c) 2026 Oliver Blaser
 */
 
 #include <cmath>
 #include <iostream>
 #include <string>
 
+#include <omw/ansi-esc.h>
 #include <omw/cli.h>
 #include <omw/color.h>
 #include <omw/omw.h>
@@ -28,6 +29,7 @@ namespace csi = omw::ansiesc::csi;
 namespace sgr = csi::sgr;
 
 namespace {
+
 omw::Color intToColor(uint32_t value) // color circle 0 .. 0x5FF
 {
     uint32_t col_value;
@@ -76,7 +78,12 @@ void setCpBack(uint32_t cpIn, uint32_t cpOut)
     if (!omw::windows::consoleSetOutCodePage(cpOut)) cout << "faild to set out code page back to " << cpOut << endl;
 }
 #endif
+
 } // namespace
+
+
+
+static void test_cli_choice();
 
 
 
@@ -85,6 +92,9 @@ void setCpBack(uint32_t cpIn, uint32_t cpOut)
 int main(int argc, char** argv)
 {
     int r = 0;
+
+    (void)argc;
+    (void)argv;
 
 #ifdef OMW_PLAT_WIN
     const uint32_t cpIn = omw::windows::consoleGetInCodePage();
@@ -102,6 +112,8 @@ int main(int argc, char** argv)
         if (!vtEnable) cout << "faild to enable virtual terminal processing" << endl;
     }
 #endif
+
+    test_cli_choice();
 
 #ifndef ___OMWi_REGION_sgr
 
@@ -367,3 +379,48 @@ void utf8(uint32_t cpIn, uint32_t cpOut)
 }
 
 #endif // !TESTING_WIN_CODE_PAGE_CHANGES
+
+
+
+static void test_cli_choice2()
+{
+    size_t res, expexted;
+
+    expexted = 0;
+    do {
+        res = omw::cli::choice("choose the first option:");
+        if (res != expexted) { cout << omw::fgBrightRed << "try again! " << omw::fgDefault; }
+    }
+    while (res != expexted);
+
+    expexted = 1;
+    do {
+        res = omw::cli::choice("choose the second option:", 'X', 'I', 123);
+        if (res != expexted) { cout << omw::fgBrightRed << "try again! " << omw::fgDefault; }
+    }
+    while (res != expexted);
+
+    expexted = 0;
+    do {
+        res = omw::cli::choice("press enter:", 'q', 'w', 0);
+        if (res != expexted) { cout << omw::fgBrightRed << "try again! " << omw::fgDefault; }
+    }
+    while (res != expexted);
+
+    expexted = 1;
+    do {
+        res = omw::cli::choice("press enter:", 'e', 'r', 1);
+        if (res != expexted) { cout << omw::fgBrightRed << "try again! " << omw::fgDefault; }
+    }
+    while (res != expexted);
+
+    res = omw::cli::choice("(red) or (blue)?", 'r', 'b');
+    if (res == 0) { cout << "your journey shall continue" << endl; }
+    else { cout << "iou ignorant idiot!" << endl; }
+}
+
+void test_cli_choice()
+{
+    test_cli_choice2();
+    // ...
+}

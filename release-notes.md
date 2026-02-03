@@ -5,8 +5,12 @@
 ### v0.3.1 - _WIP_
 
 New
+- `omw::cli::choice()`
 - Added string split overloads
 - Unified aliases for function name and signature identifiers
+
+Changed
+- Moved ANSI escape codes to `omw/ansi-esc.h`
 
 
 
